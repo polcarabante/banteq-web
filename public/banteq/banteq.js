@@ -109,7 +109,22 @@
   document.addEventListener("visibilitychange", () => setTimeout(scanTickers, 0));
   reduceMotion.addEventListener("change", scanTickers);
 
-  // Enlaces a otras webs (simulador de FUNDAE…) en pestaña nueva; los propios, en la misma.
+  // Menú de la cabecera: al elegir un enlace, la página cambiaba (o bajaba hasta la sección, como
+  // «Servicios» en la home) pero el menú seguía abierto encima: el router de Framer mantiene la
+  // cabecera montada entre páginas. Se cierra como al pulsar «×» (el botón responde a onTap de
+  // Framer: pointerdown + pointerup).
+  const closeMenuAfter = (link) => {
+    const nav = link.closest('.framer-KFp9B[data-framer-name="Open"]');
+    const toggle = nav && nav.querySelector('[data-highlight][data-framer-name="Open"]');
+    if (!toggle) return;
+    requestAnimationFrame(() => {
+      const opts = { bubbles: true, cancelable: true, composed: true, isPrimary: true, pointerId: 1, pointerType: "mouse", button: 0 };
+      toggle.dispatchEvent(new PointerEvent("pointerdown", { ...opts, buttons: 1 }));
+      toggle.dispatchEvent(new PointerEvent("pointerup", { ...opts, buttons: 0 }));
+    });
+  };
+
+  // Enlaces a otras webs en pestaña nueva; los propios, en la misma.
   document.addEventListener(
     "click",
     (event) => {
@@ -118,8 +133,9 @@
       if (new URL(link.href, window.location.href).origin !== window.location.origin) {
         link.target = "_blank";
         link.rel = "noopener noreferrer";
-      } else if (link.target === "_blank") {
-        link.removeAttribute("target");
+      } else {
+        if (link.target === "_blank") link.removeAttribute("target");
+        closeMenuAfter(link);
       }
     },
     true,

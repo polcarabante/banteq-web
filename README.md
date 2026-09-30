@@ -69,8 +69,9 @@ El fondo del hero es una B de cristal líquido negro (referencia: `assets-banteq
   pósteres y máscara.
 - **Reacción al cursor**: `assets-banteq/web/banteq-liquid.js`. Un lienzo WebGL transparente, encima
   del vídeo, usa el propio vídeo como textura y pinta solo la zona deformada: alrededor del cursor
-  (radio 100–170 px) el líquido se hunde y se aparta, y al irse vuelve con un pequeño rebote y ondas.
-  Solo actúa sobre la B.
+  (radio 50–85 px, el 4,5 % del ancho del hero; antes 100–170 px) el líquido se hunde y se aparta, y
+  al irse vuelve con un pequeño rebote y ondas. Solo actúa sobre la B. El tamaño se cambia en
+  `radius` (todo lo demás va en unidades de ese radio, así que la intensidad no cambia).
 - **Rendimiento**: en reposo no hay WebGL ni bucle de animación: se ve el `<video>` nativo
   (decodificado y compuesto por hardware). El lienzo solo dibuja mientras el cursor está cerca de la
   B y se oculta en cuanto el líquido se asienta. `pointermove` solo guarda coordenadas (sin medir el
@@ -114,9 +115,36 @@ en móvil con la CPU a ¼: 731 → 426 ms/s. En WebKit, el mismo scroll pasa de 
 tirón al entrar en «Conectamos tus herramientas» baja de 54–59 ms a 25 ms. En reposo, el hilo
 principal está prácticamente libre (hero 190 → 4 ms/s). Imágenes de la home: 482 → 210 KB.
 
+### Rendimiento durante el hover
+
+Segunda auditoría, centrada en mover el cursor (no en el scroll) por «¿Por qué Banteq?» y
+«Conectamos tus herramientas». Medido 25 s por caso con recorridos de ratón rápidos (barridos de
+izquierda a derecha, círculos sobre cada tarjeta, entrar y salir de cada tarjeta y del botón
+central) en WebKit (WebKitGTK 2.52, el motor de Safari, con el cursor real del sistema) y en Chrome
+con trazas. Lo que se ha cambiado:
+
+| Qué cargaba el hover | Arreglo |
+|---|---|
+| Botón central «B · Hablemos»: Framer Motion animaba por JavaScript el degradado y la sombra interior de 40 px (repintado del círculo en cada fotograma + re-render de React) | Hover en CSS: una capa con el aspecto final exacto del hover que aparece al pasar el cursor, sin repintar. Sin transición ni escala: en WebKit cualquier animación del hover triplicaba los fotogramas lentos |
+| Tarjetas de «¿Por qué Banteq?»: 6 `backdrop-filter` (aro del icono y pestaña del número) que WebKit rehacía en cada fotograma | Sin desenfoque (detrás hay fondo oscuro liso: se ve igual). No tenían efecto de hover propio: no se ha añadido ninguno |
+| Halo azul del botón central con `filter: blur(20px)` sobre las tiras en movimiento | El mismo halo ya desenfocado como degradado radial (diferencia máx. 3/255) |
+| Desvanecido de los extremos de las tiras con `mask-image` | Degradado blanco por encima (el fondo es blanco liso: resultado idéntico) sin máscaras |
+| Tiras: al entrar o salir el cursor se reasignaba `playbackRate` a la animación (sin efecto visible) | Eliminado |
+| Gestor de cursores de Framer: en cada `pointermove` lanzaba una animación de 0,2 s aunque no hay cursores propios | Ignora el movimiento si no hay cursores registrados |
+
+Las fichas de herramientas no tenían efecto de hover ni listeners propios, y no hay efecto magnético
+activo (el Magnetic Hover ya quedó inerte en la auditoría anterior).
+
+| Cursor en movimiento, 25 s | Antes | Ahora |
+|---|---|---|
+| WebKit · «Conectamos» | 43,6 FPS · 242 fotogramas > 33 ms · 57 > 50 ms · p95 50 ms | 59,3 FPS · 27 > 33 ms · 2 > 50 ms · p95 20 ms |
+| WebKit · «¿Por qué Banteq?» | 33 fotogramas > 33 ms · p99 38 ms | 1 > 33 ms · p99 17 ms |
+| WebKit · «¿Por qué Banteq?» con el cursor quieto | 26 fotogramas > 33 ms | 1 |
+| Chrome · «Conectamos» | 1006 repintados · hilo principal 10,3 % (42 % con CPU ×4) | 0 repintados · 7,2 % (28 %) |
+
 ## Cuadrado central de «Quiénes somos»
 
-Encima del carrusel de palabras (PROCESOS AUTOMATIZADOS · IA Y COPILOT · WEBS A MEDIDA) hay un
+Encima del carrusel de palabras (PROCESOS AUTOMATIZADOS · IA APLICADA · WEBS A MEDIDA) hay un
 cuadrado opaco con el logotipo de Banteq; el carrusel pasa por detrás. Su contenido se define en
 `tools/contenido.py` → `CUADRO_CENTRAL`:
 
@@ -132,14 +160,31 @@ El aspecto (tamaño, esquinas, fondo, sombra) está en `assets-banteq/web/banteq
 1. Hero: "Tecnología que mejora cómo trabaja tu empresa" + carrusel "Empresas que ya confían en Banteq" (Margon, RentUp Capital)
 2. 001 Quiénes somos
 3. 002 Por qué Banteq
-4. 003 Automatización e IA (procesos, asistentes IA, ventas y CRM, informes, Microsoft Copilot, seguridad)
-5. 004 Microsoft Copilot y formación FUNDAE (enlace al simulador oficial de crédito)
-6. 005 Desarrollo web (diseño, rediseño, experiencias interactivas, formularios, integraciones, responsive, a medida)
-7. 006 Proyectos: Margon y RentUp Capital, con página propia en `/proyectos/margon` y `/proyectos/rentup-capital`
-8. 007 Cómo trabajamos
-9. 008 Herramientas
-10. 009 Preguntas frecuentes
-11. Formulario de contacto (en todas las páginas)
+4. 003 Automatización e IA (procesos, asistentes IA, ventas y CRM, informes, conexión entre herramientas, seguridad)
+5. 004 Desarrollo web (diseño, rediseño, experiencias interactivas, formularios, integraciones, responsive, a medida)
+6. 005 Proyectos: Margon y RentUp Capital, con página propia en `/proyectos/margon` y `/proyectos/rentup-capital`
+7. 006 Cómo trabajamos
+8. 007 Herramientas
+9. 008 Preguntas frecuentes
+10. Formulario de contacto (en todas las páginas)
+
+### Microsoft Copilot y formación FUNDAE (retirados temporalmente)
+
+Mientras no se ofrezcan, no aparecen en ningún sitio de la web publicada: ni la sección «Microsoft
+Copilot y formación FUNDAE» (con el enlace al simulador de crédito), ni la tarjeta de Copilot en
+servicios (ese hueco lo ocupa «Conexión entre herramientas»), ni la pregunta sobre FUNDAE, ni «IA y
+Copilot» en el carrusel, ni las menciones en contacto, aviso legal, metadatos e imagen para redes.
+La numeración de secciones se recalcula sola (001–008) y el build comprueba que no quede ninguna
+mención. Todo el contenido sigue en `tools/contenido.py`; para volver a mostrarlo:
+
+```bash
+# tools/contenido.py → MOSTRAR_COPILOT_FUNDAE = True
+python3 tools/assets.py og   # imagen para redes con la línea de servicios completa
+npm run build
+```
+
+El formulario (`api/leads.js`) mantiene la lista de Brevo de FUNDAE (`BREVO_FUNDAE_LIST_ID`); desde
+la web ya no llega ninguna solicitud de ese tipo.
 
 Páginas: `/contacto`, `/proyectos`, `/aviso-legal`, `/privacidad` y 404.
 
@@ -148,7 +193,7 @@ testimonios se ha reconvertido en "Desarrollo web" (no hay testimonios reales).
 
 ## De dónde sale el contenido
 
-- **Servicios, Copilot, FUNDAE, proceso, seguridad, FAQ**: web anterior de Kairvia (solo como fuente; la marca no aparece).
+- **Servicios, Copilot y FUNDAE (ahora ocultos), proceso, seguridad, FAQ**: web anterior de Kairvia (solo como fuente; la marca no aparece).
 - **Margon**: repositorio `~/margon-web` (cinco idiomas, páginas por sector, recorrido interactivo, 3D, configurador, noticias y newsletter).
 - **RentUp Capital**: repositorio `~/Desktop/PÁGINAS WEB/rentupv2` y la web en producción (11 páginas, 3 formularios con Brevo y Resend).
 - No hay cifras de resultados, testimonios ni proyectos inventados.

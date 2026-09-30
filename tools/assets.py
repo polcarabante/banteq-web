@@ -16,6 +16,10 @@ from pathlib import Path
 from PIL import Image, ImageChops, ImageEnhance, ImageFilter, ImageOps
 
 TOOLS = Path(__file__).resolve().parent
+sys.path.insert(0, str(TOOLS))
+
+import contenido as C  # noqa: E402
+
 ROOT = TOOLS.parent
 TPL = ROOT / "plantilla-original"
 IMG = TPL / "framerusercontent.com/images"
@@ -136,12 +140,21 @@ def brand():
            .d:after{{content:"";position:absolute;inset:0;border-radius:50%;padding:6px;background:{IRIS};
            -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;opacity:.9}}""",
     )
-    # Imagen para compartir en redes (Open Graph).
+
+
+def og_image():
+    """Imagen para compartir en redes (Open Graph). La línea de servicios sigue a
+    contenido.MOSTRAR_COPILOT_FUNDAE."""
+    servicios = (
+        "Automatización · Inteligencia artificial · Microsoft Copilot · Formación FUNDAE · Desarrollo web"
+        if C.MOSTRAR_COPILOT_FUNDAE
+        else "Automatización · Inteligencia artificial · Desarrollo web"
+    )
     html_asset(
         "og", 1200, 630,
         f"""<div class="og"><div class="lock">{mark_svg("#fff", "92px")}<span>banteq</span></div>
         <h1>Tecnología que mejora<br>cómo trabaja tu empresa</h1>
-        <p>Automatización · Inteligencia artificial · Microsoft Copilot · Formación FUNDAE · Desarrollo web</p></div>""",
+        <p>{servicios}</p></div>""",
         f""".og{{width:1200px;height:630px;padding:80px 90px;color:#fff;
            background:radial-gradient(80% 90% at 85% 10%,rgba(95,125,255,.35),transparent 60%),
            radial-gradient(70% 80% at 10% 100%,rgba(168,230,255,.18),transparent 60%),#0b0b0c}}
@@ -466,6 +479,7 @@ def transparent(name, w, h):
 def main():
     GEN.mkdir(parents=True, exist_ok=True)
     brand()
+    og_image()
     icon_tiles()
     chat("chat-648", 648, 288, 2, 18)
     chat("chat-600", 600, 257, 0, 10)
@@ -486,17 +500,23 @@ def main():
     print("OK →", GEN)
 
 
-def solo_cuadro():
-    """python3 tools/assets.py cuadro — solo el logotipo del cuadrado central."""
+def solo(nombre, generar):
+    """python3 tools/assets.py cuadro | og — solo esa pieza (logotipo del cuadrado central o imagen
+    para redes)."""
     GEN.mkdir(parents=True, exist_ok=True)
-    cuadro()
-    jobs = GEN / "_jobs-cuadro.json"  # aparte: _jobs.json es la lista completa de main()
+    generar()
+    jobs = GEN / f"_jobs-{nombre}.json"  # aparte: _jobs.json es la lista completa de main()
     jobs.write_text(json.dumps(JOBS, indent=1))
     subprocess.run(["node", str(TOOLS / "capture.mjs"), str(jobs)], check=True)
     jobs.unlink()
-    trim("cuadro-logo.png")
-    print("OK →", GEN / "cuadro-logo.png")
+    if nombre == "cuadro":
+        trim("cuadro-logo.png")
+    print("OK →", GEN)
 
 
 if __name__ == "__main__":
-    solo_cuadro() if sys.argv[1:] == ["cuadro"] else main()
+    piezas = {"cuadro": cuadro, "og": og_image}
+    if sys.argv[1:2] and sys.argv[1] in piezas:
+        solo(sys.argv[1], piezas[sys.argv[1]])
+    else:
+        main()

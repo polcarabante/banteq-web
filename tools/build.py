@@ -761,6 +761,24 @@ def apply_performance():
     # refresco para actualizar sus animaciones (tirones). Ahora solo mira al mover el puntero.
     replace(FRAMER_MOD, "je.read(u,!0),e=n.clientX", "je.read(u),e=n.clientX")
     replace(FRAMER_MOD, "document.addEventListener(`pointerup`,f),je.read(u,!0)", "document.addEventListener(`pointerup`,f),je.read(u)")
+    # El mismo gestor, en cada pointermove, arrancaba una animación de 0,2 s de la opacidad del cursor
+    # (inexistente): mientras se mueve el ratón, el bucle de Framer trabajaba en cada fotograma, en
+    # toda la web. Sin cursores registrados el movimiento se ignora; si alguno se registrara, vuelve
+    # a funcionar con el siguiente movimiento.
+    replace(FRAMER_MOD, "function d(n){if(n.pointerType===`touch`){Ie(u);return}je.read(u),",
+            "function d(n){if(Qe(s.current.cursors))return;if(n.pointerType===`touch`){Ie(u);return}je.read(u),")
+    # Hover (medido con movimiento continuo del cursor, ver README «Rendimiento durante el hover»).
+    # Botón central de «Conectamos tus herramientas»: su variante de hover la animaba Framer Motion
+    # por JavaScript (degradado de fondo y sombra interior de 40 px, un repintado completo del círculo
+    # en cada fotograma, además de un re-render de React al entrar y al salir). En WebKit era el
+    # grueso de los fotogramas de 40–90 ms. Ahora el hover es CSS (banteq.css): la misma apariencia
+    # final en una capa que solo cambia de opacidad.
+    replace(HOME_MOD, "Ss={kjCYFr2ql:{hover:!0}}", "Ss={}")
+    # Tiras en bucle (herramientas, palabras de «Quiénes somos», logos del hero): al entrar o salir el
+    # cursor de una tira se reasignaba playbackRate a la animación (con hoverFactor 1, al mismo
+    # valor), lo que en WebKit la reposiciona y la vuelve a enviar al compositor. Sin efecto visible.
+    replace(HOME_MOD, ",onMouseEnter:()=>{be.current=!0,G.current&&(G.current.playbackRate=x)},"
+                      "onMouseLeave:()=>{be.current=!1,G.current&&(G.current.playbackRate=1)}", "")
     # Ticker de Framer (tiras de «Conectamos tus herramientas», carrusel de palabras y logos del
     # hero). Al entrar o salir de pantalla cambiaba un estado de React que volvía a renderizar toda
     # la tira y ponía o quitaba will-change en cada copia de cada elemento: el navegador creaba y
@@ -928,7 +946,8 @@ def apply_project_pages():
 # ---------------------------------------------------------------------------
 
 PAGINAS = {
-    "contacto": ("Contacto | Banteq", "Cuéntanos qué quieres mejorar en tu empresa: automatización, inteligencia artificial, Microsoft Copilot, formación FUNDAE o tu web."),
+    "contacto": ("Contacto | Banteq", "Cuéntanos qué quieres mejorar en tu empresa: automatización, inteligencia artificial, Microsoft Copilot, formación FUNDAE o tu web."
+                 if C.MOSTRAR_COPILOT_FUNDAE else "Cuéntanos qué quieres mejorar en tu empresa: automatización, inteligencia artificial o tu web."),
     "proyectos": ("Proyectos | Banteq", "Empresas que ya confían en Banteq y el trabajo que hemos hecho con ellas."),
     "aviso-legal": ("Aviso legal | Banteq", C.META_DESCRIPTION),
     "privacidad": ("Política de privacidad | Banteq", C.META_DESCRIPTION),
@@ -966,13 +985,20 @@ COPILOT_CARD = (
     "Microsoft Copilot.",
     " Resúmenes de correos y reuniones, documentos y análisis en Outlook, Teams, Word y Excel, con tu equipo formado para usarlo.",
 )
+# Mientras Copilot no se ofrece (contenido.MOSTRAR_COPILOT_FUNDAE), la misma tarjeta presenta un
+# servicio que la web ya describe en «Conectamos tus herramientas» y en el proceso: así la cuadrícula
+# no queda con un hueco.
+CONEXION_CARD = (
+    "Conexión entre herramientas.",
+    " Correo, Drive, Excel, CRM, ERP o WhatsApp conectados entre sí, para que la información pase de una a otra sin copiar y pegar.",
+)
 
 
 def fix_duplicate_service_card():
     """La plantilla repetía la tarjeta de chatbots; la quinta (ilustración del arco) pasa a Copilot."""
     old_title = "Asistentes de inteligencia artificial."
     old_body = [t[1] for t in C.HOME if t[0].startswith("24/7 customer support")][0]
-    new_title, new_body = COPILOT_CARD
+    new_title, new_body = COPILOT_CARD if C.MOSTRAR_COPILOT_FUNDAE else CONEXION_CARD
     for rel in (HOME_MOD, INDEX):
         text = S[rel]
         a, b = section_range_js("Service Section") if rel == HOME_MOD else section_range_html(rel, "Service Section")
@@ -1035,6 +1061,52 @@ def fix_prerendered_leftovers():
         "f(m,{},f(p(()=>import(`./PX9hIOIVM.Bh3Sw9Ys.mjs`)))))})})()",
         "(function(){})()",
     )
+
+
+def remove_child_call(rel, start, end):
+    """Quita una llamada JSX de un array children:[…] junto con la coma que la separa."""
+    t = S[rel]
+    if t[end:end + 1] == ",":
+        end += 1
+    elif t[start - 1:start] == ",":
+        start -= 1
+    else:
+        raise AssertionError(f"{rel}: la llamada no es un elemento de una lista")
+    S[rel] = t[:start] + t[end:]
+
+
+def hide_copilot_fundae():
+    """Microsoft Copilot y FUNDAE (contenido.MOSTRAR_COPILOT_FUNDAE = False). Todo se construye con sus
+    textos, enlaces y numeración, y aquí se quita del módulo de la home y del HTML a la vez (si solo
+    se quitara de uno, React daría error de hidratación). Volver a mostrarlo es cambiar la bandera."""
+    if C.MOSTRAR_COPILOT_FUNDAE:
+        return
+    for name in C.SECCIONES_OCULTAS:
+        remove_child_call(HOME_MOD, *section_range_js(name))
+        a, b = section_range_html(INDEX, name)
+        S[INDEX] = S[INDEX][:a] + S[INDEX][b:]
+    # Pregunta frecuente sobre FUNDAE: es la última de la lista, así que no queda hueco.
+    pregunta = {t[0]: t[1] for t in C.HOME}["What kind of ROI can we expect?"]
+    t = S[HOME_MOD]
+    item = jsx.call_containing(t, t.find(f"`{pregunta}`"))
+    container = jsx.call_containing(t, item[0] - 1)
+    wrapper = jsx.call_containing(t, container[0] - 1)
+    cls = re.match(r"g\(\w+,\{className:`(framer-[a-z0-9]+-container)`", t[container[0]:]).group(1)
+    remove_child_call(HOME_MOD, *wrapper)
+    h = S[INDEX]
+    k = h.find(html.escape(pregunta, quote=False))
+    a = h.rfind(f'<div class="{cls}"', 0, k)
+    assert a >= 0, "No se encuentra la pregunta de FUNDAE en el HTML"
+    S[INDEX] = h[:a] + h[html_element_extent(h, a, "div"):]
+    for rel in (HOME_MOD, INDEX):
+        # Nombres internos de capas que heredaron esos textos (no se ven, pero van en el código).
+        S[rel] = re.sub(r'data-framer-name="[^"]*(?:Copilot|FUNDAE|simulador)[^"]*"', 'data-framer-name="Texto"', S[rel])
+        S[rel] = re.sub(r'"data-framer-name":`[^`]*(?:Copilot|FUNDAE|simulador)[^`]*`', '"data-framer-name":`Texto`', S[rel])
+    # Las tarjetas de la sección son componentes aparte: ya no se pintan, pero su texto seguía en el
+    # módulo publicado. Se vacía (al volver a mostrarlo, el build los genera de nuevo).
+    S[HOME_MOD] = re.sub(r"`[^`$\\]*(?:Copilot|FUNDAE|fundae)[^`$\\]*`", "``", S[HOME_MOD])
+    for rel in (HOME_MOD, INDEX):
+        assert not re.search(r"(?i)copilot|fundae", S[rel]), f"{rel}: queda Copilot o FUNDAE"
 
 
 LIMPIEZA = [
@@ -1199,6 +1271,7 @@ def main():
         inject_assets(rel)
         apply_head_images(rel)
 
+    hide_copilot_fundae()
     make_shells()
     final_cleanup()
     convert_heavy_images()

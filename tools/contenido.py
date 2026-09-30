@@ -9,11 +9,26 @@ Fuentes del contenido (sin inventar cifras, testimonios ni proyectos):
 Cada entrada es (texto original de la plantilla, texto de Banteq).
 """
 
+# Microsoft Copilot y formación FUNDAE: retirados temporalmente de la web (aún no se ofrecen).
+# Todo su contenido sigue en este archivo. Con True vuelven la sección «Microsoft Copilot y
+# formación FUNDAE» (con el enlace al simulador de crédito), la tarjeta de Copilot en servicios, la
+# pregunta sobre FUNDAE, «IA y Copilot» en el carrusel de «Quiénes somos», las menciones en contacto
+# y aviso legal, la numeración 001–009 y los metadatos. Después: python3 tools/build.py (y
+# python3 tools/assets.py og para la imagen de redes).
+MOSTRAR_COPILOT_FUNDAE = False
+
 META_TITLE = "Banteq | Automatización, IA y desarrollo web para empresas"
 META_DESCRIPTION = (
-    "Banteq analiza cómo funciona tu empresa y aplica automatización de procesos, inteligencia "
-    "artificial, Microsoft Copilot, formación bonificable FUNDAE y desarrollo web para mejorar "
-    "procesos, presencia digital y productividad."
+    (
+        "Banteq analiza cómo funciona tu empresa y aplica automatización de procesos, inteligencia "
+        "artificial, Microsoft Copilot, formación bonificable FUNDAE y desarrollo web para mejorar "
+        "procesos, presencia digital y productividad."
+    )
+    if MOSTRAR_COPILOT_FUNDAE
+    else (
+        "Banteq analiza cómo funciona tu empresa y aplica automatización de procesos, inteligencia "
+        "artificial y desarrollo web para mejorar procesos, presencia digital y productividad."
+    )
 )
 
 # Orden final de las secciones de la home (la de equipo se elimina: no hay equipo documentado).
@@ -30,12 +45,16 @@ ORDEN_SECCIONES = [
     "FAQs Section",
 ]
 
+# Secciones que se construyen igual (todos sus textos se aplican) pero no se publican: el build las
+# quita al final del módulo de la home y del HTML. Volver a mostrarlas no requiere nada más.
+SECCIONES_OCULTAS = [] if MOSTRAR_COPILOT_FUNDAE else ["Pricing Section"]
+
 # Anclas de sección en español (id original → id nuevo).
 ANCLAS = {
     "about": "banteq",
     "value": "por-que-banteq",
     "service": "servicios",
-    "pricing": "copilot-fundae",
+    "pricing": "copilot-fundae" if MOSTRAR_COPILOT_FUNDAE else "seccion-oculta",
     "testimonial": "desarrollo-web",
     "project": "proyectos",
     "process": "como-trabajamos",
@@ -51,18 +70,30 @@ RUTAS = {
     "/privacy-policy": "/privacidad",
 }
 
-# Etiquetas de sección (número, nombre) en el orden nuevo.
-ETIQUETAS = [
-    (("001", "who we are"), ("001", "quiénes somos")),
-    (("002", "value"), ("002", "por qué banteq")),
-    (("003", "Capabilities"), ("003", "automatización e ia")),
-    (("008", "pricing"), ("004", "copilot y fundae")),
-    (("007", "testimonial"), ("005", "desarrollo web")),
-    (("005", "Case studies"), ("006", "proyectos")),
-    (("004", "process"), ("007", "cómo trabajamos")),
-    (("006", "integrations"), ("008", "herramientas")),
-    (("010", "FAQs"), ("009", "preguntas frecuentes")),
+# Etiquetas de sección (número, nombre) en el orden nuevo. La numeración (001, 002…) se calcula
+# con las secciones visibles, para que no salte ningún número si alguna está oculta.
+_ETIQUETAS = [
+    (("001", "who we are"), "quiénes somos", "About Section"),
+    (("002", "value"), "por qué banteq", "Value Section"),
+    (("003", "Capabilities"), "automatización e ia", "Service Section"),
+    (("008", "pricing"), "copilot y fundae", "Pricing Section"),
+    (("007", "testimonial"), "desarrollo web", "Testimonial Section"),
+    (("005", "Case studies"), "proyectos", "Case Studies Section"),
+    (("004", "process"), "cómo trabajamos", "Process Section"),
+    (("006", "integrations"), "herramientas", "Integrations Section"),
+    (("010", "FAQs"), "preguntas frecuentes", "FAQs Section"),
 ]
+
+
+def _numerar(etiquetas):
+    out, n = [], 0
+    for original, nombre, seccion in etiquetas:
+        n += seccion not in SECCIONES_OCULTAS
+        out.append((original, (f"{n:03d}", nombre)))
+    return out
+
+
+ETIQUETAS = _numerar(_ETIQUETAS)
 
 # Titulares animados palabra a palabra (el HTML los parte en <span> por palabra).
 TITULARES = [
@@ -100,7 +131,7 @@ HOME = [
     ("saved hours+", "automatizados"),
     ("`80%`", "`IA`"),
     (">80%<", ">IA<"),
-    ("productivity boost", "y Copilot"),
+    ("productivity boost", "y Copilot" if MOSTRAR_COPILOT_FUNDAE else "aplicada"),
     ("`5x`", "`Webs`"),
     (">5x<", ">Webs<"),
     ("FASTER RESPONSE", "a medida"),
@@ -492,7 +523,12 @@ TARJETA_PROYECTO = [
 
 PAGINA_CONTACTO = [
     ("Let’s Automate Your Growth", "Hablemos de tu empresa"),
-    ("Looking to streamline operations, reduce costs, or scale your business with AI?", "¿Quieres automatizar procesos, implantar IA o Microsoft Copilot, o renovar tu web?"),
+    (
+        "Looking to streamline operations, reduce costs, or scale your business with AI?",
+        "¿Quieres automatizar procesos, implantar IA o Microsoft Copilot, o renovar tu web?"
+        if MOSTRAR_COPILOT_FUNDAE
+        else "¿Quieres automatizar procesos, implantar IA o renovar tu web?",
+    ),
     ("We’re here to turn your vision into reality.", "Cuéntanos tu caso y te proponemos un primer paso razonable."),
     ("`Address`", "`Zona`"),
     ("Suite 502, Orion Tower", "Santa Perpètua de Mogoda, Barcelona"),
@@ -525,8 +561,10 @@ AVISO_LEGAL = [
     "Banteq ayuda a las empresas a mejorar mediante la tecnología: analiza cómo trabajan y aplica automatización, inteligencia artificial y desarrollo web.",
     "Nuestros servicios pueden incluir:",
     "Automatización de procesos",
-    "Implantación de herramientas de IA y Microsoft Copilot",
-    "Formación en inteligencia artificial, bonificable mediante FUNDAE",
+    "Implantación de herramientas de IA y Microsoft Copilot" if MOSTRAR_COPILOT_FUNDAE
+    else "Implantación de herramientas de inteligencia artificial",
+    "Formación en inteligencia artificial, bonificable mediante FUNDAE" if MOSTRAR_COPILOT_FUNDAE
+    else "Formación del equipo en las herramientas implantadas",
     "Diseño, desarrollo y rediseño de páginas web",
     "Integraciones y soluciones digitales a medida",
     "El alcance de cada servicio se concreta en la propuesta o el contrato con cada cliente.",

@@ -391,7 +391,10 @@ void main() {
         gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, video);
         newFrame = false;
       }
-      const radius = Math.min(170, Math.max(100, box.w * 0.09)) * scale;
+      // Radio del hueco bajo el cursor. Todo lo demás (hundimiento, borde apartado, refracción y
+      // ondas) va en unidades de este radio, así que cambiarlo escala el efecto sin alterar su
+      // intensidad. Antes min(170, max(100, 9 % del ancho)): ahora la mitad, más preciso.
+      const radius = Math.min(85, Math.max(50, box.w * 0.045)) * scale;
       let x0 = canvas.width, y0 = canvas.height, x1 = 0, y1 = 0;
       const grow = (cx, cy, r) => {
         x0 = Math.min(x0, cx - r); y0 = Math.min(y0, cy - r);
