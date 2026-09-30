@@ -605,3 +605,14 @@ PRIVACIDAD = [
     "5. Contacto y derechos",
     "Puedes ejercer tus derechos de acceso, rectificación, supresión y oposición escribiéndonos. " + LEGAL_PENDIENTE,
 ]
+
+
+# «Quiénes somos»: cuadrado central por encima del carrusel de palabras (PROCESOS AUTOMATIZADOS…).
+# Hoy muestra el logotipo de Banteq. Para poner un vídeo: copia el .mp4 (y, si quieres, un póster
+# .jpg) a assets-banteq/web/ y escribe aquí sus nombres; el logo queda debajo como respaldo mientras
+# el vídeo carga. Después, python3 tools/build.py.
+CUADRO_CENTRAL = {
+    "logo": "cuadro-logo.png",  # assets-banteq/generado (python3 tools/assets.py cuadro)
+    "video": None,              # p. ej. "cuadro.mp4" (en assets-banteq/web)
+    "poster": None,             # p. ej. "cuadro.jpg" (en assets-banteq/web)
+}

@@ -10,6 +10,7 @@ Salida: assets-banteq/generado/ (lo consume tools/build.py).
 """
 import json
 import subprocess
+import sys
 from pathlib import Path
 
 from PIL import Image, ImageChops, ImageEnhance, ImageFilter, ImageOps
@@ -441,6 +442,23 @@ def feature_cards():
         )
 
 
+def cuadro():
+    """Logotipo blanco (símbolo + «banteq») para el cuadrado central de «Quiénes somos».
+    Fondo transparente y sin degradado; se recorta al contenido después de renderizarlo."""
+    html_asset(
+        "cuadro-logo", 1000, 300,
+        f'<div class="l">{mark_svg("#fff", "220px")}<span>banteq</span></div>',
+        """.l{display:flex;align-items:center;justify-content:center;gap:30px;height:300px}
+           .l span{font-family:Geist;font-weight:600;font-size:220px;letter-spacing:-.055em;color:#fff;line-height:1;margin-top:-16px}""",
+    )
+
+
+def trim(name, pad=8):
+    im = Image.open(GEN / name)
+    box = im.getbbox()
+    im.crop((max(0, box[0] - pad), max(0, box[1] - pad), min(im.width, box[2] + pad), min(im.height, box[3] + pad))).save(GEN / name, optimize=True)
+
+
 def transparent(name, w, h):
     Image.new("RGBA", (w, h), (0, 0, 0, 0)).save(GEN / name)
 
@@ -457,8 +475,10 @@ def main():
     flow_illustration()
     integration_icons()
     feature_cards()
+    cuadro()
     (GEN / "_jobs.json").write_text(json.dumps(JOBS, indent=1))
     subprocess.run(["node", str(TOOLS / "capture.mjs"), str(GEN / "_jobs.json")], check=True)
+    trim("cuadro-logo.png")
     client_logos()
     project_images()
     about_image()
@@ -466,5 +486,17 @@ def main():
     print("OK →", GEN)
 
 
+def solo_cuadro():
+    """python3 tools/assets.py cuadro — solo el logotipo del cuadrado central."""
+    GEN.mkdir(parents=True, exist_ok=True)
+    cuadro()
+    jobs = GEN / "_jobs-cuadro.json"  # aparte: _jobs.json es la lista completa de main()
+    jobs.write_text(json.dumps(JOBS, indent=1))
+    subprocess.run(["node", str(TOOLS / "capture.mjs"), str(jobs)], check=True)
+    jobs.unlink()
+    trim("cuadro-logo.png")
+    print("OK →", GEN / "cuadro-logo.png")
+
+
 if __name__ == "__main__":
-    main()
+    solo_cuadro() if sys.argv[1:] == ["cuadro"] else main()

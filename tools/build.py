@@ -715,6 +715,18 @@ HERO_SOURCE_SCRIPT = (
 )
 
 
+def apply_cuadro():
+    """Cuadrado central de «Quiénes somos» (tools/contenido.py → CUADRO_CENTRAL). El aspecto (tamaño,
+    fondo, logo) está en banteq.css; si hay vídeo, banteq.js lo coloca encima del logo."""
+    cfg = C.CUADRO_CENTRAL
+    shutil.copy2(GEN / cfg["logo"], OUT / "banteq" / "cuadro-logo.png")
+    if cfg.get("video"):
+        data = {"video": f"/banteq/{cfg['video']}", "poster": f"/banteq/{cfg['poster']}" if cfg.get("poster") else None}
+        for name in (cfg["video"], cfg.get("poster")):
+            assert not name or (OUT / "banteq" / name).exists(), f"falta assets-banteq/web/{name}"
+        S[INDEX] = S[INDEX].replace("</head>", f"<script>window.BANTEQ_CUADRO={json.dumps(data)}</script></head>", 1)
+
+
 PIE_VIDEO = "framerusercontent.com/assets/S4N88TVzCfxigg9YZYcSIYNPk4.mp4"
 
 
@@ -732,21 +744,14 @@ def apply_performance():
     # Smooth scroll (Lenis): observaba todo el árbol DOM y, en cada nodo que Framer añade al hacer
     # scroll, recorría la página con querySelector buscando un atributo que la web no usa.
     replace(SHARED_MOD, "t.observe(document.documentElement,{childList:!0,subtree:!0,attributes:!0,attributeFilter:[`data-frameruni-stop-scroll`]}),", "")
-    # Lenis pedía un requestAnimationFrame perpetuo aunque nadie hiciera scroll: cada fotograma el
-    # hilo principal tenía que actualizar las animaciones en curso (los tickers de «Conectamos tus
-    # herramientas») y enviar un fotograma nuevo. Ahora duerme cuando no hay scroll y despierta con
-    # cualquier entrada (rueda, táctil, teclado, clic o scroll); al despertar se reinicia su reloj
-    # para que el primer paso no sea de varios segundos.
-    replace(
-        SHARED_MOD,
-        "let e=t=>{if(n.current)try{n.current.raf(t),requestAnimationFrame(e)}catch(e){console.error(`Error in animation frame:`,e)}},"
-        "r=requestAnimationFrame(e);return()=>{if(cancelAnimationFrame(r),n.current)",
-        "let r=0,q=0,e=t=>{r=0;if(n.current)try{n.current.raf(t),(n.current.isScrolling||n.current.animate?.isRunning||"
-        "performance.now()-q<1e3)&&(r=requestAnimationFrame(e))}catch(e){console.error(`Error in animation frame:`,e)}},"
-        "w=()=>{q=performance.now(),!r&&n.current&&(n.current.time=void 0,r=requestAnimationFrame(e))},"
-        "W=[`wheel`,`touchstart`,`touchmove`,`keydown`,`pointerdown`,`scroll`];W.forEach(k=>window.addEventListener(k,w,{passive:!0})),"
-        "r=requestAnimationFrame(e);return()=>{if(cancelAnimationFrame(r),W.forEach(k=>window.removeEventListener(k,w)),n.current)",
-    )
+    # Scroll nativo en lugar del suavizado de Lenis. Lenis movía la página desde JavaScript en cada
+    # fotograma: cualquier trabajo del hilo principal (animaciones ligadas al scroll, entrada de
+    # secciones) se convertía en un tirón del propio scroll. El scroll nativo lo hace el compositor
+    # del navegador, en otro hilo, y sigue fluido aunque el hilo principal esté ocupado. Los enlaces
+    # a secciones siguen desplazándose con suavidad (scrollIntoView de Framer).
+    replace(SHARED_MOD, "if(typeof j!=`function`){console.error(`Lenis is not available`);return}", "return;")
+    # Sin Lenis sobra también su barrido inicial: getComputedStyle de los ~2.400 elementos de la página.
+    replace(SHARED_MOD, "let e=document.getElementsByTagName(`*`);", "let e=[];")
     # Restauración del scroll de Framer: guardaba la posición con history.replaceState en cada
     # «scrollend», que con Lenis llega en cada fotograma. Ahora se guarda cuando el scroll se detiene.
     replace(FRAMER_MOD, "if(!(`onscrollend`in M))", "if(!0)")
@@ -756,6 +761,19 @@ def apply_performance():
     # refresco para actualizar sus animaciones (tirones). Ahora solo mira al mover el puntero.
     replace(FRAMER_MOD, "je.read(u,!0),e=n.clientX", "je.read(u),e=n.clientX")
     replace(FRAMER_MOD, "document.addEventListener(`pointerup`,f),je.read(u,!0)", "document.addEventListener(`pointerup`,f),je.read(u)")
+    # Ticker de Framer (tiras de «Conectamos tus herramientas», carrusel de palabras y logos del
+    # hero). Al entrar o salir de pantalla cambiaba un estado de React que volvía a renderizar toda
+    # la tira y ponía o quitaba will-change en cada copia de cada elemento: el navegador creaba y
+    # destruía decenas de capas de golpe (medido en WebKit: fotogramas de 40–75 ms al entrar).
+    # Ahora cada tira es una sola capa estable que se mueve con una animación de compositor; la pausa
+    # fuera de pantalla la hace banteq.js sin tocar React.
+    replace(HOME_MOD, "let ye=oe?!0:C(B);", "let ye=!0;")
+    replace(HOME_MOD, "willChange:ye?`transform`:void 0", "willChange:void 0")
+    # Una sola copia extra (lo justo para el bucle) y el recorrido de un periodo: capas un tercio
+    # más pequeñas y menos nodos, con la misma velocidad.
+    replace(HOME_MOD, "!oe&&le&&pe.parent&&(ge=Math.round(pe.parent/pe.children*2)+1,ge=Math.min(ge,pr),U=1)",
+            "!oe&&le&&pe.parent&&(ge=Math.max(1,Math.ceil(pe.parent/pe.children)),ge=Math.min(ge,pr),U=1)")
+    replace(HOME_MOD, "let W=pe.children+pe.children*Math.round(pe.parent/pe.children);", "let W=pe.children;")
     # Vídeo del pie: 4K en H.264 4:2:2 de 10 bits, que ningún Mac ni iPhone decodifica por hardware.
     # Se sirve en 1080p 4:2:0 de 8 bits (tools/videos.py), con el mismo nombre.
     shutil.copy2(GEN / "pie-video.mp4", OUT / PIE_VIDEO)
@@ -1070,8 +1088,9 @@ def convert_heavy_images():
         if webp.stat().st_size > png.stat().st_size * 0.8:
             webp.unlink()
             continue
+        # La PNG original se queda publicada: una página o caché anterior a la conversión (Safari
+        # guarda mucho) aún la pediría, y sin ella saldrían imágenes rotas.
         renamed[png.name] = webp.name
-        png.unlink()
     # Los archivos ya en disco y los generados en este build (páginas de make_shells) aún en memoria.
     on_disk = {p.relative_to(OUT).as_posix() for p in OUT.rglob("*") if p.suffix in (".html", ".mjs", ".js") and p.is_file()}
     rels = sorted(on_disk | {rel for rel in S.files if rel.endswith((".html", ".mjs", ".js"))})
@@ -1173,6 +1192,7 @@ def main():
     apply_hero_marquee()
     apply_hero_b()
     apply_performance()
+    apply_cuadro()
     build_cms()
     apply_project_pages()
     for rel in html_pages():

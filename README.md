@@ -97,18 +97,35 @@ Auditado con trazas de Chrome (GPU real) antes y después; los arreglos están e
 | Vídeo del pie en 4K H.264 4:2:2 de 10 bits: sin decodificación por hardware en Mac/iPhone | 1080p 4:2:0 de 8 bits (`tools/videos.py`) |
 | Framer guardaba la posición de scroll con `history.replaceState` en cada `scrollend` (con Lenis, cada fotograma) | Se guarda al terminar el scroll |
 | Lenis observaba todo el DOM y ejecutaba `querySelector` sobre la página en cada nodo añadido | Solo observa lo necesario |
-| Lenis pedía un `requestAnimationFrame` perpetuo aunque no hubiera scroll | Duerme sin scroll y despierta con cualquier entrada (mismo suavizado) |
+| Lenis (smooth scroll) movía la página desde JavaScript en cada fotograma: cualquier trabajo del hilo principal se notaba como tirón del scroll, sobre todo en Safari | Scroll nativo (lo hace el compositor del navegador, en otro hilo). Los enlaces a secciones siguen desplazándose con suavidad |
+| Ticker de Framer (tiras de herramientas, carrusel de palabras, logos del hero): al entrar o salir de pantalla re-renderizaba React y ponía/quitaba `will-change` en cada copia de cada elemento (decenas de capas creadas de golpe: fotogramas de 40–75 ms en Safari al entrar) | Una capa estable por tira, animación de compositor, una sola copia extra (tiras un 33–50 % más estrechas); la pausa fuera de pantalla la hace `banteq.js` sin tocar React |
+| Fichas de «Conectamos tus herramientas»: dos sombras interiores con desenfoque que Safari pinta en el hilo principal | Mismo aspecto con contorno y degradado sin desenfoque |
 | El gestor de cursores de Framer leía en cada fotograma aunque la web no tiene cursores propios: con los tickers de «Conectamos tus herramientas» en pantalla, el hilo principal producía un fotograma por refresco | Solo mira al mover el puntero |
 | Reveal Text importaba Urbanist de Google Fonts sin usarla | Eliminado (sin peticiones a terceros) |
 | `filter: blur(0px)` residual en 23 elementos del hero tras su animación | `filter: none` al terminar |
 | B líquida: shader a pantalla completa 30 veces/s en reposo | Vídeo nativo en reposo; shader solo en la zona deformada |
 | Móvil: podía descargar también el vídeo de escritorio | Se elige el vídeo antes de que arranque Framer |
-| PNG pesadas (capturas, tarjetas, retratos) | WebP (la imagen para redes sigue en PNG) |
+| PNG pesadas (capturas, tarjetas, retratos) | WebP (la imagen para redes sigue en PNG). Las PNG originales se siguen publicando: una página o caché anterior las pediría |
 
-Medido en Chrome con GPU (Apple M3, pantalla 1440 × 900 a DPR 2), hilo principal ocupado en ms por
-segundo, antes → después: hero en reposo 190 → 4 · herramientas 188 → 3 · FAQ 207 → 1 · pie 85 → 2 ·
-scroll 270 → 221 (scripting −54 %). CPU del proceso de la página en el pie: 54 % → 3 % de un núcleo.
-Imágenes de la home: 482 → 210 KB. Sin recálculos de estilo en reposo (antes, 60 por segundo).
+Medido en Chrome con GPU (Apple M3, 1440 × 900 a DPR 2) y en WebKit, el motor de Safari
+(scripts en la carpeta temporal de la sesión; se pueden rehacer). Durante un scroll de toda la página
+a 1500 px/s, hilo principal original → ahora: 270 → 190 ms/s (JavaScript 142 → 67, estilo 51 → 16);
+en móvil con la CPU a ¼: 731 → 426 ms/s. En WebKit, el mismo scroll pasa de 22 FPS a 60 FPS, y el
+tirón al entrar en «Conectamos tus herramientas» baja de 54–59 ms a 25 ms. En reposo, el hilo
+principal está prácticamente libre (hero 190 → 4 ms/s). Imágenes de la home: 482 → 210 KB.
+
+## Cuadrado central de «Quiénes somos»
+
+Encima del carrusel de palabras (PROCESOS AUTOMATIZADOS · IA Y COPILOT · WEBS A MEDIDA) hay un
+cuadrado opaco con el logotipo de Banteq; el carrusel pasa por detrás. Su contenido se define en
+`tools/contenido.py` → `CUADRO_CENTRAL`:
+
+- **Logo** (ahora): `python3 tools/assets.py cuadro` genera `cuadro-logo.png`.
+- **Vídeo** (más adelante): copia el `.mp4` (y un póster `.jpg` opcional) a `assets-banteq/web/`,
+  escribe sus nombres en `"video"` y `"poster"` y ejecuta `npm run build`. El vídeo se coloca encima
+  del logo, a pantalla del cuadrado, y solo se reproduce mientras se ve.
+
+El aspecto (tamaño, esquinas, fondo, sombra) está en `assets-banteq/web/banteq.css`.
 
 ## Estructura de la home
 

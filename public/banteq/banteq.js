@@ -35,6 +35,80 @@
     });
   };
 
+  // Tiras en bucle (tiras de herramientas, carrusel de palabras, logos del hero). Cada tira es una
+  // animación de compositor sobre su <ul>; aquí solo se pausa fuera de pantalla (con margen para que
+  // ya esté en marcha al entrar), con la pestaña oculta y con «reducir movimiento». Sin React.
+  const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)");
+  const tickers = new Map(); // <ul> → visible
+  const isLoop = (a) => a.effect && a.effect.getTiming().iterations === Infinity && a.effect.target && a.effect.target.tagName === "UL";
+  const applyTicker = (ul) => {
+    const run = tickers.get(ul) && !document.hidden && !reduceMotion.matches;
+    for (const a of ul.getAnimations()) {
+      if (!isLoop(a)) continue;
+      if (run && a.playState === "paused") a.play();
+      else if (!run && a.playState === "running") a.pause();
+    }
+  };
+  const tickerIO = new IntersectionObserver(
+    (entries) => {
+      for (const entry of entries) {
+        const ul = entry.target.querySelector(":scope > ul");
+        if (!ul || !tickers.has(ul)) continue;
+        tickers.set(ul, entry.isIntersecting);
+        applyTicker(ul);
+      }
+    },
+    { rootMargin: "200px 0px" },
+  );
+  const scanTickers = () => {
+    if (document.hidden) return;
+    for (const [ul] of tickers) {
+      if (!ul.isConnected) {
+        tickerIO.unobserve(ul.parentElement);
+        tickers.delete(ul);
+      }
+    }
+    for (const a of document.getAnimations()) {
+      if (!isLoop(a)) continue;
+      const ul = a.effect.target;
+      if (!tickers.has(ul)) {
+        tickers.set(ul, true);
+        tickerIO.observe(ul.parentElement);
+      }
+    }
+    // Framer vuelve a crear la animación al cambiar de tamaño: se reaplica el estado conocido.
+    for (const [ul] of tickers) applyTicker(ul);
+    mountCuadroVideo();
+  };
+
+  // «Quiénes somos»: si el cuadrado central tiene vídeo (tools/contenido.py → CUADRO_CENTRAL), se
+  // coloca encima del logo y solo se reproduce mientras se ve.
+  const cuadro = window.BANTEQ_CUADRO;
+  const mountCuadroVideo = () => {
+    if (!cuadro || !cuadro.video) return;
+    const inner = document.querySelector('#banteq [data-framer-name="Video Inner"]');
+    if (!inner || inner.querySelector(".bq-cuadro-video")) return;
+    const video = document.createElement("video");
+    video.className = "bq-cuadro-video";
+    video.muted = true;
+    video.loop = true;
+    video.playsInline = true;
+    video.preload = "none";
+    video.setAttribute("aria-hidden", "true");
+    if (cuadro.poster) video.poster = cuadro.poster;
+    video.src = cuadro.video;
+    inner.appendChild(video);
+    new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting && !document.hidden && !reduceMotion.matches) video.play().catch(() => {});
+      else video.pause();
+    }).observe(inner);
+  };
+  setInterval(scanTickers, 1500);
+  window.addEventListener("load", scanTickers);
+  // Framer reanuda sus tiras al volver a la pestaña; después se vuelve a pausar lo que no se ve.
+  document.addEventListener("visibilitychange", () => setTimeout(scanTickers, 0));
+  reduceMotion.addEventListener("change", scanTickers);
+
   // Enlaces a otras webs (simulador de FUNDAE…) en pestaña nueva; los propios, en la misma.
   document.addEventListener(
     "click",

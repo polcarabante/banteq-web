@@ -59,3 +59,58 @@ html body {
 [style*="filter: blur(0px)"] {
   filter: none !important;
 }
+
+/* «Quiénes somos»: cuadrado central por encima del carrusel de palabras, con el logotipo.
+   Mismo alto que la tarjeta de la plantilla (400 / 333 / 182 px), ahora cuadrado; el carrusel
+   (z-index 1) pasa por detrás del cuadrado (z-index 2). Superficie opaca: las palabras no se
+   cruzan con el logo. Sin filtros: solo degradado y sombras, que se pintan una vez.
+   El contenido se define en tools/contenido.py → CUADRO_CENTRAL (logo o vídeo). */
+#banteq .framer-7g3w68-container {
+  width: 400px !important; /* Framer da el ancho y deduce el alto por proporción */
+  height: auto !important;
+  aspect-ratio: 1 / 1 !important;
+  z-index: 2 !important;
+}
+#banteq .framer-7g3w68-container > a {
+  border-radius: 72px !important;
+  box-shadow: 0 40px 80px -36px rgba(0, 0, 0, 0.55), 0 12px 24px -12px rgba(0, 0, 0, 0.25);
+}
+#banteq [data-framer-name="Video Inner"] {
+  border-radius: inherit !important;
+  background:
+    url("/banteq/cuadro-logo.png") center / 58% auto no-repeat,
+    radial-gradient(120% 120% at 28% 16%, #2c2c31 0%, #121215 52%, #070708 100%) !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.14), inset 0 0 0 1px rgba(255, 255, 255, 0.06) !important;
+}
+/* La imagen que tenía la tarjeta deja de mostrarse (y de descargarse). */
+#banteq .framer-7g3w68-container > a > :not([data-framer-name="Video Inner"]) {
+  display: none !important;
+}
+/* Si hay vídeo (banteq.js), va encima del logo. */
+#banteq .bq-cuadro-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: inherit;
+}
+@media (min-width: 810px) and (max-width: 1199.98px) {
+  #banteq .framer-7g3w68-container { width: 333px !important; }
+  #banteq .framer-7g3w68-container > a { border-radius: 60px !important; }
+}
+@media (max-width: 809.98px) {
+  #banteq .framer-7g3w68-container { width: 182px !important; }
+  #banteq .framer-7g3w68-container > a { border-radius: 36px !important; }
+}
+
+/* «Conectamos tus herramientas»: las 60 fichas llevaban dos sombras interiores con desenfoque
+   (aro blanco y borde inferior oscuro). Safari las pinta en el hilo principal al aparecer las
+   tiras y daba un tirón al entrar en la sección. Mismo aspecto con recursos sin desenfoque:
+   un contorno blanco hacia dentro y un degradado de 4 px abajo (diferencia media 0,1/255). */
+#herramientas .framer-mBzfN {
+  box-shadow: none !important;
+  outline: 2px solid rgba(255, 255, 255, 0.95);
+  outline-offset: -2px;
+  background-image: linear-gradient(to top, rgba(0, 0, 0, 0.075), rgba(0, 0, 0, 0) 4px) !important;
+}
