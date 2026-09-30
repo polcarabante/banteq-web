@@ -1,0 +1,299 @@
+[
+ {
+  "url": "file:///Users/polcarabante/Desktop/BANTEQ/banteq-web/assets-banteq/generado/_html/footer-logo.html",
+  "width": 1440,
+  "height": 324,
+  "scale": 1,
+  "out": "/Users/polcarabante/Desktop/BANTEQ/banteq-web/assets-banteq/generado/footer-logo.png",
+  "wait": 400,
+  "transparent": true
+ },
+ {
+  "url": "file:///Users/polcarabante/Desktop/BANTEQ/banteq-web/assets-banteq/generado/_html/circle-text.html",
+  "width": 320,
+  "height": 320,
+  "scale": 1,
+  "out": "/Users/polcarabante/Desktop/BANTEQ/banteq-web/assets-banteq/generado/circle-text.png",
+  "wait": 400,
+  "transparent": true
+ },
+ {
+  "url": "file:///Users/polcarabante/Desktop/BANTEQ/banteq-web/assets-banteq/generado/_html/mark-white-200.html",
+  "width": 200,
+  "height": 200,
+  "scale": 1,
+  "out": "/Users/polcarabante/Desktop/BANTEQ/banteq-web/assets-banteq/generado/mark-white-200.png",
+  "wait": 400,
+  "transparent": true
+ },
+ {
+  "url": "file:///Users/polcarabante/Desktop/BANTEQ/banteq-web/assets-banteq/generado/_html/favicon-256.html",
+  "width": 256,
+  "height": 256,
+  "scale": 1,
+  "out": "/Users/polcarabante/Desktop/BANTEQ/banteq-web/assets-banteq/generado/favicon-256.png",
+  "wait": 400,
+  "transparent": true
+ },
+ {
+  "url": "file:///Users/polcarabante/Desktop/BANTEQ/banteq-web/assets-banteq/generado/_html/apple-icon-180.html",
+  "width": 180,
+  "height": 180,
+  "scale": 1,
+  "out": "/Users/polcarabante/Desktop/BANTEQ/banteq-web/assets-banteq/generado/apple-icon-180.png",
+  "wait": 400,
+  "transparent": false
+ },
+ {
+  "url": "file:///Users/polcarabante/Desktop/BANTEQ/banteq-web/assets-banteq/generado/_html/cta-disc.html",
+  "width": 320,
+  "height": 320,
+  "scale": 1,
+  "out": "/Users/polcarabante/Desktop/BANTEQ/banteq-web/assets-banteq/generado/cta-disc.png",
+  "wait": 400,
+  "transparent": true
+ },
+ {
+  "url": "file:///Users/polcarabante/Desktop/BANTEQ/banteq-web/assets-banteq/generado/_html/og.html",
+  "width": 1200,
+  "height": 630,
+  "scale": 1,
+  "out": "/Users/polcarabante/Desktop/BANTEQ/banteq-web/assets-banteq/generado/og.png",
+  "wait": 400,
+  "transparent": true
+ },
+ {
+  "url": "file:///Users/polcarabante/Desktop/BANTEQ/banteq-web/assets-banteq/generado/_html/tile-web.html",
+  "width": 400,
+  "height": 400,
+  "scale": 1,
+  "out": "/Users/polcarabante/Desktop/BANTEQ/banteq-web/assets-banteq/generado/tile-web.png",
+  "wait": 400,
+  "transparent": true
+ },
+ {
+  "url": "file:///Users/polcarabante/Desktop/BANTEQ/banteq-web/assets-banteq/generado/_html/tile-rediseno.html",
+  "width": 400,
+  "height": 400,
+  "scale": 1,
+  "out": "/Users/polcarabante/Desktop/BANTEQ/banteq-web/assets-banteq/generado/tile-rediseno.png",
+  "wait": 400,
+  "transparent": true
+ },
+ {
+  "url": "file:///Users/polcarabante/Desktop/BANTEQ/banteq-web/assets-banteq/generado/_html/tile-3d.html",
+  "width": 400,
+  "height": 400,
+  "scale": 1,
+  "out": "/Users/polcarabante/Desktop/BANTEQ/banteq-web/assets-banteq/generado/tile-3d.png",
+  "wait": 400,
+  "transparent": true
+ },
+ {
+  "url": "file:///Users/polcarabante/Desktop/BANTEQ/banteq-web/assets-banteq/generado/_html/tile-formulario.html",
+  "width": 400,
+  "height": 400,
+  "scale": 1,
+  "out": "/Users/polcarabante/Desktop/BANTEQ/banteq-web/assets-banteq/generado/tile-formulario.png",
+  "wait": 400,
+  "transparent": true
+ },
+ {
+  "url": "file:///Users/polcarabante/Desktop/BANTEQ/banteq-web/assets-banteq/generado/_html/tile-integracion.html",
+  "width": 400,
+  "height": 400,
+  "scale": 1,
+  "out": "/Users/polcarabante/Desktop/BANTEQ/banteq-web/assets-banteq/generado/tile-integracion.png",
+  "wait": 400,
+  "transparent": true
+ },
+ {
+  "url": "file:///Users/polcarabante/Desktop/BANTEQ/banteq-web/assets-banteq/generado/_html/tile-responsive.html",
+  "width": 400,
+  "height": 400,
+  "scale": 1,
+  "out": "/Users/polcarabante/Desktop/BANTEQ/banteq-web/assets-banteq/generado/tile-responsive.png",
+  "wait": 400,
+  "transparent": true
+ },
+ {
+  "url": "file:///Users/polcarabante/Desktop/BANTEQ/banteq-web/assets-banteq/generado/_html/tile-medida.html",
+  "width": 400,
+  "height": 400,
+  "scale": 1,
+  "out": "/Users/polcarabante/Desktop/BANTEQ/banteq-web/assets-banteq/generado/tile-medida.png",
+  "wait": 400,
+  "transparent": true
+ },
+ {
+  "url": "file:///Users/polcarabante/Desktop/BANTEQ/banteq-web/assets-banteq/generado/_html/tile-flujo.html",
+  "width": 400,
+  "height": 400,
+  "scale": 1,
+  "out": "/Users/polcarabante/Desktop/BANTEQ/banteq-web/assets-banteq/generado/tile-flujo.png",
+  "wait": 400,
+  "transparent": true
+ },
+ {
+  "url": "file:///Users/polcarabante/Desktop/BANTEQ/banteq-web/assets-banteq/generado/_html/chat-648.html",
+  "width": 648,
+  "height": 288,
+  "scale": 1,
+  "out": "/Users/polcarabante/Desktop/BANTEQ/banteq-web/assets-banteq/generado/chat-648.png",
+  "wait": 400,
+  "transparent": true
+ },
+ {
+  "url": "file:///Users/polcarabante/Desktop/BANTEQ/banteq-web/assets-banteq/generado/_html/chat-600.html",
+  "width": 600,
+  "height": 257,
+  "scale": 1,
+  "out": "/Users/polcarabante/Desktop/BANTEQ/banteq-web/assets-banteq/generado/chat-600.png",
+  "wait": 400,
+  "transparent": true
+ },
+ {
+  "url": "file:///Users/polcarabante/Desktop/BANTEQ/banteq-web/assets-banteq/generado/_html/lead-card.html",
+  "width": 580,
+  "height": 367,
+  "scale": 1,
+  "out": "/Users/polcarabante/Desktop/BANTEQ/banteq-web/assets-banteq/generado/lead-card.png",
+  "wait": 400,
+  "transparent": true
+ },
+ {
+  "url": "file:///Users/polcarabante/Desktop/BANTEQ/banteq-web/assets-banteq/generado/_html/chart.html",
+  "width": 600,
+  "height": 257,
+  "scale": 1,
+  "out": "/Users/polcarabante/Desktop/BANTEQ/banteq-web/assets-banteq/generado/chart.png",
+  "wait": 400,
+  "transparent": true
+ },
+ {
+  "url": "file:///Users/polcarabante/Desktop/BANTEQ/banteq-web/assets-banteq/generado/_html/diagram.html",
+  "width": 750,
+  "height": 780,
+  "scale": 1,
+  "out": "/Users/polcarabante/Desktop/BANTEQ/banteq-web/assets-banteq/generado/diagram.png",
+  "wait": 400,
+  "transparent": true
+ },
+ {
+  "url": "file:///Users/polcarabante/Desktop/BANTEQ/banteq-web/assets-banteq/generado/_html/cms-rentup-2.html",
+  "width": 616,
+  "height": 480,
+  "scale": 1,
+  "out": "/Users/polcarabante/Desktop/BANTEQ/banteq-web/assets-banteq/generado/cms-rentup-2.png",
+  "wait": 400,
+  "transparent": true
+ },
+ {
+  "url": "file:///Users/polcarabante/Desktop/BANTEQ/banteq-web/assets-banteq/generado/_html/tool-n8n.html",
+  "width": 80,
+  "height": 80,
+  "scale": 1,
+  "out": "/Users/polcarabante/Desktop/BANTEQ/banteq-web/assets-banteq/generado/tool-n8n.png",
+  "wait": 400,
+  "transparent": true
+ },
+ {
+  "url": "file:///Users/polcarabante/Desktop/BANTEQ/banteq-web/assets-banteq/generado/_html/tool-make.html",
+  "width": 80,
+  "height": 80,
+  "scale": 1,
+  "out": "/Users/polcarabante/Desktop/BANTEQ/banteq-web/assets-banteq/generado/tool-make.png",
+  "wait": 400,
+  "transparent": true
+ },
+ {
+  "url": "file:///Users/polcarabante/Desktop/BANTEQ/banteq-web/assets-banteq/generado/_html/tool-openai.html",
+  "width": 80,
+  "height": 80,
+  "scale": 1,
+  "out": "/Users/polcarabante/Desktop/BANTEQ/banteq-web/assets-banteq/generado/tool-openai.png",
+  "wait": 400,
+  "transparent": true
+ },
+ {
+  "url": "file:///Users/polcarabante/Desktop/BANTEQ/banteq-web/assets-banteq/generado/_html/tool-whatsapp.html",
+  "width": 80,
+  "height": 80,
+  "scale": 1,
+  "out": "/Users/polcarabante/Desktop/BANTEQ/banteq-web/assets-banteq/generado/tool-whatsapp.png",
+  "wait": 400,
+  "transparent": true
+ },
+ {
+  "url": "file:///Users/polcarabante/Desktop/BANTEQ/banteq-web/assets-banteq/generado/_html/tool-googledrive.html",
+  "width": 80,
+  "height": 80,
+  "scale": 1,
+  "out": "/Users/polcarabante/Desktop/BANTEQ/banteq-web/assets-banteq/generado/tool-googledrive.png",
+  "wait": 400,
+  "transparent": true
+ },
+ {
+  "url": "file:///Users/polcarabante/Desktop/BANTEQ/banteq-web/assets-banteq/generado/_html/tool-notion.html",
+  "width": 80,
+  "height": 80,
+  "scale": 1,
+  "out": "/Users/polcarabante/Desktop/BANTEQ/banteq-web/assets-banteq/generado/tool-notion.png",
+  "wait": 400,
+  "transparent": true
+ },
+ {
+  "url": "file:///Users/polcarabante/Desktop/BANTEQ/banteq-web/assets-banteq/generado/_html/tool-airtable.html",
+  "width": 80,
+  "height": 80,
+  "scale": 1,
+  "out": "/Users/polcarabante/Desktop/BANTEQ/banteq-web/assets-banteq/generado/tool-airtable.png",
+  "wait": 400,
+  "transparent": true
+ },
+ {
+  "url": "file:///Users/polcarabante/Desktop/BANTEQ/banteq-web/assets-banteq/generado/_html/tool-odoo.html",
+  "width": 80,
+  "height": 80,
+  "scale": 1,
+  "out": "/Users/polcarabante/Desktop/BANTEQ/banteq-web/assets-banteq/generado/tool-odoo.png",
+  "wait": 400,
+  "transparent": true
+ },
+ {
+  "url": "file:///Users/polcarabante/Desktop/BANTEQ/banteq-web/assets-banteq/generado/_html/tool-microsoft.html",
+  "width": 80,
+  "height": 80,
+  "scale": 1,
+  "out": "/Users/polcarabante/Desktop/BANTEQ/banteq-web/assets-banteq/generado/tool-microsoft.png",
+  "wait": 400,
+  "transparent": true
+ },
+ {
+  "url": "file:///Users/polcarabante/Desktop/BANTEQ/banteq-web/assets-banteq/generado/_html/tool-api.html",
+  "width": 80,
+  "height": 80,
+  "scale": 1,
+  "out": "/Users/polcarabante/Desktop/BANTEQ/banteq-web/assets-banteq/generado/tool-api.png",
+  "wait": 400,
+  "transparent": true
+ },
+ {
+  "url": "file:///Users/polcarabante/Desktop/BANTEQ/banteq-web/assets-banteq/generado/_html/feature-margon.html",
+  "width": 632,
+  "height": 735,
+  "scale": 1,
+  "out": "/Users/polcarabante/Desktop/BANTEQ/banteq-web/assets-banteq/generado/feature-margon.png",
+  "wait": 400,
+  "transparent": false
+ },
+ {
+  "url": "file:///Users/polcarabante/Desktop/BANTEQ/banteq-web/assets-banteq/generado/_html/feature-rentup.html",
+  "width": 632,
+  "height": 735,
+  "scale": 1,
+  "out": "/Users/polcarabante/Desktop/BANTEQ/banteq-web/assets-banteq/generado/feature-rentup.png",
+  "wait": 400,
+  "transparent": false
+ }
+]

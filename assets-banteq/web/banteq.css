@@ -1,0 +1,42 @@
+/* Identidad de Banteq sobre la plantilla de Framer.
+   La base monocroma de la plantilla se mantiene; sólo cambia la iridiscencia
+   (titular del hero, tarjetas destacadas y acentos) a una gama fría y tecnológica. */
+html body {
+  --token-bc447ec3-2d17-4c1c-b3c0-042837df2ca6: #b4c3ff !important; /* antes lavanda */
+  --token-fb2e9e17-ebe2-47b2-8650-47f5fbb8a8fe: #c9fbf1 !important; /* antes amarillo pálido */
+  --token-85295dc4-e3a3-40a5-9b33-2dce7c593d30: #d6ccff !important; /* antes rosa */
+  --token-dd533101-08c3-426a-bcef-6e0a27491b8e: #a8e6ff !important; /* antes azul claro */
+  --token-6297347c-fbcd-4309-ba9a-142e7aead2c7: #5f7dff !important; /* azul Banteq */
+}
+
+/* Sello "Made in Framer" del plan gratuito. */
+#__framer-badge-container {
+  display: none !important;
+}
+
+/* Copilot y FUNDAE: el selector mensual/anual de la tabla de precios no aplica. */
+[data-framer-name="Tab Menu"] {
+  display: none !important;
+}
+
+/* Pie: sin redes sociales hasta tener los perfiles de Banteq, y sin crédito de la plantilla. */
+[data-framer-name="Social Wrap"],
+[data-framer-name="Bottom Link Wrap"] {
+  display: none !important;
+}
+
+/* "Quiénes somos": la imagen no es un vídeo, así que no lleva botón de reproducción. */
+[data-framer-name="Play Button"],
+[data-framer-name="Play button"],
+#banteq [data-framer-name="Video Inner"] [data-framer-name="Icon"],
+#banteq [data-framer-name="Video Inner"] [data-framer-name="Variant 1"]:has([data-framer-name="Icon"]) {
+  display: none !important;
+}
+
+/* Desarrollo web: el botón de "play" de la plantilla pasa a ser una flecha hacia el proyecto. */
+#desarrollo-web a[href*="proyectos"] [data-framer-name="Icon"] svg {
+  display: none;
+}
+#desarrollo-web a[href*="proyectos"] [data-framer-name="Icon"] {
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M7 17 17 7M8 7h9v9'/%3E%3C/svg%3E") center / 70% no-repeat;
+}
