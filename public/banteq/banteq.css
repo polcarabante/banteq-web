@@ -41,13 +41,21 @@ html body {
   background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M7 17 17 7M8 7h9v9'/%3E%3C/svg%3E") center / 70% no-repeat;
 }
 
-/* Hero: en móvil el vídeo de la B es otro (la B entera). Hasta que banteq-liquid.js lo asigna,
-   no se enseña el póster de escritorio, para que la B no cambie de tamaño al cargar. */
+/* Hero: póster de la B como fondo del vídeo (mismo encuadre que object-fit: cover). Con media
+   query, cada tamaño descarga solo el suyo; en móvil el vídeo es otro, con la B entera. */
 [data-framer-name="Hero Section"] [data-framer-name="Background"] video {
-  transition: opacity 0.5s ease;
+  background: url("/banteq/hero-b-poster.jpg") center / cover no-repeat;
 }
 @media (max-width: 809.98px) {
-  html.bq-js [data-framer-name="Hero Section"] [data-framer-name="Background"] video:not([data-banteq-src]) {
-    opacity: 0 !important;
+  [data-framer-name="Hero Section"] [data-framer-name="Background"] video {
+    background-image: url("/banteq/hero-b-movil-poster.jpg");
   }
+}
+
+/* Rendimiento: las animaciones de entrada de Framer terminan en `filter: blur(0px)` y lo dejan
+   puesto; un filtro, aunque sea nulo, obliga a componer cada elemento en su propia superficie
+   (23 solo en el titular del hero, encima del vídeo). Durante la animación el valor es otro y
+   este selector no aplica, así que el efecto de entrada no cambia. */
+[style*="filter: blur(0px)"] {
+  filter: none !important;
 }

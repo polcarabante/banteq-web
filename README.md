@@ -67,13 +67,17 @@ El fondo del hero es una B de cristal líquido negro (referencia: `assets-banteq
   coincida con la referencia, reparte el movimiento de forma uniforme (el modelo frenaba al final),
   codifica escritorio (1920 × 1080, 0,9 MB) y móvil (720 × 1200 con la B entera, 0,5 MB), y crea
   pósteres y máscara.
-- **Reacción al cursor**: `assets-banteq/web/banteq-liquid.js`. Un shader WebGL usa el propio vídeo
-  como textura: alrededor del cursor (radio 100–170 px) el líquido se hunde y se aparta, y al irse
-  vuelve con un pequeño rebote y ondas. Solo actúa sobre la B.
-- **Rendimiento**: en reposo dibuja solo cuando hay fotograma nuevo (30/s) y con el cursor, a 60/s. Se
-  pausa con la pestaña oculta o el hero fuera de pantalla. Si el equipo no llega a ~40 FPS baja la
-  resolución y, si aun así no llega, deja el vídeo sin efecto. Sin WebGL o en equipos muy modestos,
-  solo vídeo. Con "reducir movimiento", la B queda quieta.
+- **Reacción al cursor**: `assets-banteq/web/banteq-liquid.js`. Un lienzo WebGL transparente, encima
+  del vídeo, usa el propio vídeo como textura y pinta solo la zona deformada: alrededor del cursor
+  (radio 100–170 px) el líquido se hunde y se aparta, y al irse vuelve con un pequeño rebote y ondas.
+  Solo actúa sobre la B.
+- **Rendimiento**: en reposo no hay WebGL ni bucle de animación: se ve el `<video>` nativo
+  (decodificado y compuesto por hardware). El lienzo solo dibuja mientras el cursor está cerca de la
+  B y se oculta en cuanto el líquido se asienta. `pointermove` solo guarda coordenadas (sin medir el
+  layout). Se pausa con la pestaña oculta o el hero fuera de pantalla. Si el equipo no llega a
+  ~50 FPS baja la resolución interna (hasta el 60 %) y la recupera cuando va holgado; **nunca**
+  desactiva la interacción por tiempos. Sin WebGL o en equipos muy modestos, solo vídeo. Con
+  "reducir movimiento", la B queda quieta.
 
 Para regenerar el vídeo a partir de uno nuevo de Higgsfield:
 
@@ -81,6 +85,30 @@ Para regenerar el vídeo a partir de uno nuevo de Higgsfield:
 python3 tools/hero_b.py video ruta/al/video.mp4
 npm run build
 ```
+
+## Rendimiento
+
+Auditado con trazas de Chrome (GPU real) antes y después; los arreglos están en `tools/build.py`
+(`apply_performance`, `convert_heavy_images`) y en `assets-banteq/web/`. No cambian nada visible.
+
+| Qué cargaba la página | Arreglo |
+|---|---|
+| Botón de play oculto de «Quiénes somos»: su Magnetic Hover tenía un `requestAnimationFrame` perpetuo que leía `getComputedStyle` y reescribía una hoja de estilos en cada fotograma (60 recálculos de estilo/s en toda la web) y un `mousemove` que forzaba layout | Componente inerte (sigue oculto) |
+| Vídeo del pie en 4K H.264 4:2:2 de 10 bits: sin decodificación por hardware en Mac/iPhone | 1080p 4:2:0 de 8 bits (`tools/videos.py`) |
+| Framer guardaba la posición de scroll con `history.replaceState` en cada `scrollend` (con Lenis, cada fotograma) | Se guarda al terminar el scroll |
+| Lenis observaba todo el DOM y ejecutaba `querySelector` sobre la página en cada nodo añadido | Solo observa lo necesario |
+| Lenis pedía un `requestAnimationFrame` perpetuo aunque no hubiera scroll | Duerme sin scroll y despierta con cualquier entrada (mismo suavizado) |
+| El gestor de cursores de Framer leía en cada fotograma aunque la web no tiene cursores propios: con los tickers de «Conectamos tus herramientas» en pantalla, el hilo principal producía un fotograma por refresco | Solo mira al mover el puntero |
+| Reveal Text importaba Urbanist de Google Fonts sin usarla | Eliminado (sin peticiones a terceros) |
+| `filter: blur(0px)` residual en 23 elementos del hero tras su animación | `filter: none` al terminar |
+| B líquida: shader a pantalla completa 30 veces/s en reposo | Vídeo nativo en reposo; shader solo en la zona deformada |
+| Móvil: podía descargar también el vídeo de escritorio | Se elige el vídeo antes de que arranque Framer |
+| PNG pesadas (capturas, tarjetas, retratos) | WebP (la imagen para redes sigue en PNG) |
+
+Medido en Chrome con GPU (Apple M3, pantalla 1440 × 900 a DPR 2), hilo principal ocupado en ms por
+segundo, antes → después: hero en reposo 190 → 4 · herramientas 188 → 3 · FAQ 207 → 1 · pie 85 → 2 ·
+scroll 270 → 221 (scripting −54 %). CPU del proceso de la página en el pie: 54 % → 3 % de un núcleo.
+Imágenes de la home: 482 → 210 KB. Sin recálculos de estilo en reposo (antes, 60 por segundo).
 
 ## Estructura de la home
 

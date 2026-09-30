@@ -38,6 +38,7 @@ FORM_MOD = f"{SITE}/TZstgc4Ug.D6CbMJeG.mjs"
 CARD_MOD = f"{SITE}/P55aRylGH.CWJQDQD0.mjs"
 MAIN_MOD = f"{SITE}/script_main.DS4nwfgn.mjs"
 SHARED_MOD = f"{SITE}/shared-lib.BO1lBLoM.mjs"
+FRAMER_MOD = f"{SITE}/framer.DrTRbU-a.mjs"
 CONTACT_MOD = f"{SITE}/eGLyM1V0aU7qtM-T8MOdbX3-XiwTlizOTYP3IzrJnFA.CZEsQl8c.mjs"
 CASES_MOD = f"{SITE}/VKDLLyTios2Zd0jk1CLqFhDLR7XtQbwEwCFou7Hgscw.CNgFRH1L.mjs"
 DETAIL_MOD = f"{SITE}/-j3X5ZE7k7IpCk1B7FCCGNnRx-KJXICCrbL_gYn8OgU.Crss1fyR.mjs"
@@ -464,8 +465,7 @@ def fix_cards():
 def inject_assets(rel):
     """Hoja de estilos y script propios de Banteq, cargados después de los de Framer."""
     h = S[rel]
-    tag_css = ('<script>document.documentElement.classList.add("bq-js")</script>'
-               '<link rel="stylesheet" href="/banteq/banteq.css">')
+    tag_css = '<link rel="stylesheet" href="/banteq/banteq.css">'
     tag_js = '<script src="/banteq/banteq.js" defer></script><script src="/banteq/banteq-liquid.js" defer></script>'
     if tag_css not in h:
         h = h.replace("</head>", f"{tag_css}{tag_js}</head>", 1)
@@ -685,13 +685,80 @@ def apply_hero_b():
     la plantilla. El póster pinta la B desde el primer instante; banteq-liquid.js añade el cursor."""
     for name in HERO_B:
         shutil.copy2(GEN / name, OUT / "banteq" / name)
-    replace(HOME_MOD, f"srcFile:`../../../{HERO_VIDEO}`", "srcFile:`/banteq/hero-b.mp4`")
-    # Póster también en el componente: si no, al hidratar desaparece y hay un instante sin B.
-    replace(HOME_MOD, "posterEnabled:!0,srcFile:`/banteq/hero-b.mp4`", "poster:`/banteq/hero-b-poster.jpg`,posterEnabled:!0,srcFile:`/banteq/hero-b.mp4`")
-    replace(INDEX, f'<video src="/{HERO_VIDEO}"', '<video src="/banteq/hero-b.mp4" poster="/banteq/hero-b-poster.jpg"')
+    # Vídeo y póster según el ancho ya en las props del componente: si Framer vuelve a crear el
+    # <video> al hidratar, lo hace con el del móvil y el teléfono no descarga el de escritorio.
+    # El póster va también en el componente: si no, al hidratar desaparece y hay un instante sin B.
+    movil = "(typeof matchMedia<`u`&&matchMedia(`(max-width: 809.98px)`).matches)"
+    replace(HOME_MOD, f"posterEnabled:!0,srcFile:`../../../{HERO_VIDEO}`",
+            f"poster:{movil}?`/banteq/hero-b-movil-poster.jpg`:`/banteq/hero-b-poster.jpg`,posterEnabled:!0,"
+            f"srcFile:{movil}?`/banteq/hero-b-movil.mp4`:`/banteq/hero-b.mp4`")
+    # Sin atributo poster en el HTML: el navegador lo pediría antes de saber si es móvil. El póster
+    # lo pinta banteq.css como fondo del <video>, con el de cada tamaño por media query.
+    replace(INDEX, f'<video src="/{HERO_VIDEO}"', '<video src="/banteq/hero-b.mp4"')
     h = S[INDEX]
-    S[INDEX] = h.replace("</head>", '<link rel="preload" as="image" href="/banteq/hero-b-poster.jpg"></head>', 1)
+    S[INDEX] = h.replace("</head>", PRELOAD_POSTERS + "</head>", 1)
+    # El script principal de Framer es async y va después de #main: este script en línea, justo tras
+    # #main, elige el vídeo del móvil antes de que Framer pueda arrancarlo (así el móvil no descarga
+    # también el de escritorio). banteq-liquid.js mantiene la elección si luego cambia el tamaño.
+    replace(INDEX, '<div id="__framer-badge-container">', HERO_SOURCE_SCRIPT + '<div id="__framer-badge-container">')
     (OUT / HERO_VIDEO).unlink()
+
+
+PRELOAD_POSTERS = (
+    '<link rel="preload" as="image" href="/banteq/hero-b-poster.jpg" media="(min-width: 810px)">'
+    '<link rel="preload" as="image" href="/banteq/hero-b-movil-poster.jpg" media="(max-width: 809.98px)">'
+)
+HERO_SOURCE_SCRIPT = (
+    "<script>(function(){var v=document.querySelector('[data-framer-name=\"Hero Section\"] "
+    "[data-framer-name=\"Background\"] video');if(v&&matchMedia('(max-width: 809.98px)').matches)"
+    "{v.src='/banteq/hero-b-movil.mp4';v.dataset.banteqSrc='movil'}})()</script>"
+)
+
+
+PIE_VIDEO = "framerusercontent.com/assets/S4N88TVzCfxigg9YZYcSIYNPk4.mp4"
+
+
+def apply_performance():
+    """Arreglos medidos con trazas de Chrome (ver README, «Rendimiento»). No cambian nada visible."""
+    # El botón de reproducir de «Quiénes somos» está oculto (la imagen no es un vídeo), pero su
+    # componente Magnetic Hover mantenía un requestAnimationFrame perpetuo que en cada fotograma
+    # leía getComputedStyle y reescribía una hoja de estilos (60 recálculos de estilo por segundo
+    # en toda la página), y un mousemove global que forzaba layout. Se deja inerte.
+    replace(HOME_MOD, "a=ae.current()===ae.canvas,o=Tr()", "a=!0,o=Tr()")
+    replace(HOME_MOD, "return x.addEventListener(`mousemove`,t),()=>x.removeEventListener(`mousemove`,t)", "return()=>{}")
+    # Reveal Text importaba Urbanist de Google Fonts en todas las visitas aunque la instancia usa
+    # Geist: petición a terceros inútil (y datos a Google).
+    replace(HOME_MOD, "@import url('https://fonts.googleapis.com/css2?family=Urbanist:wght@400&display=swap');", "")
+    # Smooth scroll (Lenis): observaba todo el árbol DOM y, en cada nodo que Framer añade al hacer
+    # scroll, recorría la página con querySelector buscando un atributo que la web no usa.
+    replace(SHARED_MOD, "t.observe(document.documentElement,{childList:!0,subtree:!0,attributes:!0,attributeFilter:[`data-frameruni-stop-scroll`]}),", "")
+    # Lenis pedía un requestAnimationFrame perpetuo aunque nadie hiciera scroll: cada fotograma el
+    # hilo principal tenía que actualizar las animaciones en curso (los tickers de «Conectamos tus
+    # herramientas») y enviar un fotograma nuevo. Ahora duerme cuando no hay scroll y despierta con
+    # cualquier entrada (rueda, táctil, teclado, clic o scroll); al despertar se reinicia su reloj
+    # para que el primer paso no sea de varios segundos.
+    replace(
+        SHARED_MOD,
+        "let e=t=>{if(n.current)try{n.current.raf(t),requestAnimationFrame(e)}catch(e){console.error(`Error in animation frame:`,e)}},"
+        "r=requestAnimationFrame(e);return()=>{if(cancelAnimationFrame(r),n.current)",
+        "let r=0,q=0,e=t=>{r=0;if(n.current)try{n.current.raf(t),(n.current.isScrolling||n.current.animate?.isRunning||"
+        "performance.now()-q<1e3)&&(r=requestAnimationFrame(e))}catch(e){console.error(`Error in animation frame:`,e)}},"
+        "w=()=>{q=performance.now(),!r&&n.current&&(n.current.time=void 0,r=requestAnimationFrame(e))},"
+        "W=[`wheel`,`touchstart`,`touchmove`,`keydown`,`pointerdown`,`scroll`];W.forEach(k=>window.addEventListener(k,w,{passive:!0})),"
+        "r=requestAnimationFrame(e);return()=>{if(cancelAnimationFrame(r),W.forEach(k=>window.removeEventListener(k,w)),n.current)",
+    )
+    # Restauración del scroll de Framer: guardaba la posición con history.replaceState en cada
+    # «scrollend», que con Lenis llega en cada fotograma. Ahora se guarda cuando el scroll se detiene.
+    replace(FRAMER_MOD, "if(!(`onscrollend`in M))", "if(!0)")
+    # Cursores personalizados de Framer: la web no tiene ninguno (todas las páginas registran {}),
+    # pero el gestor mantenía una lectura en cada fotograma. Mientras los tickers de «Conectamos tus
+    # herramientas» están en pantalla, eso obligaba al hilo principal a producir un fotograma por
+    # refresco para actualizar sus animaciones (tirones). Ahora solo mira al mover el puntero.
+    replace(FRAMER_MOD, "je.read(u,!0),e=n.clientX", "je.read(u),e=n.clientX")
+    replace(FRAMER_MOD, "document.addEventListener(`pointerup`,f),je.read(u,!0)", "document.addEventListener(`pointerup`,f),je.read(u)")
+    # Vídeo del pie: 4K en H.264 4:2:2 de 10 bits, que ningún Mac ni iPhone decodifica por hardware.
+    # Se sirve en 1080p 4:2:0 de 8 bits (tools/videos.py), con el mismo nombre.
+    shutil.copy2(GEN / "pie-video.mp4", OUT / PIE_VIDEO)
 
 
 def copy_logos():
@@ -862,7 +929,7 @@ def make_shells():
     end = html_element_extent(h, i, "div")
     # #main queda vacío (sin la home ni su pie) y bien cerrado: Framer lo pinta con createRoot.
     shell = h[:start] + "</div>" + h[end:]
-    shell = shell.replace('<link rel="preload" as="image" href="/banteq/hero-b-poster.jpg">', "")
+    shell = shell.replace(PRELOAD_POSTERS, "").replace(HERO_SOURCE_SCRIPT, "")
     pages = dict(PAGINAS)
     for pr in C.PROYECTOS:
         pages[f"proyectos/{pr['slug']}"] = (f"{pr['titulo']} | Banteq", pr["descripcion"])
@@ -984,6 +1051,42 @@ def html_pages():
     return [p.relative_to(OUT).as_posix() for p in OUT.rglob("index.html")]
 
 
+OG_IMAGE = "mesMNsTTSgV6Xg1TUfNtMnEGZY.png"  # imagen para compartir en redes: se queda en PNG
+
+
+def convert_heavy_images():
+    """Las PNG de más de 60 KB (capturas de proyectos, tarjetas, retratos de la plantilla) pasan a
+    WebP, que pesa bastante menos con el mismo aspecto, y se cambian todas sus referencias."""
+    from PIL import Image
+
+    renamed = {}
+    for png in sorted((OUT / "framerusercontent.com" / "images").glob("*.png")):
+        if png.name == OG_IMAGE or png.stat().st_size < 60_000:
+            continue
+        webp = png.with_suffix(".webp")
+        im = Image.open(png)
+        has_alpha = im.mode in ("RGBA", "LA") or (im.mode == "P" and "transparency" in im.info)
+        im.convert("RGBA" if has_alpha else "RGB").save(webp, "WEBP", quality=85, method=6)
+        if webp.stat().st_size > png.stat().st_size * 0.8:
+            webp.unlink()
+            continue
+        renamed[png.name] = webp.name
+        png.unlink()
+    # Los archivos ya en disco y los generados en este build (páginas de make_shells) aún en memoria.
+    on_disk = {p.relative_to(OUT).as_posix() for p in OUT.rglob("*") if p.suffix in (".html", ".mjs", ".js") and p.is_file()}
+    rels = sorted(on_disk | {rel for rel in S.files if rel.endswith((".html", ".mjs", ".js"))})
+    for rel in rels:
+        text = S[rel]
+        if ".png" not in text:
+            continue
+        for old, new in renamed.items():
+            text = text.replace(old, new)
+        S[rel] = text
+    for old in renamed:
+        assert all(old not in S[rel] for rel in rels), old
+    return renamed
+
+
 class _TagBalance(HTMLParser):
     VOID = {"area", "base", "br", "col", "embed", "hr", "img", "input", "link", "meta", "source", "track", "wbr"}
 
@@ -1069,6 +1172,7 @@ def main():
     apply_feature_cards()
     apply_hero_marquee()
     apply_hero_b()
+    apply_performance()
     build_cms()
     apply_project_pages()
     for rel in html_pages():
@@ -1077,6 +1181,7 @@ def main():
 
     make_shells()
     final_cleanup()
+    convert_heavy_images()
     check_html_structure()
     S.save()
     if MISSES:
