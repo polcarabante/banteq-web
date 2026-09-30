@@ -144,11 +144,14 @@ HOME = [
         "Informes automáticos, métricas semanales y alertas para decidir con información al día.",
     ),
     ("Not sure what to automate first?", "¿No sabes por dónde empezar?"),
-    ("Book a free 30-minute AI strategy session.<br class=\"framer-text\">", "Te preparamos un diagnóstico gratuito.<br class=\"framer-text\">"),
-    ("`Book a free 30-minute AI strategy session.`,g(`br`,{})", "`Te preparamos un diagnóstico gratuito.`,g(`br`,{})"),
+    ("Book a free 30-minute AI strategy session.<br class=\"framer-text\">", "Analizamos cómo trabaja tu empresa y creamos un mapa conceptual de sus procesos, herramientas y conexiones.<br class=\"framer-text\">"),
+    ("`Book a free 30-minute AI strategy session.`,g(`br`,{})", "`Analizamos cómo trabaja tu empresa y creamos un mapa conceptual de sus procesos, herramientas y conexiones.`,g(`br`,{})"),
     (
         "We’ll analyze your current workflows and identify the highest-ROI automation opportunities for your business.",
-        "Revisamos cómo trabaja tu equipo y te decimos qué conviene automatizar primero y qué herramientas habría que conectar.",
+        (
+            "Además de detectar qué conviene automatizar primero, sirve de base para documentar y ordenar tus "
+            "procesos de cara a una futura certificación ISO 9001 y transmitir más confianza a clientes y colaboradores."
+        ),
     ),
     ("Schedule a Session", "Solicitar diagnóstico"),
     ("Your Data. Protected. Always.", "Seguridad y control en cada proceso."),
@@ -494,7 +497,7 @@ PAGINA_CONTACTO = [
     ("`Address`", "`Zona`"),
     ("Suite 502, Orion Tower", "Santa Perpètua de Mogoda, Barcelona"),
     ("`Office hours`", "`Primer paso`"),
-    ("Monday to Friday, 9:00am - 6:00pm", "Diagnóstico gratuito y sin compromiso"),
+    ("Monday to Friday, 9:00am - 6:00pm", "Diagnóstico de procesos"),
     ("`Email`", "`Respuesta`"),
     ("hello@conicorn.com", "Por email o WhatsApp, como prefieras"),
 ]
