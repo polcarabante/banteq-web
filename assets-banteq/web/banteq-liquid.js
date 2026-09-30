@@ -5,10 +5,17 @@
 // Sin WebGL, en equipos modestos o con "reducir movimiento" se queda el vídeo de Framer tal cual.
 (() => {
   const VIDEO_SELECTOR = '[data-framer-name="Hero Section"] [data-framer-name="Background"] video';
-  const MOBILE_SRC = "/banteq/hero-b-movil.mp4"; // recorte central 864 × 1080 para móviles
+  const SOURCES = {
+    escritorio: { src: "/banteq/hero-b.mp4", poster: "/banteq/hero-b-poster.jpg" },
+    movil: { src: "/banteq/hero-b-movil.mp4", poster: "/banteq/hero-b-movil-poster.jpg" },
+  };
+  // El vídeo móvil (720 × 1200) es un recorte reducido del fotograma con fondo añadido arriba y
+  // abajo (tools/hero_b.py): así se lleva su uv a la de la máscara, que es la del fotograma.
+  const MOBILE_MAP = [818 / 1920, 1200 / 950, 595 / 1920, -125 / 950];
   const MASK_SRC = "/banteq/hero-b-mask.png"; // R: la B · G: zona de influencia (B ensanchada)
   const FRAME_W = 1920;
   const FRAME_H = 1080;
+  const phone = matchMedia("(max-width: 809.98px)"); // mismo corte que el diseño móvil de Framer
 
   const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
   const cores = navigator.hardwareConcurrency || 8;
@@ -105,14 +112,19 @@ void main() {
       img.src = MASK_SRC;
     });
 
-  // Los móviles reciben un recorte central más ligero; object-fit: cover lo coloca igual.
-  const useMobileSource = (video) => {
-    const box = video.getBoundingClientRect();
-    if (!box.height || box.width / box.height > 0.8 || video.dataset.banteqSrc) return;
-    video.dataset.banteqSrc = "movil";
-    const playing = !video.paused;
-    video.src = MOBILE_SRC;
-    if (playing || video.autoplay) video.play().catch(() => {});
+  // En móvil, un vídeo propio con la B entera y más ligero. Hasta que se asigna, banteq.css
+  // oculta el póster de escritorio en móvil para que la B no dé un salto al cargar.
+  const syncSource = (video) => {
+    const kind = phone.matches ? "movil" : "escritorio";
+    const want = SOURCES[kind];
+    if (video.getAttribute("poster") !== want.poster) video.poster = want.poster;
+    // Reasignar el mismo src reiniciaría el vídeo: solo se toca si cambia.
+    if (video.getAttribute("src") !== want.src) {
+      const playing = !video.paused;
+      video.src = want.src;
+      if (playing && !reducedMotion) video.play().catch(() => {});
+    }
+    if (video.dataset.banteqSrc !== kind) video.dataset.banteqSrc = kind;
   };
 
   function setup(video) {
@@ -123,6 +135,7 @@ void main() {
       state.cleanup.push(() => target.removeEventListener(type, fn, opts));
     };
 
+    syncSource(video);
     if (reducedMotion) {
       // La B queda quieta en su primer fotograma.
       const hold = () => video.pause();
@@ -130,7 +143,6 @@ void main() {
       on(video, "play", hold);
       return;
     }
-    useMobileSource(video);
     if (tier === 0 || webglOff) return;
 
     const container = video.parentElement;
@@ -216,8 +228,7 @@ void main() {
       const vh = video.videoHeight || FRAME_H;
       const s = Math.max(box.w / vw, box.h / vh);
       cover = [box.w / (vw * s), box.h / (vh * s), (vw * s - box.w) / 2 / (vw * s), (vh * s - box.h) / 2 / (vh * s)];
-      const frameW = (vw / vh) * FRAME_H; // ancho del vídeo en píxeles del fotograma completo
-      maskRect = [frameW / FRAME_W, 1, (1 - frameW / FRAME_W) / 2, 0];
+      maskRect = video.dataset.banteqSrc === "movil" ? MOBILE_MAP : [1, 1, 0, 0];
       const cap = Math.min(window.devicePixelRatio || 1, tier === 2 ? 1.5 : 1);
       const target = Math.min(cap, Math.max(0.6, (1 / s) * 1.1)) * quality;
       scale = target;
@@ -422,6 +433,7 @@ void main() {
   // Framer monta el hero al hidratar y lo vuelve a montar al navegar o cambiar de tamaño.
   const check = () => {
     const video = document.querySelector(VIDEO_SELECTOR);
+    if (video) syncSource(video);
     if (current && current.video === video && video.isConnected) return;
     teardown();
     if (video) setup(video);

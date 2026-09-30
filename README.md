@@ -57,6 +57,31 @@ fuera de la zona que controla React y aparece duplicado bajo el pie.
 `python3 tools/assets.py` (usa Chrome y `puppeteer-core` del proyecto de Margon) y después
 `python3 tools/build.py`.
 
+## B líquida del hero
+
+El fondo del hero es una B de cristal líquido negro (referencia: `assets-banteq/referencias/hero-b-referencia.webp`).
+
+- **Movimiento continuo**: vídeo generado con Higgsfield. GPT Image 2.5 quitó textos y botones de la
+  referencia; MiniMax H3 animó la imagen limpia usándola como primer y último fotograma (bucle sin
+  cortes). `tools/hero_b.py` hace el resto: deshace el degradado del hero para que el color final
+  coincida con la referencia, reparte el movimiento de forma uniforme (el modelo frenaba al final),
+  codifica escritorio (1920 × 1080, 0,9 MB) y móvil (720 × 1200 con la B entera, 0,5 MB), y crea
+  pósteres y máscara.
+- **Reacción al cursor**: `assets-banteq/web/banteq-liquid.js`. Un shader WebGL usa el propio vídeo
+  como textura: alrededor del cursor (radio 100–170 px) el líquido se hunde y se aparta, y al irse
+  vuelve con un pequeño rebote y ondas. Solo actúa sobre la B.
+- **Rendimiento**: en reposo dibuja solo cuando hay fotograma nuevo (30/s) y con el cursor, a 60/s. Se
+  pausa con la pestaña oculta o el hero fuera de pantalla. Si el equipo no llega a ~40 FPS baja la
+  resolución y, si aun así no llega, deja el vídeo sin efecto. Sin WebGL o en equipos muy modestos,
+  solo vídeo. Con "reducir movimiento", la B queda quieta.
+
+Para regenerar el vídeo a partir de uno nuevo de Higgsfield:
+
+```bash
+python3 tools/hero_b.py video ruta/al/video.mp4
+npm run build
+```
+
 ## Estructura de la home
 
 1. Hero: "Tecnología que mejora cómo trabaja tu empresa" + carrusel "Empresas que ya confían en Banteq" (Margon, RentUp Capital)

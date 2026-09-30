@@ -464,7 +464,8 @@ def fix_cards():
 def inject_assets(rel):
     """Hoja de estilos y script propios de Banteq, cargados después de los de Framer."""
     h = S[rel]
-    tag_css = '<link rel="stylesheet" href="/banteq/banteq.css">'
+    tag_css = ('<script>document.documentElement.classList.add("bq-js")</script>'
+               '<link rel="stylesheet" href="/banteq/banteq.css">')
     tag_js = '<script src="/banteq/banteq.js" defer></script><script src="/banteq/banteq-liquid.js" defer></script>'
     if tag_css not in h:
         h = h.replace("</head>", f"{tag_css}{tag_js}</head>", 1)
@@ -676,7 +677,7 @@ def apply_hero_marquee():
 
 
 HERO_VIDEO = "framerusercontent.com/assets/b3Bk2z34loWAeMvpX7fNvAf275A.mp4"
-HERO_B = ["hero-b.mp4", "hero-b-movil.mp4", "hero-b-poster.jpg", "hero-b-mask.png"]
+HERO_B = ["hero-b.mp4", "hero-b-movil.mp4", "hero-b-poster.jpg", "hero-b-movil-poster.jpg", "hero-b-mask.png"]
 
 
 def apply_hero_b():

@@ -37,8 +37,13 @@ FW, FH = 1920, 1080
 SCALE = max(VIEW_W / FW, HERO_H / FH)
 OFF_X = (VIEW_W - FW * SCALE) / 2
 
-# Recorte para móvil y tablet: centrado, así object-fit: cover lo coloca igual que el completo.
-MOBILE_W = 810
+# Vídeo para móviles (hero de ~390 × 652): la B entera y centrada. Se recorta el fotograma
+# alrededor de la B, se reduce y se completa arriba y abajo con el fondo. banteq-liquid.js
+# usa estas mismas cifras para situar la máscara (MOBILE_MAP).
+MOBILE_SIZE = (720, 1200)
+MOBILE_CROP_X, MOBILE_CROP_W = 595, 818  # la B ocupa x 644–1364 del fotograma
+MOBILE_SCALED_H = 950  # 1080 × 720 / 818
+MOBILE_PAD_Y = 125
 
 
 def overlay_alpha(page_y):
@@ -229,14 +234,42 @@ def encode(src, dst, crop, crf):
     print(dst.name, f"{dst.stat().st_size / 1e6:.2f} MB")
 
 
+def mobile(src, dst):
+    mw, mh = MOBILE_SIZE
+    # Fondo: el ajustado, recortado igual y prolongado arriba y abajo (el degradado es muy suave
+    # y en móvil esas franjas quedan bajo el velo claro de la plantilla).
+    bg = Image.open(WORK / "background.png").convert("RGB")
+    bg = bg.crop((MOBILE_CROP_X, 0, MOBILE_CROP_X + MOBILE_CROP_W, FH)).resize((mw, MOBILE_SCALED_H), Image.LANCZOS)
+    canvas = Image.new("RGB", MOBILE_SIZE)
+    canvas.paste(bg.crop((0, 0, mw, 1)).resize((mw, MOBILE_PAD_Y)), (0, 0))
+    canvas.paste(bg, (0, MOBILE_PAD_Y))
+    rest = mh - MOBILE_PAD_Y - MOBILE_SCALED_H
+    canvas.paste(bg.crop((0, MOBILE_SCALED_H - 1, mw, MOBILE_SCALED_H)).resize((mw, rest)), (0, mh - rest))
+    canvas.save(WORK / "_movil-fondo.png")
+    alpha = Image.new("L", (mw, MOBILE_SCALED_H), 0)
+    ImageDraw.Draw(alpha).rectangle((-10, 24, mw + 10, MOBILE_SCALED_H - 25), fill=255)
+    alpha.filter(ImageFilter.GaussianBlur(10)).save(WORK / "_movil-alfa.png")
+    graph = (f"[1:v]crop={MOBILE_CROP_W}:{FH}:{MOBILE_CROP_X}:0,scale={mw}:{MOBILE_SCALED_H}:flags=lanczos[v];"
+             "[2:v]format=gray[a];[v][a]alphamerge[va];"
+             f"[0:v][va]overlay=0:{MOBILE_PAD_Y}:shortest=1,format=yuv420p")
+    run("-loop", "1", "-i", str(WORK / "_movil-fondo.png"), "-i", str(src), "-loop", "1", "-i", str(WORK / "_movil-alfa.png"),
+        "-filter_complex", graph, "-frames:v", str(frame_count(src)),  # las imágenes en bucle no acaban solas
+        "-an", "-r", "30", "-c:v", "libx264", "-preset", "slow", "-crf", "24",
+        "-profile:v", "high", "-g", "30", "-movflags", "+faststart", str(dst))
+    (WORK / "_movil-fondo.png").unlink()
+    (WORK / "_movil-alfa.png").unlink()
+    print(dst.name, f"{dst.stat().st_size / 1e6:.2f} MB")
+
+
 def video(src):
     GEN.mkdir(parents=True, exist_ok=True)
     loop = WORK / "_bucle.mp4"
     retime(Path(src), loop)
     encode(loop, GEN / "hero-b.mp4", "", 23)
-    encode(loop, GEN / "hero-b-movil.mp4", f"crop=864:{FH}:{(FW - 864) // 2}:0,", 24)
+    mobile(loop, GEN / "hero-b-movil.mp4")
     loop.unlink()
     run("-i", str(GEN / "hero-b.mp4"), "-frames:v", "1", "-q:v", "3", str(GEN / "hero-b-poster.jpg"))
+    run("-i", str(GEN / "hero-b-movil.mp4"), "-frames:v", "1", "-q:v", "3", str(GEN / "hero-b-movil-poster.jpg"))
     # Máscara para el shader, a 1/4: R = la B (borde suave), G = zona de influencia (B ensanchada
     # ~150 px del fotograma, con caída suave), que es donde el cursor deforma el líquido.
     first = Image.open(GEN / "hero-b-poster.jpg").convert("RGB")
