@@ -1,4 +1,5 @@
 {
+  "framework": null,
   "buildCommand": "echo 'Sin build en Vercel: public/ ya viene generado (python3 tools/build.py en local)'",
   "outputDirectory": "public",
   "cleanUrls": true,

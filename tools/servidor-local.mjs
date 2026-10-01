@@ -1,12 +1,15 @@
-// Servidor estático para revisar la web de Banteq en local.
-// Uso: npm run dev (o node server.mjs)  →  http://localhost:4400
+// Servidor estático para revisar la web de Banteq en local (no se despliega).
+// Uso: npm run dev (o node tools/servidor-local.mjs)  →  http://localhost:4400
+//
+// No puede llamarse server.* ni estar en la raíz o en src/: Vercel toma esos archivos como el
+// servidor de la web (preset «Node») y le manda todas las peticiones (ver vercel.json y README).
 import { existsSync } from "node:fs";
 import { createServer } from "node:http";
 import { readFile, stat } from "node:fs/promises";
 import { extname, join, normalize } from "node:path";
 import { fileURLToPath } from "node:url";
 
-const ROOT = fileURLToPath(new URL("./public/", import.meta.url));
+const ROOT = fileURLToPath(new URL("../public/", import.meta.url));
 const PORT = Number(process.env.PORT) || 4400;
 
 if (!existsSync(join(ROOT, "index.html"))) {

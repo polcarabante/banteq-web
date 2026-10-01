@@ -587,6 +587,8 @@ def apply_images():
     _fit(GEN / "favicon-256.png", (32, 32), True).save(icons / "writing-hand-favicon.png")
     shutil.copy(GEN / "apple-icon-180.png", OUT / "apple-touch-icon.png")
     _fit(GEN / "favicon-256.png", (32, 32), True).save(OUT / "favicon.png")
+    # Navegadores y buscadores piden /favicon.ico aunque la página declare favicon.png.
+    Image.open(GEN / "favicon-256.png").convert("RGBA").save(OUT / "favicon.ico", sizes=[(16, 16), (32, 32), (48, 48)])
 
 
 def mark_svg_28(fill="rgb(255,255,255)"):

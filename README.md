@@ -4,7 +4,7 @@ Web de Banteq construida sobre la plantilla de Framer exportada (`site-export-17
 conservando su estructura, animaciones, efectos de scroll, responsive y componentes. Referencia
 visual de la plantilla original: https://breathtaking-step-882598.framer.app
 
-**No está desplegada.** Solo se sirve en local para revisión.
+Se publica en Vercel desde `main` como sitio estático (ver «Despliegue en Vercel»).
 
 ## Verla en local
 
@@ -37,6 +37,8 @@ bloquea desde `file://`, y la página se queda en blanco. Siempre a través del 
 | `assets-banteq/capturas/` | Capturas reales de las webs de Margon y RentUp. |
 | `public/` | La web final que se sirve. **Se regenera entera**: no editar a mano. |
 | `api/leads.js` | Endpoint del formulario para el despliegue (Brevo). Variables en `.env.example`. |
+| `tools/servidor-local.mjs` | Servidor para revisar la web en local (`npm run dev`). No se despliega. |
+| `vercel.json`, `.vercelignore` | Despliegue en Vercel como sitio estático (ver abajo). |
 
 Framer pinta la página con React a partir de sus módulos `.mjs`; el HTML exportado es solo la
 primera pintura. Por eso cada texto se cambia en los dos sitios, y por eso los cambios se hacen
@@ -56,6 +58,25 @@ fuera de la zona que controla React y aparece duplicado bajo el pie.
 
 `python3 tools/assets.py` (usa Chrome y `puppeteer-core` del proyecto de Margon) y después
 `python3 tools/build.py`.
+
+## Despliegue en Vercel
+
+La web es estática: Vercel sirve tal cual la carpeta `public/` (ya generada y versionada) y la única
+función es `api/leads.js` (el formulario). No se ejecuta Python en Vercel; `tools/build.py` se usa
+en local antes de hacer commit.
+
+- `vercel.json` → `"framework": null` (sitio estático, preset «Other»), `outputDirectory: public` y
+  un `buildCommand` que no hace nada. El `framework` del archivo manda sobre el preset guardado en el
+  panel de Vercel.
+- `.vercelignore` → no sube la plantilla original, las herramientas ni las fuentes de los recursos.
+- **No crear `server.js`/`server.mjs`/`server.ts` en la raíz ni en `src/`.** Vercel detecta esos
+  nombres como el servidor de la web (preset «Node»), los convierte en una función y le envía todas
+  las peticiones, incluidos `/` y `/favicon.ico`. Así se rompió el primer despliegue (500
+  `INTERNAL_FUNCTION_INVOCATION_FAILED` en todas las rutas): el antiguo `server.mjs` del servidor
+  local estaba en la raíz. Por eso ahora es `tools/servidor-local.mjs`.
+
+Para comprobar lo que generará Vercel sin desplegar: `npx vercel build` (crea `.vercel/output`:
+`static/` con la web y `functions/api/leads.func`; no debe aparecer ninguna otra función).
 
 ## B líquida del hero
 
@@ -207,4 +228,4 @@ testimonios se ha reconvertido en "Desarrollo web" (no hay testimonios reales).
 - **Colores**: base monocroma de la plantilla + iridiscencia fría (azul Banteq `#5f7dff`). Propuesta.
 - **Margon**: la web nueva aún no está publicada (margon.es sigue siendo la anterior). Decidir si se muestra el caso antes del lanzamiento.
 - **Redes sociales**: ocultas en el pie hasta tener perfiles.
-- **Despliegue**: `vercel.json` y `api/leads.js` preparados; faltan las variables de Brevo.
+- **Formulario en Vercel**: `api/leads.js` necesita las variables de Brevo (`.env.example`) en el proyecto de Vercel.

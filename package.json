@@ -5,8 +5,8 @@
   "description": "Web de Banteq sobre la plantilla de Framer exportada",
   "type": "module",
   "scripts": {
-    "dev": "node server.mjs",
-    "start": "node server.mjs",
+    "dev": "node tools/servidor-local.mjs",
+    "start": "node tools/servidor-local.mjs",
     "build": "python3 tools/build.py"
   },
   "engines": {

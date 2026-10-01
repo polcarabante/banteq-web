@@ -1,0 +1,8 @@
+# En Vercel solo se publica la web ya generada (public/, archivos estáticos) y el endpoint del
+# formulario (api/leads.js). Las herramientas de generación (Python), el servidor local, la
+# plantilla original y las fuentes de los recursos se usan solo en local con python3 tools/build.py.
+plantilla-original
+assets-banteq
+tools
+README.md
+.env.example
