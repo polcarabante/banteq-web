@@ -131,8 +131,10 @@ html body {
    Rendimiento durante el hover (medido con el cursor en movimiento continuo; README).
    ------------------------------------------------------------------------------------------ */
 
-/* «¿Por qué Banteq?»: el aro de cristal del icono y la pestaña del número llevaban
-   backdrop-filter (desenfoque de 12 px y 5 px). No reaccionaban al cursor, pero WebKit (Safari)
+/* [Value Section] «¿Por qué Banteq?». Sección retirada: mientras esté oculta
+   (contenido.MOSTRAR_POR_QUE_BANTEQ) el build no publica este bloque.
+   El aro de cristal del icono y la pestaña del número llevaban backdrop-filter (desenfoque de 12 px
+   y 5 px). No reaccionaban al cursor, pero WebKit (Safari)
    rehacía esos 6 desenfoques del fondo en cada fotograma que pintaba, y con el ratón en
    movimiento hay uno por cada movimiento: fotogramas de 35–45 ms. Lo que hay detrás es el fondo
    oscuro liso de la tarjeta, así que sin desenfoque se ve igual. */
@@ -141,6 +143,7 @@ html body {
   -webkit-backdrop-filter: none !important;
   backdrop-filter: none !important;
 }
+/* [/Value Section] */
 
 /* «Conectamos tus herramientas»: hover del botón central «B · Hablemos». Antes Framer Motion
    animaba por JavaScript el degradado y la sombra interior (repintado del círculo en cada

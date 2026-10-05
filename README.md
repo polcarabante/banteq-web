@@ -176,8 +176,8 @@ principal está prácticamente libre (hero 190 → 4 ms/s). Imágenes de la home
 
 ### Rendimiento durante el hover
 
-Segunda auditoría, centrada en mover el cursor (no en el scroll) por «¿Por qué Banteq?» y
-«Conectamos tus herramientas». Medido 25 s por caso con recorridos de ratón rápidos (barridos de
+Segunda auditoría, centrada en mover el cursor (no en el scroll) por «¿Por qué Banteq?» (sección
+retirada después; ver «Estructura de la home») y «Conectamos tus herramientas». Medido 25 s por caso con recorridos de ratón rápidos (barridos de
 izquierda a derecha, círculos sobre cada tarjeta, entrar y salir de cada tarjeta y del botón
 central) en WebKit (WebKitGTK 2.52, el motor de Safari, con el cursor real del sistema) y en Chrome
 con trazas. Lo que se ha cambiado:
@@ -218,14 +218,28 @@ El aspecto (tamaño, esquinas, fondo, sombra) está en `assets-banteq/web/banteq
 
 1. Hero: "Tecnología que mejora cómo trabaja tu empresa" + carrusel "Empresas que ya confían en Banteq" (Margon, RentUp Capital)
 2. 001 Quiénes somos
-3. 002 Por qué Banteq
-4. 003 Automatización e IA (procesos, asistentes IA, ventas y CRM, informes, conexión entre herramientas, seguridad)
-5. 004 Desarrollo web (diseño, rediseño, experiencias interactivas, formularios, integraciones, responsive, a medida)
-6. 005 Proyectos: Margon y RentUp Capital, con página propia en `/proyectos/margon` y `/proyectos/rentup-capital`
-7. 006 Cómo trabajamos
-8. 007 Herramientas
-9. 008 Preguntas frecuentes
-10. Formulario de contacto (en todas las páginas)
+3. 002 Automatización e IA (procesos, asistentes IA, ventas y CRM, informes, conexión entre herramientas, seguridad)
+4. 003 Desarrollo web (diseño, rediseño, experiencias interactivas, formularios, integraciones, responsive, a medida)
+5. 004 Proyectos: Margon y RentUp Capital, con página propia en `/proyectos/margon` y `/proyectos/rentup-capital`
+6. 005 Cómo trabajamos
+7. 006 Herramientas
+8. 007 Preguntas frecuentes
+9. Formulario de contacto (en todas las páginas)
+
+### «¿Por qué Banteq?» (retirada)
+
+La sección (título, subtítulo y las tres tarjetas: «Primero, el negocio», «De principio a fin»,
+«Hecho a medida») no se publica: el build la quita del HTML y del módulo de la home a la vez, igual
+que la de Copilot y FUNDAE, y tampoco publica su CSS (bloque `[Value Section]` de `banteq.css`), así
+que no se piden sus iconos ni su fondo (4 peticiones menos) y la página es ~970 px más corta en
+escritorio (~1.470 px en móvil). «Quiénes somos» enlaza directamente con «Automatización e IA», con
+el mismo espacio que hay entre las demás secciones, y la numeración se recalcula sola. Ningún enlace
+apuntaba a `#por-que-banteq`. Sus textos siguen en `tools/contenido.py`; para recuperarla:
+
+```bash
+# tools/contenido.py → MOSTRAR_POR_QUE_BANTEQ = True
+npm run build
+```
 
 ### Microsoft Copilot y formación FUNDAE (retirados temporalmente)
 
@@ -233,8 +247,7 @@ Mientras no se ofrezcan, no aparecen en ningún sitio de la web publicada: ni la
 Copilot y formación FUNDAE» (con el enlace al simulador de crédito), ni la tarjeta de Copilot en
 servicios (ese hueco lo ocupa «Conexión entre herramientas»), ni la pregunta sobre FUNDAE, ni «IA y
 Copilot» en el carrusel, ni las menciones en contacto, aviso legal, metadatos e imagen para redes.
-La numeración de secciones se recalcula sola (001–008) y el build comprueba que no quede ninguna
-mención. Todo el contenido sigue en `tools/contenido.py`; para volver a mostrarlo:
+La numeración de secciones se recalcula sola y el build comprueba que no quede ninguna mención. Todo el contenido sigue en `tools/contenido.py`; para volver a mostrarlo:
 
 ```bash
 # tools/contenido.py → MOSTRAR_COPILOT_FUNDAE = True

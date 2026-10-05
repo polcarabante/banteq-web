@@ -477,6 +477,14 @@ def copy_banteq_static():
     if dst.exists():
         shutil.rmtree(dst)
     shutil.copytree(ROOT / "assets-banteq" / "web", dst)
+    # Reglas de secciones ocultas (bloques marcados en banteq.css con el nombre de la sección):
+    # no se publican; vuelven solas al mostrar la sección.
+    css = dst / "banteq.css"
+    t = css.read_text(encoding="utf-8")
+    for name in C.SECCIONES_OCULTAS:
+        t = re.sub(rf"/\* \[{re.escape(name)}\] .*?/\* \[/{re.escape(name)}\] \*/\n\n?", "", t, flags=re.S)
+        assert f"[{name}]" not in t, f"banteq.css: bloque de {name} mal cerrado"
+    css.write_text(t, encoding="utf-8")
 
 
 # ---------------------------------------------------------------------------
@@ -1145,16 +1153,22 @@ def remove_child_call(rel, start, end):
     S[rel] = t[:start] + t[end:]
 
 
-def hide_copilot_fundae():
-    """Microsoft Copilot y FUNDAE (contenido.MOSTRAR_COPILOT_FUNDAE = False). Todo se construye con sus
-    textos, enlaces y numeración, y aquí se quita del módulo de la home y del HTML a la vez (si solo
-    se quitara de uno, React daría error de hidratación). Volver a mostrarlo es cambiar la bandera."""
-    if C.MOSTRAR_COPILOT_FUNDAE:
-        return
+def hide_sections():
+    """Secciones ocultas (contenido.SECCIONES_OCULTAS: «¿Por qué Banteq?» y la de Copilot y FUNDAE).
+    Se construyen con sus textos, enlaces y numeración, y aquí se quitan del módulo de la home y del
+    HTML a la vez (si solo se quitaran de uno, React daría error de hidratación). Volver a mostrarlas
+    es cambiar la bandera en contenido.py."""
     for name in C.SECCIONES_OCULTAS:
         remove_child_call(HOME_MOD, *section_range_js(name))
         a, b = section_range_html(INDEX, name)
         S[INDEX] = S[INDEX][:a] + S[INDEX][b:]
+    hide_copilot_fundae()
+
+
+def hide_copilot_fundae():
+    """Restos de Microsoft Copilot y FUNDAE fuera de su sección (contenido.MOSTRAR_COPILOT_FUNDAE)."""
+    if C.MOSTRAR_COPILOT_FUNDAE:
+        return
     # Pregunta frecuente sobre FUNDAE: es la última de la lista, así que no queda hueco.
     pregunta = {t[0]: t[1] for t in C.HOME}["What kind of ROI can we expect?"]
     t = S[HOME_MOD]
@@ -1341,7 +1355,7 @@ def main():
         inject_assets(rel)
         apply_head_images(rel)
 
-    hide_copilot_fundae()
+    hide_sections()
     make_shells()
     final_cleanup()
     convert_heavy_images()
