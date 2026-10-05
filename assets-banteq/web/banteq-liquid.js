@@ -16,7 +16,9 @@
   // El vídeo móvil (720 × 1200) es un recorte reducido del fotograma con fondo añadido arriba y
   // abajo (tools/hero_b.py): así se lleva su uv a la de la máscara, que es la del fotograma.
   const MOBILE_MAP = [818 / 1920, 1200 / 950, 595 / 1920, -125 / 950];
-  const MASK_SRC = "/banteq/hero-b-mask.png"; // R: la B · G: zona de influencia (B ensanchada)
+  // R: la B · G: zona de influencia del cursor (B ensanchada) · B: zona de dibujo (más ancha).
+  // Calculada con todos los fotogramas del bucle (tools/hero_b.py mascara).
+  const MASK_SRC = "/banteq/hero-b-mask.png";
   const FRAME_W = 1920;
   const FRAME_H = 1080;
   const phone = matchMedia("(max-width: 809.98px)"); // mismo corte que el diseño móvil de Framer
@@ -58,7 +60,9 @@ vec2 maskUv(vec2 uv) { return uv * uMaskRect.xy + uMaskRect.zw; }
 void main() {
   vec2 p = vec2(vUv.x, 1.0 - vUv.y) * uRes;
   vec2 uv = videoUv(p);
-  float zone = texture2D(uMask, maskUv(uv)).g;
+  // Zona de dibujo (canal B), más ancha que la de influencia del cursor (G): el hoyuelo y las ondas
+  // mantienen su forma al cruzar el contorno de la B; antes se aplastaban contra él.
+  float zone = texture2D(uMask, maskUv(uv)).b;
   vec2 slope = vec2(0.0);
   vec2 d = p - uPointer;
   float r = length(d) / uRadius;
@@ -67,6 +71,9 @@ void main() {
     if (r < 1.35) {
       float rim = (r - 0.72) / 0.2;
       float dh = uDepth * (6.4 * r * exp(-3.2 * r * r) - 2.5 * rim * exp(-rim * rim));
+      // Se apaga del todo antes de r = 1,35 (el límite del cálculo y del scissor): sin esto el
+      // hoyuelo terminaba en un círculo con un salto pequeño pero visible.
+      dh *= 1.0 - smoothstep(1.05, 1.35, r);
       slope += dh * d / max(length(d), 0.001);
     }
     // Ondas de retorno: nacen en el borde del hoyuelo y se abren perdiendo fuerza.
@@ -77,13 +84,16 @@ void main() {
       float front = 0.55 + w.z * 1.3;
       float x = length(dw) / uRadius - front;
       if (abs(x) > 0.9) continue;
-      float amp = w.w * exp(-w.z * 2.4) / front * exp(-7.0 * x * x);
+      float amp = w.w * exp(-w.z * 2.4) / front * exp(-7.0 * x * x) * (1.0 - smoothstep(0.6, 0.9, abs(x)));
       slope += amp * (-14.0 * x * cos(8.0 * x) - 8.0 * sin(8.0 * x)) * dw / max(length(dw), 0.001);
     }
   }
   float thin = clamp(uDepth, 0.0, 1.0) * exp(-r * r * 4.5) * step(0.002, zone);
   // Solo se pinta donde el líquido está deformado; en el resto se ve el vídeo nativo de debajo.
-  float alpha = clamp(length(slope) * 6.0 + thin * 3.0, 0.0, 1.0);
+  // Hacia el final de la zona de influencia el lienzo se desvanece en continuo: antes se dejaba de
+  // pintar de golpe donde la zona llegaba a 0 y, si el borde caía dentro del hoyuelo o de una onda,
+  // se veía la «pared».
+  float alpha = clamp((length(slope) * 6.0 + thin * 3.0) * smoothstep(0.002, 0.25, zone), 0.0, 1.0);
   if (alpha < 0.004) {
     gl_FragColor = vec4(0.0);
   } else {

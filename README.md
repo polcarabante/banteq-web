@@ -112,6 +112,13 @@ El fondo del hero es una B de cristal líquido negro (referencia: `assets-banteq
   (radio 50–85 px, el 4,5 % del ancho del hero; antes 100–170 px) el líquido se hunde y se aparta, y
   al irse vuelve con un pequeño rebote y ondas. Solo actúa sobre la B. El tamaño se cambia en
   `radius` (todo lo demás va en unidades de ese radio, así que la intensidad no cambia).
+- **Sin «pared» en los bordes**: la máscara (`hero-b-mask.png`, `python3 tools/hero_b.py mascara`)
+  sale de los 87 fotogramas del bucle y no solo del primero, porque el contorno de la B «respira»
+  unos píxeles: R es la fracción de fotogramas en que cada píxel es B (borde suave donde se mueve),
+  G la zona del cursor (cuándo reacciona y cuánto se hunde) y B una zona de dibujo más ancha, donde
+  la refracción no se atenúa, para que el hoyuelo y las ondas crucen el contorno sin aplastarse. En
+  el shader no hay cortes en seco: el hoyuelo, las ondas y la opacidad del lienzo llegan a cero de
+  forma continua antes del límite del cálculo y del scissor.
 - **Rendimiento**: en reposo no hay WebGL ni bucle de animación: se ve el `<video>` nativo
   (decodificado y compuesto por hardware). El lienzo solo dibuja mientras el cursor está cerca de la
   B y se oculta en cuanto el líquido se asienta. `pointermove` solo guarda coordenadas (sin medir el
