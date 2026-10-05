@@ -61,20 +61,22 @@ fuera de la zona que controla React y aparece duplicado bajo el pie.
 
 ### Favicon e iconos
 
-`python3 tools/assets.py iconos` (solo Pillow) y `python3 tools/build.py`. El símbolo blanco sobre un
-cuadrado `#0f0f0f`:
+El favicon de Banteq de siempre: la B blanca en un círculo `#0f0f0f` (`favicon-256`) y, para iOS, en
+un cuadrado `#0f0f0f` (`apple-icon-180`), ambos dibujados en `tools/assets.py` → `brand()`.
+`tools/build.py` → `apply_icons()` publica en la raíz:
 
-| Archivo (raíz del sitio) | Para qué |
+| Archivo | Para qué |
 | --- | --- |
-| `favicon.ico` (16, 32 y 48) y `favicon.png` (32) | Pestañas y marcadores. Las tres medidas pequeñas están dibujadas a píxel (`ICONOS_PIXEL`), no reducidas, para que la B no salga borrosa |
-| `favicon-48.png` | Resultados de Google (pide múltiplos de 48) |
-| `apple-touch-icon.png` (180, opaco) | Pantalla de inicio del iPhone (iOS redondea las esquinas). También como `apple-touch-icon-precomposed.png`, que iOS pide por su cuenta |
-| `site.webmanifest` + `icon-192.png`, `icon-512.png`, `icon-maskable-512.png` | Acceso directo en Android (`display: browser`: abre la web en el navegador). El «maskable» deja la B dentro de la zona segura para cualquier forma de icono |
+| `favicon.ico` (16, 32 y 48) y `favicon.png` (32) | Pestañas, marcadores y buscadores (piden `/favicon.ico` aunque la página declare otro) |
+| `apple-touch-icon.png` (180, opaco) | iPhone y iPad: pantalla de inicio, favoritos y sugerencias de Safari. También como `apple-touch-icon-precomposed.png`, que iOS pide por su cuenta |
+| `site.webmanifest` + `icon-192.png`, `icon-512.png`, `icon-maskable-512.png` | Android (acceso directo; `display: browser`, abre la web en el navegador). Mismo dibujo renderizado a más resolución; el «maskable» es el cuadrado de iOS, con la B dentro de la zona segura |
 
-Las etiquetas del `<head>` (todas las páginas) llevan `?v=<huella de los iconos>`: Safari guarda los
-favicons en una caché propia por URL que no respeta las cabeceras HTTP, así que al cambiar un icono
-cambia la URL y lo vuelve a pedir. En un iPhone que ya tenga la web en la pantalla de inicio hay que
-quitar el acceso directo y volver a añadirlo.
+Las etiquetas del `<head>` (todas las páginas, sin `media`) llevan `?v=<huella de los píxeles de los
+iconos>`: Safari guarda los favicons en una caché propia por URL que no respeta las cabeceras HTTP y
+también recuerda cuándo no encontró ninguno (durante el primer despliegue todo respondía 500); con
+una URL nueva lo vuelve a pedir. En un iPhone que siga mostrando el icono genérico: Ajustes → Apps →
+Safari → Avanzado → Datos de sitios web → borrar `banteq.com`, cerrar Safari y volver a abrir la web
+(un acceso directo de la pantalla de inicio hay que quitarlo y añadirlo de nuevo).
 
 ## Despliegue en Vercel
 

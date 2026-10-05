@@ -591,21 +591,13 @@ def apply_images():
             _fit(GEN / source, size, contain).save(target)
     for name, source in NUEVAS.items():
         shutil.copy(GEN / source, IMAGES / name)
-    shutil.copy(GEN / "favicon-32.png", OUT / "framerusercontent.com" / "sites" / "icons" / "writing-hand-favicon.png")
+    _fit(GEN / "favicon-256.png", (32, 32), True).save(OUT / "framerusercontent.com" / "sites" / "icons" / "writing-hand-favicon.png")
     apply_icons()
 
 
-# Favicon e iconos (tools/assets.py iconos), en la raíz del sitio: publicado ← generado.
-ICONOS = {
-    "favicon.png": "favicon-32.png",
-    "favicon-48.png": "favicon-48.png",
-    "apple-touch-icon.png": "apple-touch-icon-180.png",
-    # iOS lo pide por su cuenta si una página no declara apple-touch-icon; así no da 404.
-    "apple-touch-icon-precomposed.png": "apple-touch-icon-180.png",
-    "icon-192.png": "icon-192.png",
-    "icon-512.png": "icon-512.png",
-    "icon-maskable-512.png": "icon-maskable-512.png",
-}
+# Favicon de Banteq (el de siempre: B blanca en un círculo #0f0f0f; en iOS, en un cuadrado #0f0f0f),
+# dibujado en tools/assets.py → favicon-256 y apple-icon-180. Los iconos grandes del manifest son ese
+# mismo dibujo renderizado a 512 (icon-512, icon-maskable-512), no un diseño aparte.
 MANIFEST = {
     "name": "Banteq",
     "short_name": "Banteq",
@@ -619,29 +611,37 @@ MANIFEST = {
         {"src": "/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable"},
     ],
 }
+ICONOS = ["favicon.ico", "favicon.png", "apple-touch-icon.png", "apple-touch-icon-precomposed.png",
+          "icon-192.png", "icon-512.png", "icon-maskable-512.png"]
 
 
 def icon_version():
-    """Huella de los iconos: va como ?v= en las etiquetas del <head>. Safari (y Chrome) guardan el
-    favicon en una caché propia por URL que no respeta las cabeceras HTTP; si cambia el icono,
-    cambia la URL y lo vuelven a pedir."""
+    """Huella de los iconos publicados: va como ?v= en las etiquetas del <head>. Safari (y Chrome)
+    guardan el favicon en una caché propia por URL que no respeta las cabeceras HTTP (y también
+    recuerdan cuando no lo encontraron); si cambia el icono, cambia la URL y lo vuelven a pedir."""
     import hashlib
 
+    from PIL import Image
+
     digest = hashlib.sha256()
-    for source in sorted(set(ICONOS.values())) + ["favicon-16.png"]:
-        digest.update((GEN / source).read_bytes())
+    for name in ICONOS:  # por píxeles: otra versión de Pillow codifica distinto el mismo icono
+        digest.update(Image.open(OUT / name).convert("RGBA").tobytes())
     return digest.hexdigest()[:8]
 
 
 def apply_icons():
     from PIL import Image
 
-    for name, source in ICONOS.items():
-        shutil.copy(GEN / source, OUT / name)
-    # /favicon.ico (navegadores y buscadores lo piden aunque la página declare otro): las tres
-    # medidas dibujadas a píxel, no una reducción de la grande.
-    small = {size: Image.open(GEN / f"favicon-{size}.png").convert("RGBA") for size in (16, 32, 48)}
-    small[48].save(OUT / "favicon.ico", sizes=[(16, 16), (32, 32), (48, 48)], append_images=[small[16], small[32]])
+    fav = Image.open(GEN / "favicon-256.png").convert("RGBA")
+    _fit(GEN / "favicon-256.png", (32, 32), True).save(OUT / "favicon.png")
+    # Navegadores y buscadores piden /favicon.ico aunque la página declare favicon.png.
+    fav.save(OUT / "favicon.ico", sizes=[(16, 16), (32, 32), (48, 48)])
+    shutil.copy(GEN / "apple-icon-180.png", OUT / "apple-touch-icon.png")
+    # iOS lo pide por su cuenta en algunos casos (sin mirar el <head>); así no da 404.
+    shutil.copy(GEN / "apple-icon-180.png", OUT / "apple-touch-icon-precomposed.png")
+    fav.resize((192, 192), Image.LANCZOS).save(OUT / "icon-192.png")
+    shutil.copy(GEN / "icon-512.png", OUT / "icon-512.png")
+    Image.open(GEN / "icon-maskable-512.png").convert("RGB").save(OUT / "icon-maskable-512.png")
     v = icon_version()
     manifest = json.loads(json.dumps(MANIFEST))
     for icon in manifest["icons"]:
