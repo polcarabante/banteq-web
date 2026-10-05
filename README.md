@@ -59,6 +59,23 @@ fuera de la zona que controla React y aparece duplicado bajo el pie.
 `python3 tools/assets.py` (usa Chrome y `puppeteer-core` del proyecto de Margon) y después
 `python3 tools/build.py`.
 
+### Favicon e iconos
+
+`python3 tools/assets.py iconos` (solo Pillow) y `python3 tools/build.py`. El símbolo blanco sobre un
+cuadrado `#0f0f0f`:
+
+| Archivo (raíz del sitio) | Para qué |
+| --- | --- |
+| `favicon.ico` (16, 32 y 48) y `favicon.png` (32) | Pestañas y marcadores. Las tres medidas pequeñas están dibujadas a píxel (`ICONOS_PIXEL`), no reducidas, para que la B no salga borrosa |
+| `favicon-48.png` | Resultados de Google (pide múltiplos de 48) |
+| `apple-touch-icon.png` (180, opaco) | Pantalla de inicio del iPhone (iOS redondea las esquinas). También como `apple-touch-icon-precomposed.png`, que iOS pide por su cuenta |
+| `site.webmanifest` + `icon-192.png`, `icon-512.png`, `icon-maskable-512.png` | Acceso directo en Android (`display: browser`: abre la web en el navegador). El «maskable» deja la B dentro de la zona segura para cualquier forma de icono |
+
+Las etiquetas del `<head>` (todas las páginas) llevan `?v=<huella de los iconos>`: Safari guarda los
+favicons en una caché propia por URL que no respeta las cabeceras HTTP, así que al cambiar un icono
+cambia la URL y lo vuelve a pedir. En un iPhone que ya tenga la web en la pantalla de inicio hay que
+quitar el acceso directo y volver a añadirlo.
+
 ## Despliegue en Vercel
 
 La web es estática: Vercel sirve tal cual la carpeta `public/` (ya generada y versionada) y la única

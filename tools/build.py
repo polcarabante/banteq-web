@@ -583,12 +583,62 @@ def apply_images():
             _fit(GEN / source, size, contain).save(target)
     for name, source in NUEVAS.items():
         shutil.copy(GEN / source, IMAGES / name)
-    icons = OUT / "framerusercontent.com" / "sites" / "icons"
-    _fit(GEN / "favicon-256.png", (32, 32), True).save(icons / "writing-hand-favicon.png")
-    shutil.copy(GEN / "apple-icon-180.png", OUT / "apple-touch-icon.png")
-    _fit(GEN / "favicon-256.png", (32, 32), True).save(OUT / "favicon.png")
-    # Navegadores y buscadores piden /favicon.ico aunque la página declare favicon.png.
-    Image.open(GEN / "favicon-256.png").convert("RGBA").save(OUT / "favicon.ico", sizes=[(16, 16), (32, 32), (48, 48)])
+    shutil.copy(GEN / "favicon-32.png", OUT / "framerusercontent.com" / "sites" / "icons" / "writing-hand-favicon.png")
+    apply_icons()
+
+
+# Favicon e iconos (tools/assets.py iconos), en la raíz del sitio: publicado ← generado.
+ICONOS = {
+    "favicon.png": "favicon-32.png",
+    "favicon-48.png": "favicon-48.png",
+    "apple-touch-icon.png": "apple-touch-icon-180.png",
+    # iOS lo pide por su cuenta si una página no declara apple-touch-icon; así no da 404.
+    "apple-touch-icon-precomposed.png": "apple-touch-icon-180.png",
+    "icon-192.png": "icon-192.png",
+    "icon-512.png": "icon-512.png",
+    "icon-maskable-512.png": "icon-maskable-512.png",
+}
+MANIFEST = {
+    "name": "Banteq",
+    "short_name": "Banteq",
+    "start_url": "/",
+    "display": "browser",  # el acceso directo abre la web en el navegador, como siempre
+    "background_color": "#0f0f0f",
+    "theme_color": "#0f0f0f",
+    "icons": [
+        {"src": "/icon-192.png", "sizes": "192x192", "type": "image/png"},
+        {"src": "/icon-512.png", "sizes": "512x512", "type": "image/png"},
+        {"src": "/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable"},
+    ],
+}
+
+
+def icon_version():
+    """Huella de los iconos: va como ?v= en las etiquetas del <head>. Safari (y Chrome) guardan el
+    favicon en una caché propia por URL que no respeta las cabeceras HTTP; si cambia el icono,
+    cambia la URL y lo vuelven a pedir."""
+    import hashlib
+
+    digest = hashlib.sha256()
+    for source in sorted(set(ICONOS.values())) + ["favicon-16.png"]:
+        digest.update((GEN / source).read_bytes())
+    return digest.hexdigest()[:8]
+
+
+def apply_icons():
+    from PIL import Image
+
+    for name, source in ICONOS.items():
+        shutil.copy(GEN / source, OUT / name)
+    # /favicon.ico (navegadores y buscadores lo piden aunque la página declare otro): las tres
+    # medidas dibujadas a píxel, no una reducción de la grande.
+    small = {size: Image.open(GEN / f"favicon-{size}.png").convert("RGBA") for size in (16, 32, 48)}
+    small[48].save(OUT / "favicon.ico", sizes=[(16, 16), (32, 32), (48, 48)], append_images=[small[16], small[32]])
+    v = icon_version()
+    manifest = json.loads(json.dumps(MANIFEST))
+    for icon in manifest["icons"]:
+        icon["src"] += f"?v={v}"
+    (OUT / "site.webmanifest").write_text(json.dumps(manifest, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
 
 
 def mark_svg_28(fill="rgb(255,255,255)"):
@@ -622,10 +672,23 @@ def apply_nav_logo():
 
 
 def apply_head_images(rel):
+    """Iconos en el <head>: los de la plantilla (dos rel=icon por esquema de color, el mismo PNG, y
+    el apple-touch-icon) se sustituyen por el juego completo, con ?v= para saltar la caché de
+    favicons de Safari cuando cambien."""
+    v = icon_version()
+    tags = (
+        f'<link rel="icon" href="/favicon.ico?v={v}" sizes="16x16 32x32 48x48">'
+        f'<link rel="icon" href="/favicon.png?v={v}" type="image/png" sizes="32x32">'
+        f'<link rel="icon" href="/icon-192.png?v={v}" type="image/png" sizes="192x192">'
+        f'<link rel="apple-touch-icon" href="/apple-touch-icon.png?v={v}" sizes="180x180">'
+        f'<link rel="manifest" href="/site.webmanifest?v={v}">'
+    )
     h = S[rel]
-    h = re.sub(r'<link href="[^"]*" rel="icon" media="\(prefers-color-scheme: light\)">', '<link href="/favicon.png" rel="icon" media="(prefers-color-scheme: light)">', h)
-    h = re.sub(r'<link href="[^"]*" rel="icon" media="\(prefers-color-scheme: dark\)">', '<link href="/favicon.png" rel="icon" media="(prefers-color-scheme: dark)">', h)
-    h = re.sub(r'<link rel="apple-touch-icon" href="[^"]*">', '<link rel="apple-touch-icon" href="/apple-touch-icon.png">', h)
+    h, n = re.subn(r'<link href="[^"]*" rel="icon" media="\(prefers-color-scheme: light\)">\s*', "", h)
+    h, m = re.subn(r'<link href="[^"]*" rel="icon" media="\(prefers-color-scheme: dark\)">\s*', "", h)
+    h, k = re.subn(r'<link rel="apple-touch-icon" href="[^"]*">', tags, h)
+    # Las páginas de la web llevan las tres; los HTML auxiliares de terceros, ninguna.
+    assert (n, m, k) in ((1, 1, 1), (0, 0, 0)), f"{rel}: etiquetas de iconos inesperadas {(n, m, k)}"
     S[rel] = h
 
 

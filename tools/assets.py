@@ -5,6 +5,7 @@ Las piezas con texto o vectores se maquetan en HTML y se renderizan con Chrome
 encajen tipográficamente con la web. El resto se compone con Pillow.
 
     python3 tools/assets.py
+    python3 tools/assets.py iconos   → solo favicon e iconos (Pillow)
 
 Salida: assets-banteq/generado/ (lo consume tools/build.py).
 """
@@ -129,8 +130,6 @@ def brand():
     html_asset("mark-white-200", 200, 200, f'<div style="padding:44px">{mark_svg("#fff", "112px")}</div>')
     html_asset("favicon-256", 256, 256,
                f'<div style="width:256px;height:256px;border-radius:50%;background:#0f0f0f;padding:58px">{mark_svg("#fff", "140px")}</div>')
-    html_asset("apple-icon-180", 180, 180,
-               f'<div style="width:180px;height:180px;background:#0f0f0f;padding:36px">{mark_svg("#fff", "108px")}</div>', bg="#0f0f0f")
     # Disco oscuro con el símbolo (tarjetas "¿No sabes por dónde empezar?").
     html_asset(
         "cta-disc", 320, 320,
@@ -140,6 +139,65 @@ def brand():
            .d:after{{content:"";position:absolute;inset:0;border-radius:50%;padding:6px;background:{IRIS};
            -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;opacity:.9}}""",
     )
+
+
+# ---------------------------------------------------------------------------
+# Favicon e iconos (pestañas, pantalla de inicio de iPhone y Android, manifest)
+# ---------------------------------------------------------------------------
+
+ICONO_FONDO = (15, 15, 15)  # #0f0f0f, el negro de la marca
+
+# Tamaños pequeños dibujados a mano y alineados a píxel (bloques de alto entero, hueco entero,
+# todo centrado): reducir el vector a 16 px dejaba la B borrosa. Por tamaño: radio del fondo,
+# alto de cada bloque, hueco entre bloques, ancho del bloque de arriba y del de abajo.
+ICONOS_PIXEL = {16: (3.5, 5, 2, 8, 10), 32: (7, 10, 2, 16, 20), 48: (10, 15, 4, 22, 28)}
+
+
+def _bloque(draw, x0, y0, w, h, s):
+    """Bloque del símbolo: esquinas izquierdas casi rectas y extremo derecho redondo (como MARK_PATH:
+    radio izquierdo = 2,5/21 del alto, derecho = medio alto). En unidades del lienzo × s."""
+    rl, rr = h * 2.5 / 21, h / 2
+    x0, y0, w, h, rl, rr = (v * s for v in (x0, y0, w, h, rl, rr))
+    draw.rounded_rectangle([x0, y0, x0 + w - rr, y0 + h - 1], radius=rl, fill="white")
+    draw.rounded_rectangle([x0 + rl, y0, x0 + w - 1, y0 + h - 1], radius=rr, fill="white")
+
+
+def _icono(size, fondo_radio, alto_marca=None, pixel=None):
+    """Icono cuadrado con el símbolo blanco. fondo_radio: radio del cuadrado oscuro (0 = cuadrado
+    entero y opaco, para iOS y «maskable», que recortan ellos). Si no hay medidas a píxel, el
+    símbolo se escala con sus proporciones (bloques de 21, hueco de 4, anchos 30 y 38)."""
+    from PIL import ImageDraw
+
+    s = 16  # sobremuestreo; luego se reduce con BOX (cobertura exacta de cada píxel)
+    im = Image.new("RGBA", (size * s, size * s), (0, 0, 0, 0))
+    d = ImageDraw.Draw(im)
+    color = ICONO_FONDO + (255,)
+    if fondo_radio:
+        d.rounded_rectangle([0, 0, size * s - 1, size * s - 1], radius=fondo_radio * s, fill=color)
+    else:
+        d.rectangle([0, 0, size * s, size * s], fill=color)
+    if pixel:
+        h, gap, w_top, w_bottom = pixel
+    else:
+        k = alto_marca * size / 46
+        h, gap, w_top, w_bottom = 21 * k, 4 * k, 30 * k, 38 * k
+    x0 = (size - w_bottom) / 2
+    y0 = (size - (2 * h + gap)) / 2
+    _bloque(d, x0, y0, w_top, h, s)
+    _bloque(d, x0, y0 + h + gap, w_bottom, h, s)
+    im = im.resize((size, size), Image.BOX)
+    return im if fondo_radio else im.convert("RGB")
+
+
+def iconos():
+    """Favicon (16/32/48 a píxel), iconos del manifest (192 y 512, y 512 «maskable» con la B dentro
+    de la zona segura) y apple-touch-icon (180, opaco: iOS redondea las esquinas)."""
+    for size, (radio, *pixel) in ICONOS_PIXEL.items():
+        _icono(size, radio, pixel=pixel).save(GEN / f"favicon-{size}.png")
+    _icono(192, 192 * 0.22, alto_marca=0.56).save(GEN / "icon-192.png")
+    _icono(512, 512 * 0.22, alto_marca=0.56).save(GEN / "icon-512.png")
+    _icono(512, 0, alto_marca=0.46).save(GEN / "icon-maskable-512.png")  # zona segura: círculo del 80 %
+    _icono(180, 0, alto_marca=0.54).save(GEN / "apple-touch-icon-180.png")
 
 
 def og_image():
@@ -479,6 +537,7 @@ def transparent(name, w, h):
 def main():
     GEN.mkdir(parents=True, exist_ok=True)
     brand()
+    iconos()
     og_image()
     icon_tiles()
     chat("chat-648", 648, 288, 2, 18)
@@ -516,7 +575,11 @@ def solo(nombre, generar):
 
 if __name__ == "__main__":
     piezas = {"cuadro": cuadro, "og": og_image}
-    if sys.argv[1:2] and sys.argv[1] in piezas:
+    if sys.argv[1:2] == ["iconos"]:  # solo Pillow, sin Chrome
+        GEN.mkdir(parents=True, exist_ok=True)
+        iconos()
+        print("OK →", GEN)
+    elif sys.argv[1:2] and sys.argv[1] in piezas:
         solo(sys.argv[1], piezas[sys.argv[1]])
     else:
         main()
