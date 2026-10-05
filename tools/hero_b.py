@@ -10,7 +10,6 @@ del fotograma 16:9 que el hero muestra con object-fit: cover.
     python3 tools/hero_b.py plate            → assets-banteq/hero-b/plate-input.png (para editar en Higgsfield)
     python3 tools/hero_b.py clean <png>      → assets-banteq/hero-b/plate.png (fondo exacto + B limpia)
     python3 tools/hero_b.py video <mp4>      → assets-banteq/generado/hero-b*.{mp4,jpg,png}
-    python3 tools/hero_b.py movil            → solo el vídeo y el póster de móvil (desde hero-b.mp4)
 
 Pasos en Higgsfield (manuales): GPT Image 2.5 quita textos y botones de plate-input.png;
 MiniMax H3 anima plate.png usándola como primer y último fotograma (bucle sin cortes).
@@ -37,6 +36,14 @@ HERO_H = 988  # alto del hero a 1536 px (medido en la web)
 FW, FH = 1920, 1080
 SCALE = max(VIEW_W / FW, HERO_H / FH)
 OFF_X = (VIEW_W - FW * SCALE) / 2
+
+# Vídeo para móviles (hero de ~390 × 652): la B entera y centrada. Se recorta el fotograma
+# alrededor de la B, se reduce y se completa arriba y abajo con el fondo. banteq-liquid.js
+# usa estas mismas cifras para situar la máscara (MOBILE_MAP).
+MOBILE_SIZE = (720, 1200)
+MOBILE_CROP_X, MOBILE_CROP_W = 595, 818  # la B ocupa x 644–1364 del fotograma
+MOBILE_SCALED_H = 950  # 1080 × 720 / 818
+MOBILE_PAD_Y = 125
 
 
 def overlay_alpha(page_y):
@@ -227,52 +234,31 @@ def encode(src, dst, crop, crf):
     print(dst.name, f"{dst.stat().st_size / 1e6:.2f} MB")
 
 
-# Vídeo para móviles (diseño propio de móvil): solo la B, con un margen de fondo gris liso que
-# banteq.css funde con el fondo del hero (mismo color, MOVIL_FONDO) mediante un borde difuminado.
-# Así el vídeo puede ir en una caja de cualquier tamaño sin costuras ni parches. La B ocupa el 80 %
-# del ancho. banteq-liquid.js usa este recorte para situar la máscara del shader (MOBILE_MAP).
-MOVIL_SIZE = (720, 784)
-MOVIL_CROP = (549, 21, 910, 991)  # x, y, ancho, alto en el fotograma; la B: x 640–1368, y 100–932
-MOVIL_FONDO = 208  # gris del fondo (en banteq.css: #d0d0d0)
-
-
-def b_union(src, bg, samples=12):
-    """Silueta de la B en todo el bucle (unión de varios fotogramas): el líquido se mueve."""
-    n = frame_count(src)
-    union = None
-    for k in range(samples):
-        frame = WORK / "_f.png"
-        run("-ss", f"{k * n / samples / 30:.3f}", "-i", str(src), "-frames:v", "1", str(frame))
-        m = b_mask(Image.open(frame).convert("RGB"), bg)
-        union = m if union is None else ImageChops.lighter(union, m)
-        frame.unlink()
-    return union
-
-
-def movil(src=None):
-    """python3 tools/hero_b.py movil → hero-b-movil.mp4 y su póster, a partir de hero-b.mp4."""
-    src = Path(src) if src else GEN / "hero-b.mp4"
-    mw, mh = MOVIL_SIZE
-    x, y, w, h = MOVIL_CROP
+def mobile(src, dst):
+    mw, mh = MOBILE_SIZE
+    # Fondo: el ajustado, recortado igual y prolongado arriba y abajo (el degradado es muy suave
+    # y en móvil esas franjas quedan bajo el velo claro de la plantilla).
     bg = Image.open(WORK / "background.png").convert("RGB")
-    # Alfa: la B (en todo el bucle) ensanchada ~28 px del fotograma y con un borde suave de ~16 px.
-    m = b_union(src, bg).resize((FW, FH), Image.BILINEAR)
-    for _ in range(4):
-        m = m.filter(ImageFilter.MaxFilter(15))
-    m = m.filter(ImageFilter.GaussianBlur(16))
-    m.crop((x, y, x + w, y + h)).resize((mw, mh), Image.LANCZOS).save(WORK / "_movil-alfa.png")
-    graph = (f"color=c=0x{MOVIL_FONDO:02x}{MOVIL_FONDO:02x}{MOVIL_FONDO:02x}:s={mw}x{mh}:r=30[f];"
-             f"[0:v]crop={w}:{h}:{x}:{y},scale={mw}:{mh}:flags=lanczos[v];"
-             "[1:v]format=gray[a];[v][a]alphamerge[va];"
-             "[f][va]overlay=0:0:shortest=1,format=yuv420p")
-    dst = GEN / "hero-b-movil.mp4"
-    run("-i", str(src), "-loop", "1", "-i", str(WORK / "_movil-alfa.png"), "-filter_complex", graph,
-        "-frames:v", str(frame_count(src)), "-an", "-r", "30", "-c:v", "libx264", "-preset", "slow", "-crf", "24",
+    bg = bg.crop((MOBILE_CROP_X, 0, MOBILE_CROP_X + MOBILE_CROP_W, FH)).resize((mw, MOBILE_SCALED_H), Image.LANCZOS)
+    canvas = Image.new("RGB", MOBILE_SIZE)
+    canvas.paste(bg.crop((0, 0, mw, 1)).resize((mw, MOBILE_PAD_Y)), (0, 0))
+    canvas.paste(bg, (0, MOBILE_PAD_Y))
+    rest = mh - MOBILE_PAD_Y - MOBILE_SCALED_H
+    canvas.paste(bg.crop((0, MOBILE_SCALED_H - 1, mw, MOBILE_SCALED_H)).resize((mw, rest)), (0, mh - rest))
+    canvas.save(WORK / "_movil-fondo.png")
+    alpha = Image.new("L", (mw, MOBILE_SCALED_H), 0)
+    ImageDraw.Draw(alpha).rectangle((-10, 24, mw + 10, MOBILE_SCALED_H - 25), fill=255)
+    alpha.filter(ImageFilter.GaussianBlur(10)).save(WORK / "_movil-alfa.png")
+    graph = (f"[1:v]crop={MOBILE_CROP_W}:{FH}:{MOBILE_CROP_X}:0,scale={mw}:{MOBILE_SCALED_H}:flags=lanczos[v];"
+             "[2:v]format=gray[a];[v][a]alphamerge[va];"
+             f"[0:v][va]overlay=0:{MOBILE_PAD_Y}:shortest=1,format=yuv420p")
+    run("-loop", "1", "-i", str(WORK / "_movil-fondo.png"), "-i", str(src), "-loop", "1", "-i", str(WORK / "_movil-alfa.png"),
+        "-filter_complex", graph, "-frames:v", str(frame_count(src)),  # las imágenes en bucle no acaban solas
+        "-an", "-r", "30", "-c:v", "libx264", "-preset", "slow", "-crf", "24",
         "-profile:v", "high", "-g", "30", "-movflags", "+faststart", str(dst))
+    (WORK / "_movil-fondo.png").unlink()
     (WORK / "_movil-alfa.png").unlink()
-    run("-i", str(dst), "-frames:v", "1", "-q:v", "3", str(GEN / "hero-b-movil-poster.jpg"))
-    print(dst.name, f"{dst.stat().st_size / 1e6:.2f} MB", MOVIL_SIZE,
-          "MOBILE_MAP =", [round(w / FW, 6), round(h / FH, 6), round(x / FW, 6), round(y / FH, 6)])
+    print(dst.name, f"{dst.stat().st_size / 1e6:.2f} MB")
 
 
 def video(src):
@@ -280,8 +266,10 @@ def video(src):
     loop = WORK / "_bucle.mp4"
     retime(Path(src), loop)
     encode(loop, GEN / "hero-b.mp4", "", 23)
+    mobile(loop, GEN / "hero-b-movil.mp4")
     loop.unlink()
     run("-i", str(GEN / "hero-b.mp4"), "-frames:v", "1", "-q:v", "3", str(GEN / "hero-b-poster.jpg"))
+    run("-i", str(GEN / "hero-b-movil.mp4"), "-frames:v", "1", "-q:v", "3", str(GEN / "hero-b-movil-poster.jpg"))
     # Máscara para el shader, a 1/4: R = la B (borde suave), G = zona de influencia (B ensanchada
     # ~150 px del fotograma, con caída suave), que es donde el cursor deforma el líquido.
     first = Image.open(GEN / "hero-b-poster.jpg").convert("RGB")
@@ -295,8 +283,7 @@ def video(src):
     g = ImageChops.lighter(g, m)
     Image.merge("RGB", (r, g, Image.new("L", m.size, 0))).save(GEN / "hero-b-mask.png", optimize=True)
     print("hero-b-poster.jpg, hero-b-mask.png", m.size)
-    movil()
 
 
 if __name__ == "__main__":
-    {"plate": plate, "clean": clean, "video": video, "movil": movil}[sys.argv[1]](*sys.argv[2:])
+    {"plate": plate, "clean": clean, "video": video}[sys.argv[1]](*sys.argv[2:])

@@ -13,9 +13,9 @@
     escritorio: { src: "/banteq/hero-b.mp4", poster: "/banteq/hero-b-poster.jpg" },
     movil: { src: "/banteq/hero-b-movil.mp4", poster: "/banteq/hero-b-movil-poster.jpg" },
   };
-  // El vídeo móvil (720 × 784) es un recorte del fotograma alrededor de la B, con fondo liso
-  // (tools/hero_b.py movil): así se lleva su uv a la de la máscara, que es la del fotograma.
-  const MOBILE_MAP = [910 / 1920, 991 / 1080, 549 / 1920, 21 / 1080];
+  // El vídeo móvil (720 × 1200) es un recorte reducido del fotograma con fondo añadido arriba y
+  // abajo (tools/hero_b.py): así se lleva su uv a la de la máscara, que es la del fotograma.
+  const MOBILE_MAP = [818 / 1920, 1200 / 950, 595 / 1920, -125 / 950];
   const MASK_SRC = "/banteq/hero-b-mask.png"; // R: la B · G: zona de influencia (B ensanchada)
   const FRAME_W = 1920;
   const FRAME_H = 1080;
@@ -445,12 +445,9 @@ void main() {
 
     // Pestaña oculta o hero fuera de pantalla: vídeo en pausa y nada de dibujo. Al volver, el
     // vídeo sigue y la interacción arranca con el siguiente movimiento del cursor.
-    // En móvil no se arranca el <video> del HTML pre-renderizado (data-banteq-previo): React lo
-    // sustituye al hidratar y la B volvía a empezar desde 0 s. Hasta entonces se ve el póster, que
-    // es el primer fotograma, y el vídeo nuevo de Framer arranca justo desde ahí.
     const sync = () => {
       if (visible()) {
-        if (video.paused && !video.dataset.banteqPrevio) video.play().catch(() => {});
+        if (video.paused) video.play().catch(() => {});
       } else {
         stop();
         if (!video.paused) video.pause();
@@ -478,32 +475,11 @@ void main() {
     current = null;
   }
 
-  // En móvil banteq.css deja el <video> casi transparente hasta que presenta su primer fotograma
-  // (data-banteq-listo); mientras, se ve el póster del contenedor, que es ese mismo fotograma. Así
-  // no asoma ningún fotograma vacío o a medio decodificar cuando React sustituye el <video>.
-  const reveal = (video) => {
-    if (video.dataset.banteqListo || video.banteqReveal) return;
-    video.banteqReveal = true;
-    const show = () => {
-      video.dataset.banteqListo = "1";
-    };
-    const onTime = () => {
-      if (video.currentTime <= 0) return;
-      video.removeEventListener("timeupdate", onTime);
-      show();
-    };
-    if ("requestVideoFrameCallback" in video) video.requestVideoFrameCallback(show);
-    else video.addEventListener("timeupdate", onTime);
-  };
-
   // Framer monta el hero al hidratar y lo vuelve a montar al navegar o cambiar de tamaño.
   const check = () => {
     if (document.hidden) return;
     const video = document.querySelector(VIDEO_SELECTOR);
-    if (video) {
-      syncSource(video);
-      reveal(video);
-    }
+    if (video) syncSource(video);
     if (current && current.video === video && video.isConnected) return;
     teardown();
     if (video) setup(video);
