@@ -81,6 +81,26 @@ html body {
   }
 }
 
+/* Unión del hero con «Quiénes somos» (todas las medidas). El borde inferior del hero es el del
+   vídeo de la B, con el oscurecido del «Overlay» encima: más claro a la izquierda y más oscuro a la
+   derecha (187 → 172 de 255); en móvil y tableta, 170 por el «Video Overlay» de Framer. «Quiénes
+   somos» empieza en #b7b7b7 (183) liso, así que se veía una línea horizontal. Este degradado, por
+   encima del vídeo y de esas capas y por debajo de textos y botones, termina exactamente en ese
+   gris: los dos fondos quedan continuos. Nunca llega a la B: en pantallas muy panorámicas el vídeo
+   se recorta arriba y abajo y la B baja (acaba a 388 px del centro del fotograma de 1920 de ancho,
+   20,21 % del ancho), así que su alto se limita al 75 % del hueco que queda bajo ella. */
+[data-framer-name="Hero Section"] > [data-framer-name="Background"]::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: max(0px, min(9%, (50% - 20.21vw) * 0.75));
+  z-index: 3;
+  pointer-events: none;
+  background: linear-gradient(rgba(183, 183, 183, 0), var(--token-b8e0a22d-b3cf-42bc-b665-955c33d5412d, #b7b7b7));
+}
+
 /* Rendimiento: las animaciones de entrada de Framer terminan en `filter: blur(0px)` y lo dejan
    puesto; un filtro, aunque sea nulo, obliga a componer cada elemento en su propia superficie
    (23 solo en el titular del hero, encima del vídeo). Durante la animación el valor es otro y
@@ -147,6 +167,20 @@ html body {
 /* ------------------------------------------------------------------------------------------
    Rendimiento durante el hover (medido con el cursor en movimiento continuo; README).
    ------------------------------------------------------------------------------------------ */
+
+/* [Value Section] «¿Por qué Banteq?». Sección retirada: mientras esté oculta
+   (contenido.MOSTRAR_POR_QUE_BANTEQ) el build no publica este bloque.
+   El aro de cristal del icono y la pestaña del número llevaban backdrop-filter (desenfoque de 12 px
+   y 5 px). No reaccionaban al cursor, pero WebKit (Safari)
+   rehacía esos 6 desenfoques del fondo en cada fotograma que pintaba, y con el ratón en
+   movimiento hay uno por cada movimiento: fotogramas de 35–45 ms. Lo que hay detrás es el fondo
+   oscuro liso de la tarjeta, así que sin desenfoque se ve igual. */
+#por-que-banteq [data-framer-name="Icon Wrap"],
+#por-que-banteq [data-framer-name="Number"] {
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+}
+/* [/Value Section] */
 
 /* «Conectamos tus herramientas»: hover del botón central «B · Hablemos». Antes Framer Motion
    animaba por JavaScript el degradado y la sombra interior (repintado del círculo en cada
