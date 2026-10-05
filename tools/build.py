@@ -697,8 +697,10 @@ def apply_hero_b():
     # Sin atributo poster en el HTML: el navegador lo pediría antes de saber si es móvil. El póster
     # lo pinta banteq.css como fondo del <video>, con el de cada tamaño por media query.
     replace(INDEX, f'<video src="/{HERO_VIDEO}"', '<video src="/banteq/hero-b.mp4"')
+    # Al principio del <head> (lleva ~300 KB de CSS en línea): así el póster y la fuente se piden
+    # en cuanto llegan los primeros bytes y ya están cuando se pinta la portada por primera vez.
     h = S[INDEX]
-    S[INDEX] = h.replace("</head>", PRELOAD_POSTERS + "</head>", 1)
+    S[INDEX] = h.replace("<head>", "<head>" + PRELOAD_POSTERS, 1)
     # El script principal de Framer es async y va después de #main: este script en línea, justo tras
     # #main, elige el vídeo del móvil antes de que Framer pueda arrancarlo (así el móvil no descarga
     # también el de escritorio). banteq-liquid.js mantiene la elección si luego cambia el tamaño.
@@ -709,11 +711,14 @@ def apply_hero_b():
 PRELOAD_POSTERS = (
     '<link rel="preload" as="image" href="/banteq/hero-b-poster.jpg" media="(min-width: 810px)">'
     '<link rel="preload" as="image" href="/banteq/hero-b-movil-poster.jpg" media="(max-width: 809.98px)">'
+    # Geist (latín, fuente variable: un solo archivo para todos los pesos). Sin esto llega después
+    # del primer pintado y el titular salta unos píxeles al cambiar de la fuente de reserva.
+    '<link rel="preload" as="font" type="font/woff2" crossorigin href="/fonts.gstatic.com/s/geist/v5/gyByhwUxId8gMEwcGFU.woff2">'
 )
 HERO_SOURCE_SCRIPT = (
     "<script>(function(){var v=document.querySelector('[data-framer-name=\"Hero Section\"] "
     "[data-framer-name=\"Background\"] video');if(v&&matchMedia('(max-width: 809.98px)').matches)"
-    "{v.src='/banteq/hero-b-movil.mp4';v.dataset.banteqSrc='movil'}})()</script>"
+    "{v.src='/banteq/hero-b-movil.mp4';v.dataset.banteqSrc='movil';v.dataset.banteqPrevio='1'}})()</script>"
 )
 
 

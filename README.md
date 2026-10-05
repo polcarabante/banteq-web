@@ -86,8 +86,8 @@ El fondo del hero es una B de cristal líquido negro (referencia: `assets-banteq
   referencia; MiniMax H3 animó la imagen limpia usándola como primer y último fotograma (bucle sin
   cortes). `tools/hero_b.py` hace el resto: deshace el degradado del hero para que el color final
   coincida con la referencia, reparte el movimiento de forma uniforme (el modelo frenaba al final),
-  codifica escritorio (1920 × 1080, 0,9 MB) y móvil (720 × 1200 con la B entera, 0,5 MB), y crea
-  pósteres y máscara.
+  codifica escritorio (1920 × 1080, 0,9 MB) y móvil (720 × 784: solo la B, sobre el gris liso
+  `#d0d0d0` del hero y con el borde fundido; 0,4 MB), y crea pósteres y máscara.
 - **Reacción al cursor**: `assets-banteq/web/banteq-liquid.js`. Un lienzo WebGL transparente, encima
   del vídeo, usa el propio vídeo como textura y pinta solo la zona deformada: alrededor del cursor
   (radio 50–85 px, el 4,5 % del ancho del hero; antes 100–170 px) el líquido se hunde y se aparta, y
@@ -100,6 +100,27 @@ El fondo del hero es una B de cristal líquido negro (referencia: `assets-banteq
   ~50 FPS baja la resolución interna (hasta el 60 %) y la recupera cuando va holgado; **nunca**
   desactiva la interacción por tiempos. Sin WebGL o en equipos muy modestos, solo vídeo. Con
   "reducir movimiento", la B queda quieta.
+
+### Hero en móvil (< 810 px)
+
+Composición propia, no la de escritorio escalada (bloque «Hero en móvil» de `banteq.css`): textos
+arriba sobre un gris más oscuro (titular en 3 líneas equilibradas, sin el azul final del degradado
+para que contraste), y debajo la B centrada y entera, con los botones sobre su parte baja. Todo se
+calcula con CSS a partir de `100svh` (el alto visible con las barras de Safari a la vista, que no
+cambia al hacer scroll) y del ancho; nada depende de JavaScript, así que el primer fotograma ya es
+el definitivo:
+
+- **Franja gris al cargar**: el HTML pre-renderizado de Framer es el de escritorio y no trae el
+  «Video Overlay» de móvil; hasta hidratar, encima de la B se veía el fondo oscurecido. Ahora el
+  vídeo móvil tiene el mismo fondo liso que el hero y el overlay no se usa.
+- **Sin saltos (CLS 0, antes 0,15)**: en móvil no hay animaciones de entrada (el menú, la etiqueta,
+  el titular, el subtítulo y los botones estaban ocultos y desplazados hasta hidratar), la fuente
+  Geist se precarga y el póster va al principio del `<head>`.
+- **React recrea la página al hidratar** (el HTML pre-renderizado no coincide con el cliente en
+  varios puntos: React error #418, ya pasaba antes y en todos los tamaños). Como el CSS es el mismo
+  antes y después, no se mueve nada; para que la B no «vuelva a empezar», en móvil no se arranca el
+  `<video>` pre-renderizado (`data-banteq-previo`), el póster va en el contenedor y el `<video>`
+  nuevo no se muestra hasta tener su primer fotograma (`data-banteq-listo`), que es el del póster.
 
 Para regenerar el vídeo a partir de uno nuevo de Higgsfield:
 
