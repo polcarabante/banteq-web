@@ -133,6 +133,13 @@ El fondo del hero es una B de cristal líquido negro (referencia: `assets-banteq
   (radio 50–85 px, el 4,5 % del ancho del hero; antes 100–170 px) el líquido se hunde y se aparta, y
   al irse vuelve con un pequeño rebote y ondas. Solo actúa sobre la B. El tamaño se cambia en
   `radius` (todo lo demás va en unidades de ese radio, así que la intensidad no cambia).
+- **Sin «pared» en los bordes**: la máscara (`hero-b-mask.png`, `python3 tools/hero_b.py mascara`)
+  sale de los 87 fotogramas del bucle y no solo del primero, porque el contorno de la B «respira»
+  unos píxeles: R es la fracción de fotogramas en que cada píxel es B (borde suave donde se mueve),
+  G la zona del cursor (cuándo reacciona y cuánto se hunde) y B una zona de dibujo más ancha, donde
+  la refracción no se atenúa, para que el hoyuelo y las ondas crucen el contorno sin aplastarse. En
+  el shader no hay cortes en seco: el hoyuelo, las ondas y la opacidad del lienzo llegan a cero de
+  forma continua antes del límite del cálculo y del scissor.
 - **Rendimiento**: en reposo no hay WebGL ni bucle de animación: se ve el `<video>` nativo
   (decodificado y compuesto por hardware). El lienzo solo dibuja mientras el cursor está cerca de la
   B y se oculta en cuanto el líquido se asienta. `pointermove` solo guarda coordenadas (sin medir el
@@ -140,6 +147,24 @@ El fondo del hero es una B de cristal líquido negro (referencia: `assets-banteq
   ~50 FPS baja la resolución interna (hasta el 60 %) y la recupera cuando va holgado; **nunca**
   desactiva la interacción por tiempos. Sin WebGL o en equipos muy modestos, solo vídeo. Con
   "reducir movimiento", la B queda quieta.
+
+### Carga del hero en móvil y tableta (sin franja)
+
+En móvil y tableta el vídeo de la B no llena el hero: Framer iguala el tono por encima y por debajo
+con una capa, «Video Overlay». El HTML exportado es el de escritorio ya hidratado y no la traía (en
+escritorio no existe), así que solo aparecía al arrancar React: durante 1–3 s se veía una franja más
+oscura arriba y otra abajo. El diseño móvil no se ha tocado; solo cambia lo que se pinta antes de
+hidratar:
+
+- `tools/build.py` (`apply_hero_b`) devuelve esa capa al HTML inicial, tal como la pinta React.
+  En escritorio no se muestra (`banteq.css`) y Framer la retira al hidratar.
+- El contenedor del vídeo lleva el póster y, debajo, un degradado con los grises del fondo del
+  vídeo: su hueco tiene el color definitivo aunque el póster aún no haya llegado.
+- El póster se precarga al principio del `<head>`.
+
+Medido en WebKit (motor de Safari) a 390 y 430 px, en frío, pestaña nueva y recarga: antes la
+franja duraba desde el primer pintado hasta hidratar (~2 s en local); ahora el fondo del primer
+fotograma ya es el definitivo.
 
 Para regenerar el vídeo a partir de uno nuevo de Higgsfield:
 
@@ -178,8 +203,8 @@ principal está prácticamente libre (hero 190 → 4 ms/s). Imágenes de la home
 
 ### Rendimiento durante el hover
 
-Segunda auditoría, centrada en mover el cursor (no en el scroll) por «¿Por qué Banteq?» y
-«Conectamos tus herramientas». Medido 25 s por caso con recorridos de ratón rápidos (barridos de
+Segunda auditoría, centrada en mover el cursor (no en el scroll) por «¿Por qué Banteq?» (sección
+retirada después; ver «Estructura de la home») y «Conectamos tus herramientas». Medido 25 s por caso con recorridos de ratón rápidos (barridos de
 izquierda a derecha, círculos sobre cada tarjeta, entrar y salir de cada tarjeta y del botón
 central) en WebKit (WebKitGTK 2.52, el motor de Safari, con el cursor real del sistema) y en Chrome
 con trazas. Lo que se ha cambiado:
@@ -220,14 +245,28 @@ El aspecto (tamaño, esquinas, fondo, sombra) está en `assets-banteq/web/banteq
 
 1. Hero: "Tecnología que mejora cómo trabaja tu empresa" + carrusel "Empresas que ya confían en Banteq" (Margon, RentUp Capital)
 2. 001 Quiénes somos
-3. 002 Por qué Banteq
-4. 003 Automatización e IA (procesos, asistentes IA, ventas y CRM, informes, conexión entre herramientas, seguridad)
-5. 004 Desarrollo web (diseño, rediseño, experiencias interactivas, formularios, integraciones, responsive, a medida)
-6. 005 Proyectos: Margon y RentUp Capital, con página propia en `/proyectos/margon` y `/proyectos/rentup-capital`
-7. 006 Cómo trabajamos
-8. 007 Herramientas
-9. 008 Preguntas frecuentes
-10. Formulario de contacto (en todas las páginas)
+3. 002 Automatización e IA (procesos, asistentes IA, ventas y CRM, informes, conexión entre herramientas, seguridad)
+4. 003 Desarrollo web (diseño, rediseño, experiencias interactivas, formularios, integraciones, responsive, a medida)
+5. 004 Proyectos: Margon y RentUp Capital, con página propia en `/proyectos/margon` y `/proyectos/rentup-capital`
+6. 005 Cómo trabajamos
+7. 006 Herramientas
+8. 007 Preguntas frecuentes
+9. Formulario de contacto (en todas las páginas)
+
+### «¿Por qué Banteq?» (retirada)
+
+La sección (título, subtítulo y las tres tarjetas: «Primero, el negocio», «De principio a fin»,
+«Hecho a medida») no se publica: el build la quita del HTML y del módulo de la home a la vez, igual
+que la de Copilot y FUNDAE, y tampoco publica su CSS (bloque `[Value Section]` de `banteq.css`), así
+que no se piden sus iconos ni su fondo (4 peticiones menos) y la página es ~970 px más corta en
+escritorio (~1.470 px en móvil). «Quiénes somos» enlaza directamente con «Automatización e IA», con
+el mismo espacio que hay entre las demás secciones, y la numeración se recalcula sola. Ningún enlace
+apuntaba a `#por-que-banteq`. Sus textos siguen en `tools/contenido.py`; para recuperarla:
+
+```bash
+# tools/contenido.py → MOSTRAR_POR_QUE_BANTEQ = True
+npm run build
+```
 
 ### Microsoft Copilot y formación FUNDAE (retirados temporalmente)
 
@@ -235,8 +274,7 @@ Mientras no se ofrezcan, no aparecen en ningún sitio de la web publicada: ni la
 Copilot y formación FUNDAE» (con el enlace al simulador de crédito), ni la tarjeta de Copilot en
 servicios (ese hueco lo ocupa «Conexión entre herramientas»), ni la pregunta sobre FUNDAE, ni «IA y
 Copilot» en el carrusel, ni las menciones en contacto, aviso legal, metadatos e imagen para redes.
-La numeración de secciones se recalcula sola (001–008) y el build comprueba que no quede ninguna
-mención. Todo el contenido sigue en `tools/contenido.py`; para volver a mostrarlo:
+La numeración de secciones se recalcula sola y el build comprueba que no quede ninguna mención. Todo el contenido sigue en `tools/contenido.py`; para volver a mostrarlo:
 
 ```bash
 # tools/contenido.py → MOSTRAR_COPILOT_FUNDAE = True

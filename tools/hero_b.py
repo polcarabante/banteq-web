@@ -270,20 +270,49 @@ def video(src):
     loop.unlink()
     run("-i", str(GEN / "hero-b.mp4"), "-frames:v", "1", "-q:v", "3", str(GEN / "hero-b-poster.jpg"))
     run("-i", str(GEN / "hero-b-movil.mp4"), "-frames:v", "1", "-q:v", "3", str(GEN / "hero-b-movil-poster.jpg"))
-    # Máscara para el shader, a 1/4: R = la B (borde suave), G = zona de influencia (B ensanchada
-    # ~150 px del fotograma, con caída suave), que es donde el cursor deforma el líquido.
-    first = Image.open(GEN / "hero-b-poster.jpg").convert("RGB")
+    print("hero-b-poster.jpg")
+    mascara()
+
+
+def mascara(src=None):
+    """Máscara del shader de banteq-liquid.js, a 1/4 del fotograma. R = la B; G = zona de influencia
+    (la B ensanchada ~150 px del fotograma, con caída suave), donde el cursor deforma el líquido;
+    B = zona de dibujo, más ancha (ver abajo).
+
+    Se calcula con todos los fotogramas del bucle, no solo con el primero: el contorno de la B
+    «respira» unos píxeles durante el vídeo, y con la silueta de un solo fotograma la deformación
+    se cortaba en seco en un borde fijo que no coincidía con el del cristal (la «pared invisible»
+    al llevar el cursor a los extremos). R es la fracción de fotogramas en que cada píxel es B
+    (1 dentro, 0 fuera y un degradado donde el contorno se mueve) y G parte de la unión de todos."""
+    src = Path(src) if src else GEN / "hero-b.mp4"
     bg = Image.open(WORK / "background.png").convert("RGB")
-    m = b_mask(first, bg)
-    r = m.filter(ImageFilter.GaussianBlur(1.2))
-    g = m
+    raw = subprocess.run([FFMPEG, "-hide_banner", "-loglevel", "error", "-i", str(src), "-vf", "format=rgb24",
+                          "-f", "rawvideo", "-"], capture_output=True, check=True).stdout
+    size = FW * FH * 3
+    masks = [b_mask(Image.frombytes("RGB", (FW, FH), raw[i:i + size]), bg) for i in range(0, len(raw), size * 2)]
+    union = masks[0]
+    count = [0] * (union.width * union.height)
+    for m in masks:
+        union = ImageChops.lighter(union, m)
+        count = [c + (v > 0) for c, v in zip(count, m.tobytes())]
+    frac = Image.frombytes("L", union.size, bytes(round(255 * c / len(masks)) for c in count))
+    r = frac.filter(ImageFilter.GaussianBlur(1.2))
+    g = union
     for _ in range(4):
         g = g.filter(ImageFilter.MaxFilter(9))
     g = g.filter(ImageFilter.GaussianBlur(9))
-    g = ImageChops.lighter(g, m)
-    Image.merge("RGB", (r, g, Image.new("L", m.size, 0))).save(GEN / "hero-b-mask.png", optimize=True)
-    print("hero-b-poster.jpg, hero-b-mask.png", m.size)
+    g = ImageChops.lighter(g, union)
+    # B = zona de dibujo: la unión ensanchada 48 px (más que 1,35 radios del hoyuelo a cualquier
+    # tamaño de pantalla) y con caída suave. Ahí la refracción no se atenúa, así que el hoyuelo
+    # conserva su forma al cruzar el contorno de la B en vez de aplastarse contra él; G sigue
+    # decidiendo cuándo reacciona al cursor y cuánto se hunde.
+    b = union
+    for _ in range(12):
+        b = b.filter(ImageFilter.MaxFilter(9))
+    b = ImageChops.lighter(b.filter(ImageFilter.GaussianBlur(8)), g)
+    Image.merge("RGB", (r, g, b)).save(GEN / "hero-b-mask.png", optimize=True)
+    print("hero-b-mask.png", union.size, f"({len(masks)} fotogramas)")
 
 
 if __name__ == "__main__":
-    {"plate": plate, "clean": clean, "video": video}[sys.argv[1]](*sys.argv[2:])
+    {"plate": plate, "clean": clean, "video": video, "mascara": mascara}[sys.argv[1]](*sys.argv[2:])

@@ -480,6 +480,14 @@ def copy_banteq_static():
     if dst.exists():
         shutil.rmtree(dst)
     shutil.copytree(ROOT / "assets-banteq" / "web", dst)
+    # Reglas de secciones ocultas (bloques marcados en banteq.css con el nombre de la sección):
+    # no se publican; vuelven solas al mostrar la sección.
+    css = dst / "banteq.css"
+    t = css.read_text(encoding="utf-8")
+    for name in C.SECCIONES_OCULTAS:
+        t = re.sub(rf"/\* \[{re.escape(name)}\] .*?/\* \[/{re.escape(name)}\] \*/\n\n?", "", t, flags=re.S)
+        assert f"[{name}]" not in t, f"banteq.css: bloque de {name} mal cerrado"
+    css.write_text(t, encoding="utf-8")
 
 
 # ---------------------------------------------------------------------------
@@ -768,8 +776,20 @@ def apply_hero_b():
     # Sin atributo poster en el HTML: el navegador lo pediría antes de saber si es móvil. El póster
     # lo pinta banteq.css como fondo del <video>, con el de cada tamaño por media query.
     replace(INDEX, f'<video src="/{HERO_VIDEO}"', '<video src="/banteq/hero-b.mp4"')
+    # Franja al cargar en móvil: el HTML exportado es el de escritorio ya hidratado, y Framer había
+    # quitado de él las capas que en escritorio no se ven (clase hidden-72rtr7). Una es el «Video
+    # Overlay», que en móvil y tableta iguala el tono del hero por encima y por debajo del vídeo de
+    # la B: hasta que React la montaba (1–3 s en un teléfono), esas dos bandas se veían más oscuras.
+    # Se devuelve al HTML tal como la pinta React, así está desde el primer fotograma; en escritorio
+    # la oculta banteq.css y Framer la retira al hidratar, como hace con el resto de capas ocultas.
+    replace(INDEX, '<div class="framer-1tph0pi" data-framer-name="Overlay"></div><div class="framer-11lkxjs-container">',
+            '<div class="framer-1tph0pi" data-framer-name="Overlay"></div>' + HERO_VIDEO_OVERLAY +
+            '<div class="framer-11lkxjs-container">')
+    assert f"className:`{HERO_VIDEO_OVERLAY_CLASS}`" in S[HOME_MOD], "el módulo ya no pinta el Video Overlay así"
+    # Al principio del <head> (lleva ~300 KB de CSS en línea): el póster se pide con los primeros
+    # bytes y ya está cuando se pinta la portada por primera vez.
     h = S[INDEX]
-    S[INDEX] = h.replace("</head>", PRELOAD_POSTERS + "</head>", 1)
+    S[INDEX] = h.replace("<head>", "<head>" + PRELOAD_POSTERS, 1)
     # El script principal de Framer es async y va después de #main: este script en línea, justo tras
     # #main, elige el vídeo del móvil antes de que Framer pueda arrancarlo (así el móvil no descarga
     # también el de escritorio). banteq-liquid.js mantiene la elección si luego cambia el tamaño.
@@ -781,6 +801,8 @@ PRELOAD_POSTERS = (
     '<link rel="preload" as="image" href="/banteq/hero-b-poster.jpg" media="(min-width: 810px)">'
     '<link rel="preload" as="image" href="/banteq/hero-b-movil-poster.jpg" media="(max-width: 809.98px)">'
 )
+HERO_VIDEO_OVERLAY_CLASS = "framer-4gsoix hidden-72rtr7"
+HERO_VIDEO_OVERLAY = f'<div class="{HERO_VIDEO_OVERLAY_CLASS}" data-framer-name="Video Overlay"></div>'
 HERO_SOURCE_SCRIPT = (
     "<script>(function(){var v=document.querySelector('[data-framer-name=\"Hero Section\"] "
     "[data-framer-name=\"Background\"] video');if(v&&matchMedia('(max-width: 809.98px)').matches)"
@@ -1148,16 +1170,22 @@ def remove_child_call(rel, start, end):
     S[rel] = t[:start] + t[end:]
 
 
-def hide_copilot_fundae():
-    """Microsoft Copilot y FUNDAE (contenido.MOSTRAR_COPILOT_FUNDAE = False). Todo se construye con sus
-    textos, enlaces y numeración, y aquí se quita del módulo de la home y del HTML a la vez (si solo
-    se quitara de uno, React daría error de hidratación). Volver a mostrarlo es cambiar la bandera."""
-    if C.MOSTRAR_COPILOT_FUNDAE:
-        return
+def hide_sections():
+    """Secciones ocultas (contenido.SECCIONES_OCULTAS: «¿Por qué Banteq?» y la de Copilot y FUNDAE).
+    Se construyen con sus textos, enlaces y numeración, y aquí se quitan del módulo de la home y del
+    HTML a la vez (si solo se quitaran de uno, React daría error de hidratación). Volver a mostrarlas
+    es cambiar la bandera en contenido.py."""
     for name in C.SECCIONES_OCULTAS:
         remove_child_call(HOME_MOD, *section_range_js(name))
         a, b = section_range_html(INDEX, name)
         S[INDEX] = S[INDEX][:a] + S[INDEX][b:]
+    hide_copilot_fundae()
+
+
+def hide_copilot_fundae():
+    """Restos de Microsoft Copilot y FUNDAE fuera de su sección (contenido.MOSTRAR_COPILOT_FUNDAE)."""
+    if C.MOSTRAR_COPILOT_FUNDAE:
+        return
     # Pregunta frecuente sobre FUNDAE: es la última de la lista, así que no queda hueco.
     pregunta = {t[0]: t[1] for t in C.HOME}["What kind of ROI can we expect?"]
     t = S[HOME_MOD]
@@ -1447,7 +1475,7 @@ def main():
         inject_assets(rel)
         apply_head_images(rel)
 
-    hide_copilot_fundae()
+    hide_sections()
     make_shells()
     apply_seo()
     final_cleanup()

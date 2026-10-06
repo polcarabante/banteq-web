@@ -17,6 +17,14 @@ Cada entrada es (texto original de la plantilla, texto de Banteq).
 # python3 tools/assets.py og para la imagen de redes).
 MOSTRAR_COPILOT_FUNDAE = False
 
+# «¿Por qué Banteq?» (título, subtítulo y las tres tarjetas: negocio, de principio a fin, a medida):
+# retirada de la web. Sus textos siguen en este archivo y se construye igual, pero no se publica:
+# ni su HTML, ni la sección en el módulo de la home, ni su CSS (no se piden sus imágenes). Solo
+# queda, sin ejecutarse, la definición del componente de tarjeta dentro del paquete de Framer.
+# Con True vuelve en su sitio, entre «Quiénes somos» y «Automatización e IA», con su ancla
+# #por-que-banteq y la numeración corrida.
+MOSTRAR_POR_QUE_BANTEQ = False
+
 META_TITLE = "Banteq | Automatización, IA y desarrollo web para empresas"
 # Descripción para buscadores y redes (home y páginas sin una propia). Texto fijado por Banteq: no
 # menciona Copilot ni FUNDAE, que ya no se ofrecen (MOSTRAR_COPILOT_FUNDAE no la cambia).
@@ -47,7 +55,9 @@ ORDEN_SECCIONES = [
 
 # Secciones que se construyen igual (todos sus textos se aplican) pero no se publican: el build las
 # quita al final del módulo de la home y del HTML. Volver a mostrarlas no requiere nada más.
-SECCIONES_OCULTAS = [] if MOSTRAR_COPILOT_FUNDAE else ["Pricing Section"]
+SECCIONES_OCULTAS = ([] if MOSTRAR_POR_QUE_BANTEQ else ["Value Section"]) + (
+    [] if MOSTRAR_COPILOT_FUNDAE else ["Pricing Section"]
+)
 
 # Anclas de sección en español (id original → id nuevo).
 ANCLAS = {

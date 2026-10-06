@@ -50,6 +50,55 @@ html body {
   [data-framer-name="Hero Section"] [data-framer-name="Background"] video {
     background-image: url("/banteq/hero-b-movil-poster.jpg");
   }
+  /* Carga en móvil: el vídeo de la B no llena el hero y, hasta que llega su póster, por su hueco
+     se veía el gris más oscuro del fondo (un rectángulo de otro tono). El contenedor lleva ese
+     mismo póster y, debajo, un degradado con los grises del fondo del vídeo (medidos en el póster):
+     el hueco tiene su color definitivo desde el primer fotograma. Queda tapado por el vídeo. */
+  [data-framer-name="Hero Section"] .framer-11lkxjs-container {
+    background:
+      url("/banteq/hero-b-movil-poster.jpg") center / cover no-repeat,
+      linear-gradient(#dedede 0%, #dedede 10%, #dadada 16%, #d5d5d5 25%, #d0d0d0 35%, #cccccc 45%, #c6c6c6 60%, #c3c3c3 80%, #c3c3c3 100%);
+  }
+}
+/* Lo mismo en tableta, donde el vídeo (el de escritorio) tampoco llena el hero. Su fondo aclara
+   hacia la izquierda: de ahí el segundo degradado. */
+@media (min-width: 810px) and (max-width: 1199.98px) {
+  [data-framer-name="Hero Section"] .framer-11lkxjs-container {
+    background:
+      url("/banteq/hero-b-poster.jpg") center / cover no-repeat,
+      linear-gradient(to right, rgba(255, 255, 255, 0.16), rgba(0, 0, 0, 0.035)),
+      linear-gradient(#dddddd 0%, #dadada 8%, #d6d6d6 16%, #d3d3d3 25%, #cfcfcf 35%, #cccccc 45%, #c8c8c8 60%, #c5c5c5 75%, #c3c3c3 85%, #c3c3c3 100%);
+  }
+}
+
+/* Carga en móvil y tableta: el «Video Overlay» del hero (iguala el tono por encima y por debajo
+   del vídeo) va ya en el HTML inicial (tools/build.py → apply_hero_b); antes solo aparecía al
+   arrancar React y, mientras, se veía una franja más oscura arriba. En escritorio esa capa no
+   existe: Framer la quita al hidratar y, hasta entonces, no se pinta. */
+@media (min-width: 1200px) {
+  [data-framer-name="Hero Section"] .framer-4gsoix.hidden-72rtr7 {
+    display: none !important;
+  }
+}
+
+/* Unión del hero con «Quiénes somos» (todas las medidas). El borde inferior del hero es el del
+   vídeo de la B, con el oscurecido del «Overlay» encima: más claro a la izquierda y más oscuro a la
+   derecha (187 → 172 de 255); en móvil y tableta, 170 por el «Video Overlay» de Framer. «Quiénes
+   somos» empieza en #b7b7b7 (183) liso, así que se veía una línea horizontal. Este degradado, por
+   encima del vídeo y de esas capas y por debajo de textos y botones, termina exactamente en ese
+   gris: los dos fondos quedan continuos. Nunca llega a la B: en pantallas muy panorámicas el vídeo
+   se recorta arriba y abajo y la B baja (acaba a 388 px del centro del fotograma de 1920 de ancho,
+   20,21 % del ancho), así que su alto se limita al 75 % del hueco que queda bajo ella. */
+[data-framer-name="Hero Section"] > [data-framer-name="Background"]::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: max(0px, min(9%, (50% - 20.21vw) * 0.75));
+  z-index: 3;
+  pointer-events: none;
+  background: linear-gradient(rgba(183, 183, 183, 0), var(--token-b8e0a22d-b3cf-42bc-b665-955c33d5412d, #b7b7b7));
 }
 
 /* Rendimiento: las animaciones de entrada de Framer terminan en `filter: blur(0px)` y lo dejan
@@ -119,8 +168,10 @@ html body {
    Rendimiento durante el hover (medido con el cursor en movimiento continuo; README).
    ------------------------------------------------------------------------------------------ */
 
-/* «¿Por qué Banteq?»: el aro de cristal del icono y la pestaña del número llevaban
-   backdrop-filter (desenfoque de 12 px y 5 px). No reaccionaban al cursor, pero WebKit (Safari)
+/* [Value Section] «¿Por qué Banteq?». Sección retirada: mientras esté oculta
+   (contenido.MOSTRAR_POR_QUE_BANTEQ) el build no publica este bloque.
+   El aro de cristal del icono y la pestaña del número llevaban backdrop-filter (desenfoque de 12 px
+   y 5 px). No reaccionaban al cursor, pero WebKit (Safari)
    rehacía esos 6 desenfoques del fondo en cada fotograma que pintaba, y con el ratón en
    movimiento hay uno por cada movimiento: fotogramas de 35–45 ms. Lo que hay detrás es el fondo
    oscuro liso de la tarjeta, así que sin desenfoque se ve igual. */
@@ -129,6 +180,7 @@ html body {
   -webkit-backdrop-filter: none !important;
   backdrop-filter: none !important;
 }
+/* [/Value Section] */
 
 /* «Conectamos tus herramientas»: hover del botón central «B · Hablemos». Antes Framer Motion
    animaba por JavaScript el degradado y la sombra interior (repintado del círculo en cada
