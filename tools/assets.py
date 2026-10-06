@@ -5,6 +5,7 @@ Las piezas con texto o vectores se maquetan en HTML y se renderizan con Chrome
 encajen tipográficamente con la web. El resto se compone con Pillow.
 
     python3 tools/assets.py
+    python3 tools/assets.py iconos   → solo favicon e iconos (Pillow)
 
 Salida: assets-banteq/generado/ (lo consume tools/build.py).
 """
@@ -129,8 +130,6 @@ def brand():
     html_asset("mark-white-200", 200, 200, f'<div style="padding:44px">{mark_svg("#fff", "112px")}</div>')
     html_asset("favicon-256", 256, 256,
                f'<div style="width:256px;height:256px;border-radius:50%;background:#0f0f0f;padding:58px">{mark_svg("#fff", "140px")}</div>')
-    html_asset("apple-icon-180", 180, 180,
-               f'<div style="width:180px;height:180px;background:#0f0f0f;padding:36px">{mark_svg("#fff", "108px")}</div>', bg="#0f0f0f")
     # Disco oscuro con el símbolo (tarjetas "¿No sabes por dónde empezar?").
     html_asset(
         "cta-disc", 320, 320,
@@ -140,6 +139,74 @@ def brand():
            .d:after{{content:"";position:absolute;inset:0;border-radius:50%;padding:6px;background:{IRIS};
            -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;opacity:.9}}""",
     )
+
+
+# ---------------------------------------------------------------------------
+# Favicon e iconos (pestañas, resultados de Google, pantalla de inicio de iPhone y Android)
+# ---------------------------------------------------------------------------
+#
+# El icono es el logo del menú de la web: el símbolo de Banteq (MARK_PATH, la B blanca) sobre un
+# disco negro. No se rediseña nada; solo cambia cuánto ocupa la B dentro del disco, porque un
+# favicon se ve a 16–18 px (pestañas, resultados de Google) y con la proporción del menú (36 % del
+# alto) la B se quedaba en 6 px. Aquí ocupa algo más de la mitad del alto, con margen de sobra para
+# que sus esquinas no toquen el borde del disco.
+
+ICONO_FONDO = (15, 15, 15)  # #0f0f0f, el negro de la marca
+ICONO_ALTO_B = 0.56  # alto de la B respecto al disco
+ICONO_ALTO_B_CUADRADO = 0.54  # en el cuadrado opaco de iOS (redondea él las esquinas)
+ICONO_ALTO_B_MASKABLE = 0.46  # Android recorta el «maskable» a un círculo del 80 %: la B entera queda dentro
+BLOQUES = ((30, 21), (38, 21))  # ancho y alto de los dos bloques de MARK_PATH; hueco de 4 entre ellos
+HUECO, ALTO_MARCA = 4, 46
+
+
+def _bloque(draw, x0, y0, w, h, s):
+    """Bloque del símbolo: esquinas izquierdas casi rectas y extremo derecho redondo (como MARK_PATH:
+    radio izquierdo = 2,5/21 del alto, derecho = medio alto). En unidades del lienzo × s."""
+    rl, rr = h * 2.5 / 21, h / 2
+    x0, y0, w, h, rl, rr = (v * s for v in (x0, y0, w, h, rl, rr))
+    draw.rounded_rectangle([x0, y0, x0 + w - rr, y0 + h - 1], radius=rl, fill="white")
+    draw.rounded_rectangle([x0 + rl, y0, x0 + w - 1, y0 + h - 1], radius=rr, fill="white")
+
+
+def _icono(size, disco, alto_b=None):
+    """Icono de size × size con el símbolo blanco centrado. disco: fondo redondo con las esquinas
+    transparentes (favicon); si no, cuadrado entero y opaco (apple-touch-icon y «maskable»).
+    Hasta 96 px las medidas del símbolo se ajustan a píxeles enteros (alto de cada bloque, hueco,
+    anchos y posición): así los bordes rectos de la B salen nítidos y el hueco entre los dos bloques
+    no se emborrona. Se dibuja sobremuestreado y se reduce con BOX (cobertura exacta de cada píxel)."""
+    from PIL import ImageDraw
+
+    alto_b = alto_b or (ICONO_ALTO_B if disco else ICONO_ALTO_B_CUADRADO)
+    s = 16 if size <= 96 else 8
+    im = Image.new("RGBA", (size * s, size * s), (0, 0, 0, 0))
+    d = ImageDraw.Draw(im)
+    color = ICONO_FONDO + (255,)
+    if disco:
+        d.ellipse([0, 0, size * s - 1, size * s - 1], fill=color)
+    else:
+        d.rectangle([0, 0, size * s, size * s], fill=color)
+    u = alto_b * size / ALTO_MARCA  # una unidad del símbolo
+    h, hueco, (w_top, _), (w_bottom, _) = BLOQUES[0][1] * u, HUECO * u, *[(w * u, 0) for w, _ in BLOQUES]
+    if size <= 96:
+        h, hueco, w_top, w_bottom = max(1, round(h)), max(1, round(hueco)), round(w_top), round(w_bottom)
+    x0, y0 = (size - w_bottom) / 2, (size - (2 * h + hueco)) / 2
+    if size <= 96:
+        x0, y0 = int(x0 + 0.5), int(y0 + 0.5)
+    _bloque(d, x0, y0, w_top, h, s)
+    _bloque(d, x0, y0 + h + hueco, w_bottom, h, s)
+    im = im.resize((size, size), Image.BOX)
+    return im if disco else im.convert("RGB")
+
+
+def iconos():
+    """Favicon en 16/32/48/96 (pestañas, favicon.ico y Google, que pide múltiplos de 48), 192 y 512
+    (manifest), apple-touch-icon de 180 y 512 «maskable» (opacos: la B queda dentro de la zona segura)."""
+    for size in (16, 32, 48, 96):
+        _icono(size, True).save(GEN / f"favicon-{size}.png")
+    for size in (192, 512):
+        _icono(size, True).save(GEN / f"icon-{size}.png")
+    _icono(180, False).save(GEN / "apple-touch-icon-180.png")
+    _icono(512, False, ICONO_ALTO_B_MASKABLE).save(GEN / "icon-maskable-512.png")
 
 
 def og_image():
@@ -479,6 +546,7 @@ def transparent(name, w, h):
 def main():
     GEN.mkdir(parents=True, exist_ok=True)
     brand()
+    iconos()
     og_image()
     icon_tiles()
     chat("chat-648", 648, 288, 2, 18)
@@ -516,7 +584,11 @@ def solo(nombre, generar):
 
 if __name__ == "__main__":
     piezas = {"cuadro": cuadro, "og": og_image}
-    if sys.argv[1:2] and sys.argv[1] in piezas:
+    if sys.argv[1:2] == ["iconos"]:  # solo Pillow, sin Chrome
+        GEN.mkdir(parents=True, exist_ok=True)
+        iconos()
+        print("OK →", GEN)
+    elif sys.argv[1:2] and sys.argv[1] in piezas:
         solo(sys.argv[1], piezas[sys.argv[1]])
     else:
         main()

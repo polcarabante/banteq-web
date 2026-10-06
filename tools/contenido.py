@@ -18,18 +18,18 @@ Cada entrada es (texto original de la plantilla, texto de Banteq).
 MOSTRAR_COPILOT_FUNDAE = False
 
 META_TITLE = "Banteq | Automatización, IA y desarrollo web para empresas"
+# Descripción para buscadores y redes (home y páginas sin una propia). Texto fijado por Banteq: no
+# menciona Copilot ni FUNDAE, que ya no se ofrecen (MOSTRAR_COPILOT_FUNDAE no la cambia).
 META_DESCRIPTION = (
-    (
-        "Banteq analiza cómo funciona tu empresa y aplica automatización de procesos, inteligencia "
-        "artificial, Microsoft Copilot, formación bonificable FUNDAE y desarrollo web para mejorar "
-        "procesos, presencia digital y productividad."
-    )
-    if MOSTRAR_COPILOT_FUNDAE
-    else (
-        "Banteq analiza cómo funciona tu empresa y aplica automatización de procesos, inteligencia "
-        "artificial y desarrollo web para mejorar procesos, presencia digital y productividad."
-    )
+    "Banteq Digital ayuda a las empresas a mejorar sus procesos mediante automatización, "
+    "inteligencia artificial y desarrollo web a medida."
 )
+
+# Identidad en buscadores (tools/build.py → apply_seo): dominio canónico, sin www ni barra final, y
+# nombre del sitio para Google (el que muestra encima de la URL en los resultados).
+SITIO = "https://banteq.com"
+NOMBRE_SITIO = "Banteq"
+NOMBRE_ALTERNATIVO = "Banteq Digital"
 
 # Orden final de las secciones de la home (la de equipo se elimina: no hay equipo documentado).
 ORDEN_SECCIONES = [

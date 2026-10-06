@@ -59,6 +59,46 @@ fuera de la zona que controla React y aparece duplicado bajo el pie.
 `python3 tools/assets.py` (usa Chrome y `puppeteer-core` del proyecto de Margon) y después
 `python3 tools/build.py`.
 
+### Favicon e iconos
+
+`python3 tools/assets.py iconos` (solo Pillow) y `python3 tools/build.py`. Es el logo del menú: el
+símbolo de Banteq (la B blanca) sobre un disco negro `#0f0f0f`. No se rediseña: solo cambia cuánto
+ocupa la B dentro del disco (56 % del alto, frente al 36 % del menú), porque un favicon se ve a
+16–18 px y con la proporción del menú la B se quedaba en 6 px.
+
+| Archivo (raíz del sitio) | Para qué |
+| --- | --- |
+| `favicon.ico` (16, 32 y 48) | Pestañas, marcadores y cualquier navegador o buscador que lo pida por su cuenta |
+| `favicon-48x48.png` y `favicon-96x96.png` | Resultados de Google (solo acepta favicons cuadrados de un múltiplo de 48 px) |
+| `favicon.png` (32) | Nombre que ya estaba publicado: se mantiene para páginas en caché |
+| `apple-touch-icon.png` (180, opaco) | Favoritos y pantalla de inicio del iPhone (iOS redondea las esquinas). También como `apple-touch-icon-precomposed.png`, que iOS pide por su cuenta |
+| `site.webmanifest` + `icon-192.png`, `icon-512.png`, `icon-maskable-512.png` | Acceso directo en Android (`display: browser`: abre la web en el navegador). El «maskable» deja la B dentro de la zona segura para cualquier forma de icono |
+
+Hasta 96 px las medidas de la B se ajustan a píxeles enteros para que no salga borrosa. Las
+etiquetas del `<head>` (todas las páginas) llevan `?v=<huella de los iconos>`: Safari guarda los
+favicons en una caché propia por URL que no respeta las cabeceras HTTP, así que al cambiar un icono
+cambia la URL y lo vuelve a pedir; mientras no cambie, la URL es siempre la misma. En un iPhone que
+ya tenga la web en la pantalla de inicio hay que quitar el acceso directo y volver a añadirlo.
+
+### Identidad en buscadores (SEO)
+
+Todo sale de `tools/contenido.py` (`META_TITLE`, `META_DESCRIPTION`, `SITIO`, `NOMBRE_SITIO`) y lo
+aplica `apply_seo()` en `tools/build.py`:
+
+- **Canónica y `og:url` de cada página**, absolutas (`https://banteq.com/contacto`…). La plantilla
+  dejaba `/` en todas: para Google, todas eran copias de la home.
+- **Open Graph y Twitter** con el título y la descripción de cada página y la imagen en URL
+  absoluta; `og:site_name` y `og:locale`.
+- **Datos estructurados** (JSON-LD) en la home: `Organization` (nombre, logo) y `WebSite` (el nombre
+  que Google muestra sobre la URL). Solo datos ciertos: sin dirección ni teléfono hasta tenerlos.
+- **`robots.txt`** (todo permitido, con el sitemap) y **`sitemap.xml`** con las páginas indexables.
+- La página 404 lleva `noindex`.
+- En el navegador, Framer ponía a cada página el título de la home y tenía como dominio el de la
+  plantilla (`framer.app`): ahora usa el `<title>` de cada ruta y `SITIO`.
+
+Pendiente fuera del repositorio: `www.banteq.com` no está añadido al proyecto de Vercel (no carga
+por HTTPS); hay que añadirlo como redirección a `banteq.com`.
+
 ## Despliegue en Vercel
 
 La web es estática: Vercel sirve tal cual la carpeta `public/` (ya generada y versionada) y la única

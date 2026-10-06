@@ -132,6 +132,9 @@ def fix_html_paths(rel):
     h = h.replace("https://breathtaking-step-882598.framer.app/privacy-policy", C.RUTAS["/privacy-policy"])
     h = re.sub(r"https://breathtaking-step-882598\.framer\.app/case-studies/[a-z0-9-]+", C.RUTAS["/case-studies"], h)
     h = h.replace("https://breathtaking-step-882598.framer.app/404", "/#servicios")
+    # Logo del menú en el HTML inicial: apuntaba a la carpeta de la exportación (un 404 para quien
+    # lea el HTML sin ejecutar JavaScript, como los rastreadores).
+    h = h.replace('href="../breathtaking-step-882598.framer.app/index.html"', 'href="/"')
     h = h.replace("https://breathtaking-step-882598.framer.app/", "/")
     h = h.replace("../framerusercontent.com/", "/framerusercontent.com/")
     h = h.replace("../fonts.gstatic.com/", "/fonts.gstatic.com/")
@@ -583,12 +586,65 @@ def apply_images():
             _fit(GEN / source, size, contain).save(target)
     for name, source in NUEVAS.items():
         shutil.copy(GEN / source, IMAGES / name)
-    icons = OUT / "framerusercontent.com" / "sites" / "icons"
-    _fit(GEN / "favicon-256.png", (32, 32), True).save(icons / "writing-hand-favicon.png")
-    shutil.copy(GEN / "apple-icon-180.png", OUT / "apple-touch-icon.png")
-    _fit(GEN / "favicon-256.png", (32, 32), True).save(OUT / "favicon.png")
-    # Navegadores y buscadores piden /favicon.ico aunque la página declare favicon.png.
-    Image.open(GEN / "favicon-256.png").convert("RGBA").save(OUT / "favicon.ico", sizes=[(16, 16), (32, 32), (48, 48)])
+    shutil.copy(GEN / "favicon-32.png", OUT / "framerusercontent.com" / "sites" / "icons" / "writing-hand-favicon.png")
+    apply_icons()
+
+
+# Favicon e iconos, en la raíz del sitio: publicado ← generado (tools/assets.py iconos). Es el logo
+# del menú: la B blanca sobre el disco negro.
+ICONOS = {
+    "favicon.png": "favicon-32.png",  # nombre que ya estaba publicado: se mantiene para páginas en caché
+    "favicon-48x48.png": "favicon-48.png",  # Google pide múltiplos de 48 px
+    "favicon-96x96.png": "favicon-96.png",
+    "apple-touch-icon.png": "apple-touch-icon-180.png",
+    # iOS lo pide por su cuenta si una página no declara apple-touch-icon; así no da 404.
+    "apple-touch-icon-precomposed.png": "apple-touch-icon-180.png",
+    "icon-192.png": "icon-192.png",
+    "icon-512.png": "icon-512.png",
+    "icon-maskable-512.png": "icon-maskable-512.png",
+}
+MANIFEST = {
+    "name": "Banteq",
+    "short_name": "Banteq",
+    "start_url": "/",
+    "display": "browser",  # el acceso directo abre la web en el navegador, como siempre
+    "background_color": "#0f0f0f",
+    "theme_color": "#0f0f0f",
+    "icons": [
+        {"src": "/icon-192.png", "sizes": "192x192", "type": "image/png"},
+        {"src": "/icon-512.png", "sizes": "512x512", "type": "image/png"},
+        {"src": "/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable"},
+    ],
+}
+
+
+def icon_version():
+    """Huella de los iconos: va como ?v= en las etiquetas del <head>. Safari (y Chrome) guardan el
+    favicon en una caché propia por URL que no respeta las cabeceras HTTP; si cambia el icono,
+    cambia la URL y lo vuelven a pedir. Mientras el icono no cambie, la URL es siempre la misma
+    (Google pide que la del favicon sea estable)."""
+    import hashlib
+
+    digest = hashlib.sha256()
+    for source in sorted(set(ICONOS.values())) + ["favicon-16.png"]:
+        digest.update((GEN / source).read_bytes())
+    return digest.hexdigest()[:8]
+
+
+def apply_icons():
+    from PIL import Image
+
+    for name, source in ICONOS.items():
+        shutil.copy(GEN / source, OUT / name)
+    # /favicon.ico (navegadores y buscadores lo piden aunque la página declare otro), con sus tres
+    # medidas ya generadas en lugar de dejar que el formato reduzca la grande.
+    small = {size: Image.open(GEN / f"favicon-{size}.png").convert("RGBA") for size in (16, 32, 48)}
+    small[48].save(OUT / "favicon.ico", sizes=[(16, 16), (32, 32), (48, 48)], append_images=[small[16], small[32]])
+    v = icon_version()
+    manifest = json.loads(json.dumps(MANIFEST))
+    for icon in manifest["icons"]:
+        icon["src"] += f"?v={v}"
+    (OUT / "site.webmanifest").write_text(json.dumps(manifest, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
 
 
 def mark_svg_28(fill="rgb(255,255,255)"):
@@ -622,10 +678,25 @@ def apply_nav_logo():
 
 
 def apply_head_images(rel):
+    """Iconos en el <head>: los de la plantilla (dos rel=icon por esquema de color, el mismo PNG de
+    32 px, y el apple-touch-icon) se sustituyen por el juego completo. El .ico va primero (lo
+    entiende todo); los PNG de 48 y 96 son los que Google puede usar en sus resultados (exige un
+    múltiplo de 48 px); el de 192, para pantallas densas y Android."""
+    v = icon_version()
+    tags = (
+        f'<link rel="icon" href="/favicon.ico?v={v}" sizes="48x48">'
+        f'<link rel="icon" type="image/png" sizes="48x48" href="/favicon-48x48.png?v={v}">'
+        f'<link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png?v={v}">'
+        f'<link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png?v={v}">'
+        f'<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v={v}">'
+        f'<link rel="manifest" href="/site.webmanifest?v={v}">'
+    )
     h = S[rel]
-    h = re.sub(r'<link href="[^"]*" rel="icon" media="\(prefers-color-scheme: light\)">', '<link href="/favicon.png" rel="icon" media="(prefers-color-scheme: light)">', h)
-    h = re.sub(r'<link href="[^"]*" rel="icon" media="\(prefers-color-scheme: dark\)">', '<link href="/favicon.png" rel="icon" media="(prefers-color-scheme: dark)">', h)
-    h = re.sub(r'<link rel="apple-touch-icon" href="[^"]*">', '<link rel="apple-touch-icon" href="/apple-touch-icon.png">', h)
+    h, n = re.subn(r'<link href="[^"]*" rel="icon" media="\(prefers-color-scheme: light\)">\s*', "", h)
+    h, m = re.subn(r'<link href="[^"]*" rel="icon" media="\(prefers-color-scheme: dark\)">\s*', "", h)
+    h, k = re.subn(r'<link rel="apple-touch-icon" href="[^"]*">', tags, h)
+    # Las páginas de la web llevan las tres; los HTML auxiliares de terceros, ninguna.
+    assert (n, m, k) in ((1, 1, 1), (0, 0, 0)), f"{rel}: etiquetas de iconos inesperadas {(n, m, k)}"
     S[rel] = h
 
 
@@ -1139,6 +1210,109 @@ def final_cleanup():
         p.unlink()
 
 
+# ---------------------------------------------------------------------------
+# Identidad en buscadores: canónicas, Open Graph, datos estructurados, robots.txt y sitemap.xml
+# ---------------------------------------------------------------------------
+
+def page_url(rel):
+    """URL pública de una página generada (sin index.html ni barra final, como las sirve Vercel)."""
+    path = rel[: -len("index.html")].strip("/")
+    return f"{C.SITIO}/{path}"
+
+
+def structured_data():
+    """JSON-LD de la home: la organización (nombre y logo) y el sitio (el nombre que Google muestra
+    en los resultados). Solo datos ciertos: sin dirección, teléfono ni perfiles hasta tenerlos."""
+    org, site = f"{C.SITIO}/#organization", f"{C.SITIO}/#website"
+    data = {
+        "@context": "https://schema.org",
+        "@graph": [
+            {
+                "@type": "Organization",
+                "@id": org,
+                "name": C.NOMBRE_SITIO,
+                "alternateName": C.NOMBRE_ALTERNATIVO,
+                "url": f"{C.SITIO}/",
+                "logo": {"@type": "ImageObject", "url": f"{C.SITIO}/icon-512.png", "width": 512, "height": 512},
+                "description": C.META_DESCRIPTION,
+            },
+            {
+                "@type": "WebSite",
+                "@id": site,
+                "name": C.NOMBRE_SITIO,
+                "alternateName": C.NOMBRE_ALTERNATIVO,
+                "url": f"{C.SITIO}/",
+                "inLanguage": "es",
+                "publisher": {"@id": org},
+            },
+        ],
+    }
+    return '<script type="application/ld+json">' + json.dumps(data, ensure_ascii=False) + "</script>"
+
+
+def apply_seo():
+    """Cada página se identifica a sí misma ante buscadores y redes. La plantilla dejaba en todas
+    canonical y og:url = "/" (para Google, todas eran copias de la home) y el título, la descripción
+    y la imagen de Open Graph/Twitter de la home, con la imagen en ruta relativa (las redes la
+    piden absoluta). Además genera robots.txt y sitemap.xml."""
+    og_image = f"{C.SITIO}/framerusercontent.com/images/{OG_IMAGE}"
+    indexables, titulos = [], {}
+    for rel in sorted(r for r in S.files if r.endswith(".html") and "third-party-assets" not in r):
+        h = S[rel]
+        head_end = h.find("</head>")
+        head, rest = h[:head_end], h[head_end:]
+        title = html.unescape(re.search(r"<title>([^<]*)</title>", head).group(1))
+        desc = html.unescape(re.search(r'<meta name="description" content="([^"]*)"', head).group(1))
+        es_404 = rel.startswith("404")
+        if rel.endswith("index.html") and not re.match(r"proyectos/[^/]+/index\.html$", rel):  # las de proyecto ya lo traen del CMS
+            titulos[rel] = title
+
+        def meta(attr, value, head):
+            head, n = re.subn(rf'<meta {attr} content="[^"]*">', f'<meta {attr} content="{html.escape(value)}">', head)
+            assert n == 1, f"{rel}: {attr} aparece {n} veces"
+            return head
+
+        for attr in ('property="og:title"', 'name="twitter:title"'):
+            head = meta(attr, title, head)
+        for attr in ('property="og:description"', 'name="twitter:description"'):
+            head = meta(attr, desc, head)
+        for attr in ('property="og:image"', 'name="twitter:image"'):
+            head = meta(attr, og_image, head)
+        extra = f'<meta property="og:site_name" content="{C.NOMBRE_SITIO}"><meta property="og:locale" content="es_ES">'
+        assert head.count('<link rel="canonical" href="/">') == 1 and head.count('<meta property="og:url" content="/">') == 1, rel
+        if es_404:
+            # La página de error no se indexa ni señala a ninguna URL como suya.
+            head = head.replace('<link rel="canonical" href="/">', "").replace('<meta property="og:url" content="/">', extra)
+            head, n = re.subn(r'<meta name="robots" content="[^"]*">', '<meta name="robots" content="noindex">', head)
+            assert n == 1, rel
+        else:
+            url = page_url(rel)
+            head = head.replace('<link rel="canonical" href="/">', f'<link rel="canonical" href="{url}">')
+            head = head.replace('<meta property="og:url" content="/">', f'<meta property="og:url" content="{url}">' + extra)
+            indexables.append(url)
+            if rel == INDEX:
+                head += structured_data()
+        S[rel] = head + rest
+    # Framer, en el navegador (y Google ejecuta JavaScript): al navegar reescribe la canónica con el
+    # dominio del sitio, que en la exportación era el de la plantilla en framer.app…
+    replace(MAIN_MOD, "siteCanonicalURL:`https://breathtaking-step-882598.framer.app`", f"siteCanonicalURL:`{C.SITIO}`")
+    # …y pone como título el del módulo de cada página, que en las páginas sin título propio es el
+    # de la home: /contacto acababa titulándose igual que la home. Se usa el <title> de cada ruta.
+    titulos = {"/" + rel[: -len("index.html")].strip("/"): t for rel, t in titulos.items()}
+    replace(
+        FRAMER_MOD,
+        "s(()=>{document.title=e.title||``,e.viewport&&document.querySelector(`meta[name=\"viewport\"]`)?.setAttribute(`content`,e.viewport)},[e.title,e.viewport])",
+        "s(()=>{document.title=(" + json.dumps(titulos, ensure_ascii=False) + ")[location.pathname.replace(/\\/+$/,``)||`/`]||e.title||``,"
+        "e.viewport&&document.querySelector(`meta[name=\"viewport\"]`)?.setAttribute(`content`,e.viewport)},[e.title,e.viewport,location.pathname])",
+    )
+    (OUT / "robots.txt").write_text(f"User-agent: *\nAllow: /\n\nSitemap: {C.SITIO}/sitemap.xml\n", encoding="utf-8")
+    urls = "".join(f"  <url><loc>{html.escape(u)}</loc></url>\n" for u in sorted(indexables, key=lambda u: (u.count("/"), u)))
+    (OUT / "sitemap.xml").write_text(
+        '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + urls + "</urlset>\n",
+        encoding="utf-8",
+    )
+
+
 def html_pages():
     return [p.relative_to(OUT).as_posix() for p in OUT.rglob("index.html")]
 
@@ -1275,6 +1449,7 @@ def main():
 
     hide_copilot_fundae()
     make_shells()
+    apply_seo()
     final_cleanup()
     convert_heavy_images()
     check_html_structure()
