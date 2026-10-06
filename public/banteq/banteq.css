@@ -385,3 +385,26 @@ form[data-bq-metodo="email"] [data-bq-campo="tel"] {
   outline-offset: 6px;
   border-radius: 4px;
 }
+
+/* Enlaces dentro del texto de las páginas de servicio y de proyecto: mismo color que el texto,
+   subrayado fino, y más oscuro al pasar el cursor. */
+a.bq-enlace {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+  text-decoration-color: currentColor;
+  transition: color 0.2s ease;
+}
+@media (hover: hover) {
+  a.bq-enlace:hover {
+    color: rgb(26, 26, 26);
+  }
+}
+
+/* Menú desplegado: los enlaces miden 121 px con 8 px de relleno lateral y «Automatización» (107 px)
+   se partía en dos líneas. Con 4 px cabe; el texto va centrado, así que el resto no cambia. */
+.framer-15gidq9 a {
+  padding-left: 4px !important;
+  padding-right: 4px !important;
+}

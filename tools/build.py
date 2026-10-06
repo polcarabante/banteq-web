@@ -434,7 +434,7 @@ def fix_links():
 PIE_HTML = [
     (">Case Studies<", ">Proyectos<"), (">Contact<", ">Contacto<"), (">404<", ">Servicios<"),
     (">Terms<", ">Aviso legal<"), (">Privacy<", ">Privacidad<"), (">Policy<", ">Privacidad<"), (">Home<", ">Inicio<"),
-    ("© Conicorn 2026 | Built in ", "© Banteq 2026 · Tecnología aplicada a empresas"),
+    ("© Conicorn 2026 | Built in ", C.PIE_COPYRIGHT),
 ]
 
 
@@ -456,7 +456,56 @@ def fix_footer():
         for old, new in PIE_HTML:
             replace(rel, old, new, required=False)
     for rel in html_pages():
-        S[rel] = re.sub(r"(© Banteq 2026 · Tecnología aplicada a empresas)<span[^>]*>(?:<a[^>]*>)?Framer(?:</a>)?</span>", r"\1", S[rel])
+        S[rel] = re.sub("(" + re.escape(C.PIE_COPYRIGHT) + r")<span[^>]*>(?:<a[^>]*>)?Framer(?:</a>)?</span>", r"\1", S[rel])
+    apply_service_links()
+
+
+def apply_service_links():
+    """Enlaces a las páginas de servicio desde el menú y el pie de todas las páginas. Sustituyen al
+    enlace único «Servicios» (que solo bajaba a la sección de la home): el menú pasa de 3 a 4 filas
+    y el pie de 5 a 7 enlaces, con los mismos componentes y clases."""
+    t = S[NAV_MOD]
+    sv = C.SERVICIOS
+    assert len(sv) == 3
+    # Menú: la fila «Contacto · Servicios» se convierte en dos filas.
+    a = t.find("o(d.div,{className:`framer-f26tnn`,\"data-framer-name\":`Row`")
+    assert a > 0 and t.count("o(d.div,{className:`framer-f26tnn`") == 1
+    b = jsx.match_bracket(t, a + 1)
+    fila = t[a:b]
+    contacto = "{href:{webPageId:`mow46yhcP`},implicitPathVariables:void 0}"
+    seccion = "{href:{webPageId:`augiA20Il`,hash:`v30xxKYcD`},implicitPathVariables:void 0}"
+    assert fila.count(contacto) == 2 and fila.count(seccion) == 2 and "QxmZp6UDH:`Contacto`" in fila and "QxmZp6UDH:`Servicios`" in fila
+
+    def variante(izq, der, fila_id):
+        """izq/der: (etiqueta, enlace, id). La fila original es (Contacto, VIYA0mWaJ) · (Servicios, Sqkmy1PTy)."""
+        f = fila.replace("K6gMgeQhK", fila_id)
+        f = f.replace(contacto, "\0IZQ\0").replace(seccion, "\0DER\0")
+        f = f.replace("QxmZp6UDH:`Contacto`", f"QxmZp6UDH:`{izq[0]}`").replace("QxmZp6UDH:`Servicios`", f"QxmZp6UDH:`{der[0]}`")
+        f = f.replace("VIYA0mWaJ", izq[2]).replace("Sqkmy1PTy", der[2])
+        return f.replace("\0IZQ\0", izq[1]).replace("\0DER\0", der[1])
+
+    enlace = lambda rid: f"{{href:{{webPageId:`{rid}`}},implicitPathVariables:void 0}}"
+    fila2 = variante((sv[0]["menu"], enlace(sv[0]["id"]), "bqMnSrv01"), (sv[1]["menu"], enlace(sv[1]["id"]), "bqMnSrv02"), "K6gMgeQhK")
+    fila3 = variante((sv[2]["menu"], enlace(sv[2]["id"]), "bqMnSrv03"), ("Contacto", contacto, "VIYA0mWaJ"), "bqMnFila3")
+    t = t[:a] + fila2 + "," + fila3 + t[b:]
+    # Pie: el enlace «Servicios» se convierte en tres.
+    a = t.find("s(U,{", t.rfind("s(U,{", 0, t.find("children:`Servicios`}")))
+    b = jsx.match_bracket(t, a + 1)
+    bloque = t[a:b]
+    assert "href:{webPageId:`augiA20Il`,hash:`v30xxKYcD`}" in bloque and bloque.count("cjjEg1nHt") == 2, "no se encuentra el enlace «Servicios» del pie"
+    nuevos = []
+    for k, s_ in enumerate(sv, 1):
+        nuevos.append(bloque.replace("href:{webPageId:`augiA20Il`,hash:`v30xxKYcD`}", f"href:{{webPageId:`{s_['id']}`}}")
+                      .replace("children:`Servicios`", f"children:`{s_['menu']}`").replace("cjjEg1nHt", f"bqPieSrv{k}"))
+    S[NAV_MOD] = t[:a] + ",".join(nuevos) + t[b:]
+    # Lo mismo en el pie del HTML inicial de la home.
+    h = S[INDEX]
+    k = h.find(">Servicios</a>")
+    a = h.rfind('<div class="framer-inrpaz"', 0, k)
+    b = html_element_extent(h, a, "div")
+    bloque = h[a:b]
+    assert bloque.count('href="/#servicios"') == 1
+    S[INDEX] = h[:a] + "".join(bloque.replace('href="/#servicios"', f'href="/{s_["slug"]}"').replace(">Servicios<", f">{s_['menu']}<") for s_ in sv) + h[b:]
 
 
 def fix_cards():
@@ -789,7 +838,7 @@ def apply_hero_b():
     # Al principio del <head> (lleva ~300 KB de CSS en línea): el póster se pide con los primeros
     # bytes y ya está cuando se pinta la portada por primera vez.
     h = S[INDEX]
-    S[INDEX] = h.replace("<head>", "<head>" + PRELOAD_POSTERS, 1)
+    S[INDEX] = h.replace("<head>", "<head>" + PRELOAD_FONT + PRELOAD_POSTERS, 1)
     # El script principal de Framer es async y va después de #main: este script en línea, justo tras
     # #main, elige el vídeo del móvil antes de que Framer pueda arrancarlo (así el móvil no descarga
     # también el de escritorio). banteq-liquid.js mantiene la elección si luego cambia el tamaño.
@@ -797,6 +846,10 @@ def apply_hero_b():
     (OUT / HERO_VIDEO).unlink()
 
 
+# Geist (latín, fuente variable: un solo archivo para todos los pesos). Sin precarga llega después
+# del primer pintado y, al sustituir a la fuente de reserva, mueve los textos: era el salto de
+# diseño de la home en móvil (CLS 0,10: el subtítulo subía una línea). Va en todas las páginas.
+PRELOAD_FONT = '<link rel="preload" as="font" type="font/woff2" crossorigin href="/fonts.gstatic.com/s/geist/v5/gyByhwUxId8gMEwcGFU.woff2">'
 PRELOAD_POSTERS = (
     '<link rel="preload" as="image" href="/banteq/hero-b-poster.jpg" media="(min-width: 810px)">'
     '<link rel="preload" as="image" href="/banteq/hero-b-movil-poster.jpg" media="(max-width: 809.98px)">'
@@ -890,6 +943,7 @@ def apply_performance():
     # Vídeo del pie: 4K en H.264 4:2:2 de 10 bits, que ningún Mac ni iPhone decodifica por hardware.
     # Se sirve en 1080p 4:2:0 de 8 bits (tools/videos.py), con el mismo nombre.
     shutil.copy2(GEN / "pie-video.mp4", OUT / PIE_VIDEO)
+    shutil.copy2(GEN / "pie-video-poster.jpg", OUT / "banteq" / "pie-video-poster.jpg")  # ver tools/prerender.mjs
 
 
 def copy_logos():
@@ -1037,6 +1091,292 @@ def apply_project_pages():
 
 
 # ---------------------------------------------------------------------------
+# 6b. Páginas de servicio (contenido.SERVICIOS)
+# ---------------------------------------------------------------------------
+#
+# Cada página de servicio es una copia del módulo de la página de texto de la plantilla (la del
+# aviso legal): misma cabecera, mismo pie con formulario, mismas tipografías y mismos puntos de
+# corte. Solo cambia el contenido de su columna, que se genera aquí con los mismos componentes y
+# clases que usa la plantilla (texto enriquecido de Framer), y se registra como una ruta más.
+
+HOME_ROUTE = "augiA20Il"
+COL_TEXTO = "var(--token-8d6ef72b-962d-48df-af78-a514b20c6a38, rgb(82, 82, 82))"
+# En las páginas de servicio la columna es larga y acaba sobre la parte gris del degradado de fondo
+# (#b7b7b7): el gris de texto de la plantilla (82) se quedaba ahí en 3,8:1. Con 60 pasa de 5,5:1.
+COL_TEXTO_SERVICIO = "rgb(60, 60, 60)"
+COL_TITULO = "var(--token-1ebf9de7-133d-4417-ad6e-35a4c663a1d9, rgb(26, 26, 26))"
+COL_SUBTITULO = "var(--token-c7252384-fca0-4580-9fcd-c3b52008f218, rgb(40, 40, 40))"
+LINK_IMPORT = 'import{h as BQL}from"./framer.DrTRbU-a.mjs";'  # componente Link de Framer (como lo importa la home)
+
+
+def service_mod(sv):
+    return f"{SITE}/bq-servicio-{sv['slug']}.mjs"
+
+
+def static_routes():
+    """Ruta → id de página de Framer, y ancla de la home → id del elemento (para enlaces internos)."""
+    t = S[MAIN_MOD]
+    rutas = {path: rid for rid, path in re.findall(r"(\w+):\{elements:\{[^}]*\},page:N\(\(\)=>import\(`[^`]+`\)\),path:`([^`:]+)`\}", t)}
+    rutas.update({"/" + sv["slug"]: sv["id"] for sv in C.SERVICIOS})
+    i = t.find(HOME_ROUTE + ":{elements:{") + len(HOME_ROUTE) + len(":{elements:{")
+    anclas = {name: eid for eid, name in re.findall(r"(\w+):`([^`]+)`", t[i:t.find("}", i)])}
+    return rutas, anclas
+
+
+def js_link(text, dest, scope, contador):
+    """Enlace dentro de un texto: navega con el router de Framer (sin recargar) si es una página
+    de la web; en pestaña nueva si es externa."""
+    rutas, anclas = static_routes()
+    externo = dest.startswith("http")
+    if externo:
+        href = f"`{dest}`"
+    elif dest.startswith("/#"):
+        href = f"{{webPageId:`{HOME_ROUTE}`,hash:`{anclas[dest[2:]]}`}}"
+    elif dest in rutas:
+        href = f"{{webPageId:`{rutas[dest]}`}}"
+    else:  # páginas de proyecto (CMS): por su ruta
+        assert dest.startswith("/proyectos/"), dest
+        href = f"`{dest}`"
+    contador[0] += 1
+    return (
+        f"o(BQL,{{href:{href},motionChild:!0,nodeId:`bqL{contador[0]:03d}`,openInNewTab:{'!0' if externo else '!1'},"
+        f"relValues:[],scopeId:`{scope}`,smoothScroll:!1,children:o(l.a,{{className:`bq-enlace`,children:`{js_template(text)}`}})}})"
+    )
+
+
+def js_inline(texto, scope, contador):
+    """Hijos de un párrafo: cadena, o lista de trozos (texto, negrita, enlace)."""
+    if isinstance(texto, str):
+        return f"`{js_template(texto)}`"
+    out = []
+    for parte in texto:
+        if isinstance(parte, str):
+            out.append(f"`{js_template(parte)}`")
+        elif parte[0] == "b":
+            out.append(f"o(`strong`,{{children:`{js_template(parte[1])}`}})")
+        else:
+            out.append(js_link(parte[1], parte[2], scope, contador))
+    return "[" + ",".join(out) + "]"
+
+
+def _rt(children, cls, nombre):
+    """Bloque de texto enriquecido de Framer con una clase de maquetación de la plantilla."""
+    return (f"o(b,{{__fromCanvasComponent:!0,children:{children},className:`{cls}`,\"data-framer-name\":`{nombre}`,"
+            "fonts:[`Inter`],verticalAlignment:`top`,withExternalLayout:!0})")
+
+
+def _el(tag, preset, preset_id, color, children):
+    fn = "a" if children.startswith("[") else "o"
+    return (f"{fn}(`{tag}`,{{className:`framer-styles-preset-{preset}`,\"data-styles-preset\":`{preset_id}`,dir:`auto`,"
+            f"style:{{\"--framer-text-color\":`{color}`}},children:{children}}})")
+
+
+def js_titulo(texto):
+    """Título de sección (h2): en el teléfono la plantilla usa otro tamaño de letra."""
+    txt = f"`{js_template(texto)}`"
+    movil = _el("h2", "dmuwar", "PnTPvlabJ", COL_TITULO, txt)
+    resto = _el("h2", "1nvzal8", "FYvoJIwJT", COL_TITULO, txt)
+    return (f"o(p,{{breakpoint:S,overrides:{{xH4VXQETc:{{children:o(t,{{children:{movil}}})}}}},"
+            f"children:{_rt(f'o(t,{{children:{resto}}})', 'framer-n8m9sc', 'Titulo')}}})")
+
+
+def js_parrafo(texto, scope, contador):
+    return _rt(f"o(t,{{children:{_el('p', '1qlfxwt', 'Ref37fLYE', COL_TEXTO_SERVICIO, js_inline(texto, scope, contador))}}})", "framer-4mj00g", "Texto")
+
+
+def js_lista(items, scope, contador):
+    lis = []
+    for it in items:
+        hijos = js_inline(it, scope, contador)
+        fn = "a" if hijos.startswith("[") else "o"
+        lis.append(f"o(`li`,{{\"data-preset-tag\":`p`,children:{fn}(`p`,{{style:{{\"--framer-text-color\":`{COL_TEXTO_SERVICIO}`}},children:{hijos}}})}})")
+    ul = (f"a(`ul`,{{className:`framer-styles-preset-1qlfxwt`,\"data-styles-preset\":`Ref37fLYE`,dir:`auto`,"
+          f"style:{{\"--framer-text-color\":`{COL_TEXTO_SERVICIO}`}},children:[{','.join(lis)}]}})")
+    return _rt(f"o(t,{{children:{ul}}})", "framer-nbxqjv", "Lista")
+
+
+def js_faq(preguntas, scope, contador):
+    out = []
+    for q, r in preguntas:
+        h3 = _rt(f"o(t,{{children:{_el('h3', 'p6ud8h', 'uIOe7s18L', COL_SUBTITULO, f'`{js_template(q)}`')}}})", "framer-tm6xs4", "Pregunta")
+        out.append(f"a(`div`,{{className:`framer-10noxlw`,\"data-framer-name\":`Stack`,children:[{h3},{js_parrafo(r, scope, contador)}]}})")
+    return out
+
+
+def js_service_main(sv):
+    """Contenido de la columna de una página de servicio."""
+    scope, contador = sv["id"], [0]
+    intro_m = ",".join(_el("p", "16wioa8", "MQ9x832KF", COL_TEXTO_SERVICIO, f"`{js_template(x)}`") for x in sv["intro"])
+    intro_d = ",".join(_el("p", "j5ar9w", "yzTX5vOKi", COL_TEXTO_SERVICIO, f"`{js_template(x)}`") for x in sv["intro"])
+    bloques = [
+        f"o(p,{{breakpoint:S,overrides:{{xH4VXQETc:{{children:a(t,{{children:[{intro_m}]}})}}}},"
+        f"children:{_rt(f'a(t,{{children:[{intro_d}]}})', 'framer-16yka5q', 'Intro')}}})"
+    ]
+    for titulo, contenido in sv["secciones"]:
+        hijos = [js_titulo(titulo)]
+        for tipo, valor in contenido:
+            if tipo == "p":
+                hijos.append(js_parrafo(valor, scope, contador))
+            elif tipo == "ul":
+                hijos.append(js_lista(valor, scope, contador))
+            elif tipo == "faq":
+                hijos.extend(js_faq(valor, scope, contador))
+            else:
+                raise ValueError(tipo)
+        bloques.append(f"a(`div`,{{className:`framer-1dcxdhn`,\"data-framer-name\":`Stack`,children:[{','.join(hijos)}]}})")
+    return "[" + ",".join(bloques) + "]"
+
+
+def neutralize_entrance():
+    """En las páginas interiores, el título aparecía palabra a palabra y el subtítulo con un fundido
+    al cargar. Cuando el HTML inicial ya se ha enseñado (móvil, window.BANTEQ_PRE; ver make_shells)
+    esas dos animaciones se desactivan: el contenido ya está a la vista y repetirlas sería un
+    parpadeo. En escritorio y tableta todo sigue igual."""
+    for rel in (TERMS_MOD, PRIVACY_MOD, CASES_MOD, DETAIL_MOD):
+        t = S[rel]
+        t, n = re.subn(r"\beffect:(\w+),", r"effect:globalThis.BANTEQ_PRE?void 0:\1,", t)
+        t, m = re.subn(r"__framer__styleAppearEffectEnabled:!0", "__framer__styleAppearEffectEnabled:!globalThis.BANTEQ_PRE", t)
+        assert (n, m) == (1, 1), (rel, n, m)
+        S[rel] = t
+
+
+def build_service_pages():
+    base = S[TERMS_MOD]
+    for sv in C.SERVICIOS:
+        t = base
+        for viejo, nuevo in ((C.AVISO_LEGAL[0], sv["h1"]), (C.LEGAL_ACTUALIZACION, sv["subtitulo"])):
+            marca = f"children:`{js_template(viejo)}`"
+            assert t.count(marca) == 1, (sv["slug"], viejo, t.count(marca))
+            t = t.replace(marca, f"children:`{js_template(nuevo)}`")
+        i = t.find('className:`framer-inyegz`,"data-framer-name":`Main`,children:[')
+        assert i > 0, "no se encuentra la columna de contenido de la página de texto"
+        k = t.find("children:[", i) + len("children:")
+        t = t[:k] + js_service_main(sv) + t[jsx.match_bracket(t, k):]
+        assert "H6u27ToU_" in t
+        t = t.replace("H6u27ToU_", sv["id"])
+        S[service_mod(sv)] = LINK_IMPORT + t
+        PAGINAS[sv["slug"]] = (sv["title"], sv["descripcion"])
+    # Rutas nuevas: junto a la del aviso legal, y con la misma plantilla de página (cabecera y pie).
+    m = S[MAIN_MOD]
+    legal = re.search(r"H6u27ToU_:\{elements:\{\},page:N\(\(\)=>import\(`[^`]+`\)\),path:`/aviso-legal`\},", m)
+    assert legal, "no se encuentra la ruta del aviso legal"
+    nuevas = "".join(
+        f"{sv['id']}:{{elements:{{}},page:N(()=>import(`./bq-servicio-{sv['slug']}.mjs`)),path:`/{sv['slug']}`}}," for sv in C.SERVICIOS
+    )
+    m = m[: legal.end()] + nuevas + m[legal.end():]
+    casos = "".join(f"case`{sv['id']}`:" for sv in C.SERVICIOS)
+    assert m.count("case`H6u27ToU_`:") == 2
+    m = m.replace("case`H6u27ToU_`:", "case`H6u27ToU_`:" + casos)
+    S[MAIN_MOD] = m
+
+
+def apply_project_seo():
+    """Páginas de proyecto: los rótulos «Punto de partida», «Qué hicimos» y «Resultado» pasan a ser
+    encabezados (h2, con la misma clase: se ven igual), y bajo el resultado se enlazan los servicios
+    relacionados y, si está publicada, la web del cliente (contenido.PROYECTO_SERVICIOS/_WEB)."""
+    t = S[DETAIL_MOD]
+    for rotulo in ("Punto de partida", "Qué hicimos", "Resultado"):
+        viejo = 'o(`p`,{className:`framer-styles-preset-1nvzal8`,"data-styles-preset":`FYvoJIwJT`,dir:`auto`,children:`' + rotulo + "`})"
+        assert t.count(viejo) == 1, rotulo
+        t = t.replace(viejo, viejo.replace("o(`p`,", "o(`h2`,", 1))
+    nombres = {sv["slug"]: sv["nombre"].lower() for sv in C.SERVICIOS}
+    rutas = {sv["slug"]: sv["id"] for sv in C.SERVICIOS}
+    n = [0]
+
+    def enlace(texto, href, externo=False):
+        n[0] += 1
+        return (f"o(BQL,{{href:{href},motionChild:!0,nodeId:`bqPr{n[0]:03d}`,openInNewTab:{'!0' if externo else '!1'},relValues:[],"
+                f"scopeId:`QTC5sKvau`,smoothScroll:!1,children:o(ne.a,{{className:`bq-enlace`,children:`{js_template(texto)}`}})}})")
+
+    por_proyecto = []
+    for pr in C.PROYECTOS:
+        servicios = C.PROYECTO_SERVICIOS[pr["slug"]]
+        trozos = ["`Servicios relacionados: `" if len(servicios) > 1 else "`Servicio relacionado: `"]
+        for k, slug in enumerate(servicios):
+            if k:
+                trozos.append("` y `")
+            trozos.append(enlace(nombres[slug], f"{{webPageId:`{rutas[slug]}`}}"))
+        trozos.append("`.`")
+        if pr["slug"] in C.PROYECTO_WEB:
+            dominio, url = C.PROYECTO_WEB[pr["slug"]]
+            trozos += ["` Web del cliente: `", enlace(dominio, f"`{url}`", True), "`.`"]
+        por_proyecto.append(f"\"{pr['slug']}\":[{','.join(trozos)}]")
+    slug = "(typeof location<`u`?location.pathname.replace(/\\/+$/,``).split(`/`).pop():``)"
+    bloque = (
+        "o(S,{__fromCanvasComponent:!0,children:o(t,{children:a(`p`,{className:`framer-styles-preset-1qlfxwt`,"
+        f"\"data-styles-preset\":`Ref37fLYE`,dir:`auto`,style:{{\"--framer-text-color\":`{COL_TEXTO}`}},"
+        f"children:({{{','.join(por_proyecto)}}})[{slug}]??[]}})}}),className:`framer-8h8rrf`,\"data-framer-name\":`Relacionado`,"
+        "fonts:[`Inter`],verticalAlignment:`top`,withExternalLayout:!0}),"
+    )
+    ancla = "a(`div`,{className:`framer-zy84k1`,\"data-framer-name\":`Stat Wrap`"
+    assert t.count(ancla) == 1
+    S[DETAIL_MOD] = LINK_IMPORT + t.replace(ancla, bloque + ancla)
+    # Página de contacto: «Por email o WhatsApp…» era un enlace mailto: sin dirección (roto).
+    c = S[CONTACT_MOD]
+    a = c.find("o(se,{href:`mailto:")
+    assert a > 0, "no se encuentra el enlace mailto de la página de contacto"
+    S[CONTACT_MOD] = c[:a] + "`Por WhatsApp o por email, como prefieras`" + c[jsx.match_bracket(c, a + 1):]
+
+
+# Textos alternativos de las imágenes de la home y del pie (por id de imagen de Framer). Las
+# decorativas (iconos junto a un texto que ya dice lo mismo) van vacías, que es lo correcto.
+ALT = {
+    "JoLUJzWcifYswzE6msfHXW4QOg": "Asistente de IA que resume los correos del día",
+    "fjjKosDgY23zKW4wHEEqDuzH7s": "Asistente de IA que resume los correos del día",
+    "ZorDrCsHnegaSiRVKyn1U0zE": "Ficha de un nuevo contacto marcado como cualificado",
+    "6TuyOzSCZDNOdRtZ8FK3OJeJ8": "Gráfico de un informe semanal automático",
+    "cgrW7f9W33xv3ZDvvKXaqAaaIL0": "Esquema de un proceso automatizado, con Banteq en el centro",
+    "8U1vJYm3i4TejPV6zUq2qL12tAU": "Herramientas de una empresa conectadas entre sí",
+    "aSmMadORFrjf0SEWGxtfp2qXEmA": "Portada de la web de Margon",
+    "mKS6dvxPlvfsWt7d3VskQg0q8": "Portada de la web de RentUp Capital",
+    "tQe8KYZERtfj6dEWPfoEV61M2Q": "Margon",
+    "banteq-rentup-logo-blanco": "RentUp Capital",
+    "I4qNVX0rmT5t1adTfrJrlvVIO9A": "Banteq",
+    **{i: "" for i in (
+        "n8zXCidbrBUAQChuau8L7G7DhQ", "xeCVP2BCTEN80S79boVREIjGMB0", "z6cPmsnJML2flePXMqm2kdZG6EI", "BnPovhu3UVva8wf8pdIhGnyeu0",
+        "io1ebA6nKd3sIhRozjyWCmW7Pk", "Nc7T0UP7TMYghubatYlzblQr3vc", "Jd4Actw3iicp7lVmQL6Tty7Ezw", "ZWhfkzGB6c8iJeDzvp6nt6xFt4",
+        "WOYTcCaxggRNt47bSlnpBZZRtp8",
+        # Iconos de herramientas: su nombre va escrito al lado.
+        "2xquyjyFTB2qMqOwhpLzMdYE", "5uPQw4lqjfuPQVY56gQ2VAps", "ZlucgVlz0X3yiswDce5ZZWPzxnU", "ZQy4IZjczFBHr315feUz6FY9Jc",
+        "qn0FSop5Ezs3MCS3AzMwD3o2NR4", "NJei4VUurepCT7nFvab7lNWfGuE", "AhQIGlem4StUQWPLgPR6MUs5ioY", "oin8QcjYXzUlmHfyHtNW6VeuO4",
+        "cDjkCDrLWvNdD8oA4b1Pjx9RaM", "VK3pQ5OWeJjNxkJwuh2e4tWvU",
+        # Restos de la plantilla en el HTML inicial (tarjetas que el CMS sustituye al cargar, iconos
+        # de redes ocultos, imagen tapada por el cuadrado central).
+        "AD2HoNBg3wzuHti33ECtpWxwM", "S8Ya3bZm5hKzKHZ1WWwtc09Gu0", "E5IqsYnTd6volBburXjEsGHak4", "F1ceXDYLhKYcg9ROAsw3PtZSnQ",
+        "dnhM1LvqvNjni0IxjdLhnIp2ACE", "gVKmWmun8uyy0BvdmPlOwEu1I", "2xvxH7w2Wb4vKKchKeUXeEAad4", "8tnVvk6l5lwFqJm4sXDTu6A59yE",
+        "xPCk1w6MQxfXL3tva6NSiaV6SI",
+    )},
+}
+
+
+def apply_alts():
+    """Sustituye los alt genéricos de la plantilla («Service», «avatar», «logo»…) en los módulos y
+    en el HTML inicial."""
+    for rel in (HOME_MOD, NAV_MOD):
+        t = S[rel]
+        for stem, alt in ALT.items():
+            alt_js = js_template(alt)
+            # helper(objeto con src, `alt`)
+            t = re.sub(r"(\{pixelHeight:\d+,pixelWidth:\d+,src:`[^`]*" + stem + r"[^`]*`(?:,srcSet:`[^`]*`)?\},`)[^`]*(`\))",
+                       lambda m: m.group(1) + alt_js + m.group(2), t)
+            # objeto con alt: y, más adelante, el src de esa imagen
+            t = re.sub(r"(alt:`)[^`]*(`(?=[^{}]{0,420}" + stem + "))", lambda m: m.group(1) + alt_js + m.group(2), t)
+        S[rel] = t
+    for rel in html_pages():
+        h = S[rel]
+
+        def img(m):
+            tag = m.group(0)
+            for stem, alt in ALT.items():
+                if stem in tag:
+                    nuevo = f'alt="{html.escape(alt)}"'
+                    return re.sub(r'alt="[^"]*"', nuevo, tag, count=1) if "alt=" in tag else tag.replace("<img", "<img " + nuevo, 1)
+            return tag
+
+        S[rel] = re.sub(r"<img\b[^>]*>", img, h)
+
+
+# ---------------------------------------------------------------------------
 # 7. Páginas que Framer pinta en el navegador
 # ---------------------------------------------------------------------------
 
@@ -1044,10 +1384,107 @@ PAGINAS = {
     "contacto": ("Contacto | Banteq", "Cuéntanos qué quieres mejorar en tu empresa: automatización, inteligencia artificial, Microsoft Copilot, formación FUNDAE o tu web."
                  if C.MOSTRAR_COPILOT_FUNDAE else "Cuéntanos qué quieres mejorar en tu empresa: automatización, inteligencia artificial o tu web."),
     "proyectos": ("Proyectos | Banteq", "Empresas que ya confían en Banteq y el trabajo que hemos hecho con ellas."),
-    "aviso-legal": ("Aviso legal | Banteq", C.META_DESCRIPTION),
-    "privacidad": ("Política de privacidad | Banteq", C.META_DESCRIPTION),
+    "aviso-legal": ("Aviso legal | Banteq", "Aviso legal y condiciones de uso de la web y de los servicios de Banteq."),
+    "privacidad": ("Política de privacidad | Banteq", "Qué datos personales trata Banteq, para qué los usa, cómo los protege y cómo ejercer tus derechos."),
     "404": ("Página no encontrada | Banteq", C.META_DESCRIPTION),
 }
+
+
+# HTML inicial de las páginas interiores (tools/prerender.mjs). Framer las pinta en el navegador:
+# sin esto, su HTML llega vacío y en un móvil no se ve nada hasta descargar y ejecutar ~400 KB de
+# JavaScript. La instantánea va en #bq-pre, delante de #main:
+#  - En teléfono (< 800 px) se ve desde el primer momento. React pinta la página de verdad debajo,
+#    oculta, y cuando está lista (título puesto e imágenes de la primera pantalla cargadas) se
+#    cambia una por otra en el mismo fotograma.
+#  - En tableta y escritorio no se enseña (la instantánea es la versión de teléfono): la página
+#    carga como siempre. El contenido sigue estando en el HTML para los buscadores.
+PRERENDER = ROOT / "assets-banteq" / "prerender"
+PRE_CSS = (
+    "#bq-pre{display:none}"
+    "@media (max-width:799.98px){html:not(.bq-listo) #bq-pre{display:block}"
+    # opacity y no visibility: algunos elementos de Framer fijan visibility y se verían a través.
+    "html:not(.bq-listo) #main{position:absolute;top:0;left:0;width:100%;opacity:0;pointer-events:none}}"
+)
+# En la cabecera: decide si esta visita usa la instantánea (teléfono) y lo anota en BANTEQ_PRE, que
+# es lo que miran los módulos de página para no repetir la animación de entrada. Sin JavaScript,
+# en un teléfono la instantánea se queda a la vista (CSS de arriba).
+PRE_BOOT = (
+    "<script>(function(){var c=!!window.BANTEQ_CAPTURA,m=!c&&matchMedia('(max-width: 799.98px)').matches;"
+    # Al capturar (tools/prerender.mjs) no se enseña ninguna instantánea, pero la página se pinta
+    # como en el teléfono: sin animación de entrada.
+    "window.BANTEQ_PRE=m||c;if(!m)document.documentElement.classList.add('bq-listo')})()</script>"
+)
+PRE_SWAP = (
+    "<script>(function(){var d=document,pre=d.getElementById('bq-pre'),main=d.getElementById('main');"
+    "if(!window.BANTEQ_PRE||window.BANTEQ_CAPTURA){pre&&pre.remove();return}"
+    # Mientras se ve la instantánea, la página de verdad (debajo, transparente) no recibe foco ni la
+    # leen los lectores de pantalla: no hay contenido duplicado.
+    "main.inert=true;"
+    "var t0=0,fin=false,cola=false,obs,iv;"
+    # Lista: la página de verdad ya tiene su título y las imágenes de la primera pantalla (con 2,5 s
+    # de margen como mucho para las imágenes).
+    "function lista(){var h=main.querySelector('h1');if(!h||!h.textContent.trim())return false;"
+    "if(!t0)t0=performance.now();var im=main.querySelectorAll('img');for(var i=0;i<im.length;i++){"
+    "var r=im[i].getBoundingClientRect();if(r.width>0&&r.bottom>0&&r.top<innerHeight&&!im[i].complete)"
+    "return performance.now()-t0>2500}"
+    # …y los vídeos de la primera pantalla (el fondo de la página de contacto), su primer fotograma.
+    "var v=main.querySelectorAll('video');for(i=0;i<v.length;i++){r=v[i].getBoundingClientRect();"
+    "if(r.width>0&&r.bottom>0&&r.top<innerHeight&&v[i].readyState<2)return performance.now()-t0>2500}"
+    "return true}"
+    "function cambiar(){if(fin)return;fin=true;obs.disconnect();clearInterval(iv);pre.remove();main.inert=false;"
+    "d.documentElement.classList.add('bq-listo')}"
+    "function probar(){if(fin||cola||!lista())return;cola=true;"
+    "requestAnimationFrame(function(){requestAnimationFrame(cambiar)})}"
+    "obs=new MutationObserver(probar);obs.observe(main,{childList:true,subtree:true});"
+    "iv=setInterval(probar,150)})()</script>"
+)
+
+
+def static_imports(rel):
+    """Módulos que un módulo importa de forma estática (los dinámicos, import(`…`), no cuentan)."""
+    base = rel.rsplit("/", 1)[0]
+    return {f"{base}/{m}" for m in re.findall(r'(?:from|import)"\./([^"]+\.mjs)"', S[rel])}
+
+
+def module_closure(*entradas):
+    vistos, cola = [], list(entradas)
+    while cola:
+        rel = cola.pop(0)
+        if rel in vistos:
+            continue
+        vistos.append(rel)
+        cola.extend(sorted(static_imports(rel)))
+    return vistos
+
+
+def route_modules():
+    """Ruta de Framer → módulo de su página (de la tabla de rutas del script principal)."""
+    t = S[MAIN_MOD]
+    return {path: f"{SITE}/{mod}" for mod, path in re.findall(r"page:N\(\(\)=>import\(`\./([^`]+)`\)\),path:`([^`]+)`", t)}
+
+
+def page_preloads(page, path):
+    """Cada página precarga los módulos que necesita ella. Los HTML salen del de la home, así que
+    todas precargaban el módulo de la home (490 KB) y dejaban el suyo para el final, cuando el
+    script principal ya había arrancado: en un móvil eso retrasaba varios segundos su contenido."""
+    rutas = route_modules()
+    ruta = "/" + path
+    mod = rutas.get(ruta) or next((m for r, m in rutas.items() if ":" in r and ruta.startswith(r.split(":")[0])), None)
+    assert mod, f"sin módulo para {ruta}"
+    modulos = [m for m in module_closure(MAIN_MOD, mod) if m != MAIN_MOD]
+    viejos = re.findall(r'<link rel="modulepreload"[^>]*>', page)
+    assert viejos, path
+    nuevos = "".join(f'<link rel="modulepreload" fetchpriority="low" href="/{m}">' for m in modulos)
+    i = page.find(viejos[0])
+    for v in viejos:
+        page = page.replace(v, "", 1)
+    return page[:i] + nuevos + page[i:]
+
+
+def prerender_signature():
+    import hashlib
+
+    return hashlib.sha1((TOOLS / "contenido.py").read_bytes()).hexdigest()[:12]
 
 
 def make_shells():
@@ -1065,10 +1502,23 @@ def make_shells():
     pages = dict(PAGINAS)
     for pr in C.PROYECTOS:
         pages[f"proyectos/{pr['slug']}"] = (f"{pr['titulo']} | Banteq", pr["descripcion"])
+    desactualizadas = []
     for path, (title, desc) in pages.items():
         page = re.sub(r"<title>[^<]*</title>", f"<title>{html.escape(title)}</title>", shell)
         page = re.sub(r'(<meta name="description" content=")[^"]*(")', lambda m: m.group(1) + html.escape(desc) + m.group(2), page)
+        page = page_preloads(page, path)
+        snap = PRERENDER / (path.replace("/", "__") + ".json")
+        if snap.exists():
+            data = json.loads(snap.read_text(encoding="utf-8"))
+            if data.get("firma") != prerender_signature():
+                desactualizadas.append(path)
+            vacio = re.findall(r'<div id="main"[^>]*></div>', page)
+            assert len(vacio) == 1, (path, vacio)
+            page = page.replace(vacio[0], f'<div id="bq-pre">{data["html"]}</div>{vacio[0]}{PRE_SWAP}', 1)
+            page = page.replace("</head>", f'<style data-bq-pre="">{PRE_CSS}{data["css"]}</style>{PRE_BOOT}</head>', 1)
         S[f"{path}/index.html"] = page
+    if desactualizadas:
+        print("AVISO: el HTML inicial de estas páginas se capturó con otro contenido; ejecuta `npm run prerender`:", ", ".join(desactualizadas))
     # Para rutas que no existen el servidor entrega 404.html; el router de Framer sólo pinta su
     # página 404 si la URL es /404, así que se ajusta antes de que arranque.
     S["404.html"] = S["404/index.html"].replace(
@@ -1186,19 +1636,10 @@ def hide_copilot_fundae():
     """Restos de Microsoft Copilot y FUNDAE fuera de su sección (contenido.MOSTRAR_COPILOT_FUNDAE)."""
     if C.MOSTRAR_COPILOT_FUNDAE:
         return
-    # Pregunta frecuente sobre FUNDAE: es la última de la lista, así que no queda hueco.
+    # La quinta pregunta frecuente era la de FUNDAE; ahora ese hueco lo ocupa «¿Dónde trabajáis?»
+    # (contenido.FAQ_ZONA), así que no hay nada que quitar de la lista.
     pregunta = {t[0]: t[1] for t in C.HOME}["What kind of ROI can we expect?"]
-    t = S[HOME_MOD]
-    item = jsx.call_containing(t, t.find(f"`{pregunta}`"))
-    container = jsx.call_containing(t, item[0] - 1)
-    wrapper = jsx.call_containing(t, container[0] - 1)
-    cls = re.match(r"g\(\w+,\{className:`(framer-[a-z0-9]+-container)`", t[container[0]:]).group(1)
-    remove_child_call(HOME_MOD, *wrapper)
-    h = S[INDEX]
-    k = h.find(html.escape(pregunta, quote=False))
-    a = h.rfind(f'<div class="{cls}"', 0, k)
-    assert a >= 0, "No se encuentra la pregunta de FUNDAE en el HTML"
-    S[INDEX] = h[:a] + h[html_element_extent(h, a, "div"):]
+    assert not re.search(r"(?i)fundae|copilot", pregunta), pregunta
     for rel in (HOME_MOD, INDEX):
         # Nombres internos de capas que heredaron esos textos (no se ven, pero van en el código).
         S[rel] = re.sub(r'data-framer-name="[^"]*(?:Copilot|FUNDAE|simulador)[^"]*"', 'data-framer-name="Texto"', S[rel])
@@ -1248,34 +1689,107 @@ def page_url(rel):
     return f"{C.SITIO}/{path}"
 
 
-def structured_data():
-    """JSON-LD de la home: la organización (nombre y logo) y el sitio (el nombre que Google muestra
-    en los resultados). Solo datos ciertos: sin dirección, teléfono ni perfiles hasta tenerlos."""
-    org, site = f"{C.SITIO}/#organization", f"{C.SITIO}/#website"
-    data = {
-        "@context": "https://schema.org",
-        "@graph": [
-            {
-                "@type": "Organization",
-                "@id": org,
-                "name": C.NOMBRE_SITIO,
-                "alternateName": C.NOMBRE_ALTERNATIVO,
-                "url": f"{C.SITIO}/",
-                "logo": {"@type": "ImageObject", "url": f"{C.SITIO}/icon-512.png", "width": 512, "height": 512},
-                "description": C.META_DESCRIPTION,
-            },
-            {
-                "@type": "WebSite",
-                "@id": site,
-                "name": C.NOMBRE_SITIO,
-                "alternateName": C.NOMBRE_ALTERNATIVO,
-                "url": f"{C.SITIO}/",
-                "inLanguage": "es",
-                "publisher": {"@id": org},
-            },
-        ],
-    }
+def _ld(*nodos):
+    data = {"@context": "https://schema.org", "@graph": [n for n in nodos if n]}
     return '<script type="application/ld+json">' + json.dumps(data, ensure_ascii=False) + "</script>"
+
+
+ORG_ID = f"{C.SITIO}/#organization"
+AREA = {"@type": "AdministrativeArea", "name": C.PROVINCIA}
+
+
+def ld_organizacion():
+    """La empresa: nombre, logo y localidad. Solo datos ciertos: sin calle, teléfono ni perfiles
+    hasta tenerlos (cuando existan, aquí; y entonces tiene sentido pasar a LocalBusiness)."""
+    return {
+        "@type": "Organization",
+        "@id": ORG_ID,
+        "name": C.NOMBRE_SITIO,
+        "alternateName": C.NOMBRE_ALTERNATIVO,
+        "url": f"{C.SITIO}/",
+        "logo": {"@type": "ImageObject", "url": f"{C.SITIO}/icon-512.png", "width": 512, "height": 512},
+        "description": C.META_DESCRIPTION,
+        "address": {"@type": "PostalAddress", "addressLocality": C.LOCALIDAD, "addressRegion": C.PROVINCIA, "addressCountry": "ES"},
+        "areaServed": AREA,
+    }
+
+
+def ld_sitio():
+    return {
+        "@type": "WebSite",
+        "@id": f"{C.SITIO}/#website",
+        "name": C.NOMBRE_SITIO,
+        "alternateName": C.NOMBRE_ALTERNATIVO,
+        "url": f"{C.SITIO}/",
+        "inLanguage": "es",
+        "publisher": {"@id": ORG_ID},
+    }
+
+
+def ld_migas(*pasos):
+    """Migas de pan: (nombre, url) desde la home hasta la página."""
+    pasos = (("Inicio", f"{C.SITIO}/"),) + pasos
+    return {
+        "@type": "BreadcrumbList",
+        "itemListElement": [{"@type": "ListItem", "position": k, "name": n, "item": u} for k, (n, u) in enumerate(pasos, 1)],
+    }
+
+
+def ld_faq(preguntas):
+    return {
+        "@type": "FAQPage",
+        "mainEntity": [{"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": r}} for q, r in preguntas],
+    }
+
+
+def faq_home():
+    """Preguntas frecuentes de la home tal como se publican (contenido.HOME)."""
+    originales = ["What industries do you work with?", "How long does implementation take?",
+                  "Do we need technical knowledge to work with you?", "Is AI automation secure?", "What kind of ROI can we expect?"]
+    out = []
+    for k, entrada in enumerate(C.HOME):
+        if entrada[0] in originales:
+            out.append((entrada[1], C.HOME[k + 1][1]))
+    assert len(out) == len(originales), out
+    return out
+
+
+def structured_data(rel):
+    """JSON-LD de cada página. Todo sale de contenido.py: lo mismo que se lee en la página."""
+    url = page_url(rel)
+    servicios = {sv["slug"]: sv for sv in C.SERVICIOS}
+    proyectos = {pr["slug"]: pr for pr in C.PROYECTOS}
+    ruta = rel[: -len("index.html")].strip("/")
+    if rel == INDEX:
+        return _ld(ld_organizacion(), ld_sitio(), ld_faq(faq_home()))
+    if ruta in servicios:
+        sv = servicios[ruta]
+        preguntas = [par for _, bloques in sv["secciones"] for tipo, valor in bloques if tipo == "faq" for par in valor]
+        servicio = {
+            "@type": "Service", "@id": f"{url}#servicio", "name": sv["nombre"], "serviceType": sv["nombre"],
+            "description": sv["descripcion"], "url": url, "provider": {"@id": ORG_ID}, "areaServed": AREA,
+        }
+        return _ld(ld_organizacion(), servicio, ld_faq(preguntas), ld_migas((sv["nombre"], url)))
+    if ruta == "proyectos":
+        lista = {
+            "@type": "ItemList",
+            "itemListElement": [{"@type": "ListItem", "position": k, "name": pr["titulo"], "url": f"{C.SITIO}/proyectos/{pr['slug']}"}
+                                for k, pr in enumerate(C.PROYECTOS, 1)],
+        }
+        return _ld(ld_organizacion(), {"@type": "CollectionPage", "@id": f"{url}#pagina", "name": "Proyectos", "url": url, "mainEntity": lista},
+                   ld_migas(("Proyectos", url)))
+    if ruta.startswith("proyectos/"):
+        pr = proyectos[ruta.split("/")[1]]
+        obra = {
+            "@type": "CreativeWork", "@id": f"{url}#proyecto", "name": pr["titulo"], "description": pr["descripcion"], "url": url,
+            "image": f"{C.SITIO}/framerusercontent.com/images/{pr['tarjeta']}", "dateCreated": pr["ano"], "about": pr["sector"],
+            "creator": {"@id": ORG_ID}, "inLanguage": "es",
+        }
+        return _ld(ld_organizacion(), obra, ld_migas(("Proyectos", f"{C.SITIO}/proyectos"), (pr["cliente"], url)))
+    if ruta == "contacto":
+        return _ld(ld_organizacion(), {"@type": "ContactPage", "@id": f"{url}#pagina", "name": "Contacto", "url": url, "about": {"@id": ORG_ID}},
+                   ld_migas(("Contacto", url)))
+    return ""
 
 
 def apply_seo():
@@ -1318,8 +1832,7 @@ def apply_seo():
             head = head.replace('<link rel="canonical" href="/">', f'<link rel="canonical" href="{url}">')
             head = head.replace('<meta property="og:url" content="/">', f'<meta property="og:url" content="{url}">' + extra)
             indexables.append(url)
-            if rel == INDEX:
-                head += structured_data()
+            head += structured_data(rel)
         S[rel] = head + rest
     # Framer, en el navegador (y Google ejecuta JavaScript): al navegar reescribe la canónica con el
     # dominio del sitio, que en la exportación era el de la plantilla en framer.app…
@@ -1471,6 +1984,10 @@ def main():
     apply_cuadro()
     build_cms()
     apply_project_pages()
+    neutralize_entrance()
+    build_service_pages()
+    apply_project_seo()
+    apply_alts()
     for rel in html_pages():
         inject_assets(rel)
         apply_head_images(rel)

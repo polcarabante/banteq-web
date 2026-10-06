@@ -7,7 +7,8 @@
   "scripts": {
     "dev": "node tools/servidor-local.mjs",
     "start": "node tools/servidor-local.mjs",
-    "build": "python3 tools/build.py"
+    "build": "python3 tools/build.py",
+    "prerender": "node tools/prerender.mjs"
   },
   "engines": {
     "node": ">=18"

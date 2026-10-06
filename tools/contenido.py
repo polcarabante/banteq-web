@@ -25,7 +25,7 @@ MOSTRAR_COPILOT_FUNDAE = False
 # #por-que-banteq y la numeración corrida.
 MOSTRAR_POR_QUE_BANTEQ = False
 
-META_TITLE = "Banteq | Automatización, IA y desarrollo web para empresas"
+META_TITLE = "Banteq | Automatización, IA y desarrollo web en Barcelona"
 # Descripción para buscadores y redes (home y páginas sin una propia). Texto fijado por Banteq: no
 # menciona Copilot ni FUNDAE, que ya no se ofrecen (MOSTRAR_COPILOT_FUNDAE no la cambia).
 META_DESCRIPTION = (
@@ -38,6 +38,15 @@ META_DESCRIPTION = (
 SITIO = "https://banteq.com"
 NOMBRE_SITIO = "Banteq"
 NOMBRE_ALTERNATIVO = "Banteq Digital"
+
+# Dónde está Banteq y dónde trabaja. Se nombra de forma natural: una vez por página, sin listas de
+# municipios.
+LOCALIDAD = "Santa Perpètua de Mogoda"
+PROVINCIA = "Barcelona"
+ZONA_FRASE = "Estamos en Santa Perpètua de Mogoda y trabajamos con empresas de Barcelona, el Vallès y alrededores."
+
+# Pregunta nueva de la home (ocupa el hueco de la de FUNDAE, que ya no se publica).
+FAQ_ZONA = ("¿Dónde trabajáis?", ZONA_FRASE + " Cuéntanos tu caso y vemos la mejor forma de empezar.")
 
 # Orden final de las secciones de la home (la de equipo se elimina: no hay equipo documentado).
 ORDEN_SECCIONES = [
@@ -354,10 +363,11 @@ HOME = [
         "Yes. Security and data privacy are a top priority in every system we build. We use secure APIs, encrypted connections, role-based access controls, and trusted platforms to ensure your business data remains protected. We also follow best practices for compliance and system reliability.",
         "No en los procesos sensibles. Diseñamos las automatizaciones con revisión humana, registro de acciones y validaciones: la IA prepara, clasifica y ejecuta tareas, y las decisiones importantes siguen pasando por una persona.",
     ),
-    ("What kind of ROI can we expect?", "¿Qué es FUNDAE y cómo se bonifica la formación?"),
+    ("What kind of ROI can we expect?", "¿Qué es FUNDAE y cómo se bonifica la formación?" if MOSTRAR_COPILOT_FUNDAE else FAQ_ZONA[0]),
     (
         "Most businesses see ROI through reduced manual work, faster response times, increased lead conversion, and improved operational efficiency. Depending on the automation scope, clients often save dozens of hours per week while improving customer experience and scaling operations without increasing overhead.",
-        "FUNDAE permite a las empresas usar un crédito anual para formar a su plantilla mediante bonificaciones en las cotizaciones a la Seguridad Social. Te ayudamos a calcular el crédito disponible y a gestionar la documentación; la bonificación final depende del crédito y de los requisitos de cada empresa.",
+        "FUNDAE permite a las empresas usar un crédito anual para formar a su plantilla mediante bonificaciones en las cotizaciones a la Seguridad Social. Te ayudamos a calcular el crédito disponible y a gestionar la documentación; la bonificación final depende del crédito y de los requisitos de cada empresa."
+        if MOSTRAR_COPILOT_FUNDAE else FAQ_ZONA[1],
     ),
     ("Have any other questions?", "¿Tienes otra pregunta?"),
     ("Contact Us", "Contactar"),
@@ -399,6 +409,9 @@ INTEGRACIONES = [
     ("Custom APIs", "APIs a medida", "api"),
 ]
 
+# Pie: el copyright nombra dónde está Banteq (señal local en todas las páginas).
+PIE_COPYRIGHT = "© Banteq 2026 · Santa Perpètua de Mogoda, Barcelona"
+
 # Navegación y pie (módulo compartido).
 NAV = [
     ("`Get this Template`", "`Hablemos`"),
@@ -414,7 +427,7 @@ NAV = [
     ("children:`404`", "children:`Servicios`"),
     ("children:`Terms`", "children:`Aviso legal`"),
     ("children:`Privacy`", "children:`Privacidad`"),
-    ("`© Conicorn 2026 | Built in `", "`© Banteq 2026 · Tecnología aplicada a empresas`"),
+    ("`© Conicorn 2026 | Built in `", f"`{PIE_COPYRIGHT}`"),
 ]
 
 # Formulario del pie.
@@ -653,6 +666,210 @@ PRIVACIDAD = [
     "5. Contacto y derechos",
     "Puedes ejercer tus derechos de acceso, rectificación, supresión y oposición escribiéndonos. " + LEGAL_PENDIENTE,
 ]
+
+
+# ---------------------------------------------------------------------------
+# Zona y páginas de servicio (SEO). Solo lo que Banteq ofrece hoy y lo que ya está documentado en
+# este archivo: sin Copilot ni FUNDAE, sin cifras ni testimonios.
+# ---------------------------------------------------------------------------
+
+# Texto de un bloque: una cadena, o una lista de trozos: "texto", ("b", "negrita") o
+# ("a", "texto del enlace", destino). Destino: ruta de la web ("/contacto", "/proyectos/margon",
+# "/#como-trabajamos") o URL completa.
+# Bloques de una sección: ("p", texto) · ("ul", [texto, …]) · ("faq", [(pregunta, respuesta), …]).
+_CIERRE = [
+    ZONA_FRASE + " ",
+    ("a", "Cuéntanos tu caso", "/contacto"),
+    " y te proponemos un primer paso razonable.",
+]
+
+SERVICIOS = [
+    {
+        "slug": "automatizacion-procesos",
+        "id": "bqSvAuto1",
+        "menu": "Automatización",
+        "nombre": "Automatización de procesos",
+        "title": "Automatización de procesos para empresas en Barcelona | Banteq",
+        "descripcion": (
+            "Automatizamos facturas, documentos, correos, formularios y seguimiento comercial conectando "
+            "las herramientas que ya usa tu empresa. En Barcelona y alrededores."
+        ),
+        "h1": "Automatización de procesos para empresas",
+        "subtitulo": "Tareas repetitivas que se resuelven solas, conectadas con las herramientas que ya usa tu equipo.",
+        "intro": [
+            "Facturas que se registran a mano, correos que hay que reenviar, datos que se copian de un Excel a otro, "
+            "solicitudes que se quedan sin respuesta. Son tareas pequeñas que, sumadas, se llevan horas cada semana y "
+            "acaban provocando errores.",
+            "En Banteq analizamos cómo trabaja tu empresa, decidimos contigo qué merece la pena automatizar y lo "
+            "construimos sobre tus herramientas, con revisión humana donde hace falta.",
+        ],
+        "secciones": [
+            ("Qué procesos automatizamos", [
+                ("ul", [
+                    [("b", "Documentos y facturas. "), "Se reciben, se clasifican y se registran sin teclearlos de nuevo, con una persona que valida lo que lo necesita."],
+                    [("b", "Correos y formularios. "), "Cada solicitud llega a quien debe, queda registrada y recibe respuesta."],
+                    [("b", "Ventas y CRM. "), "Contactos clasificados, respuestas personalizadas, seguimiento automático y un CRM siempre al día."],
+                    [("b", "Informes y datos. "), "Informes automáticos, métricas semanales y alertas para decidir con información al día."],
+                    [("b", "Conexión entre herramientas. "), "Correo, Drive, Excel, CRM, ERP o WhatsApp conectados entre sí, para que la información pase de una a otra sin copiar y pegar."],
+                ]),
+            ]),
+            ("Empezamos por un diagnóstico", [
+                ("p", "Antes de automatizar nada, analizamos cómo trabaja tu empresa y dibujamos un mapa de sus procesos, herramientas y conexiones. Ese mapa muestra dónde se pierde tiempo y qué conviene automatizar primero."),
+                ("p", "Además, sirve de base para documentar y ordenar tus procesos de cara a una futura certificación ISO 9001."),
+                ("p", ["Después seguimos un proceso claro: diseño, desarrollo, pruebas y formación de tu equipo. Así es ", ("a", "cómo trabajamos", "/#como-trabajamos"), "."]),
+            ]),
+            ("Sobre las herramientas que ya usas", [
+                ("p", "No hace falta cambiar de programas. Trabajamos con Microsoft 365, Google Drive, WhatsApp, Notion, Airtable u Odoo, y las conectamos con n8n, Make o integraciones a medida cuando el proceso lo requiere."),
+            ]),
+            ("Con control y supervisión", [
+                ("ul", [
+                    "Revisión humana en los pasos sensibles",
+                    "Registro de cada acción",
+                    "Integraciones seguras y protección de datos",
+                    "Pruebas con datos reales o de prueba antes de ponerlo en marcha",
+                ]),
+            ]),
+            ("Un caso real: RentUp Capital", [
+                ("p", "Para RentUp Capital, una firma de inversión inmobiliaria, automatizamos todo lo que ocurre después de enviar un formulario en su web: cada contacto se guarda en su lista, la persona recibe una confirmación por email y el equipo, un aviso con todos los datos."),
+                ("p", [("a", "Ver el proyecto de RentUp Capital", "/proyectos/rentup-capital")]),
+            ]),
+            ("Preguntas frecuentes", [
+                ("faq", [
+                    ("¿Qué procesos se pueden automatizar?", "Los que se repiten y siguen reglas claras: registrar documentos y facturas, responder y clasificar correos, pasar datos entre programas, hacer seguimiento de contactos o preparar informes. En el diagnóstico vemos cuáles compensan en tu caso."),
+                    ("¿Tenemos que cambiar de herramientas?", "No. Partimos de las que ya usa tu empresa y las conectamos entre sí. Solo proponemos una herramienta nueva cuando resuelve algo que las actuales no pueden."),
+                    ("¿Qué pasa si una automatización se equivoca?", "Las diseñamos con validaciones, registro de acciones y revisión humana en los pasos sensibles, y las probamos antes de ponerlas en marcha. Las decisiones importantes siguen pasando por una persona."),
+                    ("¿Necesitamos conocimientos técnicos?", "No. Nos encargamos del análisis, el desarrollo, las integraciones y las pruebas. Después formamos a tu equipo y dejamos documentación para que use el sistema con autonomía."),
+                ]),
+            ]),
+            ("¿Hablamos de tus procesos?", [
+                ("p", _CIERRE),
+                ("p", ["También te puede interesar: ", ("a", "inteligencia artificial para empresas", "/inteligencia-artificial"), " y ", ("a", "desarrollo web a medida", "/desarrollo-web"), "."]),
+            ]),
+        ],
+    },
+    {
+        "slug": "inteligencia-artificial",
+        "id": "bqSvIntA1",
+        "menu": "IA aplicada",
+        "nombre": "Inteligencia artificial para empresas",
+        "title": "Inteligencia artificial para empresas en Barcelona | Banteq",
+        "descripcion": (
+            "Asistentes de IA para atención al cliente, documentación interna y clasificación de contactos, "
+            "integrados en tus herramientas. En Barcelona y alrededores."
+        ),
+        "h1": "Inteligencia artificial para empresas",
+        "subtitulo": "Asistentes que atienden, clasifican y redactan dentro de tus herramientas, con tu equipo al mando.",
+        "intro": [
+            "La inteligencia artificial ya es útil en el día a día de una empresa: responde consultas, encuentra información "
+            "en tus documentos, clasifica lo que entra y prepara borradores. Lo difícil no es usarla, sino aplicarla donde de verdad aporta.",
+            "En Banteq la integramos en tus procesos y en las herramientas que ya utilizas, y dejamos claro qué hace la IA y qué sigue decidiendo una persona.",
+        ],
+        "secciones": [
+            ("Qué hacemos con inteligencia artificial", [
+                ("ul", [
+                    [("b", "Atención al cliente. "), "Asistentes que responden las consultas habituales y pasan a tu equipo las que necesitan a una persona."],
+                    [("b", "Consultas sobre tu documentación interna. "), "Tu equipo pregunta con sus palabras y el asistente responde a partir de los documentos de la empresa."],
+                    [("b", "Clasificación de contactos. "), "Cada solicitud llega etiquetada y a quien corresponde."],
+                    [("b", "Borradores de respuesta. "), "La IA prepara el texto; una persona lo revisa y lo envía."],
+                    [("b", "IA en tu web y en tus automatizaciones. "), "La añadimos a formularios, flujos y procesos donde aporta valor de verdad."],
+                ]),
+            ]),
+            ("La IA propone, tu equipo decide", [
+                ("p", "No dejamos procesos sensibles sin supervisión. Diseñamos cada solución con revisión humana, registro de acciones y validaciones: la IA prepara, clasifica y ejecuta tareas, y las decisiones importantes siguen pasando por una persona."),
+            ]),
+            ("Tus datos, bajo control", [
+                ("ul", [
+                    "Usamos los datos que aportas solo para el alcance acordado",
+                    "Los protegemos con medidas de seguridad adecuadas",
+                    "No los usamos para entrenar modelos de IA públicos sin tu permiso expreso",
+                ]),
+                ("p", ["Lo explicamos con detalle en nuestra ", ("a", "política de privacidad", "/privacidad"), "."]),
+            ]),
+            ("Integrada en lo que ya usas", [
+                ("p", "Trabajamos con modelos de OpenAI y los conectamos con tu correo, tus documentos, tu CRM o WhatsApp mediante n8n, Make o integraciones a medida. Después formamos a tu equipo y dejamos documentación para que use el sistema con autonomía."),
+            ]),
+            ("Empieza por un caso concreto", [
+                ("p", ["La mejor forma de empezar es elegir una tarea y resolverla bien. En el diagnóstico de procesos vemos dónde la IA ahorra tiempo de verdad y dónde basta con una ", ("a", "automatización de procesos", "/automatizacion-procesos"), " más sencilla."]),
+            ]),
+            ("Preguntas frecuentes", [
+                ("faq", [
+                    ("¿La IA sustituye a las personas del equipo?", "No. Se ocupa de tareas repetitivas, como clasificar, buscar información o redactar un primer borrador, para que tu equipo dedique su tiempo a lo que requiere criterio. Las decisiones importantes siguen pasando por una persona."),
+                    ("¿Qué pasa con los datos de nuestra empresa?", "Se usan solo para el alcance acordado, se protegen con medidas de seguridad adecuadas y no se emplean para entrenar modelos de IA públicos sin tu permiso expreso."),
+                    ("¿Necesitamos conocimientos técnicos?", "No. Nos encargamos del análisis, el desarrollo, las integraciones y las pruebas. Después formamos a tu equipo y dejamos documentación."),
+                    ("¿Por dónde empezamos?", "Por un diagnóstico de procesos: analizamos cómo trabaja tu empresa y elegimos contigo el primer caso de uso, el que más tiempo ahorra con menos riesgo."),
+                ]),
+            ]),
+            ("¿Hablamos de tu caso?", [
+                ("p", _CIERRE),
+                ("p", ["También te puede interesar: ", ("a", "automatización de procesos", "/automatizacion-procesos"), " y ", ("a", "desarrollo web a medida", "/desarrollo-web"), "."]),
+            ]),
+        ],
+    },
+    {
+        "slug": "desarrollo-web",
+        "id": "bqSvWebM1",
+        "menu": "Desarrollo web",
+        "nombre": "Desarrollo web a medida",
+        "title": "Desarrollo web a medida en Barcelona | Banteq",
+        "descripcion": (
+            "Diseñamos y desarrollamos webs corporativas a medida, rediseños y webs conectadas con tu CRM y "
+            "tus automatizaciones. Sin plantillas. En Barcelona y alrededores."
+        ),
+        "h1": "Desarrollo web a medida",
+        "subtitulo": "Webs corporativas diseñadas y desarrolladas desde cero, conectadas con tu negocio.",
+        "intro": [
+            "Tu web es, muchas veces, la primera reunión con un cliente. Tiene que explicar bien lo que haces, transmitir confianza y convertir visitas en contactos.",
+            "Diseñamos y desarrollamos cada web a medida, sin plantillas, y la conectamos con tu correo, tu CRM o tus automatizaciones para que trabaje para tu negocio.",
+        ],
+        "secciones": [
+            ("Qué tipo de webs hacemos", [
+                ("ul", [
+                    [("b", "Webs corporativas. "), "Modernas y cuidadas al detalle, pensadas para explicar bien lo que haces."],
+                    [("b", "Rediseño de webs. "), "Nueva imagen, mejor estructura y una experiencia pensada primero para el móvil."],
+                    [("b", "Experiencias interactivas. "), "Animaciones, 3D y recorridos que hacen que un producto se entienda de un vistazo."],
+                    [("b", "Webs en varios idiomas. "), "Con la terminología correcta en cada uno."],
+                    [("b", "Funcionalidades propias. "), "Newsletter, áreas específicas o lo que tu negocio necesite."],
+                ]),
+            ]),
+            ("Una web conectada, no un folleto", [
+                ("ul", [
+                    "Formularios que guardan cada solicitud en tu CRM",
+                    "Confirmación automática a quien escribe",
+                    "Aviso a tu equipo al momento",
+                    "Integración con tu correo y con tus automatizaciones",
+                ]),
+                ("p", ["Es el mismo trabajo que hacemos en ", ("a", "automatización de procesos", "/automatizacion-procesos"), ", aplicado a tu web."]),
+            ]),
+            ("Rápida y bien construida", [
+                ("p", "Diseño adaptado a móvil, tablet y escritorio, buen rendimiento y una base técnica preparada para crecer contigo. Cuidamos también la estructura y el SEO de cada página, para que tus clientes te encuentren."),
+            ]),
+            ("Proyectos reales", [
+                ("p", [("b", "Margon. "), "Web corporativa en cinco idiomas para una empresa metalúrgica, con una página por sector, un recorrido interactivo en 3D y una sección de noticias con newsletter. ", ("a", "Ver el proyecto de Margon", "/proyectos/margon")]),
+                ("p", [("b", "RentUp Capital. "), "Web de once páginas para una firma de inversión inmobiliaria, con formularios conectados que registran cada contacto y avisan al equipo. ", ("a", "Ver el proyecto de RentUp Capital", "/proyectos/rentup-capital")]),
+            ]),
+            ("Preguntas frecuentes", [
+                ("faq", [
+                    ("¿Trabajáis con plantillas?", "No. Cada web se diseña y se desarrolla para la empresa que la encarga: su contenido, su imagen y las funciones que necesita."),
+                    ("¿Podéis rediseñar la web que ya tenemos?", "Sí. Renovamos webs que se han quedado atrás: nueva imagen, mejor estructura y una experiencia pensada primero para el móvil."),
+                    ("¿La web puede conectarse con nuestro CRM o nuestro correo?", "Sí. Los formularios pueden guardar cada solicitud en tu CRM, enviar la confirmación a quien escribe y avisar a tu equipo al momento, sin trabajo manual."),
+                    ("¿Hacéis webs en varios idiomas?", "Sí. La web que hemos desarrollado para Margon, por ejemplo, está disponible en cinco idiomas, con la terminología técnica correcta en cada uno."),
+                ]),
+            ]),
+            ("¿Hablamos de tu web?", [
+                ("p", _CIERRE),
+                ("p", ["También te puede interesar: ", ("a", "automatización de procesos", "/automatizacion-procesos"), " e ", ("a", "inteligencia artificial para empresas", "/inteligencia-artificial"), "."]),
+            ]),
+        ],
+    },
+]
+
+# Servicios de cada proyecto (enlaces desde su página) y web pública del cliente. La web nueva de
+# Margon aún no está publicada (margon.es sigue siendo la anterior): sin enlace hasta entonces.
+PROYECTO_SERVICIOS = {
+    "margon": ["desarrollo-web"],
+    "rentup-capital": ["desarrollo-web", "automatizacion-procesos"],
+}
+PROYECTO_WEB = {"rentup-capital": ("rentupcapital.com", "https://www.rentupcapital.com/")}
 
 
 # «Quiénes somos»: cuadrado central por encima del carrusel de palabras (PROCESOS AUTOMATIZADOS…).

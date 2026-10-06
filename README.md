@@ -97,19 +97,61 @@ como obligatorio solo el campo del método elegido. El aspecto está en `banteq.
 
 ### Identidad en buscadores (SEO)
 
-Todo sale de `tools/contenido.py` (`META_TITLE`, `META_DESCRIPTION`, `SITIO`, `NOMBRE_SITIO`) y lo
-aplica `apply_seo()` en `tools/build.py`:
+Todo sale de `tools/contenido.py` (`META_TITLE`, `META_DESCRIPTION`, `SITIO`, `NOMBRE_SITIO`,
+`LOCALIDAD`, `SERVICIOS`…) y lo aplica `tools/build.py`:
 
 - **Canónica y `og:url` de cada página**, absolutas (`https://banteq.com/contacto`…). La plantilla
   dejaba `/` en todas: para Google, todas eran copias de la home.
 - **Open Graph y Twitter** con el título y la descripción de cada página y la imagen en URL
   absoluta; `og:site_name` y `og:locale`.
-- **Datos estructurados** (JSON-LD) en la home: `Organization` (nombre, logo) y `WebSite` (el nombre
-  que Google muestra sobre la URL). Solo datos ciertos: sin dirección ni teléfono hasta tenerlos.
+- **Datos estructurados** (JSON-LD, `structured_data()`): organización (nombre, logo y localidad;
+  sin calle ni teléfono hasta tenerlos) en todas; sitio y preguntas frecuentes en la home; servicio,
+  preguntas y migas de pan en cada página de servicio; obra y migas en cada proyecto; lista en
+  `/proyectos`; página de contacto. Solo lo que se lee en la propia página.
 - **`robots.txt`** (todo permitido, con el sitemap) y **`sitemap.xml`** con las páginas indexables.
 - La página 404 lleva `noindex`.
 - En el navegador, Framer ponía a cada página el título de la home y tenía como dominio el de la
   plantilla (`framer.app`): ahora usa el `<title>` de cada ruta y `SITIO`.
+- **Textos alternativos** de las imágenes (`ALT` en `build.py`): descriptivos en las ilustraciones y
+  capturas; vacíos en las decorativas.
+
+### Páginas de servicio
+
+`/automatizacion-procesos`, `/inteligencia-artificial` y `/desarrollo-web` (contenido en
+`contenido.SERVICIOS`: título, subtítulo, secciones, listas, preguntas frecuentes y enlaces). Cada una
+es una copia del módulo de la página de texto de la plantilla (la del aviso legal) con otra columna
+de contenido, registrada como una ruta más de Framer: misma cabecera, mismo pie con formulario,
+mismas tipografías y puntos de corte. El menú y el pie de todas las páginas enlazan a las tres
+(`apply_service_links`), y cada proyecto enlaza a sus servicios (`apply_project_seo`).
+
+Para añadir o cambiar una: editar `SERVICIOS`, `npm run build` y `npm run prerender`.
+
+### SEO local
+
+Banteq está en Santa Perpètua de Mogoda y trabaja en Barcelona y alrededores. Se dice una vez por
+página y con naturalidad (`ZONA_FRASE`): en el título de la home y de los servicios, en el cierre de
+cada página de servicio, en una pregunta frecuente de la home, en el copyright del pie y en los
+datos estructurados. Sin listas de municipios.
+
+### HTML inicial de las páginas interiores (`npm run prerender`)
+
+Framer pinta en el navegador todas las páginas menos la home: su HTML llegaba vacío (0 palabras) y
+en un móvil no se veía nada hasta descargar y ejecutar el JavaScript. `tools/prerender.mjs` abre cada
+página en Chrome a tamaño de teléfono y guarda su HTML y sus estilos en `assets-banteq/prerender/`;
+el build los mete en cada página (`#bq-pre`, delante de `#main`):
+
+- **Buscadores**: el contenido está en el HTML desde el primer byte.
+- **Teléfono (< 800 px)**: se ve al instante. React pinta la página de verdad debajo, oculta, y
+  cuando está lista se cambia una por otra en el mismo fotograma (son idénticas píxel a píxel). Las
+  dos animaciones de entrada de esas páginas (título y subtítulo) no se repiten en ese caso.
+- **Tableta y escritorio**: no se enseña (es la versión de teléfono); todo carga como siempre.
+
+Hay que repetir `npm run prerender` cuando cambie el contenido de esas páginas; si no, el build
+avisa («el HTML inicial… se capturó con otro contenido»).
+
+Además, cada página precarga solo sus módulos (`page_preloads`: todas precargaban el de la home,
+490 KB) y la fuente Geist se precarga en todas (sin eso llegaba tarde y movía los textos: era el
+salto de diseño de la home en móvil, CLS 0,10 → 0).
 
 Pendiente fuera del repositorio: `www.banteq.com` no está añadido al proyecto de Vercel (no carga
 por HTTPS); hay que añadirlo como redirección a `banteq.com`.
