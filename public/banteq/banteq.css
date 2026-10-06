@@ -222,3 +222,166 @@ html body {
   pointer-events: none;
   background: linear-gradient(to right, #fff 0%, rgba(255, 255, 255, 0) 12.5%, rgba(255, 255, 255, 0) 87.5%, #fff 100%);
 }
+
+/* ------------------------------------------------------------------------------------------
+   Formulario de contacto: método de contacto (WhatsApp o correo). Lo monta banteq.js dentro del
+   formulario de Framer. Mismo cristal que los campos (pista oscura translúcida con filo claro) y
+   opción elegida como la píldora «Hablemos» del menú (blanco al 80 % con texto oscuro).
+   ------------------------------------------------------------------------------------------ */
+.bq-metodo {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px;
+  flex: none;
+  width: 100%;
+  margin-top: 8px; /* sitio para el sello «Recomendado», que asoma por arriba */
+  padding: 4px;
+  border-radius: 16px;
+  background: rgba(0, 0, 0, 0.2);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+  font-family: "Geist", "Geist Placeholder", sans-serif;
+}
+.bq-metodo-opcion {
+  position: relative;
+  display: block;
+  min-width: 0;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+/* El radio real ocupa toda la opción, invisible: clic, teclado y lectores de pantalla nativos. */
+.bq-metodo-opcion input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+.bq-metodo-cara {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 40px;
+  padding: 0 10px;
+  border-radius: 12px;
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+  transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+}
+.bq-metodo-cara svg {
+  flex: none;
+  width: 17px;
+  height: 17px;
+}
+.bq-metodo-opcion input:checked + .bq-metodo-cara {
+  background: rgba(255, 255, 255, 0.8);
+  color: rgb(26, 26, 26);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.14), inset 0 0 0 1px rgba(255, 255, 255, 0.55);
+}
+.bq-metodo-opcion input:focus-visible + .bq-metodo-cara {
+  outline: 2px solid rgba(255, 255, 255, 0.95);
+  outline-offset: 2px;
+}
+@media (hover: hover) {
+  .bq-metodo-opcion:hover input:not(:checked) + .bq-metodo-cara {
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+  }
+}
+/* En el móvil cada opción mide unos 130–160 px: sin icono y con la letra algo menor para que
+   «Correo electrónico» quepa en una línea. */
+@media (max-width: 479.98px) {
+  .bq-metodo-cara {
+    padding: 0 6px;
+    font-size: clamp(13px, 3.7vw, 15.5px);
+  }
+  .bq-metodo-cara svg {
+    display: none;
+  }
+}
+/* Sello «Recomendado»: la iridiscencia de la marca, sobre el borde superior de la opción. */
+.bq-metodo-sello {
+  position: absolute;
+  top: -12px;
+  right: 10px;
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, rgb(180, 195, 255), rgb(201, 251, 241) 35%, rgb(214, 204, 255) 70%, rgb(168, 230, 255));
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.18);
+  color: rgb(26, 26, 26);
+  font-size: 10px;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  pointer-events: none;
+}
+.bq-metodo-nota {
+  flex: none;
+  width: 100%;
+  margin: 0 0 2px;
+  padding: 0 4px;
+  color: rgba(255, 255, 255, 0.72);
+  font-family: "Geist", "Geist Placeholder", sans-serif;
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.45;
+  text-align: left;
+}
+/* Solo se ve el campo del método elegido. */
+form[data-bq-metodo="whatsapp"] [data-bq-campo="email"],
+form[data-bq-metodo="email"] [data-bq-campo="tel"] {
+  display: none !important;
+}
+/* Prefijo: se ve solo el código (+34); encima, invisible, la lista nativa de países. */
+.bq-prefijo {
+  position: relative;
+  order: -1;
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  gap: 5px;
+  margin-right: 12px;
+  padding-right: 12px;
+  border-right: 1px solid rgba(255, 255, 255, 0.2);
+  color: #fff;
+  font-family: "Geist", "Geist Placeholder", sans-serif;
+  font-size: 16px;
+  line-height: 19.2px;
+  cursor: pointer;
+}
+.bq-prefijo svg {
+  flex: none;
+  width: 10px;
+  height: 10px;
+  opacity: 0.7;
+}
+.bq-prefijo select {
+  position: absolute;
+  top: -12px;
+  bottom: -12px;
+  left: -12px;
+  right: 0;
+  width: calc(100% + 12px);
+  height: calc(100% + 24px);
+  margin: 0;
+  padding: 0;
+  border: 0;
+  opacity: 0;
+  cursor: pointer;
+  font-size: 16px; /* por debajo de 16 px Safari de iPhone amplía la página al abrir la lista */
+  appearance: none;
+  -webkit-appearance: none;
+}
+.bq-prefijo:focus-within {
+  outline: 2px solid rgba(255, 255, 255, 0.95);
+  outline-offset: 6px;
+  border-radius: 4px;
+}

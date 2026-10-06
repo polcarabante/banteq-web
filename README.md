@@ -80,6 +80,21 @@ favicons en una caché propia por URL que no respeta las cabeceras HTTP, así qu
 cambia la URL y lo vuelve a pedir; mientras no cambie, la URL es siempre la misma. En un iPhone que
 ya tenga la web en la pantalla de inicio hay que quitar el acceso directo y volver a añadirlo.
 
+### Formulario de contacto: WhatsApp o correo
+
+El cliente elige cómo prefiere que le contactemos (WhatsApp, por defecto, o correo electrónico) y
+solo da ese dato: teléfono con prefijo (+34 por defecto) o email. El formulario sigue siendo el de
+Framer; `assets-banteq/web/banteq.js` le añade el selector, el aviso y el campo de teléfono, y deja
+como obligatorio solo el campo del método elegido. El aspecto está en `banteq.css`.
+
+- Se envía a `/api/leads` con `contactPreference` («WhatsApp» o «Correo electrónico») y `phone` o
+  `email`. Nunca se abre WhatsApp al enviar.
+- `api/leads.js` valida el dato del método elegido, guarda el contacto en Brevo (los de WhatsApp,
+  sin correo, con el teléfono como identificador) y avisa al equipo con el método elegido y, si es
+  WhatsApp, un enlace para abrir el chat. El correo de confirmación al cliente solo sale si dio
+  su email.
+- En local (`npm run dev`) el envío solo se muestra en la terminal.
+
 ### Identidad en buscadores (SEO)
 
 Todo sale de `tools/contenido.py` (`META_TITLE`, `META_DESCRIPTION`, `SITIO`, `NOMBRE_SITIO`) y lo

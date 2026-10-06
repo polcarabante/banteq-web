@@ -91,6 +91,17 @@ const normalizeSpanishPhone = (value = "") => {
   return digits ? `+${digits}` : "";
 };
 
+const isValidEmail = (value = "") => /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(value);
+
+// Número internacional ya normalizado (+ y entre 8 y 15 cifras, el máximo de E.164).
+const isValidPhone = (value = "") => /^\+\d{8,15}$/.test(value);
+
+const escapeHtml = (value = "") => String(value)
+  .replace(/&/g, "&amp;")
+  .replace(/</g, "&lt;")
+  .replace(/>/g, "&gt;")
+  .replace(/"/g, "&quot;");
+
 const parseBrevoListId = (value) => Number(String(value || "").replace("#", "").trim());
 
 const getListIdForType = (type) => {
@@ -213,17 +224,24 @@ const sendAdminNotification = async (lead) => {
 
   if (!adminEmail || !senderEmail) return;
 
+  const text = (value) => escapeHtml(value || "No indicado");
+  const isWhatsappLead = lead.contactPreference === "WhatsApp" && lead.phone;
+  // Enlace para que el equipo abra el chat desde el aviso. Al cliente nunca se le abre WhatsApp.
+  const whatsappLink = isWhatsappLead
+    ? ` · <a href="https://wa.me/${lead.phone.replace(/\D/g, "")}">Abrir chat de WhatsApp</a>`
+    : "";
+
   const htmlContent = `
     <h2>Nuevo contacto desde la web de Banteq</h2>
-    <p><strong>Nombre:</strong> ${lead.name || "No indicado"}</p>
-    <p><strong>Empresa:</strong> ${lead.company || "No indicado"}</p>
-    <p><strong>Email:</strong> ${lead.email || "No indicado"}</p>
-    <p><strong>Teléfono:</strong> ${lead.phone || "No indicado"}</p>
-    <p><strong>Preferencia de contacto:</strong> ${lead.contactPreference || "No indicado"}</p>
+    <p><strong>Prefiere que le contactemos por:</strong> ${text(lead.contactPreference)}</p>
+    <p><strong>Nombre:</strong> ${text(lead.name)}</p>
+    <p><strong>Empresa:</strong> ${text(lead.company)}</p>
+    <p><strong>Teléfono:</strong> ${text(lead.phone)}${whatsappLink}</p>
+    <p><strong>Email:</strong> ${text(lead.email)}</p>
     <p><strong>Fecha de envío:</strong> ${formatDisplayDate(lead.submittedAt)}</p>
     <p><strong>Estado:</strong> Nuevo</p>
-    <p><strong>Mensaje:</strong> ${(lead.message || "No indicado").replace(/\n/g, "<br>")}</p>
-    <p><strong>Áreas:</strong> ${lead.areas || "No indicado"}</p>
+    <p><strong>Mensaje:</strong> ${text(lead.message).replace(/\n/g, "<br>")}</p>
+    <p><strong>Áreas:</strong> ${text(lead.areas)}</p>
   `;
 
   await brevoFetch("/smtp/email", {
@@ -232,7 +250,7 @@ const sendAdminNotification = async (lead) => {
       sender: { name: senderName, email: senderEmail },
       to: [{ email: adminEmail, name: "Banteq" }],
       replyTo: lead.email ? { email: lead.email, name: lead.name || "Lead" } : undefined,
-      subject: `Nuevo contacto web: ${lead.name || lead.company || "sin nombre"}`,
+      subject: `Nuevo contacto web (${isWhatsappLead ? "WhatsApp" : "correo"}): ${lead.name || lead.company || "sin nombre"}`,
       htmlContent,
     }),
   });
@@ -450,12 +468,17 @@ const handlePost = async (request, response) => {
     return json(response, 400, { error: "Missing required lead fields" });
   }
 
-  if (contactPreference === "Correo electrónico" && !email) {
-    return json(response, 400, { error: "Email is required for email preference" });
+  // El cliente elige un método de contacto y solo da ese dato: teléfono para WhatsApp o correo.
+  if (contactPreference === "Correo electrónico" && !isValidEmail(email)) {
+    return json(response, 400, { error: "A valid email is required for email preference" });
   }
 
-  if (contactPreference === "WhatsApp" && !phone) {
-    return json(response, 400, { error: "Phone is required for WhatsApp preference" });
+  if (contactPreference === "WhatsApp" && !isValidPhone(phone)) {
+    return json(response, 400, { error: "A valid phone is required for WhatsApp preference" });
+  }
+
+  if (!email && !phone) {
+    return json(response, 400, { error: "An email or a phone is required" });
   }
 
   const lead = {
