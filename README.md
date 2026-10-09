@@ -298,6 +298,31 @@ cuadrado opaco con el logotipo de Banteq; el carrusel pasa por detrás. Su conte
 
 El aspecto (tamaño, esquinas, fondo, sombra) está en `assets-banteq/web/banteq.css`.
 
+## Demo de la tarjeta de Margon
+
+En el carrusel de proyectos (y en `/proyectos`), la tarjeta de Margon enseña una grabación real de
+su web encima de la imagen fija: el cursor va hasta «¿Qué hace Margon dentro de un tren?», hace
+clic y corre la animación de la propia web hasta el interior del coche.
+
+- Con ratón se reproduce mientras el cursor está sobre la tarjeta y al salir vuelve a la imagen
+  fija; sin ratón (móvil, tableta), mientras la tarjeta se ve en pantalla. Con «reducir
+  movimiento» o ahorro de datos se queda la imagen. El vídeo no se pide hasta que la tarjeta está
+  cerca de la pantalla (`mountDemo` en `assets-banteq/web/banteq.js`).
+- La imagen fija de la tarjeta es el primer fotograma del vídeo, con el mismo marco oscuro que las
+  demás tarjetas: por eso no hay salto al empezar ni al terminar.
+- Para rehacerla (por ejemplo, si cambia la portada de Margon), con su web sirviéndose en local
+  (`npm run dev` en `~/margon-web`, puerto 4310):
+
+      node tools/demo_margon.mjs      # graba la web: fotogramas + guion (cursor, cámara)
+      python3 tools/demo_margon.py    # monta assets-banteq/generado/margon-demo.mp4 y cms-card-margon.jpg
+      npm run build
+
+- Qué proyecto lleva demo se decide en `tools/contenido.py` (`"demo"` en `PROYECTOS`).
+
+Las métricas de cada tarjeta también están ahí (`"metricas"`). Si la tercera es una cifra larga
+(«+2.500 €/año»), la tarjeta le da el ancho que queda en la fila y en móvil la baja a una segunda
+línea; con cifras cortas se queda como en la plantilla.
+
 ## Estructura de la home
 
 1. Hero: "Tecnología que mejora cómo trabaja tu empresa" + carrusel "Empresas que ya confían en Banteq" (Margon, RentUp Capital)

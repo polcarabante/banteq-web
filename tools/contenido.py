@@ -483,7 +483,11 @@ PROYECTOS = [
             ("4. Noticias y newsletter", ["Sección de noticias con una página para cada artículo", "Newsletter con confirmación de suscripción y página de baja", "Envío de correos gestionado con Resend"]),
         ],
         "resultado": "Una web corporativa preparada para acompañar procesos comerciales largos: clara para el comprador técnico, disponible en cinco idiomas y lista para crecer con nuevos contenidos.",
-        "metricas": [("5", "Idiomas"), ("3", "Sectores"), ("3D", "Experiencia interactiva")],
+        # El ahorro es un dato de Pol (2026-10-09): tiempo que ya no se dedica a preparar y enviar el
+        # boletín, ahora automatizado desde la web.
+        "metricas": [("5", "Idiomas"), ("2", "Animaciones"), ("+2.500 €/año", "ahorrados en tiempo con el newsletter automatizado")],
+        # Grabación real de la web que se reproduce sobre la imagen de la tarjeta (tools/demo_margon.*).
+        "demo": "margon-demo.mp4",
     },
     {
         "slug": "rentup-capital",

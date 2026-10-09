@@ -519,6 +519,10 @@ def inject_assets(rel):
     h = S[rel]
     tag_css = '<link rel="stylesheet" href="/banteq/banteq.css">'
     tag_js = '<script src="/banteq/banteq.js" defer></script><script src="/banteq/banteq-liquid.js" defer></script>'
+    # Demos en vídeo de las tarjetas de proyecto: imagen de la tarjeta → vídeo (lo usa banteq.js).
+    demos = {Path(pr["tarjeta"]).stem: f"/banteq/{pr['demo']}" for pr in C.PROYECTOS if pr.get("demo")}
+    if demos:
+        tag_js = f"<script>window.BANTEQ_DEMOS={json.dumps(demos)}</script>" + tag_js
     if tag_css not in h:
         h = h.replace("</head>", f"{tag_css}{tag_js}</head>", 1)
     S[rel] = h
@@ -944,6 +948,9 @@ def apply_performance():
     # Se sirve en 1080p 4:2:0 de 8 bits (tools/videos.py), con el mismo nombre.
     shutil.copy2(GEN / "pie-video.mp4", OUT / PIE_VIDEO)
     shutil.copy2(GEN / "pie-video-poster.jpg", OUT / "banteq" / "pie-video-poster.jpg")  # ver tools/prerender.mjs
+    for pr in C.PROYECTOS:
+        if pr.get("demo"):
+            shutil.copy2(GEN / pr["demo"], OUT / "banteq" / pr["demo"])  # ver tools/demo_margon.mjs
 
 
 def copy_logos():
@@ -1585,12 +1592,10 @@ def fix_prerendered_leftovers():
         ("Streamlining project coordination and task assignments for faster delivery and smoother collaboration.", r["descripcion"]),
         ("AI Workflow Automation for Finance SaaS Company", m["titulo"]),
         ("We analyze real estate workflows, identify operational bottlenecks, and uncover revenue opportunities.", m["descripcion"]),
-        (">Lead Response<", ">Idiomas<"), (">View Bookings<", ">Sectores<"), (">Engagement<", ">Experiencia interactiva<"),
-        (">Faster Delivery<", ">Páginas<"), (">Admin Work<", ">Formularios conectados<"), (">Productivity<", ">Herramientas integradas<"),
-        (">Demo Booking<", ">Idiomas<"), (">Closing Rate<", ">Sectores<"),
     ]
     for old, new in pares:
         replace(INDEX, old, new, required=False)
+    fix_project_cards_html()
     # Sello de Framer (oculto por CSS, pero su texto estaba en el HTML).
     h = S[INDEX]
     i = h.find('<div id="__framer-badge-container"')
@@ -1606,6 +1611,66 @@ def fix_prerendered_leftovers():
         "f(m,{},f(p(()=>import(`./PX9hIOIVM.Bh3Sw9Ys.mjs`)))))})})()",
         "(function(){})()",
     )
+
+
+METRICA_ANCHA = 4  # caracteres: una cifra más larga («+2.500 €/año») no cabe en un tercio de la fila
+
+
+def fix_project_cards_html():
+    """Tarjetas del carrusel de proyectos en el HTML inicial. Venían con la imagen, el logo y las
+    cifras de ejemplo de la plantilla («+40%», «24/7»…), que React cambiaba por los del CMS al cargar:
+    hasta entonces se leían, junto a nuestros textos, datos que no son de ningún proyecto. Ahora cada
+    tarjeta lleva desde el HTML la imagen, el logo y las métricas de su proyecto."""
+    h = S[INDEX]
+    out, pos, n = [], 0, 0
+    for m in re.finditer(r'<div class="framer-fesYP[ "]', h):
+        a = m.start()
+        if a < pos:
+            continue
+        b = html_element_extent(h, a, "div")
+        card = h[a:b]
+        pr = next((p for p in C.PROYECTOS if f">{html.escape(p['titulo'], quote=False)}<" in card), None)
+        if pr is None:
+            continue
+        # Imagen y logo: como los pinta React con los datos del CMS (sin variantes de tamaño).
+        for nombre, archivo, alt in (("Image", pr["tarjeta"], f"Web de {pr['cliente']}"), ("Logo", pr["logo"], pr["cliente"])):
+            i = card.index("<img", card.index(f'data-framer-name="{nombre}"'))
+            j = card.index(">", i) + 1
+            tag = re.sub(r' (?:sizes|srcset)="[^"]*"', "", card[i:j])
+            tag = re.sub(r' src="[^"]*"', f' src="/framerusercontent.com/images/{archivo}"', tag)
+            tag = re.sub(r' alt="[^"]*"', f' alt="{html.escape(alt)}"', tag)
+            card = card[:i] + tag + card[j:]
+        # Métricas: cifra y nombre, en el orden en que están en la fila.
+        i = card.index('<div class="framer-1tjgdmg"')
+        j = html_element_extent(card, i, "div")
+        textos = iter(html.escape(t, quote=False) for par in pr["metricas"] for t in par)
+        fila, k = re.subn(r'(<p class="framer-text framer-styles-preset-(?:1nvzal8|1qlfxwt)"[^>]*>)[^<]*(</p>)',
+                          lambda mm: mm.group(1) + next(textos) + mm.group(2), card[i:j])
+        assert k == 6, (pr["slug"], k)
+        if len(pr["metricas"][2][0]) > METRICA_ANCHA:
+            fila = fila.replace('class="framer-1tjgdmg"', 'class="framer-1tjgdmg bq-datos-ancho"', 1)
+        out.append(h[pos:a] + card[:i] + fila + card[j:])
+        pos, n = b, n + 1
+    assert n >= len(C.PROYECTOS), f"tarjetas de proyecto en el HTML: {n}"
+    S[INDEX] = "".join(out) + h[pos:]
+
+
+def apply_wide_metric():
+    """Tercera métrica de las tarjetas de proyecto cuando es una cifra larga («+2.500 €/año»): no cabe
+    en el tercio de fila que le da la plantilla, y en móvil la plantilla ni la pinta (solo enseña
+    dos). El módulo de la tarjeta marca entonces la fila con una clase (el reparto está en banteq.css)
+    y pinta la tercera también en móvil. Las tarjetas con cifras cortas quedan como estaban."""
+    t = S[CARD_MOD]
+    m = re.search(r"className:`framer-1p3jokw`.*?text:(\w+),verticalAlignment", t, re.S)
+    assert m, "no se encuentra la tercera cifra de la tarjeta"
+    ancha = f"(({m.group(1)}||``).length>{METRICA_ANCHA})"
+    for old, new in (
+        ("fe()&&o(d.div,{className:`framer-10ajrs0`", f"(fe()||{ancha})&&o(d.div,{{className:`framer-10ajrs0`"),
+        ("o(d.div,{className:`framer-1tjgdmg`,", f"o(d.div,{{className:`framer-1tjgdmg`+({ancha}?` bq-datos-ancho`:``),"),
+    ):
+        assert t.count(old) == 1, old
+        t = t.replace(old, new)
+    S[CARD_MOD] = t
 
 
 def remove_child_call(rel, start, end):
@@ -2014,6 +2079,7 @@ def main():
     apply_cuadro()
     build_cms()
     apply_project_pages()
+    apply_wide_metric()
     neutralize_entrance()
     build_service_pages()
     apply_project_seo()

@@ -488,3 +488,61 @@ a.bq-enlace {
     max-width: 80%;
   }
 }
+
+/* Tarjetas de proyecto con demo (banteq.js, mountDemo): el vídeo ocupa exactamente el sitio de la
+   imagen, con su mismo recorte y sus mismas esquinas, y solo se ve mientras se reproduce. */
+.bq-demo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: inherit;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+.bq-demo.bq-demo-on {
+  opacity: 1;
+}
+
+/* Tarjetas de proyecto cuya tercera métrica es una cifra larga («+2.500 €/año»; la clase la pone
+   tools/build.py, apply_wide_metric). Las dos primeras ocupan lo que mide su texto y la tercera se
+   queda con el resto de la fila, sin partirse. En móvil (variante framer-v-1kfc35p), donde la
+   plantilla solo enseña dos métricas, las dos primeras siguen a medias y la tercera baja a su fila. */
+.framer-fesYP .framer-1tjgdmg.bq-datos-ancho {
+  gap: 20px 32px;
+}
+.framer-fesYP .bq-datos-ancho > .framer-risutp,
+.framer-fesYP .bq-datos-ancho > .framer-2cy0hp {
+  flex: 0 0 auto;
+  width: auto;
+}
+.framer-fesYP .bq-datos-ancho > .framer-10ajrs0 {
+  flex: 1 1 0;
+  min-width: 0;
+}
+.framer-fesYP .bq-datos-ancho > .framer-10ajrs0 .framer-1p3jokw {
+  white-space: nowrap;
+}
+.framer-fesYP .bq-datos-ancho > .framer-10ajrs0 .framer-160i2qr {
+  text-wrap: balance;
+}
+.framer-fesYP.framer-v-1kfc35p .framer-1tjgdmg.bq-datos-ancho {
+  flex-wrap: wrap;
+  column-gap: 16px;
+}
+.framer-fesYP.framer-v-1kfc35p .bq-datos-ancho > .framer-risutp,
+.framer-fesYP.framer-v-1kfc35p .bq-datos-ancho > .framer-2cy0hp {
+  flex: 1 0 0;
+}
+.framer-fesYP.framer-v-1kfc35p .bq-datos-ancho > .framer-10ajrs0 {
+  flex: 0 0 100%;
+}
+
+/* Ficha de proyecto: las tres cajas de métricas miden lo mismo aunque el nombre de una ocupe más
+   líneas (la del ahorro de Margon); en la plantilla cada una medía lo que su texto. */
+.framer-mLEeF .framer-zy84k1 > div {
+  align-self: stretch;
+  height: auto;
+}

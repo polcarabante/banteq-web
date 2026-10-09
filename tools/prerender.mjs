@@ -81,7 +81,9 @@ try {
         else el.setAttribute("style", s);
         el.removeAttribute("data-bq-s0");
       });
-      clone.querySelectorAll("script, canvas").forEach((el) => el.remove());
+      // Fuera lo que no es contenido: scripts, lienzos y el vídeo que banteq.js monta sobre las
+      // tarjetas con demo (lo vuelve a montar sobre la página de verdad).
+      clone.querySelectorAll("script, canvas, .bq-demo").forEach((el) => el.remove());
       // Vídeos: sin descargarlos dos veces (el de verdad lo pone React). Si el vídeo está en la
       // primera pantalla (el fondo de la página de contacto), su primer fotograma como póster.
       const reales = [...main.querySelectorAll("video")];

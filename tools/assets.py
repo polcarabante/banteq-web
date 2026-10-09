@@ -411,7 +411,8 @@ def project_images():
               "rentup-home", "rentup-club", "rentup-home-movil"]}
     out = {}
     # Tarjetas del carrusel de proyectos (762×720) y cabecera del detalle (1280×720).
-    framed(shots["margon-home"], 762, 720).save(GEN / "cms-card-margon.jpg", quality=88)
+    # La de Margon es el primer fotograma de su demo en vídeo: la genera tools/demo_margon.py con
+    # este mismo marco (si se rehiciera aquí, la imagen fija y el vídeo dejarían de coincidir).
     framed(shots["rentup-home"], 762, 720).save(GEN / "cms-card-rentup.jpg", quality=88)
     cover(shots["margon-home"], 1280, 720, 0).save(GEN / "cms-hero-margon.jpg", quality=88)
     cover(shots["rentup-home"], 1280, 720, 0).save(GEN / "cms-hero-rentup.jpg", quality=88)

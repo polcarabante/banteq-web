@@ -118,6 +118,84 @@
     }).observe(inner);
   };
   // ---------------------------------------------------------------------------------------------
+  // Tarjetas de proyecto con demo: una grabación real de la web del cliente se reproduce encima de
+  // la imagen de la tarjeta, que es su primer fotograma (tools/demo_margon.mjs). Con ratón, mientras
+  // el cursor está sobre la tarjeta, y al salir vuelve a la imagen fija; sin ratón (móvil, tableta),
+  // mientras la tarjeta se ve en pantalla. El vídeo no se descarga hasta que la tarjeta está cerca.
+  // ---------------------------------------------------------------------------------------------
+  const demos = window.BANTEQ_DEMOS || {};
+  const DEMO_IMG = Object.keys(demos).map((name) => `img[src*="${name}"]`).join(",");
+  const conRaton = window.matchMedia("(hover: hover) and (pointer: fine)");
+  const ahorroDatos = () => !!(navigator.connection && navigator.connection.saveData);
+  const mountDemo = (img) => {
+    const marco = img.closest('[data-framer-name="Image"]');
+    const tarjeta = marco && marco.closest(".framer-fesYP");
+    if (!tarjeta || marco.querySelector(".bq-demo")) return;
+    const src = demos[Object.keys(demos).find((name) => img.src.includes(name))];
+    const video = document.createElement("video");
+    video.className = "bq-demo";
+    video.muted = true;
+    video.loop = true;
+    video.playsInline = true;
+    video.preload = "none";
+    video.setAttribute("aria-hidden", "true");
+    marco.appendChild(video);
+    let dentro = false; // el cursor está sobre la tarjeta
+    let visible = false; // la tarjeta se ve (casi) entera
+    const cargar = (modo) => {
+      if (!video.src) {
+        video.preload = modo;
+        video.src = src;
+      }
+    };
+    const sync = () => {
+      const activo = !document.hidden && !reduceMotion.matches && (conRaton.matches ? dentro : visible && !ahorroDatos());
+      if (activo) {
+        cargar("auto");
+        video.play().catch(() => {});
+      } else {
+        video.pause();
+        video.classList.remove("bq-demo-on");
+        // Con ratón, la próxima vez empieza desde el principio (cuando ya se ha fundido con la imagen).
+        if (conRaton.matches && video.src) setTimeout(() => !dentro && (video.currentTime = 0), 220);
+      }
+    };
+    // Solo se enseña cuando ya hay fotogramas: hasta entonces se sigue viendo la imagen fija.
+    video.addEventListener("playing", () => video.classList.add("bq-demo-on"));
+    // En el carrusel, la banda de las flechas cruza la tarjeta por el centro y no es hija suya: el
+    // cursor «sale» de la tarjeta al pasar por ahí. Se escucha en el carrusel y se mira la posición.
+    const zona = tarjeta.closest(".framer-HWODK") || tarjeta;
+    const sobre = (event) => {
+      const r = tarjeta.getBoundingClientRect();
+      const ahora = event.pointerType === "mouse" && event.clientX >= r.left && event.clientX <= r.right && event.clientY >= r.top && event.clientY <= r.bottom;
+      if (ahora !== dentro) {
+        dentro = ahora;
+        sync();
+      }
+    };
+    zona.addEventListener("pointermove", sobre, { passive: true });
+    zona.addEventListener("pointerleave", () => {
+      if (dentro) {
+        dentro = false;
+        sync();
+      }
+    });
+    new IntersectionObserver(([entry]) => {
+      visible = entry.isIntersecting;
+      sync();
+    }, { threshold: 0.6 }).observe(marco);
+    // Al acercarse la tarjeta: con ratón basta la cabecera del vídeo; sin él, se va a reproducir.
+    const cerca = new IntersectionObserver(([entry]) => {
+      if (!entry.isIntersecting || reduceMotion.matches || ahorroDatos()) return;
+      cargar(conRaton.matches ? "metadata" : "auto");
+      cerca.disconnect();
+    }, { rootMargin: "300px" });
+    cerca.observe(marco);
+    document.addEventListener("visibilitychange", sync);
+  };
+  const scanDemos = () => DEMO_IMG && document.querySelectorAll(DEMO_IMG).forEach(mountDemo);
+
+  // ---------------------------------------------------------------------------------------------
   // Formulario de contacto: el cliente elige cómo prefiere que le contactemos, WhatsApp (por
   // defecto) o correo, y solo tiene que dar ese dato. El formulario es el de Framer; aquí se le
   // añaden el selector, el aviso y el campo de teléfono con prefijo, y se activa como obligatorio
@@ -215,16 +293,23 @@
     sync();
   };
   const scanForms = () => document.querySelectorAll("form:not([data-bq-contacto])").forEach(enhanceContactForm);
-  // En cuanto Framer monta un formulario (al cargar, al cambiar de página o al rehacer la página en
-  // móvil), antes de que se pinte: solo se miran los nodos recién añadidos.
+  // En cuanto Framer monta un formulario o una tarjeta con demo (al cargar, al cambiar de página o
+  // al rehacer la página en móvil), antes de que se pinte: solo se miran los nodos recién añadidos.
   new MutationObserver((mutations) => {
+    let forms = false;
+    let cards = false;
     for (const mutation of mutations) {
       for (const node of mutation.addedNodes) {
-        if (node.nodeType === 1 && (node.tagName === "FORM" || node.querySelector("form"))) return scanForms();
+        if (node.nodeType !== 1) continue;
+        forms = forms || node.tagName === "FORM" || !!node.querySelector("form");
+        cards = cards || (!!DEMO_IMG && (node.matches(DEMO_IMG) || !!node.querySelector(DEMO_IMG)));
       }
     }
+    if (forms) scanForms();
+    if (cards) scanDemos();
   }).observe(document.documentElement, { childList: true, subtree: true });
   scanForms();
+  scanDemos();
 
   setInterval(scanTickers, 1500);
   window.addEventListener("load", scanTickers);
