@@ -479,7 +479,7 @@ PROYECTOS = [
         "bloques": [
             ("1. Cinco idiomas", ["Español, català, English, Deutsch y français", "Cada página y cada noticia disponible en los cinco idiomas", "Normas y certificaciones con su nombre oficial en cada idioma"]),
             ("2. Una página por sector", ["Ferroviario, defensa y obra pública con páginas propias", "Obra ejecutada con los proyectos reales de la empresa", "Homologaciones, capacidad productiva y proceso integral"]),
-            ("3. Experiencia interactiva", ["Recorrido interactivo por el interior de un tren", "Escena 3D y animaciones de producto", "Configurador del módulo de aseo"]),
+            ("3. Experiencia interactiva", ["Entrada animada al interior de un tren desde la portada", "Recorrido por el salón de pasajeros: ocho conjuntos para ver de cerca", "Segunda animación para entrar en el módulo de aseo"]),
             ("4. Noticias y newsletter", ["Sección de noticias con una página para cada artículo", "Newsletter con confirmación de suscripción y página de baja", "Envío de correos gestionado con Resend"]),
         ],
         "resultado": "Una web corporativa preparada para acompañar procesos comerciales largos: clara para el comprador técnico, disponible en cinco idiomas y lista para crecer con nuevos contenidos.",
@@ -848,7 +848,7 @@ SERVICIOS = [
                 ("p", "Diseño adaptado a móvil, tablet y escritorio, buen rendimiento y una base técnica preparada para crecer contigo. Cuidamos también la estructura y el SEO de cada página, para que tus clientes te encuentren."),
             ]),
             ("Proyectos reales", [
-                ("p", [("b", "Margon. "), "Web corporativa en cinco idiomas para una empresa metalúrgica, con una página por sector, un recorrido interactivo en 3D y una sección de noticias con newsletter. ", ("a", "Ver el proyecto de Margon", "/proyectos/margon")]),
+                ("p", [("b", "Margon. "), "Web corporativa en cinco idiomas para una empresa metalúrgica, con una página por sector, un recorrido interactivo por el interior de un tren y una sección de noticias con newsletter. ", ("a", "Ver el proyecto de Margon", "/proyectos/margon")]),
                 ("p", [("b", "RentUp Capital. "), "Web de once páginas para una firma de inversión inmobiliaria, con formularios conectados que registran cada contacto y avisan al equipo. ", ("a", "Ver el proyecto de RentUp Capital", "/proyectos/rentup-capital")]),
             ]),
             ("Preguntas frecuentes", [
