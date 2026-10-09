@@ -422,3 +422,19 @@ a.bq-enlace {
   padding-left: 4px !important;
   padding-right: 4px !important;
 }
+
+/* Fila «¿No sabes por dónde empezar?» + «Seguridad y control» (escritorio). La plantilla fija la
+   tarjeta de seguridad en 420 px y deja que la del diagnóstico crezca con su texto: en cuanto el
+   texto ocupa una línea más, la del diagnóstico sobresale por arriba y por abajo y el texto queda
+   pegado al botón. La de seguridad toma la altura de la fila (nunca menos de 420 px) y el texto
+   conserva los 16 px de aire sobre el botón que tenía. */
+@media (min-width: 1200px) {
+  .framer-Paghq .framer-1kunsgp {
+    gap: 16px;
+  }
+  .framer-Paghq .framer-whwse3 {
+    height: auto !important;
+    min-height: 420px;
+    align-self: stretch;
+  }
+}

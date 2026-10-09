@@ -199,8 +199,9 @@ HOME = [
     (
         "We’ll analyze your current workflows and identify the highest-ROI automation opportunities for your business.",
         (
-            "Además de detectar qué conviene automatizar primero, sirve de base para documentar y ordenar tus "
-            "procesos de cara a una futura certificación ISO 9001 y transmitir más confianza a clientes y colaboradores."
+            "Al finalizar el diagnóstico, recibirás un mapa completo y documentado de los procesos de tu empresa, "
+            "estructurado para facilitar la implantación de un Sistema de Gestión de Calidad conforme a ISO 9001 y "
+            "servir como base para un futuro proceso de certificación."
         ),
     ),
     ("Schedule a Session", "Solicitar diagnóstico"),
@@ -715,7 +716,7 @@ SERVICIOS = [
             ]),
             ("Empezamos por un diagnóstico", [
                 ("p", "Antes de automatizar nada, analizamos cómo trabaja tu empresa y dibujamos un mapa de sus procesos, herramientas y conexiones. Ese mapa muestra dónde se pierde tiempo y qué conviene automatizar primero."),
-                ("p", "Además, sirve de base para documentar y ordenar tus procesos de cara a una futura certificación ISO 9001."),
+                ("p", "Al finalizar el diagnóstico, recibirás un mapa completo y documentado de los procesos de tu empresa, estructurado para facilitar la implantación de un Sistema de Gestión de Calidad conforme a ISO 9001 y servir como base para un futuro proceso de certificación."),
                 ("p", ["Después seguimos un proceso claro: diseño, desarrollo, pruebas y formación de tu equipo. Así es ", ("a", "cómo trabajamos", "/#como-trabajamos"), "."]),
             ]),
             ("Sobre las herramientas que ya usas", [
