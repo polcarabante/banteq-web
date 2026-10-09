@@ -205,11 +205,6 @@ HOME = [
         ),
     ),
     ("Schedule a Session", "Solicitar diagnóstico"),
-    ("Your Data. Protected. Always.", "Seguridad y control en cada proceso."),
-    ("End-to-End Encryption", "Protección de datos"),
-    ("Secure API Integrations", "Integraciones seguras"),
-    ("Role-Based Access Control", "Revisión humana"),
-    ("Data Minimization", "Registro de acciones"),
     # Copilot y FUNDAE (antes: precios)
     (
         "Whether you're starting small or scaling fast, we have an automation plan that fits.",
@@ -377,12 +372,16 @@ HOME = [
 ]
 
 
+# Tarjeta «¿No sabes por dónde empezar?»: nota junto al botón (primera frase destacada + resto).
+# Recoge la idea de la antigua tarjeta «Seguridad y control en cada proceso», que ya no se muestra.
+DIAGNOSTICO_NOTA = (
+    "Primero entendemos cómo trabajas.",
+    "Después automatizamos de forma segura: protegemos tus datos y mantenemos la revisión humana "
+    "donde importa para evitar errores.",
+)
+
 # Variantes móviles que la plantilla escribe en dos líneas.
 LINEAS_MOVIL = [
-    (("End-to-End", "Encryption"), ("Protección", "de datos")),
-    (("Secure API", "Integrations"), ("Integraciones", "seguras")),
-    (("Role-Based", "Access Control"), ("Revisión", "humana")),
-    (("Data", "Minimization"), ("Registro", "de acciones")),
     (("Not sure which plan is", "right for you?"), ("¿Cuánto crédito FUNDAE", "tiene tu empresa?")),
 ]
 

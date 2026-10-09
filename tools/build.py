@@ -1620,6 +1620,35 @@ def remove_child_call(rel, start, end):
     S[rel] = t[:start] + t[end:]
 
 
+NOTA_DIAGNOSTICO_CLASE = "bq-diag-nota framer-text framer-styles-preset-1qlfxwt"
+
+
+def apply_diagnostic_row():
+    """Fila inferior de «Servicios»: se quita la tarjeta «Seguridad y control en cada proceso» y la de
+    «¿No sabes por dónde empezar?» ocupa toda la fila (la composición está en banteq.css). Entre el
+    texto y el botón se añade una nota corta (contenido.DIAGNOSTICO_NOTA) con la letra del texto de la
+    tarjeta. Todo se hace a la vez en el módulo de la home y en el HTML: si solo se hiciera en uno,
+    React daría error de hidratación."""
+    destacado, resto = C.DIAGNOSTICO_NOTA
+    src = S[HOME_MOD]
+    assert src.count("className:`framer-whwse3`") == 1 and src.count("className:`framer-dyx1m5`") == 1
+    remove_child_call(HOME_MOD, *jsx.call_containing(src, src.find("className:`framer-whwse3`")))
+    src = S[HOME_MOD]
+    fin = jsx.call_containing(src, src.find("className:`framer-dyx1m5`"))[1]
+    nota = "h(`p`,{className:`%s`,children:[g(`span`,{children:`%s`}),` %s`]})" % (
+        NOTA_DIAGNOSTICO_CLASE, js_template(destacado), js_template(resto))
+    S[HOME_MOD] = src[:fin] + "," + nota + src[fin:]
+
+    h = S[INDEX]
+    assert h.count('class="framer-whwse3"') == 1 and h.count('class="framer-dyx1m5"') == 1
+    a = h.rfind("<div", 0, h.find('class="framer-whwse3"'))
+    h = h[:a] + h[html_element_extent(h, a, "div"):]
+    fin = html_element_extent(h, h.rfind("<div", 0, h.find('class="framer-dyx1m5"')), "div")
+    nota = '<p class="%s"><span>%s</span> %s</p>' % (
+        NOTA_DIAGNOSTICO_CLASE, html.escape(destacado, quote=False), html.escape(resto, quote=False))
+    S[INDEX] = h[:fin] + nota + h[fin:]
+
+
 def hide_sections():
     """Secciones ocultas (contenido.SECCIONES_OCULTAS: «¿Por qué Banteq?» y la de Copilot y FUNDAE).
     Se construyen con sus textos, enlaces y numeración, y aquí se quitan del módulo de la home y del
@@ -1956,6 +1985,7 @@ def main():
     strip_framer_extras(INDEX)
     reorder_sections_js()
     reorder_sections_html(INDEX)
+    apply_diagnostic_row()
     rename_anchors()
     rename_routes()
     apply_nav_html()

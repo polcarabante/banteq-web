@@ -409,18 +409,68 @@ a.bq-enlace {
   padding-right: 4px !important;
 }
 
-/* Fila «¿No sabes por dónde empezar?» + «Seguridad y control» (escritorio). La plantilla fija la
-   tarjeta de seguridad en 420 px y deja que la del diagnóstico crezca con su texto: en cuanto el
-   texto ocupa una línea más, la del diagnóstico sobresale por arriba y por abajo y el texto queda
-   pegado al botón. La de seguridad toma la altura de la fila (nunca menos de 420 px) y el texto
-   conserva los 16 px de aire sobre el botón que tenía. */
+/* Fila inferior de «Servicios»: solo queda la tarjeta «¿No sabes por dónde empezar?», a todo el
+   ancho de la fila (la de «Seguridad y control» y la nota se tratan en tools/build.py,
+   apply_diagnostic_row). No cambia nada de la tarjeta: mismo degradado, borde, radio y botón.
+   Con #main delante porque, al llegar a la home desde otra página, Framer vuelve a inyectar sus
+   estilos después de esta hoja. */
+
+/* Nota junto al botón: la letra del texto de la tarjeta, con la primera frase algo más marcada. */
+#main .framer-Paghq p.bq-diag-nota {
+  --framer-text-color: rgb(82, 82, 82);
+  flex: none;
+  width: 100%;
+  margin: 0;
+  text-wrap: pretty;
+}
+#main .framer-Paghq p.bq-diag-nota span {
+  color: rgb(26, 26, 26);
+  font-weight: 500;
+}
+
+/* Escritorio: dos columnas. A la izquierda, el icono, el titular y el texto. A la derecha, la nota
+   empieza a la altura del titular (80 px del icono + 24 px de separación) y el botón acaba a la
+   altura de la última línea del texto (20 px es lo mínimo entre nota y botón). La tarjeta mide lo
+   que pide su contenido. */
 @media (min-width: 1200px) {
-  .framer-Paghq .framer-1kunsgp {
-    gap: 16px;
+  #main .framer-Paghq .framer-eipeh8 {
+    width: 100%;
   }
-  .framer-Paghq .framer-whwse3 {
-    height: auto !important;
-    min-height: 420px;
-    align-self: stretch;
+  #main .framer-Paghq .framer-1kunsgp {
+    display: grid;
+    grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+    grid-template-rows: auto 1fr auto;
+    column-gap: 96px;
+    height: auto;
+  }
+  #main .framer-Paghq .framer-dyx1m5 {
+    grid-column: 1;
+    grid-row: 1 / -1;
+  }
+  #main .framer-Paghq .framer-12odsag {
+    text-wrap: pretty;
+  }
+  #main .framer-Paghq p.bq-diag-nota {
+    grid-column: 2;
+    grid-row: 1;
+    margin: 104px 0 20px;
+  }
+  #main .framer-Paghq .framer-ldlgjv-container {
+    grid-column: 2;
+    grid-row: 3;
+    justify-self: start;
+  }
+}
+
+/* Tableta y móvil: una columna. La tarjeta separa sus bloques 40 px; la nota va a 16 px del texto
+   y, en tableta, con su mismo ancho. */
+@media (max-width: 1199.98px) {
+  #main .framer-Paghq p.bq-diag-nota {
+    margin-top: -24px;
+  }
+}
+@media (min-width: 800px) and (max-width: 1199.98px) {
+  #main .framer-Paghq p.bq-diag-nota {
+    max-width: 80%;
   }
 }
