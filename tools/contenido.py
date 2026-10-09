@@ -372,7 +372,7 @@ HOME = [
 ]
 
 
-# Tarjeta «¿No sabes por dónde empezar?»: nota junto al botón (primera frase destacada + resto).
+# Tarjeta «¿No sabes por dónde empezar?»: tarjeta clara de la derecha (título + frase, sobre el botón).
 # Recoge la idea de la antigua tarjeta «Seguridad y control en cada proceso», que ya no se muestra.
 DIAGNOSTICO_NOTA = (
     "Primero entendemos cómo trabajas.",
