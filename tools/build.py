@@ -995,6 +995,11 @@ def _ul(items):
     return [4, "ul", {"dir": "auto"}, *items]
 
 
+def metricas(pr):
+    """Las tres casillas de métricas de un proyecto: las que no tenga, vacías (y no se pintan)."""
+    return (list(pr["metricas"]) + [("", "")] * 3)[:3]
+
+
 def build_cms():
     import framercms as fc
 
@@ -1026,7 +1031,7 @@ def build_cms():
             f[ik] = _img(im, 616, 480, titulo)
             f[tk] = _rich([4, "p", {"dir": "auto"}, [4, "strong", None, [5, titulo]]], _ul([_li([5, x]) for x in puntos_b]))
         f["VP5uhfljk"] = _rich(_p(pr["resultado"]))
-        for (valor, nombre), kv, kn in zip(pr["metricas"], ["HuRupB55d", "sIAhHzqTY", "jNEfZPTBj"], ["wx9y36BaQ", "zTKG0DlAJ", "qlPM_T3ez"]):
+        for (valor, nombre), kv, kn in zip(metricas(pr), ["HuRupB55d", "sIAhHzqTY", "jNEfZPTBj"], ["wx9y36BaQ", "zTKG0DlAJ", "qlPM_T3ez"]):
             f[kv] = (fc.STRING, valor)
             f[kn] = (fc.STRING, nombre)
         for campo, clave in CAMPOS_NUEVOS.items():
@@ -1614,13 +1619,14 @@ def fix_prerendered_leftovers():
 
 
 METRICA_ANCHA = 4  # caracteres: una cifra más larga («+2.500 €/año») no cabe en un tercio de la fila
+CASILLAS = ("framer-risutp", "framer-2cy0hp", "framer-10ajrs0")  # las tres métricas de la tarjeta
 
 
 def fix_project_cards_html():
     """Tarjetas del carrusel de proyectos en el HTML inicial. Venían con la imagen, el logo y las
     cifras de ejemplo de la plantilla («+40%», «24/7»…), que React cambiaba por los del CMS al cargar:
     hasta entonces se leían, junto a nuestros textos, datos que no son de ningún proyecto. Ahora cada
-    tarjeta lleva desde el HTML la imagen, el logo y las métricas de su proyecto."""
+    tarjeta lleva desde el HTML la imagen, el logo, la frase destacada y las métricas de su proyecto."""
     h = S[INDEX]
     out, pos, n = [], 0, 0
     for m in re.finditer(r'<div class="framer-fesYP[ "]', h):
@@ -1640,14 +1646,28 @@ def fix_project_cards_html():
             tag = re.sub(r' src="[^"]*"', f' src="/framerusercontent.com/images/{archivo}"', tag)
             tag = re.sub(r' alt="[^"]*"', f' alt="{html.escape(alt)}"', tag)
             card = card[:i] + tag + card[j:]
+        # Frase destacada de la descripción, en negrita (como la pinta el módulo de la tarjeta).
+        if pr.get("destacado"):
+            frase = html.escape(pr["destacado"], quote=False)
+            i = card.index("<p", card.index('class="framer-1b88o7x"'))
+            j = card.index("</p>", i)
+            assert card[i:j].count(frase) == 1, pr["slug"]
+            card = card[:i] + card[i:j].replace(frase, f'<strong class="framer-text">{frase}</strong>') + card[j:]
         # Métricas: cifra y nombre, en el orden en que están en la fila.
         i = card.index('<div class="framer-1tjgdmg"')
         j = html_element_extent(card, i, "div")
-        textos = iter(html.escape(t, quote=False) for par in pr["metricas"] for t in par)
+        datos = metricas(pr)
+        textos = iter(html.escape(t, quote=False) for par in datos for t in par)
         fila, k = re.subn(r'(<p class="framer-text framer-styles-preset-(?:1nvzal8|1qlfxwt)"[^>]*>)[^<]*(</p>)',
                           lambda mm: mm.group(1) + next(textos) + mm.group(2), card[i:j])
         assert k == 6, (pr["slug"], k)
-        if len(pr["metricas"][2][0]) > METRICA_ANCHA:
+        for casilla, (valor, _) in zip(CASILLAS, datos):
+            x = fila.index(f'<div class="{casilla}"')
+            if not valor:  # casilla vacía: no se pinta
+                fila = fila[:x] + fila[html_element_extent(fila, x, "div"):]
+            elif len(valor) > METRICA_ANCHA:
+                fila = fila.replace(f'class="{casilla}"', f'class="{casilla} bq-dato-ancho"', 1)
+        if any(len(valor) > METRICA_ANCHA for valor, _ in datos):
             fila = fila.replace('class="framer-1tjgdmg"', 'class="framer-1tjgdmg bq-datos-ancho"', 1)
         out.append(h[pos:a] + card[:i] + fila + card[j:])
         pos, n = b, n + 1
@@ -1656,21 +1676,50 @@ def fix_project_cards_html():
 
 
 def apply_wide_metric():
-    """Tercera métrica de las tarjetas de proyecto cuando es una cifra larga («+2.500 €/año»): no cabe
-    en el tercio de fila que le da la plantilla, y en móvil la plantilla ni la pinta (solo enseña
-    dos). El módulo de la tarjeta marca entonces la fila con una clase (el reparto está en banteq.css)
-    y pinta la tercera también en móvil. Las tarjetas con cifras cortas quedan como estaban."""
+    """Métricas y descripción de las tarjetas de proyecto, en el módulo de la tarjeta.
+
+    - Una casilla sin cifra no se pinta (un proyecto puede tener dos métricas en vez de tres).
+    - Una cifra larga («+2.500 €/año») no cabe en el tercio de fila que le da la plantilla, y en
+      móvil la plantilla ni pinta la tercera: su casilla y la fila se marcan con una clase (el
+      reparto está en banteq.css) y la tercera, si es la larga, se pinta también en móvil.
+    - La frase destacada de un proyecto (contenido «destacado») va en negrita en la descripción.
+    Las tarjetas con tres cifras cortas y sin frase destacada quedan como en la plantilla."""
     t = S[CARD_MOD]
-    m = re.search(r"className:`framer-1p3jokw`.*?text:(\w+),verticalAlignment", t, re.S)
-    assert m, "no se encuentra la tercera cifra de la tarjeta"
-    ancha = f"(({m.group(1)}||``).length>{METRICA_ANCHA})"
+    v = [re.search(r"className:`%s`.*?text:([\w$]+),verticalAlignment" % c, t, re.S).group(1)
+         for c in ("framer-10c7f2m", "framer-taol0k", "framer-1p3jokw")]
+    larga = [f"(({x}||``).length>{METRICA_ANCHA})" for x in v]
+    ancha = [f"+({x}?` bq-dato-ancho`:``)" for x in larga]
     for old, new in (
-        ("fe()&&o(d.div,{className:`framer-10ajrs0`", f"(fe()||{ancha})&&o(d.div,{{className:`framer-10ajrs0`"),
-        ("o(d.div,{className:`framer-1tjgdmg`,", f"o(d.div,{{className:`framer-1tjgdmg`+({ancha}?` bq-datos-ancho`:``),"),
+        ("o(d.div,{className:`framer-1tjgdmg`,", f"o(d.div,{{className:`framer-1tjgdmg`+(({'||'.join(larga)})?` bq-datos-ancho`:``),"),
+        ("o(d.div,{className:`framer-risutp`,", f"o(d.div,{{className:`framer-risutp`{ancha[0]},"),
+        ("o(d.div,{className:`framer-2cy0hp`,", f"{v[1]}&&o(d.div,{{className:`framer-2cy0hp`{ancha[1]},"),
+        ("fe()&&o(d.div,{className:`framer-10ajrs0`,", f"{v[2]}&&(fe()||{larga[2]})&&o(d.div,{{className:`framer-10ajrs0`{ancha[2]},"),
     ):
         assert t.count(old) == 1, old
         t = t.replace(old, new)
+    frases = [pr["destacado"] for pr in C.PROYECTOS if pr.get("destacado")]
+    if frases:
+        a, b = jsx.call_containing(t, t.find("className:`framer-1b88o7x`"))
+        seg = t[a:b]
+        texto = re.search(r"text:([\w$]+),verticalAlignment", seg).group(1)
+        patron = "|".join(re.escape(f).replace("\\ ", " ") for f in frases)
+        for old, new in (
+            ("children:`Descripción del proyecto.`})})", f"children:({texto}||``).split(/({patron})/).map((x,i)=>i%2?s(`strong`,{{children:x}},i):x)}})}})"),
+            (f"text:{texto},verticalAlignment", "verticalAlignment"),
+        ):
+            assert seg.count(old) == 1, old
+            seg = seg.replace(old, new)
+        t = t[:a] + seg + t[b:]
     S[CARD_MOD] = t
+    # Ficha del proyecto: sus tres cajas de métricas, igual: la que no tiene cifra no se pinta.
+    t = S[DETAIL_MOD]
+    for caja in ("framer-ufjomy", "framer-mizxtl", "framer-125avhf"):
+        marca = "a(`div`,{className:`%s`," % caja
+        assert t.count(marca) == 1, caja
+        a, b = jsx.call_containing(t, t.find(marca) + len(marca))
+        cifra = re.search(r"text:([\w$]+),verticalAlignment", t[a:b]).group(1)
+        t = t[:a] + f"{cifra}&&" + t[a:b] + t[b:]
+    S[DETAIL_MOD] = t
 
 
 def join_diagnostic_text():

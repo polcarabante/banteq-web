@@ -564,43 +564,42 @@ a.bq-enlace {
   opacity: 1;
 }
 
-/* Tarjetas de proyecto cuya tercera métrica es una cifra larga («+2.500 €/año»; la clase la pone
-   tools/build.py, apply_wide_metric). Las dos primeras ocupan lo que mide su texto y la tercera se
-   queda con el resto de la fila, sin partirse. En móvil (variante framer-v-1kfc35p), donde la
-   plantilla solo enseña dos métricas, las dos primeras siguen a medias y la tercera baja a su fila. */
+/* Tarjetas de proyecto con una cifra larga («+2.500 €/año»; las clases las pone tools/build.py,
+   apply_wide_metric). Las métricas cortas ocupan lo que mide su texto y la larga se queda con el
+   resto de la fila, sin partirse y con aire a los lados. En móvil (variante framer-v-1kfc35p) la
+   larga baja a su propia línea. */
 .framer-fesYP .framer-1tjgdmg.bq-datos-ancho {
-  gap: 20px 32px;
+  gap: 20px 56px;
 }
-.framer-fesYP .bq-datos-ancho > .framer-risutp,
-.framer-fesYP .bq-datos-ancho > .framer-2cy0hp {
+.framer-fesYP .bq-datos-ancho > div {
   flex: 0 0 auto;
   width: auto;
 }
-.framer-fesYP .bq-datos-ancho > .framer-10ajrs0 {
+.framer-fesYP .bq-datos-ancho > .bq-dato-ancho {
   flex: 1 1 0;
   min-width: 0;
 }
-.framer-fesYP .bq-datos-ancho > .framer-10ajrs0 .framer-1p3jokw {
+.framer-fesYP .bq-dato-ancho > :first-child {
   white-space: nowrap;
 }
-.framer-fesYP .bq-datos-ancho > .framer-10ajrs0 .framer-160i2qr {
+.framer-fesYP .bq-dato-ancho > :last-child {
   text-wrap: balance;
 }
 .framer-fesYP.framer-v-1kfc35p .framer-1tjgdmg.bq-datos-ancho {
   flex-wrap: wrap;
-  column-gap: 16px;
 }
-.framer-fesYP.framer-v-1kfc35p .bq-datos-ancho > .framer-risutp,
-.framer-fesYP.framer-v-1kfc35p .bq-datos-ancho > .framer-2cy0hp {
-  flex: 1 0 0;
-}
-.framer-fesYP.framer-v-1kfc35p .bq-datos-ancho > .framer-10ajrs0 {
+.framer-fesYP.framer-v-1kfc35p .bq-datos-ancho > .bq-dato-ancho {
   flex: 0 0 100%;
 }
 
-/* Ficha de proyecto: las tres cajas de métricas miden lo mismo aunque el nombre de una ocupe más
-   líneas (la del ahorro de Margon); en la plantilla cada una medía lo que su texto. */
+/* Ficha de proyecto: las cajas de métricas miden lo mismo aunque el nombre de una ocupe más
+   líneas (la del ahorro de Margon), con las cifras alineadas arriba; en la plantilla cada una
+   medía lo que su texto. */
 .framer-mLEeF .framer-zy84k1 > div {
   align-self: stretch;
   height: auto;
+  justify-content: flex-start;
+}
+.framer-mLEeF .framer-zy84k1 p {
+  text-wrap: balance;
 }

@@ -319,9 +319,11 @@ clic y corre la animación de la propia web hasta el interior del coche.
 
 - Qué proyecto lleva demo se decide en `tools/contenido.py` (`"demo"` en `PROYECTOS`).
 
-Las métricas de cada tarjeta también están ahí (`"metricas"`). Si la tercera es una cifra larga
-(«+2.500 €/año»), la tarjeta le da el ancho que queda en la fila y en móvil la baja a una segunda
-línea; con cifras cortas se queda como en la plantilla.
+Las métricas de cada tarjeta también están ahí (`"metricas"`: dos o tres; la casilla que falte no
+se pinta, ni en la tarjeta ni en la ficha del proyecto). Si una es una cifra larga («+2.500 €/año»),
+la tarjeta le da el ancho que queda en la fila y en móvil la baja a su propia línea; con cifras
+cortas se queda como en la plantilla. `"destacado"` es la parte de la descripción que la tarjeta
+pone en negrita («cinco idiomas» en Margon).
 
 ## Estructura de la home
 

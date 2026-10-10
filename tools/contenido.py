@@ -485,7 +485,9 @@ PROYECTOS = [
         "resultado": "Una web corporativa preparada para acompañar procesos comerciales largos: clara para el comprador técnico, disponible en cinco idiomas y lista para crecer con nuevos contenidos.",
         # El ahorro es un dato de Pol (2026-10-09): tiempo que ya no se dedica a preparar y enviar el
         # boletín, ahora automatizado desde la web.
-        "metricas": [("5", "Idiomas"), ("2", "Animaciones"), ("+2.500 €/año", "ahorrados en tiempo con el newsletter automatizado")],
+        "metricas": [("2", "Animaciones"), ("+2.500 €/año", "ahorrados en tiempo con el newsletter automatizado")],
+        # Parte de la descripción que va en negrita en la tarjeta (los cinco idiomas ya no son una métrica).
+        "destacado": "cinco idiomas",
         # Grabación real de la web que se reproduce sobre la imagen de la tarjeta (tools/demo_margon.*).
         "demo": "margon-demo.mp4",
     },
