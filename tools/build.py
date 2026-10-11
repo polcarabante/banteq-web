@@ -12,6 +12,7 @@ cambia a la vez en el módulo (lo que ve el usuario) y en el HTML pre-renderizad
 pintura y buscadores). Cada sustitución comprueba que el texto original existe: si hay una
 errata en la tabla, el build falla en vez de dejar contenido a medias.
 """
+import hashlib
 import html
 import json
 import re
@@ -2074,6 +2075,44 @@ class _TagBalance(HTMLParser):
             self.errors.append(f"línea {self.getpos()[0]}: </{tag}> cierra <{self.stack[-1] if self.stack else '-'}>")
 
 
+# Lo único que cambia entre este equipo y la nube al generar la web (ver README): el formato de una
+# imagen. No debe contar como «versión nueva».
+SEGUN_EQUIPO = re.compile(rb"cgrW7f9W33xv3ZDvvKXaqAaaIL0(?:_1)?\.(?:png|webp)")
+
+
+def version_assets():
+    """Direcciones con versión para lo que cambia de contenido sin cambiar de nombre.
+
+    Los módulos de Framer se llaman igual en cada publicación. Safari no vuelve a pedir los que la
+    página precarga (modulepreload) aunque el servidor diga que hay que revalidarlos: tras publicar,
+    quien ya había visitado la web cargaba el HTML, el CSS y los datos nuevos con el código antiguo
+    (la tarjeta de Margon salió así, con las métricas descolocadas). Para que eso no pueda pasar,
+    las páginas piden los módulos en una carpeta cuyo nombre lleva una huella de su contenido
+    (…/sites/<id>-<huella>/…): si cambia un módulo o un dato del CMS, cambia la dirección de todos y
+    el navegador tiene que pedirlos. La carpeta en disco es la de siempre; vercel.json y
+    tools/servidor-local.mjs resuelven el sufijo. Dentro, los módulos se importan con rutas
+    relativas, así que todo el conjunto (y los datos del CMS que leen) queda en la misma versión.
+    banteq.css y los scripts propios llevan su huella como ?v=."""
+    sitio = OUT / SITE
+    huella = hashlib.sha1()
+    for f in sorted(p for p in sitio.rglob("*") if p.is_file()):
+        huella.update(f.relative_to(sitio).as_posix().encode())
+        huella.update(SEGUN_EQUIPO.sub(b"imagen", f.read_bytes()))
+    version = huella.hexdigest()[:10]
+    propios = {n: hashlib.sha1((OUT / "banteq" / n).read_bytes()).hexdigest()[:10]
+               for n in ("banteq.css", "banteq.js", "banteq-liquid.js")}
+    total = 0
+    for f in OUT.rglob("*.html"):
+        t = f.read_text(encoding="utf-8")
+        total += t.count(f"{SITE}/")
+        t = t.replace(f"{SITE}/", f"{SITE}-{version}/")
+        for nombre, v in propios.items():
+            t = t.replace(f'"/banteq/{nombre}"', f'"/banteq/{nombre}?v={v}"')
+        f.write_text(t, encoding="utf-8")
+    assert total, "ninguna página carga módulos de Framer"
+    return version
+
+
 def check_html_structure():
     """Una etiqueta mal cerrada saca contenido fuera de #main: React no puede hidratar y
     deja copias duplicadas bajo el pie. La exportación original está perfectamente anidada."""
@@ -2161,6 +2200,7 @@ def main():
     convert_heavy_images()
     check_html_structure()
     S.save()
+    version_assets()
     if MISSES:
         print("\nTextos originales NO encontrados:")
         for rel, old in MISSES:

@@ -175,6 +175,25 @@ en local antes de hacer commit.
 Para comprobar lo que generará Vercel sin desplegar: `npx vercel build` (crea `.vercel/output`:
 `static/` con la web y `functions/api/leads.func`; no debe aparecer ninguna otra función).
 
+## Caché: direcciones con versión
+
+Los módulos de Framer conservan su nombre entre publicaciones. Safari no vuelve a pedir los que la
+página precarga aunque el servidor diga que hay que revalidarlos, así que quien ya había visitado la
+web cargaba, tras publicar, el HTML, el CSS y los datos nuevos con el código antiguo: la tarjeta de
+Margon se vio en producción con las métricas descolocadas, distinta de la versión aprobada en local
+(en Chrome y en un navegador limpio se veía bien).
+
+Por eso las páginas no piden los módulos en `…/sites/<id>/` sino en `…/sites/<id>-<huella>/`, donde
+la huella sale del contenido de toda esa carpeta (módulos y datos del CMS): si cambia algo, cambia la
+dirección de todo el conjunto y el navegador tiene que pedirlo. La carpeta en disco es la de
+siempre; el sufijo lo resuelven la regla `rewrites` de `vercel.json` y `tools/servidor-local.mjs`.
+`banteq.css` y los scripts propios llevan su huella como `?v=`. Lo hace `version_assets()` al final
+de `tools/build.py`; no hay que tocar nada a mano.
+
+Para comprobar una publicación como la vería alguien que ya había entrado, no basta con abrirla en
+un navegador limpio: hay que cargar la versión anterior, publicar y volver a entrar en el mismo
+navegador (mejor en Safari).
+
 ## B líquida del hero
 
 El fondo del hero es una B de cristal líquido negro (referencia: `assets-banteq/referencias/hero-b-referencia.webp`).
