@@ -3,5 +3,11 @@
   "buildCommand": "echo 'Sin build en Vercel: public/ ya viene generado (python3 tools/build.py en local)'",
   "outputDirectory": "public",
   "cleanUrls": true,
-  "trailingSlash": false
+  "trailingSlash": false,
+  "rewrites": [
+    {
+      "source": "/framerusercontent.com/sites/70yiSpZyA9Z5dxDKIiuNjl-:version/:path*",
+      "destination": "/framerusercontent.com/sites/70yiSpZyA9Z5dxDKIiuNjl/:path*"
+    }
+  ]
 }

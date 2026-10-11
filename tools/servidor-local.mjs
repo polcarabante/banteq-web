@@ -37,8 +37,13 @@ const TYPES = {
   ".txt": "text/plain; charset=utf-8",
 };
 
+// Las páginas piden los módulos de Framer en una carpeta con sufijo de versión
+// (…/sites/<id>-<versión>/…, ver version_assets en tools/build.py): es la misma carpeta. En Vercel
+// lo resuelve la regla «rewrites» de vercel.json.
+const SIN_VERSION = /^(\/framerusercontent\.com\/sites\/70yiSpZyA9Z5dxDKIiuNjl)-[^/]+\//;
+
 const resolveFile = async (urlPath) => {
-  const clean = normalize(decodeURIComponent(urlPath)).replace(/^(\.\.[/\\])+/, "");
+  const clean = normalize(decodeURIComponent(urlPath).replace(SIN_VERSION, "$1/")).replace(/^(\.\.[/\\])+/, "");
   const candidates = [join(ROOT, clean), join(ROOT, clean, "index.html"), join(ROOT, `${clean}.html`)];
   for (const file of candidates) {
     if (!file.startsWith(ROOT)) continue;
