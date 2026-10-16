@@ -869,13 +869,21 @@ SERVICIOS = [
     },
 ]
 
-# Servicios de cada proyecto (enlaces desde su página) y web pública del cliente. La web nueva de
-# Margon aún no está publicada (margon.es sigue siendo la anterior): sin enlace hasta entonces.
+# Servicios de cada proyecto (enlaces desde su página) y web pública del cliente (en la línea
+# «Relacionado» del final de la ficha).
 PROYECTO_SERVICIOS = {
     "margon": ["desarrollo-web"],
     "rentup-capital": ["desarrollo-web", "automatizacion-procesos"],
 }
 PROYECTO_WEB = {"rentup-capital": ("rentupcapital.com", "https://www.rentupcapital.com/")}
+
+# Enlace visible a la web real de cada proyecto: bajo el subtítulo de su ficha y junto a «Ver
+# proyecto» en su tarjeta. Se abre en pestaña nueva. La web nueva de Margon aún no está en margon.es:
+# se enlaza su versión publicada en Vercel (pedido por Pol el 2026-10-16).
+WEB_PROYECTO = {
+    "rentup-capital": ("Visitar rentupcapital.com", "https://rentupcapital.com"),
+    "margon": ("Visitar margon-web.vercel.app", "https://margon-web.vercel.app/"),
+}
 
 
 # «Quiénes somos»: cuadrado central por encima del carrusel de palabras (PROCESOS AUTOMATIZADOS…).

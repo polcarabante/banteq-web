@@ -1647,6 +1647,15 @@ def fix_project_cards_html():
             tag = re.sub(r' src="[^"]*"', f' src="/framerusercontent.com/images/{archivo}"', tag)
             tag = re.sub(r' alt="[^"]*"', f' alt="{html.escape(alt)}"', tag)
             card = card[:i] + tag + card[j:]
+        # Enlace a la web del proyecto, junto a «Ver proyecto» (como lo pinta el módulo de la tarjeta).
+        if pr["slug"] in C.WEB_PROYECTO:
+            texto, url = C.WEB_PROYECTO[pr["slug"]]
+            x = card.index('<div class="framer-1qgpqek-container"')
+            y = html_element_extent(card, x, "div")
+            card = (card[:y] + f'<a href="{url}" target="_blank" rel="noopener noreferrer" class="bq-web"><span>'
+                    f"{html.escape(texto, quote=False)}</span>{_flecha_html()}</a>" + card[y:])
+            assert card.count('class="framer-adcxl0"') == 1, pr["slug"]
+            card = card.replace('class="framer-adcxl0"', 'class="framer-adcxl0 bq-con-web"')
         # Frase destacada de la descripción, en negrita (como la pinta el módulo de la tarjeta).
         if pr.get("destacado"):
             frase = html.escape(pr["destacado"], quote=False)
@@ -1674,6 +1683,58 @@ def fix_project_cards_html():
         pos, n = b, n + 1
     assert n >= len(C.PROYECTOS), f"tarjetas de proyecto en el HTML: {n}"
     S[INDEX] = "".join(out) + h[pos:]
+
+
+FLECHA_WEB = ("M3.5 8.5l5-5M4.5 3.5h4v4", 11)  # flecha de enlace externo (trazo, tamaño en px)
+
+
+def _flecha_js(jsx_fn):
+    d, n = FLECHA_WEB
+    return (f"{jsx_fn}(`svg`,{{viewBox:`0 0 12 12`,width:{n},height:{n},\"aria-hidden\":`true`,children:{jsx_fn}(`path`,"
+            f"{{d:`{d}`,fill:`none`,stroke:`currentColor`,strokeWidth:1.4,strokeLinecap:`round`,strokeLinejoin:`round`}})}})")
+
+
+def _flecha_html():
+    d, n = FLECHA_WEB
+    return (f'<svg viewBox="0 0 12 12" width="{n}" height="{n}" aria-hidden="true"><path d="{d}" fill="none" '
+            'stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"></path></svg>')
+
+
+def apply_project_links():
+    """Enlace a la web real de cada proyecto (contenido.WEB_PROYECTO), en pestaña nueva.
+
+    - Ficha del proyecto: debajo del subtítulo, con la misma aparición que el subtítulo.
+    - Tarjeta del proyecto (carrusel de la home y /proyectos): junto a «Ver proyecto», en la misma
+      línea (en móvil, debajo). La tarjeta identifica el proyecto por su título.
+    Es un enlace secundario (estilos «a.bq-web» en banteq.css), no un botón."""
+    # Ficha: copia del subtítulo (mismo componente y misma animación de entrada) con el enlace.
+    t = S[DETAIL_MOD]
+    a, b = jsx.call_containing(t, t.find("className:`framer-11gw15l`"))
+    assert t[b:b + 1] == "]", "el subtítulo de la ficha ya no es el último de su bloque"
+    sub = t[a:b]
+    por_slug = ",".join(f"\"{slug}\":[`{js_template(texto)}`,`{url}`]" for slug, (texto, url) in C.WEB_PROYECTO.items())
+    slug = "(typeof location<`u`?location.pathname.replace(/\\/+$/,``).split(`/`).pop():``)"
+    enlace = ("o(BQL,{href:W[1],motionChild:!0,nodeId:`bqWebPr`,openInNewTab:!0,relValues:[],scopeId:`QTC5sKvau`,smoothScroll:!1,"
+              f"children:a(ne.a,{{className:`bq-web`,children:[o(`span`,{{children:W[0]}}),{_flecha_js('o')}]}})}})")
+    for old, new in (("className:`framer-11gw15l`", "className:`bq-web-fila`"),
+                     ('"data-framer-name":`Description`', '"data-framer-name":`Web del proyecto`'),
+                     ("children:D})", f"children:{enlace}}})")):
+        assert sub.count(old) == 1, old
+        sub = sub.replace(old, new)
+    S[DETAIL_MOD] = t[:b] + f",(W=>W&&{sub})(({{{por_slug}}})[{slug}])" + t[b:]
+    # Tarjeta: tercer elemento del bloque de título, descripción y «Ver proyecto».
+    t = S[CARD_MOD]
+    titulo = re.search(r"className:`framer-1y4mxfk`.*?text:([\w$]+),", t, re.S).group(1)
+    por_titulo = ",".join(f"{json.dumps(pr['titulo'], ensure_ascii=False)}:[`{js_template(C.WEB_PROYECTO[pr['slug']][0])}`,"
+                          f"`{C.WEB_PROYECTO[pr['slug']][1]}`]" for pr in C.PROYECTOS if pr["slug"] in C.WEB_PROYECTO)
+    web = f"(({{{por_titulo}}})[{titulo}])"
+    a, b = jsx.call_containing(t, t.find("className:`framer-adcxl0`"))
+    bloque = t[a:b]
+    assert bloque.endswith("]})"), "el bloque de la tarjeta ya no acaba en su lista de hijos"
+    bloque = bloque.replace("className:`framer-adcxl0`", f"className:`framer-adcxl0`+({web}?` bq-con-web`:``)", 1)
+    enlace = (f"(W=>W&&o(`a`,{{href:W[1],target:`_blank`,rel:`noopener noreferrer`,className:`bq-web`,"
+              f"children:[s(`span`,{{children:W[0]}}),{_flecha_js('s')}]}}))({web})")
+    S[CARD_MOD] = t[:a] + bloque[:-3] + "," + enlace + "]})" + t[b:]
 
 
 def apply_wide_metric():
@@ -2188,6 +2249,7 @@ def main():
     neutralize_entrance()
     build_service_pages()
     apply_project_seo()
+    apply_project_links()
     apply_alts()
     for rel in html_pages():
         inject_assets(rel)
