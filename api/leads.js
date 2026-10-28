@@ -38,6 +38,34 @@ const normalizeText = (value = "") => String(value || "").trim();
 
 const getBrevoDate = (date = new Date()) => date.toISOString().slice(0, 10);
 
+// Fecha y hora de España para el aviso y para Brevo («28/10/2026 10:52»).
+const getMadridDateTime = (date = new Date()) => new Intl.DateTimeFormat("es-ES", {
+  timeZone: "Europe/Madrid", day: "2-digit", month: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit",
+}).format(date).replace(",", "");
+
+// Solo se aceptan envíos desde la propia web (y sus vistas previas de Vercel, y en local).
+const ALLOWED_ORIGIN = /^https:\/\/((www\.)?banteq\.com|banteq-[a-z0-9-]+\.vercel\.app)$|^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/;
+
+// Límite básico contra envíos automáticos: como mucho 5 solicitudes por IP cada 10 minutos
+// (por instancia de la función; suficiente para cortar ráfagas).
+const RATE_LIMIT = { max: 5, windowMs: 10 * 60 * 1000 };
+const recentByIp = new Map();
+const isRateLimited = (ip) => {
+  const now = Date.now();
+  const hits = (recentByIp.get(ip) || []).filter((t) => now - t < RATE_LIMIT.windowMs);
+  hits.push(now);
+  recentByIp.set(ip, hits);
+  if (recentByIp.size > 5000) recentByIp.clear();
+  return hits.length > RATE_LIMIT.max;
+};
+
+const getClientIp = (request) => String(request.headers["x-forwarded-for"] || request.socket?.remoteAddress || "").split(",")[0].trim();
+
+const LIMITS = { name: 120, company: 160, message: 5000, email: 254, page: 500 };
+
+// Error con código para la respuesta: el navegador recibe el código y un texto, nunca detalles internos.
+const failure = (code, message, status = 502, extra = {}) => Object.assign(new Error(message), { publicCode: code, publicStatus: status, ...extra });
+
 const formatDisplayDate = (value = "") => {
   const raw = normalizeText(value);
   if (!raw) return "";
@@ -146,6 +174,8 @@ const brevoFetch = async (path, options = {}) => {
   if (!apiKey) {
     const error = new Error("Missing BREVO_API_KEY");
     error.category = "API key incorrecta o ausente";
+    error.publicCode = "config";
+    error.publicStatus = 500;
     console.error("Brevo configuration error", safeStringify({
       category: error.category,
       brevoApiKeyExists: false,
@@ -222,38 +252,46 @@ const sendAdminNotification = async (lead) => {
   const senderEmail = process.env.BREVO_SENDER_EMAIL;
   const senderName = process.env.BREVO_SENDER_NAME || "Banteq";
 
-  if (!adminEmail || !senderEmail) return;
+  // Sin aviso no se da la solicitud por recibida: el contacto podría quedarse sin atender.
+  if (!adminEmail || !senderEmail) {
+    throw failure("config", "Missing BREVO_ADMIN_EMAIL or BREVO_SENDER_EMAIL", 500, {
+      category: "configuración incompleta en Vercel (BREVO_ADMIN_EMAIL / BREVO_SENDER_EMAIL)",
+    });
+  }
 
   const text = (value) => escapeHtml(value || "No indicado");
   const isWhatsappLead = lead.contactPreference === "WhatsApp" && lead.phone;
+  const digits = (lead.phone || "").replace(/\D/g, "");
   // Enlace para que el equipo abra el chat desde el aviso. Al cliente nunca se le abre WhatsApp.
-  const whatsappLink = isWhatsappLead
-    ? ` · <a href="https://wa.me/${lead.phone.replace(/\D/g, "")}">Abrir chat de WhatsApp</a>`
-    : "";
+  const contactLine = isWhatsappLead
+    ? `<p><strong>WhatsApp:</strong> ${text(lead.phone)} · <a href="https://wa.me/${digits}">Abrir chat de WhatsApp</a></p>`
+    : `<p><strong>Correo:</strong> <a href="mailto:${escapeHtml(lead.email)}">${text(lead.email)}</a> (responde a este aviso para escribirle)</p>`;
+  const pageLine = lead.page
+    ? `<p><strong>Página:</strong> <a href="${escapeHtml(lead.page)}">${text(lead.pageTitle || lead.page)}</a><br><small>${text(lead.page)}</small></p>`
+    : `<p><strong>Página:</strong> ${text(lead.origin)}</p>`;
 
   const htmlContent = `
-    <h2>Nuevo contacto desde la web de Banteq</h2>
+    <h2>Nueva solicitud desde la web de Banteq</h2>
     <p><strong>Prefiere que le contactemos por:</strong> ${text(lead.contactPreference)}</p>
+    ${contactLine}
     <p><strong>Nombre:</strong> ${text(lead.name)}</p>
     <p><strong>Empresa:</strong> ${text(lead.company)}</p>
-    <p><strong>Teléfono:</strong> ${text(lead.phone)}${whatsappLink}</p>
-    <p><strong>Email:</strong> ${text(lead.email)}</p>
-    <p><strong>Fecha de envío:</strong> ${formatDisplayDate(lead.submittedAt)}</p>
-    <p><strong>Estado:</strong> Nuevo</p>
-    <p><strong>Mensaje:</strong> ${text(lead.message).replace(/\n/g, "<br>")}</p>
-    <p><strong>Áreas:</strong> ${text(lead.areas)}</p>
+    <p><strong>Qué quiere mejorar:</strong><br>${text(lead.message).replace(/\n/g, "<br>")}</p>
+    ${pageLine}
+    <p><strong>Fecha y hora:</strong> ${text(lead.submittedAtLocal)}</p>
   `;
 
-  await brevoFetch("/smtp/email", {
+  const result = await brevoFetch("/smtp/email", {
     method: "POST",
     body: JSON.stringify({
       sender: { name: senderName, email: senderEmail },
       to: [{ email: adminEmail, name: "Banteq" }],
-      replyTo: lead.email ? { email: lead.email, name: lead.name || "Lead" } : undefined,
-      subject: `Nuevo contacto web (${isWhatsappLead ? "WhatsApp" : "correo"}): ${lead.name || lead.company || "sin nombre"}`,
+      replyTo: lead.email ? { email: lead.email, name: lead.name || "Contacto web" } : undefined,
+      subject: `Nueva solicitud web (${isWhatsappLead ? "WhatsApp" : "correo"}): ${lead.name}${lead.company ? ` · ${lead.company}` : ""}`,
       htmlContent,
     }),
   });
+  return result?.messageId || null;
 };
 
 const getValidBrevoListId = (formType) => {
@@ -297,6 +335,8 @@ const buildContactPayload = (lead) => {
   addAttribute(attributes, "ESTADO", "Nuevo");
   addAttribute(attributes, "MENSAJE", lead.message);
   addAttribute(attributes, "AREAS", lead.areas);
+  addAttribute(attributes, "PAGINA", lead.page || lead.origin);
+  addAttribute(attributes, "FECHA_HORA", lead.submittedAtLocal);
 
   if (phone) {
     addAttribute(attributes, "TELEFONO", phone);
@@ -344,6 +384,8 @@ const requiredContactAttributes = [
   { name: "AREAS", type: "text" },
   { name: "ESTADO", type: "text" },
   { name: "MENSAJE", type: "text" },
+  { name: "PAGINA", type: "text" },
+  { name: "FECHA_HORA", type: "text" },
 ];
 
 let attributesReady = false;
@@ -401,11 +443,11 @@ const saveLead = async (lead) => {
   await ensureContactAttributes();
 
   try {
-    await brevoFetch("/contacts", {
+    const created = await brevoFetch("/contacts", {
       method: "POST",
       body: JSON.stringify(payload),
     });
-    return;
+    if (created?.id) return created.id;
   } catch (error) {
     if (error.category !== "contacto ya existente en Brevo") {
       throw error;
@@ -427,6 +469,11 @@ const saveLead = async (lead) => {
       body: JSON.stringify(updatePayload),
     });
   }
+  // Con updateEnabled Brevo puede actualizar un contacto existente sin devolver su id: se consulta.
+  const encodedIdentifier = encodeURIComponent(identifier);
+  const identifierType = lead.email ? "" : "?identifierType=ext_id";
+  const contact = await brevoFetch(`/contacts/${encodedIdentifier}${identifierType}`);
+  return contact?.id || null;
 };
 
 const mapContactToLead = (contact, sourceList = "") => {
@@ -456,94 +503,131 @@ const listContactsFromList = async (listId, sourceList) => {
 };
 
 const handlePost = async (request, response) => {
+  const origin = normalizeText(request.headers.origin);
+  if (origin && !ALLOWED_ORIGIN.test(origin)) {
+    console.error("Lead endpoint rejected origin", safeStringify({ origin }));
+    return json(response, 403, { error: "Origen no permitido.", code: "origin" });
+  }
+
   const body = parseRequestBody(request);
+  const ip = getClientIp(request);
+
+  // Antispam: campo trampa relleno o formulario enviado en menos de 2 s desde que se cargó. Se
+  // responde como si fuera bien (un bot no debe saber que lo hemos detectado) y no se guarda nada.
+  const elapsedMs = Number(body.elapsedMs);
+  if (normalizeText(body.hp) || (Number.isFinite(elapsedMs) && elapsedMs >= 0 && elapsedMs < 2000)) {
+    console.error("Lead endpoint spam discarded", safeStringify({ ip, elapsedMs, honeypot: Boolean(normalizeText(body.hp)) }));
+    return json(response, 200, { ok: true });
+  }
+
+  if (isRateLimited(ip)) {
+    console.error("Lead endpoint rate limited", safeStringify({ ip }));
+    return json(response, 429, { error: "Has enviado varias solicitudes seguidas. Espera unos minutos y vuelve a intentarlo.", code: "rate_limit" });
+  }
+
   const formType = normalizeText(body.formType);
   const contactPreference = normalizeContactPreference(body.contactPreference || body.contactMethod || (normalizeText(body.email) ? "Correo electrónico" : ""));
   const email = normalizeText(body.email).toLowerCase();
   const phone = normalizeSpanishPhone(body.phone || body.whatsapp || body.telefono);
   const name = normalizeText(body.name || body.nombre);
   const company = normalizeText(body.company || body.empresa);
+  const message = normalizeText(body.message || body.mensaje);
+  const page = normalizeText(body.page);
+  const isContactForm = formType.startsWith("Contacto");
 
-  if (!formType || !name) {
-    return json(response, 400, { error: "Missing required lead fields" });
+  // Mismas comprobaciones que en el navegador, por si alguien envía directamente al endpoint.
+  const fields = {};
+  if (!name) fields.name = "Escribe tu nombre.";
+  if (isContactForm && !company) fields.company = "Escribe el nombre de tu empresa.";
+  if (isContactForm && !message) fields.message = "Cuéntanos qué te gustaría mejorar.";
+  if (name.length > LIMITS.name) fields.name = "El nombre es demasiado largo.";
+  if (company.length > LIMITS.company) fields.company = "El nombre de la empresa es demasiado largo.";
+  if (message.length > LIMITS.message) fields.message = "El mensaje es demasiado largo (máximo 5.000 caracteres).";
+  if (contactPreference === "WhatsApp" && !isValidPhone(phone)) fields.phone = "Revisa el número de WhatsApp.";
+  if (contactPreference === "Correo electrónico" && (!isValidEmail(email) || email.length > LIMITS.email)) fields.email = "Revisa el correo electrónico.";
+  if (!contactPreference && !email && !phone) fields.email = "Indica un correo o un teléfono.";
+  if (!formType) fields.form = "Formulario no reconocido.";
+
+  if (Object.keys(fields).length) {
+    console.error("Lead endpoint validation error", safeStringify({ ip, formType, fields }));
+    return json(response, 400, { error: "Revisa los campos marcados.", code: "validation", fields });
   }
 
-  // El cliente elige un método de contacto y solo da ese dato: teléfono para WhatsApp o correo.
-  if (contactPreference === "Correo electrónico" && !isValidEmail(email)) {
-    return json(response, 400, { error: "A valid email is required for email preference" });
-  }
-
-  if (contactPreference === "WhatsApp" && !isValidPhone(phone)) {
-    return json(response, 400, { error: "A valid phone is required for WhatsApp preference" });
-  }
-
-  if (!email && !phone) {
-    return json(response, 400, { error: "An email or a phone is required" });
-  }
-
+  const now = new Date();
   const lead = {
     formType,
     name,
-    email,
-    phone,
+    email: contactPreference === "WhatsApp" ? "" : email,
+    phone: contactPreference === "Correo electrónico" ? "" : phone,
     company,
     contactPreference: contactPreference || (email ? "Correo electrónico" : ""),
-    message: normalizeText(body.message || body.mensaje),
+    message,
     areas: Array.isArray(body.areas) ? body.areas.join(", ") : normalizeText(body.areas),
     origin: normalizeText(body.origin || body.origen),
+    page: /^https?:\/\//.test(page) ? page.slice(0, LIMITS.page) : "",
+    pageTitle: normalizeText(body.pageTitle).slice(0, 200),
     employeesRange: normalizeText(body.employeesRange || body.numeroEmpleados || body.numero_empleados),
     microsoft365Usage: normalizeText(body.microsoft365Usage || body.usoActualMicrosoft365 || body.uso_actual_microsoft_365),
     microsoftApps: Array.isArray(body.microsoftApps) ? body.microsoftApps.join(", ") : normalizeText(body.microsoftApps || body.aplicacionesMicrosoft || body.aplicaciones_microsoft),
-    submittedAt: getBrevoDate(),
+    submittedAt: getBrevoDate(now),
+    submittedAtLocal: getMadridDateTime(now),
   };
 
   console.log("Lead endpoint received", safeStringify({
-    method: request.method,
     brevoApiKeyExists: Boolean(process.env.BREVO_API_KEY),
+    adminEmailExists: Boolean(process.env.BREVO_ADMIN_EMAIL),
+    senderEmailExists: Boolean(process.env.BREVO_SENDER_EMAIL),
     formType,
-    contactPreference,
-    hasEmail: Boolean(email),
-    normalizedPhone: phone,
+    contactPreference: lead.contactPreference,
+    page: lead.page || lead.origin,
     listId: getListIdForType(formType),
-    rawListIds: {
-      diagnostic: process.env.BREVO_DIAGNOSTIC_LIST_ID || null,
-      contact: process.env.BREVO_CONTACT_LIST_ID || null,
-      fundae: process.env.BREVO_FUNDAE_LIST_ID || null,
-    },
   }));
 
-  await saveLead(lead);
-
-  const notifications = [];
-
+  // 1. Guardar en Brevo. 2. Avisar a Banteq. Si falla cualquiera, la solicitud no se da por
+  // recibida: el navegador muestra el error y se puede reintentar (el contacto se actualiza, no
+  // se duplica). 3. Confirmación al cliente que eligió correo (si falla, solo se registra).
+  let contactId;
   try {
-    await sendAdminNotification(lead);
-    notifications.push("admin");
+    contactId = await saveLead(lead);
   } catch (error) {
-    console.error("Brevo admin notification error", safeStringify({
-      category: error.category || classifyBrevoError(0, error.message),
-      message: error.message,
-      formType: lead.formType,
-      email: lead.email,
-      phone: lead.phone,
-    }));
+    throw Object.assign(error, { publicCode: error.publicCode || (error.status === 401 ? "brevo_auth" : "brevo_contact"), publicStatus: error.publicStatus || 502 });
   }
 
-  if (email) {
+  let notificationId;
+  try {
+    notificationId = await sendAdminNotification(lead);
+  } catch (error) {
+    throw Object.assign(error, { publicCode: error.publicCode || "brevo_email", publicStatus: error.publicStatus || 502 });
+  }
+
+  let confirmation = false;
+  if (lead.email) {
     try {
-      await sendConfirmationEmail({ name, email });
-      notifications.push("confirmation");
+      await sendConfirmationEmail({ name, email: lead.email });
+      confirmation = true;
     } catch (error) {
       console.error("Brevo confirmation email error", safeStringify({
         category: error.category || classifyBrevoError(0, error.message),
         message: error.message,
-        email,
         formType: lead.formType,
       }));
     }
   }
 
-  return json(response, 200, { ok: true, phone, notifications });
+  console.log("Lead saved and notified", safeStringify({ contactId, notificationId, confirmation, contactPreference: lead.contactPreference }));
+
+  const result = { ok: true, contactId, notificationId, confirmation };
+  // Comprobación de extremo a extremo: devuelve lo que ha quedado guardado en Brevo (los datos son
+  // los que acaba de enviar quien pregunta).
+  if (request.headers["x-bq-diagnostico"] === "1" && contactId) {
+    try {
+      const saved = await brevoFetch(`/contacts/${contactId}`);
+      result.saved = { id: saved.id, email: saved.email || null, ext_id: saved.ext_id || null, listIds: saved.listIds, attributes: saved.attributes };
+    } catch (error) {
+      result.saved = { error: error.category || error.message };
+    }
+  }
+  return json(response, 200, result);
 };
 
 const handleGet = async (request, response) => {
@@ -593,13 +677,13 @@ export default async function handler(request, response) {
       message: error.message,
       stack: error.stack,
       method: request.method,
-      body: request.body,
     };
 
-    console.error("Lead endpoint error", safeStringify(diagnostic));
+    console.error("Lead endpoint error", safeStringify({ ...diagnostic, publicCode: error.publicCode || "server" }));
 
-    return json(response, 500, {
-      error: "Ha ocurrido un problema al enviar la solicitud. Por favor, inténtelo de nuevo en unos minutos.",
+    return json(response, error.publicStatus || 500, {
+      error: "No hemos podido enviar tu solicitud. Inténtalo de nuevo en unos minutos.",
+      code: error.publicCode || "server",
     });
   }
 }

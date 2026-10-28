@@ -10,15 +10,24 @@
     return headers[name];
   };
 
+  // Envío en curso (lo fija la validación de más abajo al dejar pasar un envío).
+  let envio = null;
+  const respuesta = (status, body) => new Response(JSON.stringify(body), { status, headers: { "Content-Type": "application/json" } });
+
   window.fetch = (input, init = {}) => {
     const isFramerForm = readHeader(init.headers, "Framer-POW") || readHeader(init.headers, "Framer-Form-Fields");
     if (!isFramerForm || !(init.body instanceof FormData)) return nativeFetch(input, init);
+    return enviarSolicitud(Object.fromEntries(init.body.entries()), envio && envio.form);
+  };
 
-    const fields = Object.fromEntries(init.body.entries());
+  // Envía la solicitud a /api/leads y deja el resultado a la vista. La usa Framer (primer intento,
+  // a través de fetch) y, tras un error, la validación de más abajo: Framer se queda en su estado
+  // de error y ya no reenvía, así que los reintentos se mandan desde aquí.
+  const enviarSolicitud = (fields, form) => {
     const pick = (...keys) => keys.map((key) => fields[key]).find(Boolean) || "";
     // Campos trampa de Framer: si alguno viene relleno, es un bot y no se envía nada.
     const honeypots = ["website", "subject", "title", "description", "feedback", "notes", "details", "remarks", "comments"];
-    if (honeypots.some((key) => fields[key])) return Promise.resolve(new Response("{}", { status: 200 }));
+    if (honeypots.some((key) => fields[key])) return Promise.resolve(respuesta(200, {}));
     const payload = {
       formType: "Contacto web",
       origin: window.location.pathname,
@@ -41,12 +50,51 @@
     } else if (fields.ContactMethod === "email") {
       payload.contactPreference = "Correo electrónico";
     }
+    const clave = JSON.stringify(payload);
+    // La misma solicitud ya se envió bien desde esta página: no se manda otra vez.
+    if (form && form.dataset.bqEnviado === clave) {
+      terminarEnvio(form, "ok", "Ya hemos recibido esta solicitud. Te escribiremos pronto.");
+      return Promise.resolve(respuesta(200, { ok: true }));
+    }
+    payload.page = window.location.href;
+    payload.pageTitle = document.title;
+    payload.elapsedMs = form ? Date.now() - Number(form.dataset.bqInicio || 0) : undefined;
 
     return nativeFetch("/api/leads", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),
-    });
+    }).then(
+      async (res) => {
+        let data = {};
+        try {
+          data = await res.clone().json();
+        } catch {}
+        if (res.ok && data.ok) {
+          if (form) {
+            form.dataset.bqEnviado = clave;
+            delete form.dataset.bqFallo;
+          }
+          const destino = payload.contactPreference === "WhatsApp"
+            ? `Te escribiremos por WhatsApp al ${payload.phone}.`
+            : `Te responderemos a ${payload.email}${data.confirmation ? " y te hemos enviado una confirmación" : ""}.`;
+          terminarEnvio(form, "ok", `Solicitud recibida. ${destino}`);
+          return res;
+        }
+        // Cualquier otra respuesta es un error: nunca se da por enviada.
+        if (form) form.dataset.bqFallo = "1";
+        if (form && data.fields) marcarErroresServidor(form, data.fields);
+        terminarEnvio(form, "error", data.code === "validation" || data.code === "rate_limit"
+          ? data.error
+          : "No hemos podido enviar tu solicitud. Inténtalo de nuevo en unos minutos.");
+        return res.ok ? respuesta(502, { error: { message: data.error || "Envío no confirmado" } }) : res;
+      },
+      (error) => {
+        if (form) form.dataset.bqFallo = "1";
+        terminarEnvio(form, "error", "No hemos podido enviar tu solicitud. Revisa tu conexión e inténtalo de nuevo.");
+        throw error;
+      },
+    );
   };
 
   // Tiras en bucle (tiras de herramientas, carrusel de palabras, logos del hero). Cada tira es una
@@ -291,7 +339,149 @@
     telInput.addEventListener("input", sync);
     form.addEventListener("reset", () => setTimeout(sync, 0));
     sync();
+    // Los avisos los pone la validación propia (debajo de cada campo), no el navegador.
+    form.noValidate = true;
+    form.dataset.bqInicio = String(Date.now());
+    form.addEventListener("input", (event) => {
+      if (event.target.matches && event.target.matches("[aria-invalid]")) desmarcar(event.target);
+    });
+    selector.addEventListener("change", () => {
+      for (const input of form.querySelectorAll("[aria-invalid]")) desmarcar(input);
+    });
   };
+  // ---------------------------------------------------------------------------------------------
+  // Validación del formulario de contacto, con el error debajo de cada campo, y estado del envío
+  // (enviando, recibido o error) debajo del botón. Corre antes que Framer: si hay errores, o si ya
+  // hay un envío en curso, Framer no llega a enviar nada.
+  // ---------------------------------------------------------------------------------------------
+  const TEXTOS = {
+    Name: "Escribe tu nombre.",
+    Company: "Escribe el nombre de tu empresa.",
+    Message: "Cuéntanos qué te gustaría mejorar.",
+    Phone: "Escribe tu número de WhatsApp.",
+    PhoneMal34: "Revisa el número: en España son 9 cifras (por ejemplo, 612 345 678).",
+    PhoneMal: "Revisa el número de teléfono (sin el prefijo del país).",
+    Email: "Escribe tu correo electrónico.",
+    EmailMal: "Revisa el correo: parece incompleto (por ejemplo, nombre@empresa.com).",
+  };
+  const DEL_SERVIDOR = { name: "Name", company: "Company", message: "Message", phone: "Phone", email: "Email" };
+  const campo = (form, nombre) => form.querySelector(`[name="${nombre}"]`);
+  const errorDe = (input, crear) => {
+    const caja = input.closest("label") || input;
+    let error = caja.nextElementSibling;
+    if (error && error.classList.contains("bq-error")) return error;
+    if (!crear) return null;
+    error = document.createElement("p");
+    error.className = "bq-error";
+    error.id = `bq-error-${input.name}`;
+    error.setAttribute("role", "alert");
+    caja.after(error);
+    return error;
+  };
+  const marcar = (input, texto) => {
+    const caja = input.closest("label") || input;
+    errorDe(input, true).textContent = texto;
+    caja.dataset.bqInvalido = "1";
+    input.setAttribute("aria-invalid", "true");
+    input.setAttribute("aria-describedby", `bq-error-${input.name}`);
+  };
+  const desmarcar = (input) => {
+    const caja = input.closest("label") || input;
+    const error = errorDe(input, false);
+    if (error) error.remove();
+    delete caja.dataset.bqInvalido;
+    input.removeAttribute("aria-invalid");
+    input.removeAttribute("aria-describedby");
+  };
+  const validar = (form) => {
+    const errores = [];
+    const whatsapp = form.dataset.bqMetodo !== "email";
+    for (const nombre of ["Name", "Company"]) {
+      const input = campo(form, nombre);
+      if (input && !input.value.trim()) errores.push([input, TEXTOS[nombre]]);
+    }
+    if (whatsapp) {
+      const tel = campo(form, "Phone");
+      const prefijo = (campo(form, "PhonePrefix") || {}).value || "34";
+      const cifras = tel ? tel.value.replace(/\D/g, "").replace(prefijo === "39" ? /^$/ : /^0+/, "") : "";
+      if (tel && !cifras) errores.push([tel, TEXTOS.Phone]);
+      else if (tel && prefijo === "34" && !/^[6-9]\d{8}$/.test(cifras)) errores.push([tel, TEXTOS.PhoneMal34]);
+      else if (tel && (cifras.length < 6 || cifras.length + prefijo.length > 15)) errores.push([tel, TEXTOS.PhoneMal]);
+    } else {
+      const email = campo(form, "Email");
+      const valor = email ? email.value.trim() : "";
+      if (email && !valor) errores.push([email, TEXTOS.Email]);
+      else if (email && !/^[^\s@]+@[^\s@.]+(\.[^\s@.]+)*\.[a-z]{2,}$/i.test(valor)) errores.push([email, TEXTOS.EmailMal]);
+    }
+    const mensaje = form.querySelector('textarea[name="Message"], [name="Message"]');
+    if (mensaje && !mensaje.value.trim()) errores.push([mensaje, TEXTOS.Message]);
+    return errores;
+  };
+  const marcarErroresServidor = (form, fields) => {
+    for (const [clave, texto] of Object.entries(fields)) {
+      const input = DEL_SERVIDOR[clave] && campo(form, DEL_SERVIDOR[clave]);
+      if (input) marcar(input, texto);
+    }
+  };
+  const estadoDe = (form) => {
+    let estado = form.querySelector(".bq-estado");
+    if (estado) return estado;
+    const boton = form.querySelector('[type="submit"]');
+    const fila = boton && [...form.children].find((c) => c.contains(boton));
+    estado = document.createElement("p");
+    estado.className = "bq-estado";
+    estado.setAttribute("aria-live", "polite");
+    (fila || form.lastElementChild).after(estado);
+    return estado;
+  };
+  const mostrarEstado = (form, tipo, texto) => {
+    const estado = estadoDe(form);
+    estado.dataset.tipo = tipo;
+    estado.textContent = texto;
+  };
+  function terminarEnvio(form, tipo, texto) {
+    if (!form) return;
+    delete form.dataset.bqEnviando;
+    clearTimeout(Number(form.dataset.bqGuarda || 0));
+    if (envio && envio.form === form) envio = null;
+    mostrarEstado(form, tipo, texto);
+  }
+  document.addEventListener(
+    "submit",
+    (event) => {
+      const form = event.target;
+      if (!(form instanceof HTMLFormElement) || !form.dataset.bqContacto) return;
+      const parar = () => {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+      };
+      // Un envío a la vez: los clics repetidos mientras se envía no hacen nada.
+      if (form.dataset.bqEnviando) return parar();
+      for (const input of form.querySelectorAll("[aria-invalid]")) desmarcar(input);
+      const errores = validar(form);
+      if (errores.length) {
+        parar();
+        for (const [input, texto] of errores) marcar(input, texto);
+        errores[0][0].focus({ preventScroll: false });
+        mostrarEstado(form, "error", errores.length > 1 ? "Revisa los campos marcados." : "Revisa el campo marcado.");
+        return;
+      }
+      form.dataset.bqEnviando = "1";
+      envio = { form };
+      mostrarEstado(form, "enviando", "Enviando tu solicitud…");
+      // Reintento tras un error: lo envía este script (Framer ya no lo haría).
+      if (form.dataset.bqFallo) {
+        parar();
+        enviarSolicitud(Object.fromEntries(new FormData(form).entries()), form).catch(() => {});
+      }
+      // Si en 30 s no hubiera respuesta, se libera el formulario para poder reintentar.
+      form.dataset.bqGuarda = String(setTimeout(() => {
+        if (form.dataset.bqEnviando) terminarEnvio(form, "error", "No hemos podido confirmar el envío. Inténtalo de nuevo.");
+      }, 30000));
+    },
+    true,
+  );
+
   const scanForms = () => document.querySelectorAll("form:not([data-bq-contacto])").forEach(enhanceContactForm);
   // En cuanto Framer monta un formulario o una tarjeta con demo (al cargar, al cambiar de página o
   // al rehacer la página en móvil), antes de que se pinte: solo se miran los nodos recién añadidos.

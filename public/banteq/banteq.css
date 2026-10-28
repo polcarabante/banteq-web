@@ -671,3 +671,40 @@ a.bq-enlace {
   margin-top: 4px;
   white-space: pre-wrap;
 }
+
+/* Formulario de contacto: error debajo de cada campo (banteq.js, validar) y estado del envío debajo
+   del botón. Misma letra que el aviso del método; el error en un rojo claro legible sobre el cristal. */
+form[data-bq-contacto] .bq-error {
+  margin: -2px 4px 2px;
+  color: #ffc4bd;
+  font-family: "Geist", "Geist Placeholder", sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.35;
+}
+form[data-bq-contacto] .bq-estado {
+  width: 100%;
+  margin: 2px 0 0;
+  color: rgba(255, 255, 255, 0.85);
+  font-family: "Geist", "Geist Placeholder", sans-serif;
+  font-size: 13.5px;
+  font-weight: 500;
+  line-height: 1.4;
+  text-align: center;
+  animation: bq-estado-entra 0.25s ease;
+}
+form[data-bq-contacto] .bq-estado:empty {
+  display: none;
+}
+form[data-bq-contacto] .bq-estado[data-tipo="error"] {
+  color: #ffc4bd;
+}
+form[data-bq-contacto] .bq-estado[data-tipo="ok"] {
+  color: #ffffff;
+}
+@keyframes bq-estado-entra {
+  from {
+    opacity: 0;
+    transform: translateY(-3px);
+  }
+}

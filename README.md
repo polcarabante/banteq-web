@@ -94,6 +94,20 @@ como obligatorio solo el campo del método elegido. El aspecto está en `banteq.
   WhatsApp, un enlace para abrir el chat. El correo de confirmación al cliente solo sale si dio
   su email.
 - En local (`npm run dev`) el envío solo se muestra en la terminal.
+- Validación en el navegador (`validar` en `banteq.js`): nombre, empresa, mensaje y el dato del
+  método (número de 9 cifras para +34; de 6 a 15 en total con otros prefijos; correo con dominio).
+  El error sale debajo de cada campo y el estado del envío (enviando, recibido o error) debajo del
+  botón. Un envío a la vez; la misma solicitud no se reenvía. Tras un error, el reintento lo manda
+  el propio script (Framer se queda en su estado de error y ya no reenvía).
+- `api/leads.js` repite la validación, acepta solo envíos desde banteq.com (y vistas previas y local),
+  descarta en silencio el campo trampa y los envíos en menos de 2 s, y limita a 5 envíos por IP cada
+  10 minutos. Guarda en Brevo NOMBRE, EMPRESA, MENSAJE, PREFERENCIA_CONTACTO, WHATSAPP/TELEFONO o el
+  email, PAGINA, FECHA_ENVIO, FECHA_HORA y ESTADO, y avisa a `BREVO_ADMIN_EMAIL`. Si no puede guardar
+  o avisar responde con error (con un `code`: `config`, `brevo_contact`, `brevo_email`…) y la web no
+  da la solicitud por recibida. Los fallos quedan en los registros de la función en Vercel.
+- Variables necesarias en Vercel (Production): `BREVO_API_KEY`, `BREVO_ADMIN_EMAIL`,
+  `BREVO_SENDER_EMAIL` (remitente verificado en Brevo), `BREVO_SENDER_NAME` y `BREVO_CONTACT_LIST_ID`.
+  Tras añadirlas o cambiarlas hay que volver a desplegar.
 
 ### Identidad en buscadores (SEO)
 
