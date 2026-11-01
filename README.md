@@ -113,12 +113,12 @@ como obligatorio solo el campo del método elegido. El aspecto está en `banteq.
   `banteq.js` en el contenedor del formulario). `/contacto` redirige a `/#hablemos` (`vercel.json`;
   el servidor local lee las mismas redirecciones).
 
-### Pie de las subpáginas en el teléfono
+### Pie en el teléfono (home y subpáginas)
 
-Es el mismo componente que el de la home. Solo en las subpáginas (`data-bq-pagina="sub"` en
-`<html>`: lo pone `make_shells` y `banteq.js` lo mantiene al navegar sin recargar), por debajo de
-810 px, `banteq.css` ajusta el logotipo al ancho (medía 357 px fijos y se cortaba a 320 px), deja
-que el copyright baje de línea y da más área táctil a los enlaces. El pie de la home no cambia.
+Es el mismo componente que el de la home. Por debajo de 810 px, `banteq.css` ajusta el logotipo
+al ancho (medía 357 px fijos y se cortaba a 320 px) y deja que el copyright baje de línea, en todas
+las páginas. Solo en las subpáginas (`data-bq-pagina="sub"` en `<html>`: lo pone `make_shells` y
+`banteq.js` lo mantiene al navegar sin recargar) da además más área táctil a los enlaces.
 La instantánea de carga (`npm run prerender`) guarda el pie ya aparecido (antes salía con el
 formulario y los enlaces invisibles) y con el póster del vídeo de fondo.
 

@@ -558,11 +558,12 @@ PAGINA_404 = [
 
 # ---------------------------------------------------------------------------
 # Páginas legales (misma estructura que la plantilla). Los datos identificativos del
-# titular (razón social, NIF, domicilio y email) no constan en los archivos: pendientes.
+# titular se incorporan con los datos facilitados por Pol.
 # ---------------------------------------------------------------------------
 
-LEGAL_ACTUALIZACION = "Última actualización: septiembre de 2026"
-LEGAL_PENDIENTE = "Datos del titular pendientes de completar: razón social, NIF, domicilio y email de contacto."
+LEGAL_ACTUALIZACION = "Última actualización: 1 de noviembre de 2026"
+LEGAL_TITULAR = "Titular: Pol Carabante Martin, profesional autónomo que opera bajo la marca Banteq. NIF: 54166747E. Domicilio profesional: C/Casal dels Mogoda, 127, 08130 Santa Perpètua de Mogoda. Contacto: pol@banteq.org."
+LEGAL_CONTACTO = LEGAL_TITULAR
 
 AVISO_LEGAL = [
     "Aviso legal y condiciones de uso", LEGAL_ACTUALIZACION,
@@ -607,7 +608,7 @@ AVISO_LEGAL = [
     "Herramientas internas de desarrollo",
     "El cliente recibe los derechos de uso de los entregables creados para él, pero no puede revender ni redistribuir los sistemas propios de Banteq sin acuerdo expreso.",
     "5. Datos de contacto",
-    LEGAL_PENDIENTE,
+    LEGAL_CONTACTO,
 ]
 
 PRIVACIDAD = [
@@ -653,7 +654,7 @@ PRIVACIDAD = [
     "Alteración",
     "Ningún sistema de transmisión o almacenamiento es completamente seguro, pero trabajamos para reducir los riesgos al mínimo.",
     "5. Contacto y derechos",
-    "Puedes ejercer tus derechos de acceso, rectificación, supresión y oposición escribiéndonos. " + LEGAL_PENDIENTE,
+    "Puedes ejercer tus derechos de acceso, rectificación, supresión y oposición escribiéndonos. " + LEGAL_CONTACTO,
 ]
 
 

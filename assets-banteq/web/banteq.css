@@ -1385,23 +1385,24 @@ dialog.bq-fx.bq-fx-cerrando::backdrop {
 }
 
 /* ------------------------------------------------------------------------------------------
-   Pie de las subpáginas en el teléfono (html[data-bq-pagina="sub"]; la home no lo lleva y su pie
-   no cambia). Es el mismo componente que el de la home; aquí solo se corrige lo que no cabía:
-   - El logotipo medía 357 px fijos: a 320 px se cortaba («bante»). Ahora ocupa como mucho el
-     ancho disponible, con su proporción.
-   - El copyright no podía partirse (white-space: pre) y se cortaba a 320 px: ahora baja de línea.
-   - Los enlaces tenían 21 px de alto para pulsar: más área táctil, sin cambiar cómo se ven.
+   Pie en el teléfono. Mismo componente en la home y en las subpáginas; solo se corrige lo que no
+   cabía a 320 px, sin cambiar el diseño:
+   - El logotipo medía 357 px fijos y se cortaba («bante»): ahora ocupa como mucho el ancho
+     disponible, con su proporción (desde ~400 px se ve igual que antes). Home y subpáginas.
+   - El copyright no podía partirse (white-space: pre) y se cortaba: ahora baja de línea. Home y
+     subpáginas.
+   - Subpáginas (html[data-bq-pagina="sub"]): enlaces con más área táctil, sin cambiar cómo se ven.
    ------------------------------------------------------------------------------------------ */
 @media (max-width: 809.98px) {
-  html[data-bq-pagina="sub"] footer .framer-c9d4hk {
+  footer .framer-c9d4hk {
     width: 100% !important;
     max-width: 357px;
     height: auto !important;
     aspect-ratio: 357 / 80 !important;
     flex: none;
   }
-  html[data-bq-pagina="sub"] footer .framer-1jwrepz,
-  html[data-bq-pagina="sub"] footer .framer-1jwrepz p {
+  footer .framer-1jwrepz,
+  footer .framer-1jwrepz p {
     max-width: 100%;
     white-space: normal !important;
   }

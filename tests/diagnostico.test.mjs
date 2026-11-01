@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import handler from '../api/diagnosticos.js';
 import {validateSubmission,measurement,pricing,buildReports,reportBlocks,rich} from '../lib/diagnostico.mjs';
-import {saveDiagnostic} from '../lib/notion-diagnostico.mjs';
+import {saveDiagnostic,ensureDiagnosticPdfs} from '../lib/notion-diagnostico.mjs';
 import {fixture} from './fixture.mjs';
 
 test('volumen, tiempo activo y excepciones; esperas no se convierten en ahorro',()=>{const a=fixture().answers;const p=a.areas.ventas.procesos[0];assert.equal(measurement(p).hours,25);const r=buildReports(a);const auto=r.automation.sections[1].body.join('\n');assert.match(auto,/22.5 h\/mes/);assert.match(auto,/no equivale a ahorro/);assert.equal(r.automation.sections.length,3);assert.match(auto,/pendientes de presupuesto/);});
@@ -21,11 +21,12 @@ test('reintento recupera el proyecto y sus informes; payload distinto no reutili
   if(path==='/file_uploads')return {id:'upload'};
   if(path.endsWith('/send'))return {status:'uploaded'};
   if(path==='/pages'){
-   const id='p'+(++seq);const p={id,properties:data.properties};db.blocks[id]=data.children||[];
+   const id='p'+(++seq);const p={id,properties:{...data.properties,'Adjuntar archivo':{files:[]}}};db.blocks[id]=data.children||[];
    if(data.parent.data_source_id)db.projects.push(p);
    else db.blocks[data.parent.page_id].push({id,type:'child_page',child_page:{title:data.properties.title.title[0].text.content}});
    return p;
   }
+  if(path.startsWith('/pages/')){const p=db.projects.find(p=>p.id===path.split('/')[2]);if(method==='PATCH')Object.assign(p.properties,data.properties);return p;}
   const id=path.match(/^\/blocks\/([^/]+)\/children/)?.[1];
   if(id){if(method==='PATCH'){db.blocks[id].push(...data.children);return {};}return {results:db.blocks[id],has_more:false};}
   throw new Error('unexpected '+path);
@@ -33,8 +34,28 @@ test('reintento recupera el proyecto y sus informes; payload distinto no reutili
  const opts={env:{NOTION_PROJECTS_DATA_SOURCE_ID:'ds'},call};
  const r=await saveDiagnostic(a,body,opts);assert.match(r.reference,/BQ-/);assert.equal(db.projects.length,1);
  a.actualizado=new Date().toISOString();a.r._submissionHash='transient';
- await saveDiagnostic(a,body,opts);assert.equal(db.projects.length,1);assert.equal(seq,4);
+ await saveDiagnostic(a,body,opts);assert.equal(db.projects.length,1);assert.equal(seq,4);assert.equal(db.projects[0].properties['Adjuntar archivo'].files.length,2);
  a.r.E10='Cambio';await assert.rejects(saveDiagnostic(a,body,opts),/otras respuestas/);
 });
 
 test('disponibilidad pública sin revelar credenciales',async()=>{const res=response();await handler({method:'GET',headers:{}},res);assert.deepEqual(res.data,{ready:false});assert.equal(res.statusCode,200);});
+
+
+test('PDF adjuntos: conserva archivos previos y reanuda si falla el segundo informe',async()=>{
+ const a=fixture().answers,reports=buildReports(a);let uploads=0,fail=true;
+ const files=[{name:'contrato.pdf',type:'external',external:{url:'https://example.invalid/contrato.pdf'}}];
+ const call=async(path,data,method)=>{
+  if(path==='/pages/p'){
+   if(method==='PATCH')files.splice(0,files.length,...data.properties['Adjuntar archivo'].files);
+   return {properties:{'Adjuntar archivo':{files:structuredClone(files)}}};
+  }
+  if(path==='/file_uploads'){uploads++;return {id:'u'+uploads};}
+  if(path.endsWith('/send')){assert.equal(data.get('file').type,'application/pdf');assert.ok((await data.get('file').text()).startsWith('%PDF-'));if(uploads===2&&fail)throw new Error('red');return {};}
+  throw new Error(path);
+ };
+ await assert.rejects(ensureDiagnosticPdfs(call,'p',reports,a.r.E1,'BQ-TEST'),/red/);
+ assert.equal(files.length,2);fail=false;
+ await ensureDiagnosticPdfs(call,'p',reports,a.r.E1,'BQ-TEST');
+ assert.equal(files.length,3);assert.equal(uploads,3);assert.equal(files[0].name,'contrato.pdf');
+ await ensureDiagnosticPdfs(call,'p',reports,a.r.E1,'BQ-TEST');assert.equal(uploads,3);
+});
