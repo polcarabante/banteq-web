@@ -9,5 +9,17 @@
       "source": "/framerusercontent.com/sites/70yiSpZyA9Z5dxDKIiuNjl-:version/:path*",
       "destination": "/framerusercontent.com/sites/70yiSpZyA9Z5dxDKIiuNjl/:path*"
     }
+  ],
+  "redirects": [
+    {
+      "source": "/contacto",
+      "destination": "/#hablemos",
+      "permanent": true
+    },
+    {
+      "source": "/inteligencia-artificial",
+      "destination": "/automatizacion-procesos",
+      "permanent": true
+    }
   ]
 }

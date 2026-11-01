@@ -108,20 +108,44 @@ como obligatorio solo el campo del método elegido. El aspecto está en `banteq.
 - Variables necesarias en Vercel (Production): `BREVO_API_KEY`, `BREVO_ADMIN_EMAIL`,
   `BREVO_SENDER_EMAIL` (remitente verificado en Brevo), `BREVO_SENDER_NAME` y `BREVO_CONTACT_LIST_ID`.
   Tras añadirlas o cambiarlas hay que volver a desplegar.
+- No hay página de contacto (se quitó el 2026-11-01): «Hablemos», «Solicitar diagnóstico» y
+  «Cuéntanos tu caso» bajan a este formulario en la misma página (ancla `#hablemos`, que pone
+  `banteq.js` en el contenedor del formulario). `/contacto` redirige a `/#hablemos` (`vercel.json`;
+  el servidor local lee las mismas redirecciones).
+
+### Fórmula Banteq
+
+Oferta: remodelación gratuita de la web de una empresa si contrata con Banteq su mantenimiento, que
+pasa a costar menos que el actual, **hasta** 50 €/mes menos (hasta 600 €/año). Nunca se promete
+50 € a quien paga menos ni un ahorro garantizado.
+
+- Entrada: botón «Fórmula Banteq» bajo el título de la sección «Desarrollo web» de la home
+  (`apply_formula_home` en `build.py`, en el módulo y en el HTML inicial) y bloque `("formula", …)`
+  en `/desarrollo-web` (`contenido.SERVICIOS`). Los dos son enlaces a `#formula-banteq`; esa
+  dirección también abre la ventana.
+- La ventana (`<dialog>`) y su formulario los monta `banteq.js` («Fórmula Banteq»); estilos en
+  `banteq.css`. Pide empresa, cuota mensual actual y WhatsApp o correo (mismo selector y prefijos
+  que el formulario del pie). Con la cuota escrita dice lo que podría ahorrar: «hasta 50 €/mes» si
+  paga más de 50 €; si paga 50 € o menos, que la rebaja será menor y se concreta en la propuesta.
+- Se envía a `/api/leads` con `formType: "Fórmula Banteq"` y `monthlyFee`. El endpoint lo valida
+  (empresa, importe > 0, contacto), lo guarda en la misma lista de Brevo que el contacto
+  (`BREVO_CONTACT_LIST_ID`) con `TIPO_SOLICITUD` = «Fórmula Banteq» y `PAGO_MANTENIMIENTO` (número;
+  los crea si no existen) y avisa a `BREVO_ADMIN_EMAIL` con el asunto «Fórmula Banteq: empresa ·
+  importe €/mes» y el plazo de 48 h. Si dio correo, recibe una confirmación. No usa variables nuevas.
 
 ### Identidad en buscadores (SEO)
 
 Todo sale de `tools/contenido.py` (`META_TITLE`, `META_DESCRIPTION`, `SITIO`, `NOMBRE_SITIO`,
 `LOCALIDAD`, `SERVICIOS`…) y lo aplica `tools/build.py`:
 
-- **Canónica y `og:url` de cada página**, absolutas (`https://banteq.com/contacto`…). La plantilla
+- **Canónica y `og:url` de cada página**, absolutas (`https://banteq.com/proyectos`…). La plantilla
   dejaba `/` en todas: para Google, todas eran copias de la home.
 - **Open Graph y Twitter** con el título y la descripción de cada página y la imagen en URL
   absoluta; `og:site_name` y `og:locale`.
 - **Datos estructurados** (JSON-LD, `structured_data()`): organización (nombre, logo y localidad;
   sin calle ni teléfono hasta tenerlos) en todas; sitio y preguntas frecuentes en la home; servicio,
   preguntas y migas de pan en cada página de servicio; obra y migas en cada proyecto; lista en
-  `/proyectos`; página de contacto. Solo lo que se lee en la propia página.
+  `/proyectos`. Solo lo que se lee en la propia página.
 - **`robots.txt`** (todo permitido, con el sitemap) y **`sitemap.xml`** con las páginas indexables.
 - La página 404 lleva `noindex`.
 - En el navegador, Framer ponía a cada página el título de la home y tenía como dominio el de la
@@ -131,12 +155,14 @@ Todo sale de `tools/contenido.py` (`META_TITLE`, `META_DESCRIPTION`, `SITIO`, `N
 
 ### Páginas de servicio
 
-`/automatizacion-procesos`, `/inteligencia-artificial` y `/desarrollo-web` (contenido en
+`/automatizacion-procesos` y `/desarrollo-web` (contenido en
 `contenido.SERVICIOS`: título, subtítulo, secciones, listas, preguntas frecuentes y enlaces). Cada una
 es una copia del módulo de la página de texto de la plantilla (la del aviso legal) con otra columna
 de contenido, registrada como una ruta más de Framer: misma cabecera, mismo pie con formulario,
-mismas tipografías y puntos de corte. El menú y el pie de todas las páginas enlazan a las tres
-(`apply_service_links`), y cada proyecto enlaza a sus servicios (`apply_project_seo`).
+mismas tipografías y puntos de corte. El menú y el pie de todas las páginas enlazan a las dos
+(`apply_service_links`), y cada proyecto enlaza a sus servicios (`apply_project_seo`). La página
+`/inteligencia-artificial` («IA aplicada») se quitó el 2026-11-01 y redirige a
+`/automatizacion-procesos` (`vercel.json`).
 
 Para añadir o cambiar una: editar `SERVICIOS`, `npm run build` y `npm run prerender`.
 
@@ -402,7 +428,7 @@ npm run build
 El formulario (`api/leads.js`) mantiene la lista de Brevo de FUNDAE (`BREVO_FUNDAE_LIST_ID`); desde
 la web ya no llega ninguna solicitud de ese tipo.
 
-Páginas: `/contacto`, `/proyectos`, `/aviso-legal`, `/privacidad` y 404.
+Páginas: `/proyectos`, `/aviso-legal`, `/privacidad` y 404 (la de contacto se quitó el 2026-11-01).
 
 La sección de equipo de la plantilla se ha eliminado (no hay equipo documentado) y la de
 testimonios se ha reconvertido en "Desarrollo web" (no hay testimonios reales).
@@ -417,7 +443,7 @@ testimonios se ha reconvertido en "Desarrollo web" (no hay testimonios reales).
 ## Pendiente de decidir o completar
 
 - **Datos legales** del titular (razón social, NIF, domicilio, email): aviso legal y privacidad los marcan como pendientes.
-- **Email / teléfono / WhatsApp** de contacto de Banteq (la página de contacto no muestra ninguno).
+- **Email / teléfono / WhatsApp** de contacto de Banteq (la web no muestra ninguno).
 - **Zona**: aparece "Santa Perpètua de Mogoda, Barcelona" (de los emails de prospección). Confirmar.
 - **Logo**: no había logo de Banteq en los archivos; el símbolo (dos bloques que forman una B) y el logotipo en minúsculas son una propuesta.
 - **Colores**: base monocroma de la plantilla + iridiscencia fría (azul Banteq `#5f7dff`). Propuesta.

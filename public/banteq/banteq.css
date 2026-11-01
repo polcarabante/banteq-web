@@ -708,3 +708,664 @@ form[data-bq-contacto] .bq-estado[data-tipo="ok"] {
     transform: translateY(-3px);
   }
 }
+
+/* ------------------------------------------------------------------------------------------
+   Formulario del pie: destino de «Hablemos» y del resto de llamadas a contactar (#hablemos).
+   ------------------------------------------------------------------------------------------ */
+#hablemos {
+  scroll-margin-top: 104px;
+}
+
+/* ------------------------------------------------------------------------------------------
+   Fórmula Banteq. Botón de entrada (home, sección «Desarrollo web», bajo el título; y página
+   /desarrollo-web) y ventana con la oferta y el formulario, que monta banteq.js. Misma familia
+   que el resto: negro de las tarjetas de proyecto, iridiscencia de la marca en el sello y cristal
+   oscuro con el selector WhatsApp/correo del formulario del pie.
+   ------------------------------------------------------------------------------------------ */
+.bq-formula-entrada {
+  display: flex;
+  justify-content: flex-start;
+  width: 100%;
+}
+.framer-ad961y .bq-formula-entrada {
+  justify-content: center;
+  /* El contenedor de Framer recorta lo que sobresale: la sombra necesita sitio dentro. */
+  margin-top: 6px;
+  padding-bottom: 26px;
+}
+.bq-formula-boton {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  max-width: 100%;
+  padding: 7px 8px 7px 7px;
+  border-radius: 999px;
+  background: radial-gradient(140% 220% at 12% 0%, #2c2c31 0%, #121215 55%, #070708 100%);
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.15), inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+  color: #fff;
+  font-family: "Geist", "Geist Placeholder", sans-serif;
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.25s ease;
+}
+.bq-formula-sello {
+  flex: none;
+  padding: 7px 12px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, rgb(180, 195, 255), rgb(201, 251, 241) 35%, rgb(214, 204, 255) 70%, rgb(168, 230, 255));
+  color: rgb(26, 26, 26);
+  font-size: 13.5px;
+  font-weight: 600;
+  letter-spacing: -0.005em;
+  white-space: nowrap;
+}
+.bq-formula-texto {
+  min-width: 0;
+  color: rgba(255, 255, 255, 0.86);
+}
+.bq-formula-flecha {
+  position: relative;
+  flex: none;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.12);
+  transition: background-color 0.25s ease;
+}
+.bq-formula-flecha::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  width: 12px;
+  height: 12px;
+  background: currentColor;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' fill='none' stroke='black' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M2 6h8M6.5 2.5 10 6l-3.5 3.5'/%3E%3C/svg%3E") center / contain no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' fill='none' stroke='black' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M2 6h8M6.5 2.5 10 6l-3.5 3.5'/%3E%3C/svg%3E") center / contain no-repeat;
+  transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+@media (hover: hover) {
+  .bq-formula-boton:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.2), inset 0 0 0 1px rgba(255, 255, 255, 0.14);
+  }
+  .bq-formula-boton:hover .bq-formula-flecha {
+    background: rgba(255, 255, 255, 0.2);
+  }
+  .bq-formula-boton:hover .bq-formula-flecha::before {
+    transform: translateX(2px);
+  }
+}
+.bq-formula-boton:active {
+  transform: scale(0.98);
+}
+.bq-formula-boton:focus-visible {
+  outline: 2px solid rgb(26, 26, 26);
+  outline-offset: 3px;
+}
+@media (max-width: 479.98px) {
+  .bq-formula-boton {
+    gap: 9px;
+    font-size: 14px;
+  }
+  .bq-formula-sello {
+    padding: 7px 10px;
+    font-size: 12.5px;
+  }
+  .bq-formula-flecha {
+    width: 26px;
+    height: 26px;
+  }
+}
+
+/* Ventana */
+html.bq-fx-abierta {
+  overflow: hidden;
+}
+dialog.bq-fx {
+  max-width: none;
+  max-height: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: #fff;
+}
+dialog.bq-fx[open] {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  padding: 24px;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+dialog.bq-fx::backdrop {
+  background: rgba(10, 10, 12, 0.52);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  animation: bq-fx-fondo 0.3s ease;
+}
+dialog.bq-fx.bq-fx-cerrando::backdrop {
+  opacity: 0;
+  transition: opacity 0.18s ease;
+}
+.bq-fx *,
+.bq-fx *::before,
+.bq-fx *::after {
+  box-sizing: border-box;
+}
+.bq-fx-panel {
+  position: relative;
+  display: flex;
+  width: min(1040px, 100%);
+  max-height: min(760px, calc(100dvh - 48px));
+  border-radius: 32px;
+  background: radial-gradient(120% 120% at 15% 0%, #2c2c31 0%, #121215 55%, #070708 100%);
+  box-shadow: 0 40px 120px rgba(0, 0, 0, 0.45), inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+  font-family: "Geist", "Geist Placeholder", sans-serif;
+  overflow: hidden;
+  animation: bq-fx-entra 0.42s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.bq-fx-cerrando .bq-fx-panel {
+  animation: bq-fx-sale 0.18s ease forwards;
+}
+.bq-fx-contenido {
+  display: grid;
+  grid-template-columns: 1.08fr 1fr;
+  width: 100%;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+}
+@keyframes bq-fx-entra {
+  from {
+    opacity: 0;
+    transform: translateY(18px) scale(0.98);
+  }
+}
+@keyframes bq-fx-sale {
+  to {
+    opacity: 0;
+    transform: translateY(10px) scale(0.985);
+  }
+}
+@keyframes bq-fx-fondo {
+  from {
+    opacity: 0;
+  }
+}
+.bq-fx-cerrar {
+  position: absolute;
+  top: 32px; /* dentro de la tarjeta del formulario, a la altura de «Pide tu propuesta» */
+  right: 32px;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  cursor: pointer;
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  transition: background-color 0.2s ease;
+}
+.bq-fx-cerrar svg {
+  width: 18px;
+  height: 18px;
+}
+@media (hover: hover) {
+  .bq-fx-cerrar:hover {
+    background: rgba(255, 255, 255, 0.2);
+  }
+}
+.bq-fx :focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.95);
+  outline-offset: 2px;
+}
+
+/* Oferta */
+.bq-fx-oferta {
+  padding: 48px 40px 40px 48px;
+}
+.bq-fx-sello {
+  display: inline-block;
+  margin: 0;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, rgb(180, 195, 255), rgb(201, 251, 241) 35%, rgb(214, 204, 255) 70%, rgb(168, 230, 255));
+  color: rgb(26, 26, 26);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.bq-fx-titulo {
+  margin: 20px 0 14px;
+  color: #fff;
+  font-size: clamp(28px, 3vw, 38px);
+  font-weight: 500;
+  line-height: 1.08;
+  letter-spacing: -0.035em;
+}
+.bq-fx-titulo span {
+  color: rgba(255, 255, 255, 0.52);
+}
+.bq-fx-intro {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 15.5px;
+  line-height: 1.55;
+}
+.bq-fx-cifras {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin: 26px 0 28px;
+  padding: 0;
+  list-style: none;
+}
+.bq-fx-cifras li {
+  padding: 16px 14px 15px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.05);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+}
+.bq-fx-cifras strong {
+  display: block;
+  background: linear-gradient(90deg, rgb(200, 210, 255), rgb(216, 252, 244) 40%, rgb(226, 218, 255) 75%, rgb(190, 236, 255));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  font-size: 26px;
+  font-weight: 500;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  white-space: nowrap;
+}
+.bq-fx-cifras small {
+  font-size: 14px;
+  letter-spacing: -0.01em;
+}
+.bq-fx-cifras span {
+  display: block;
+  margin-top: 6px;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 12.5px;
+  line-height: 1.35;
+}
+.bq-fx-ir {
+  display: none;
+}
+.bq-fx-pasos {
+  display: grid;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: bq-paso;
+}
+.bq-fx-pasos li {
+  position: relative;
+  padding-left: 40px;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 14.5px;
+  line-height: 1.5;
+  counter-increment: bq-paso;
+}
+.bq-fx-pasos li::before {
+  content: counter(bq-paso);
+  position: absolute;
+  top: -1px;
+  left: 0;
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.22);
+  color: #fff;
+  font-size: 12.5px;
+  font-weight: 500;
+}
+.bq-fx-pasos b {
+  color: #fff;
+  font-weight: 500;
+}
+.bq-fx-letra {
+  margin: 24px 0 0;
+  padding-top: 16px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.46);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+/* Formulario */
+.bq-fx-pedir {
+  display: flex;
+  padding: 20px 20px 20px 0;
+}
+.bq-fx-formulario,
+.bq-fx-hecho {
+  width: 100%;
+  padding: 34px 30px 26px;
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.06);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+}
+.bq-fx-subtitulo {
+  margin: 0;
+  color: #fff;
+  font-size: 22px;
+  font-weight: 500;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+.bq-fx-nota {
+  margin: 6px 0 22px;
+  color: rgba(255, 255, 255, 0.62);
+  font-size: 14px;
+  line-height: 1.45;
+}
+.bq-fx-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin: 0;
+}
+.bq-fx-campo label:not(.bq-metodo-opcion):not(.bq-fx-caja),
+.bq-fx-etiqueta {
+  display: block;
+  margin: 0 2px 8px;
+  color: rgba(255, 255, 255, 0.82);
+  font-size: 13.5px;
+  font-weight: 500;
+  line-height: 1.4;
+}
+.bq-fx-campo > input,
+.bq-fx-caja {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: 50px;
+  padding: 0 16px;
+  border: 0;
+  border-radius: 14px;
+  background: rgba(0, 0, 0, 0.28);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.12);
+  color: #fff;
+  font: 400 16px/1.2 "Geist", "Geist Placeholder", sans-serif;
+  transition: box-shadow 0.2s ease, background-color 0.2s ease;
+}
+.bq-fx-caja input {
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: #fff;
+  font: inherit;
+  outline: none;
+}
+.bq-fx-campo > input:focus,
+.bq-fx-caja:focus-within {
+  outline: none;
+  background: rgba(0, 0, 0, 0.36);
+  box-shadow: inset 0 0 0 1.5px rgba(255, 255, 255, 0.72);
+}
+.bq-fx-caja .bq-prefijo:focus-within {
+  outline-offset: 4px;
+}
+.bq-fx input::placeholder {
+  color: rgba(255, 255, 255, 0.4);
+  opacity: 1;
+}
+.bq-fx input[aria-invalid="true"],
+.bq-fx-caja:has(input[aria-invalid="true"]) {
+  box-shadow: inset 0 0 0 1.5px rgba(255, 170, 160, 0.75);
+}
+.bq-fx-caja input[aria-invalid="true"] {
+  box-shadow: none;
+}
+.bq-fx-euros span {
+  flex: none;
+  margin-left: 10px;
+  color: rgba(255, 255, 255, 0.55);
+  font-size: 15px;
+}
+.bq-fx-ahorro {
+  margin: 8px 2px 0;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 13px;
+  line-height: 1.45;
+  animation: bq-estado-entra 0.25s ease;
+}
+.bq-fx-ahorro:empty {
+  display: none;
+}
+.bq-fx-ahorro b {
+  background: linear-gradient(90deg, rgb(200, 210, 255), rgb(216, 252, 244) 40%, rgb(226, 218, 255) 75%, rgb(190, 236, 255));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  font-weight: 600;
+}
+.bq-fx .bq-metodo {
+  margin-top: 10px;
+}
+.bq-fx .bq-error {
+  margin: 7px 2px 0;
+  color: #ffc4bd;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.4;
+}
+.bq-fx-trampa {
+  position: absolute !important;
+  left: -9999px !important;
+  width: 1px !important;
+  height: 1px !important;
+  opacity: 0 !important;
+}
+.bq-fx-enviar {
+  width: 100%;
+  height: 52px;
+  margin-top: 6px;
+  padding: 0 20px;
+  border: 0;
+  border-radius: 999px;
+  background: #fff;
+  color: rgb(17, 17, 17);
+  font: 500 16px/1 "Geist", "Geist Placeholder", sans-serif;
+  letter-spacing: -0.01em;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.2s ease, opacity 0.2s ease;
+}
+@media (hover: hover) {
+  .bq-fx-enviar:hover {
+    background: rgb(234, 234, 234);
+  }
+}
+.bq-fx-enviar:active {
+  transform: scale(0.985);
+}
+.bq-fx-form[data-bq-enviando] .bq-fx-enviar {
+  opacity: 0.6;
+  cursor: progress;
+}
+.bq-fx-estado {
+  margin: -4px 0 0;
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 13.5px;
+  font-weight: 500;
+  line-height: 1.45;
+  text-align: center;
+  animation: bq-estado-entra 0.25s ease;
+}
+.bq-fx-estado:empty {
+  display: none;
+}
+.bq-fx-estado[data-tipo="error"] {
+  color: #ffc4bd;
+}
+.bq-fx-legal {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.45);
+  font-size: 12px;
+  line-height: 1.5;
+  text-align: center;
+}
+.bq-fx-legal a {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.bq-fx-hecho {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  text-align: center;
+  outline: none;
+  animation: bq-estado-entra 0.3s ease;
+}
+.bq-fx-hecho[hidden],
+.bq-fx-formulario[hidden] {
+  display: none;
+}
+.bq-fx-hecho-icono {
+  display: grid;
+  place-items: center;
+  width: 60px;
+  height: 60px;
+  margin-bottom: 6px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, rgb(180, 195, 255), rgb(201, 251, 241) 45%, rgb(214, 204, 255));
+  color: rgb(26, 26, 26);
+}
+.bq-fx-hecho-icono svg {
+  width: 28px;
+  height: 28px;
+}
+.bq-fx-hecho-texto {
+  max-width: 340px;
+  margin: 0 0 10px;
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 15px;
+  line-height: 1.55;
+}
+.bq-fx-listo {
+  max-width: 220px;
+}
+
+/* Teléfono y tableta estrecha: hoja que sube desde abajo, a pantalla casi completa. */
+@media (max-width: 799.98px) {
+  dialog.bq-fx[open] {
+    align-items: flex-end;
+    padding: 0;
+  }
+  .bq-fx-panel {
+    width: 100%;
+    max-height: calc(100dvh - 10px);
+    border-radius: 28px 28px 0 0;
+    animation-name: bq-fx-sube;
+  }
+  @keyframes bq-fx-sube {
+    from {
+      transform: translateY(40px);
+      opacity: 0;
+    }
+  }
+  .bq-fx-contenido {
+    grid-template-columns: 1fr;
+  }
+  .bq-fx-cerrar {
+    top: 12px;
+    right: 12px;
+    background: rgba(40, 40, 44, 0.72);
+  }
+  .bq-fx-oferta {
+    padding: 52px 22px 6px;
+  }
+  .bq-fx-titulo {
+    margin-top: 16px;
+    font-size: clamp(26px, 7.4vw, 32px);
+  }
+  .bq-fx-intro {
+    font-size: 15px;
+  }
+  .bq-fx-cifras {
+    gap: 8px;
+    margin: 22px 0 16px;
+  }
+  .bq-fx-ir {
+    display: block;
+    width: 100%;
+    height: 50px;
+    margin: 0 0 24px;
+    border: 0;
+    border-radius: 999px;
+    background: #fff;
+    color: rgb(17, 17, 17);
+    font: 500 16px/1 "Geist", "Geist Placeholder", sans-serif;
+    letter-spacing: -0.01em;
+    cursor: pointer;
+  }
+  .bq-fx-cifras li {
+    padding: 13px 10px 12px;
+    border-radius: 16px;
+  }
+  .bq-fx-cifras strong {
+    font-size: clamp(18px, 5.2vw, 22px);
+  }
+  .bq-fx-cifras small {
+    font-size: 12px;
+  }
+  .bq-fx-cifras span {
+    font-size: 11.5px;
+  }
+  .bq-fx-pasos li {
+    font-size: 14px;
+  }
+  .bq-fx-pedir {
+    padding: 18px 12px calc(16px + env(safe-area-inset-bottom));
+  }
+  .bq-fx-formulario,
+  .bq-fx-hecho {
+    padding: 26px 18px 22px;
+    border-radius: 22px;
+  }
+  .bq-fx-hecho {
+    min-height: 360px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .bq-fx-panel,
+  dialog.bq-fx::backdrop,
+  .bq-fx-hecho,
+  .bq-fx-ahorro,
+  .bq-fx-estado {
+    animation: none;
+  }
+  .bq-formula-boton,
+  .bq-formula-flecha::before {
+    transition: none;
+  }
+}

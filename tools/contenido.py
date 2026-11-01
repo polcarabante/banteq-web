@@ -550,23 +550,6 @@ TARJETA_PROYECTO = [
     ("`Engagement`", "`Dato`"),
 ]
 
-PAGINA_CONTACTO = [
-    ("Let’s Automate Your Growth", "Hablemos de tu empresa"),
-    (
-        "Looking to streamline operations, reduce costs, or scale your business with AI?",
-        "¿Quieres automatizar procesos, implantar IA o Microsoft Copilot, o renovar tu web?"
-        if MOSTRAR_COPILOT_FUNDAE
-        else "¿Quieres automatizar procesos, implantar IA o renovar tu web?",
-    ),
-    ("We’re here to turn your vision into reality.", "Cuéntanos tu caso y te proponemos un primer paso razonable."),
-    ("`Address`", "`Zona`"),
-    ("Suite 502, Orion Tower", "Santa Perpètua de Mogoda, Barcelona"),
-    ("`Office hours`", "`Primer paso`"),
-    ("Monday to Friday, 9:00am - 6:00pm", "Diagnóstico de procesos"),
-    ("`Email`", "`Respuesta`"),
-    ("hello@conicorn.com", "Por email o WhatsApp, como prefieras"),
-]
-
 PAGINA_404 = [
     ("Back to Home", "Volver al inicio"),
     ("This page could not be founded.", "Esta página no existe o se ha movido."),
@@ -680,12 +663,14 @@ PRIVACIDAD = [
 # ---------------------------------------------------------------------------
 
 # Texto de un bloque: una cadena, o una lista de trozos: "texto", ("b", "negrita") o
-# ("a", "texto del enlace", destino). Destino: ruta de la web ("/contacto", "/proyectos/margon",
-# "/#como-trabajamos") o URL completa.
+# ("a", "texto del enlace", destino). Destino: ruta de la web ("/proyectos/margon",
+# "/#como-trabajamos"), ancla de la misma página ("#hablemos": el formulario del pie;
+# "#formula-banteq": abre la Fórmula Banteq) o URL completa.
+# ("formula", texto del botón): botón que abre la Fórmula Banteq (ver FORMULA, más abajo).
 # Bloques de una sección: ("p", texto) · ("ul", [texto, …]) · ("faq", [(pregunta, respuesta), …]).
 _CIERRE = [
     ZONA_FRASE + " ",
-    ("a", "Cuéntanos tu caso", "/contacto"),
+    ("a", "Cuéntanos tu caso", "#hablemos"),
     " y te proponemos un primer paso razonable.",
 ]
 
@@ -749,65 +734,7 @@ SERVICIOS = [
             ]),
             ("¿Hablamos de tus procesos?", [
                 ("p", _CIERRE),
-                ("p", ["También te puede interesar: ", ("a", "inteligencia artificial para empresas", "/inteligencia-artificial"), " y ", ("a", "desarrollo web a medida", "/desarrollo-web"), "."]),
-            ]),
-        ],
-    },
-    {
-        "slug": "inteligencia-artificial",
-        "id": "bqSvIntA1",
-        "menu": "IA aplicada",
-        "nombre": "Inteligencia artificial para empresas",
-        "title": "Inteligencia artificial para empresas en Barcelona | Banteq",
-        "descripcion": (
-            "Asistentes de IA para atención al cliente, documentación interna y clasificación de contactos, "
-            "integrados en tus herramientas. En Barcelona y alrededores."
-        ),
-        "h1": "Inteligencia artificial para empresas",
-        "subtitulo": "Asistentes que atienden, clasifican y redactan dentro de tus herramientas, con tu equipo al mando.",
-        "intro": [
-            "La inteligencia artificial ya es útil en el día a día de una empresa: responde consultas, encuentra información "
-            "en tus documentos, clasifica lo que entra y prepara borradores. Lo difícil no es usarla, sino aplicarla donde de verdad aporta.",
-            "En Banteq la integramos en tus procesos y en las herramientas que ya utilizas, y dejamos claro qué hace la IA y qué sigue decidiendo una persona.",
-        ],
-        "secciones": [
-            ("Qué hacemos con inteligencia artificial", [
-                ("ul", [
-                    [("b", "Atención al cliente. "), "Asistentes que responden las consultas habituales y pasan a tu equipo las que necesitan a una persona."],
-                    [("b", "Consultas sobre tu documentación interna. "), "Tu equipo pregunta con sus palabras y el asistente responde a partir de los documentos de la empresa."],
-                    [("b", "Clasificación de contactos. "), "Cada solicitud llega etiquetada y a quien corresponde."],
-                    [("b", "Borradores de respuesta. "), "La IA prepara el texto; una persona lo revisa y lo envía."],
-                    [("b", "IA en tu web y en tus automatizaciones. "), "La añadimos a formularios, flujos y procesos donde aporta valor de verdad."],
-                ]),
-            ]),
-            ("La IA propone, tu equipo decide", [
-                ("p", "No dejamos procesos sensibles sin supervisión. Diseñamos cada solución con revisión humana, registro de acciones y validaciones: la IA prepara, clasifica y ejecuta tareas, y las decisiones importantes siguen pasando por una persona."),
-            ]),
-            ("Tus datos, bajo control", [
-                ("ul", [
-                    "Usamos los datos que aportas solo para el alcance acordado",
-                    "Los protegemos con medidas de seguridad adecuadas",
-                    "No los usamos para entrenar modelos de IA públicos sin tu permiso expreso",
-                ]),
-                ("p", ["Lo explicamos con detalle en nuestra ", ("a", "política de privacidad", "/privacidad"), "."]),
-            ]),
-            ("Integrada en lo que ya usas", [
-                ("p", "Trabajamos con modelos de OpenAI y los conectamos con tu correo, tus documentos, tu CRM o WhatsApp mediante n8n, Make o integraciones a medida. Después formamos a tu equipo y dejamos documentación para que use el sistema con autonomía."),
-            ]),
-            ("Empieza por un caso concreto", [
-                ("p", ["La mejor forma de empezar es elegir una tarea y resolverla bien. En el diagnóstico de procesos vemos dónde la IA ahorra tiempo de verdad y dónde basta con una ", ("a", "automatización de procesos", "/automatizacion-procesos"), " más sencilla."]),
-            ]),
-            ("Preguntas frecuentes", [
-                ("faq", [
-                    ("¿La IA sustituye a las personas del equipo?", "No. Se ocupa de tareas repetitivas, como clasificar, buscar información o redactar un primer borrador, para que tu equipo dedique su tiempo a lo que requiere criterio. Las decisiones importantes siguen pasando por una persona."),
-                    ("¿Qué pasa con los datos de nuestra empresa?", "Se usan solo para el alcance acordado, se protegen con medidas de seguridad adecuadas y no se emplean para entrenar modelos de IA públicos sin tu permiso expreso."),
-                    ("¿Necesitamos conocimientos técnicos?", "No. Nos encargamos del análisis, el desarrollo, las integraciones y las pruebas. Después formamos a tu equipo y dejamos documentación."),
-                    ("¿Por dónde empezamos?", "Por un diagnóstico de procesos: analizamos cómo trabaja tu empresa y elegimos contigo el primer caso de uso, el que más tiempo ahorra con menos riesgo."),
-                ]),
-            ]),
-            ("¿Hablamos de tu caso?", [
-                ("p", _CIERRE),
-                ("p", ["También te puede interesar: ", ("a", "automatización de procesos", "/automatizacion-procesos"), " y ", ("a", "desarrollo web a medida", "/desarrollo-web"), "."]),
+                ("p", ["También te puede interesar: ", ("a", "desarrollo web a medida", "/desarrollo-web"), "."]),
             ]),
         ],
     },
@@ -837,6 +764,10 @@ SERVICIOS = [
                     [("b", "Funcionalidades propias. "), "Newsletter, áreas específicas o lo que tu negocio necesite."],
                 ]),
             ]),
+            ("Fórmula Banteq: tu web, renovada sin coste", [
+                ("p", "Si contratas con Banteq el mantenimiento de tu web, te la remodelamos gratis. Y el mantenimiento te cuesta menos de lo que pagas hoy: hasta 50 €/mes menos, hasta 600 € de ahorro al año."),
+                ("formula", "Descubre cómo funciona"),
+            ]),
             ("Una web conectada, no un folleto", [
                 ("ul", [
                     "Formularios que guardan cada solicitud en tu CRM",
@@ -863,11 +794,19 @@ SERVICIOS = [
             ]),
             ("¿Hablamos de tu web?", [
                 ("p", _CIERRE),
-                ("p", ["También te puede interesar: ", ("a", "automatización de procesos", "/automatizacion-procesos"), " e ", ("a", "inteligencia artificial para empresas", "/inteligencia-artificial"), "."]),
+                ("p", ["También te puede interesar: ", ("a", "automatización de procesos", "/automatizacion-procesos"), "."]),
             ]),
         ],
     },
 ]
+
+# Fórmula Banteq (pedida por Pol el 2026-11-01): remodelación gratuita de la web al contratar con
+# Banteq su mantenimiento, que pasa a costar menos que el actual: HASTA 50 €/mes menos (hasta
+# 600 €/año). Decir siempre «hasta»: quien paga menos de 50 € no ahorra 50 €, y el máximo no está
+# garantizado. Se abre con un botón en la sección «Desarrollo web» de la home (FORMULA_BOTON) y en
+# la página /desarrollo-web (bloque "formula" de SERVICIOS). La ventana y su formulario los monta
+# banteq.js; el envío va a /api/leads como «Fórmula Banteq».
+FORMULA_BOTON = ("Fórmula Banteq", "Renueva tu web sin coste")
 
 # Servicios de cada proyecto (enlaces desde su página) y web pública del cliente (en la línea
 # «Relacionado» del final de la ficha).

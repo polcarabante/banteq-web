@@ -54,8 +54,20 @@ const resolveFile = async (urlPath) => {
   return null;
 };
 
+// Redirecciones de vercel.json (/contacto → /#hablemos…), para que en local se comporte igual.
+const REDIRECTS = Object.fromEntries(
+  (JSON.parse(await readFile(fileURLToPath(new URL("../vercel.json", import.meta.url)), "utf8")).redirects || []).map((r) => [r.source, r.destination]),
+);
+
 const handler = async (req, res) => {
   const url = new URL(req.url, "http://localhost");
+
+  const destino = REDIRECTS[url.pathname.replace(/\/+$/, "")];
+  if (destino) {
+    res.writeHead(308, { Location: destino });
+    res.end();
+    return;
+  }
 
   // En local no hay backend: los formularios responden OK para poder probar el flujo.
   if (url.pathname === "/api/leads" && req.method === "POST") {

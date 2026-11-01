@@ -418,13 +418,13 @@ def set_links_before(rel, label, link_js, prop="q0dQpavo3"):
 
 
 def fix_links():
-    replace(HOME_MOD, "fLS9iwM5O:`framer.com`", "fLS9iwM5O:`/contacto`")
+    replace(HOME_MOD, "fLS9iwM5O:`framer.com`", "fLS9iwM5O:`#hablemos`")
     # La imagen de "Quiénes somos" abría un vídeo de YouTube de la plantilla.
     replace(HOME_MOD, "WwoFhkv5M:`https://www.youtube.com/watch?v=8AHPXm9Y6mI`", "WwoFhkv5M:`/proyectos`")
     set_links_before(HOME_MOD, "Ver servicios", "{webPageId:`augiA20Il`,hash:`v30xxKYcD`}")
     replace(HOME_MOD, "href:`framer.com`", "href:{webPageId:`mow46yhcP`}")
     set_links_before(HOME_MOD, "Calcular mi crédito FUNDAE", "`https://simuladorcredito.fundae.es`")
-    # Cabecera: "Hablemos" lleva a contacto; el enlace "Servicios" (antes 404) a la sección.
+    # Cabecera: "Hablemos" baja al formulario del pie; el enlace "Servicios" (antes 404) a la sección.
     replace(NAV_MOD, "href:`https://www.framer.com/marketplace/templates/`", "href:{webPageId:`mow46yhcP`}")
     t = S[NAV_MOD]
     t = t.replace("{href:{webPageId:`HaABzrLei`}", "{href:{webPageId:`augiA20Il`,hash:`v30xxKYcD`}")
@@ -446,7 +446,7 @@ def fix_new_tab_links():
         S[rel] = S[rel].replace("openInNewTab:!0", "openInNewTab:!1")
     for rel in html_pages():
         h = S[rel]
-        h = h.replace('href="https://framer.com/"', 'href="/contacto"')
+        h = h.replace('href="https://framer.com/"', 'href="#hablemos"')
         h = h.replace('href="https://www.youtube.com/watch?v=8AHPXm9Y6mI"', 'href="/proyectos"')
         S[rel] = h
 
@@ -463,12 +463,14 @@ def fix_footer():
 
 def apply_service_links():
     """Enlaces a las páginas de servicio desde el menú y el pie de todas las páginas. Sustituyen al
-    enlace único «Servicios» (que solo bajaba a la sección de la home): el menú pasa de 3 a 4 filas
-    y el pie de 5 a 7 enlaces, con los mismos componentes y clases."""
+    enlace único «Servicios» (que solo bajaba a la sección de la home). Desde el 2026-11-01 hay dos
+    servicios y ya no hay página de contacto: la fila «Contacto · Servicios» del menú pasa a ser
+    «Automatización · Desarrollo web» (el menú sigue con 3 filas) y en el pie «Servicios» se
+    convierte en dos enlaces, con los mismos componentes y clases."""
     t = S[NAV_MOD]
     sv = C.SERVICIOS
-    assert len(sv) == 3
-    # Menú: la fila «Contacto · Servicios» se convierte en dos filas.
+    assert len(sv) == 2
+    # Menú: la fila «Contacto · Servicios» pasa a ser la de los dos servicios.
     a = t.find("o(d.div,{className:`framer-f26tnn`,\"data-framer-name\":`Row`")
     assert a > 0 and t.count("o(d.div,{className:`framer-f26tnn`") == 1
     b = jsx.match_bracket(t, a + 1)
@@ -486,10 +488,9 @@ def apply_service_links():
         return f.replace("\0IZQ\0", izq[1]).replace("\0DER\0", der[1])
 
     enlace = lambda rid: f"{{href:{{webPageId:`{rid}`}},implicitPathVariables:void 0}}"
-    fila2 = variante((sv[0]["menu"], enlace(sv[0]["id"]), "bqMnSrv01"), (sv[1]["menu"], enlace(sv[1]["id"]), "bqMnSrv02"), "K6gMgeQhK")
-    fila3 = variante((sv[2]["menu"], enlace(sv[2]["id"]), "bqMnSrv03"), ("Contacto", contacto, "VIYA0mWaJ"), "bqMnFila3")
-    t = t[:a] + fila2 + "," + fila3 + t[b:]
-    # Pie: el enlace «Servicios» se convierte en tres.
+    fila = variante((sv[0]["menu"], enlace(sv[0]["id"]), "bqMnSrv01"), (sv[1]["menu"], enlace(sv[1]["id"]), "bqMnSrv02"), "K6gMgeQhK")
+    t = t[:a] + fila + t[b:]
+    # Pie: el enlace «Servicios» se convierte en uno por servicio.
     a = t.find("s(U,{", t.rfind("s(U,{", 0, t.find("children:`Servicios`}")))
     b = jsx.match_bracket(t, a + 1)
     bloque = t[a:b]
@@ -1090,8 +1091,6 @@ def apply_project_pages():
         replace(CASES_MOD, old, new)
     for old, new in C.TARJETA_PROYECTO:
         replace(CARD_MOD, old, new, required=False)
-    for old, new in C.PAGINA_CONTACTO:
-        replace(CONTACT_MOD, old, new)
     for old, new in C.PAGINA_404:
         replace(NOTFOUND_MOD, old, new)
     replace(f"{SITE}/3KB8JVX0XPCELUYDCiu6xYPRdLRb6m_91NISrPoGRD0.DdsJ13Uw.mjs", "} - Conicorn`", "} | Banteq`")
@@ -1142,6 +1141,8 @@ def js_link(text, dest, scope, contador):
     rutas, anclas = static_routes()
     externo = dest.startswith("http")
     if externo:
+        href = f"`{dest}`"
+    elif dest.startswith("#"):  # ancla de la misma página (#hablemos: formulario del pie)
         href = f"`{dest}`"
     elif dest.startswith("/#"):
         href = f"{{webPageId:`{HOME_ROUTE}`,hash:`{anclas[dest[2:]]}`}}"
@@ -1234,6 +1235,8 @@ def js_service_main(sv):
                 hijos.append(js_lista(valor, scope, contador))
             elif tipo == "faq":
                 hijos.extend(js_faq(valor, scope, contador))
+            elif tipo == "formula":
+                hijos.append(formula_boton("o", "a", valor))
             else:
                 raise ValueError(tipo)
         bloques.append(f"a(`div`,{{className:`framer-1dcxdhn`,\"data-framer-name\":`Stack`,children:[{','.join(hijos)}]}})")
@@ -1324,11 +1327,6 @@ def apply_project_seo():
     ancla = "a(`div`,{className:`framer-zy84k1`,\"data-framer-name\":`Stat Wrap`"
     assert t.count(ancla) == 1
     S[DETAIL_MOD] = LINK_IMPORT + t.replace(ancla, bloque + ancla)
-    # Página de contacto: «Por email o WhatsApp…» era un enlace mailto: sin dirección (roto).
-    c = S[CONTACT_MOD]
-    a = c.find("o(se,{href:`mailto:")
-    assert a > 0, "no se encuentra el enlace mailto de la página de contacto"
-    S[CONTACT_MOD] = c[:a] + "`Por WhatsApp o por email, como prefieras`" + c[jsx.match_bracket(c, a + 1):]
 
 
 # Textos alternativos de las imágenes de la home y del pie (por id de imagen de Framer). Las
@@ -1394,8 +1392,6 @@ def apply_alts():
 # ---------------------------------------------------------------------------
 
 PAGINAS = {
-    "contacto": ("Contacto | Banteq", "Cuéntanos qué quieres mejorar en tu empresa: automatización, inteligencia artificial, Microsoft Copilot, formación FUNDAE o tu web."
-                 if C.MOSTRAR_COPILOT_FUNDAE else "Cuéntanos qué quieres mejorar en tu empresa: automatización, inteligencia artificial o tu web."),
     "proyectos": ("Proyectos | Banteq", "Empresas que ya confían en Banteq y el trabajo que hemos hecho con ellas."),
     "aviso-legal": ("Aviso legal | Banteq", "Aviso legal y condiciones de uso de la web y de los servicios de Banteq."),
     "privacidad": ("Política de privacidad | Banteq", "Qué datos personales trata Banteq, para qué los usa, cómo los protege y cómo ejercer tus derechos."),
@@ -1737,6 +1733,84 @@ def apply_project_links():
     S[CARD_MOD] = t[:a] + bloque[:-3] + "," + enlace + "]})" + t[b:]
 
 
+# ---------------------------------------------------------------------------
+# Fórmula Banteq y fin de la página de contacto (2026-11-01)
+# ---------------------------------------------------------------------------
+
+def formula_boton(jsx_fn, jsxs_fn, texto=None):
+    """Botón que abre la Fórmula Banteq (la ventana la monta banteq.js al pulsarlo). Es un enlace a
+    #formula-banteq: sin JavaScript no hace nada raro, y la dirección con ese ancla abre la ventana."""
+    sello, texto_def = C.FORMULA_BOTON
+    return (f"{jsx_fn}(`div`,{{className:`bq-formula-entrada`,children:{jsxs_fn}(`a`,{{className:`bq-formula-boton`,href:`#formula-banteq`,"
+            f"\"aria-haspopup\":`dialog`,children:[{jsx_fn}(`span`,{{className:`bq-formula-sello`,children:`{js_template(sello)}`}}),"
+            f"{jsx_fn}(`span`,{{className:`bq-formula-texto`,children:`{js_template(texto or texto_def)}`}}),"
+            f"{jsx_fn}(`span`,{{className:`bq-formula-flecha`,\"aria-hidden\":`true`}})]}})}})")
+
+
+def formula_boton_html(texto=None):
+    sello, texto_def = C.FORMULA_BOTON
+    return ('<div class="bq-formula-entrada"><a class="bq-formula-boton" href="#formula-banteq" aria-haspopup="dialog">'
+            f'<span class="bq-formula-sello">{html.escape(sello)}</span><span class="bq-formula-texto">{html.escape(texto or texto_def)}</span>'
+            '<span class="bq-formula-flecha" aria-hidden="true"></span></a></div>')
+
+
+def apply_formula_home():
+    """Home, sección «Desarrollo web»: el botón de la Fórmula Banteq va bajo el título
+    («Webs que trabajan para tu negocio»), en el módulo y en el HTML inicial (iguales, para que
+    React hidrate sin rehacer nada). Las tarjetas de la sección no se tocan."""
+    t = S[HOME_MOD]
+    a = t.find("(`div`,{className:`framer-ewdv2o`,\"data-framer-name\":`Heading`") - 1
+    assert a > 0 and t.count("className:`framer-ewdv2o`") == 1, "no se encuentra el título de la sección Desarrollo web"
+    b = jsx.match_bracket(t, a + 1)
+    cab = t.rfind("className:`framer-ad961y`", 0, a)
+    jsxs_fn = t[t.rfind("(", 0, cab) - 1]
+    S[HOME_MOD] = t[:b] + "," + formula_boton(t[a], jsxs_fn) + t[b:]
+    h = S[INDEX]
+    i = h.find('<div class="framer-ewdv2o" data-framer-name="Heading">')
+    assert i > 0 and h.count('<div class="framer-ewdv2o" data-framer-name="Heading">') == 1
+    j = html_element_extent(h, i, "div")
+    S[INDEX] = h[:j] + formula_boton_html() + h[j:]
+
+
+CONTACTO_ID = "mow46yhcP"  # página /contacto de la plantilla
+
+
+def remove_contact_page():
+    """Pol pidió quitar la página «Contacto» (2026-11-01). Sus enlaces («Hablemos», «Solicitar
+    diagnóstico», «Cuéntanos tu caso»…) bajan ahora al formulario del pie de la misma página
+    (#hablemos), que sigue en todas las páginas y envía a /api/leads como siempre. Se quitan la
+    ruta, su módulo, su enlace del pie y su HTML; /contacto redirige a /#hablemos (vercel.json)."""
+    destino = "`#hablemos`"
+    for rel in [HOME_MOD, NAV_MOD] + [service_mod(sv) for sv in C.SERVICIOS]:
+        S[rel] = S[rel].replace(f"{{webPageId:`{CONTACTO_ID}`}}", destino)
+    # Pie: el enlace «Contacto» (en el módulo y en el HTML inicial de la home).
+    t = S[NAV_MOD]
+    k = t.find("children:`Contacto`})")
+    a = t.rfind("s(U,{", 0, k)
+    b = jsx.match_bracket(t, a + 1)
+    assert a > 0 and "className:`framer-1ew41is`" in t[a:b] and t[a - 1] == ",", "no se encuentra el enlace «Contacto» del pie"
+    S[NAV_MOD] = t[:a - 1] + t[b:]
+    h = S[INDEX]
+    k = h.find('href="/contacto">Contacto</a>')
+    a = h.rfind('<div class="framer-1ew41is"', 0, k)
+    assert k > 0 and a > 0
+    h = h[:a] + h[html_element_extent(h, a, "div"):]
+    h = h.replace('href="/contacto"', 'href="#hablemos"')
+    # Ancla del formulario del pie (también la pone banteq.js en las páginas que pinta el navegador).
+    assert h.count('<div class="framer-cc1k0w-container"') == 1
+    S[INDEX] = h.replace('<div class="framer-cc1k0w-container"', '<div id="hablemos" class="framer-cc1k0w-container"')
+    # Ruta y módulo de la página.
+    m = S[MAIN_MOD]
+    m, n = re.subn(rf"{CONTACTO_ID}:\{{elements:\{{\}},page:N\(\(\)=>import\(`\./([^`]+)`\)\),path:`/contacto`\}},", "", m)
+    assert n == 1, "no se encuentra la ruta /contacto"
+    S[MAIN_MOD] = m
+    S.files.pop(CONTACT_MOD, None)
+    (OUT / CONTACT_MOD).unlink()
+    for rel in list(S.files):
+        if rel.endswith((".mjs", ".html")) and (CONTACTO_ID in S[rel] or "/contacto" in S[rel]):
+            raise AssertionError(f"queda un enlace a /contacto en {rel}")
+
+
 def apply_wide_metric():
     """Métricas y descripción de las tarjetas de proyecto, en el módulo de la tarjeta.
 
@@ -2007,9 +2081,6 @@ def structured_data(rel):
             "creator": {"@id": ORG_ID}, "inLanguage": "es",
         }
         return _ld(ld_organizacion(), obra, ld_migas(("Proyectos", f"{C.SITIO}/proyectos"), (pr["cliente"], url)))
-    if ruta == "contacto":
-        return _ld(ld_organizacion(), {"@type": "ContactPage", "@id": f"{url}#pagina", "name": "Contacto", "url": url, "about": {"@id": ORG_ID}},
-                   ld_migas(("Contacto", url)))
     return ""
 
 
@@ -2059,7 +2130,7 @@ def apply_seo():
     # dominio del sitio, que en la exportación era el de la plantilla en framer.app…
     replace(MAIN_MOD, "siteCanonicalURL:`https://breathtaking-step-882598.framer.app`", f"siteCanonicalURL:`{C.SITIO}`")
     # …y pone como título el del módulo de cada página, que en las páginas sin título propio es el
-    # de la home: /contacto acababa titulándose igual que la home. Se usa el <title> de cada ruta.
+    # de la home: /proyectos acababa titulándose igual que la home. Se usa el <title> de cada ruta.
     titulos = {"/" + rel[: -len("index.html")].strip("/"): t for rel, t in titulos.items()}
     replace(
         FRAMER_MOD,
@@ -2250,6 +2321,8 @@ def main():
     build_service_pages()
     apply_project_seo()
     apply_project_links()
+    apply_formula_home()
+    remove_contact_page()
     apply_alts()
     for rel in html_pages():
         inject_assets(rel)

@@ -61,7 +61,27 @@ const isRateLimited = (ip) => {
 
 const getClientIp = (request) => String(request.headers["x-forwarded-for"] || request.socket?.remoteAddress || "").split(",")[0].trim();
 
-const LIMITS = { name: 120, company: 160, message: 5000, email: 254, page: 500 };
+const LIMITS = { name: 120, company: 160, message: 5000, email: 254, page: 500, monthlyFee: 100000 };
+
+// Fórmula Banteq: remodelación gratuita de la web al contratar con Banteq su mantenimiento, que
+// cuesta menos que el actual (hasta 50 €/mes menos). La solicitud trae empresa, cuota mensual
+// actual y un contacto; va a la misma lista de Brevo que el formulario de contacto, marcada con
+// TIPO_SOLICITUD = «Fórmula Banteq».
+const FORMULA = "Fórmula Banteq";
+const FORMULA_REBAJA_MAX = 50;
+const isFormulaType = (type) => normalizeText(type) === FORMULA;
+
+// «120», «120,50», «1.200» o un número → número con dos decimales como mucho (o NaN).
+const parseEuros = (value) => {
+  if (typeof value === "number") return Number.isFinite(value) ? Math.round(value * 100) / 100 : NaN;
+  let v = String(value || "").replace(/[\s€]/g, "");
+  if (!v) return NaN;
+  if (v.includes(",") && v.includes(".")) v = v.replace(/\./g, "").replace(",", ".");
+  else if (v.includes(",")) v = v.replace(",", ".");
+  else if (/^\d{1,3}(\.\d{3})+$/.test(v)) v = v.replace(/\./g, "");
+  return /^\d+(\.\d{1,2})?$/.test(v) ? Number(v) : NaN;
+};
+const formatEuros = (n) => new Intl.NumberFormat("es-ES", { maximumFractionDigits: 2 }).format(n);
 
 // Error con código para la respuesta: el navegador recibe el código y un texto, nunca detalles internos.
 const failure = (code, message, status = 502, extra = {}) => Object.assign(new Error(message), { publicCode: code, publicStatus: status, ...extra });
@@ -134,7 +154,7 @@ const parseBrevoListId = (value) => Number(String(value || "").replace("#", "").
 
 const getListIdForType = (type) => {
   if (type === "FUNDAE") return parseBrevoListId(process.env.BREVO_FUNDAE_LIST_ID);
-  if (String(type || "").startsWith("Contacto")) return parseBrevoListId(process.env.BREVO_CONTACT_LIST_ID);
+  if (String(type || "").startsWith("Contacto") || isFormulaType(type)) return parseBrevoListId(process.env.BREVO_CONTACT_LIST_ID);
   return parseBrevoListId(process.env.BREVO_DIAGNOSTIC_LIST_ID);
 };
 
@@ -224,8 +244,18 @@ Hemos recibido tu solicitud. Revisaremos lo que nos cuentas y te escribiremos pa
 Un saludo,
 Equipo de Banteq`;
 
-const sendConfirmationEmail = async ({ name, email }) => {
+const getFormulaConfirmationText = (company) => `Hola,
+
+Gracias por tu interés en la Fórmula Banteq.
+
+Hemos recibido la solicitud de ${company}. En menos de 48 horas te enviaremos una propuesta con tu web remodelada y la oferta de mantenimiento correspondiente.
+
+Un saludo,
+Equipo de Banteq`;
+
+const sendConfirmationEmail = async ({ name, email, formType, company }) => {
   if (!email) return;
+  const formula = isFormulaType(formType);
 
   const senderEmail = process.env.BREVO_SENDER_EMAIL;
   const senderName = process.env.BREVO_SENDER_NAME || "Banteq";
@@ -234,14 +264,14 @@ const sendConfirmationEmail = async ({ name, email }) => {
     throw new Error("Missing BREVO_SENDER_EMAIL");
   }
 
-  const htmlContent = getConfirmationText(name).replace(/\n/g, "<br>");
+  const htmlContent = escapeHtml(formula ? getFormulaConfirmationText(company) : getConfirmationText(name)).replace(/\n/g, "<br>");
 
   await brevoFetch("/smtp/email", {
     method: "POST",
     body: JSON.stringify({
       sender: { name: senderName, email: senderEmail },
-      to: [{ email, name }],
-      subject: "Hemos recibido tu solicitud",
+      to: [{ email, name: name || company || email }],
+      subject: formula ? "Hemos recibido tu solicitud de la Fórmula Banteq" : "Hemos recibido tu solicitud",
       htmlContent,
     }),
   });
@@ -269,6 +299,33 @@ const sendAdminNotification = async (lead) => {
   const pageLine = lead.page
     ? `<p><strong>Página:</strong> <a href="${escapeHtml(lead.page)}">${text(lead.pageTitle || lead.page)}</a><br><small>${text(lead.page)}</small></p>`
     : `<p><strong>Página:</strong> ${text(lead.origin)}</p>`;
+
+  if (isFormulaType(lead.formType)) {
+    const rebaja = Math.min(FORMULA_REBAJA_MAX, lead.monthlyFee);
+    const plazo = getMadridDateTime(new Date(lead.submittedAtMs + 48 * 3600 * 1000));
+    const formulaHtml = `
+    <h2>Nueva solicitud de la Fórmula Banteq</h2>
+    <p><strong>Empresa:</strong> ${text(lead.company)}</p>
+    <p><strong>Paga hoy por el mantenimiento de su web:</strong> ${formatEuros(lead.monthlyFee)} €/mes</p>
+    <p><strong>Rebaja máxima de la oferta para este importe:</strong> hasta ${formatEuros(rebaja)} €/mes${lead.monthlyFee <= FORMULA_REBAJA_MAX ? " (paga 50 € o menos: la rebaja tiene que ser menor que su cuota)" : ""}</p>
+    <p><strong>Prefiere que le contactemos por:</strong> ${text(lead.contactPreference)}</p>
+    ${contactLine}
+    <p><strong>Compromiso:</strong> enviarle en menos de 48 h la propuesta de web remodelada y la oferta de mantenimiento (antes del ${text(plazo)}).</p>
+    ${pageLine}
+    <p><strong>Fecha y hora:</strong> ${text(lead.submittedAtLocal)}</p>
+  `;
+    const result = await brevoFetch("/smtp/email", {
+      method: "POST",
+      body: JSON.stringify({
+        sender: { name: senderName, email: senderEmail },
+        to: [{ email: adminEmail, name: "Banteq" }],
+        replyTo: lead.email ? { email: lead.email, name: lead.company || "Fórmula Banteq" } : undefined,
+        subject: `Fórmula Banteq: ${lead.company} · ${formatEuros(lead.monthlyFee)} €/mes (${isWhatsappLead ? "WhatsApp" : "correo"})`,
+        htmlContent: formulaHtml,
+      }),
+    });
+    return result?.messageId || null;
+  }
 
   const htmlContent = `
     <h2>Nueva solicitud desde la web de Banteq</h2>
@@ -336,6 +393,8 @@ const buildContactPayload = (lead) => {
   addAttribute(attributes, "MENSAJE", lead.message);
   addAttribute(attributes, "AREAS", lead.areas);
   addAttribute(attributes, "PAGINA", lead.page || lead.origin);
+  addAttribute(attributes, "TIPO_SOLICITUD", lead.formType);
+  if (Number.isFinite(lead.monthlyFee)) addAttribute(attributes, "PAGO_MANTENIMIENTO", lead.monthlyFee);
   addAttribute(attributes, "FECHA_HORA", lead.submittedAtLocal);
 
   if (phone) {
@@ -386,6 +445,8 @@ const requiredContactAttributes = [
   { name: "MENSAJE", type: "text" },
   { name: "PAGINA", type: "text" },
   { name: "FECHA_HORA", type: "text" },
+  { name: "TIPO_SOLICITUD", type: "text" },
+  { name: "PAGO_MANTENIMIENTO", type: "float" },
 ];
 
 let attributesReady = false;
@@ -534,11 +595,15 @@ const handlePost = async (request, response) => {
   const message = normalizeText(body.message || body.mensaje);
   const page = normalizeText(body.page);
   const isContactForm = formType.startsWith("Contacto");
+  const isFormula = isFormulaType(formType);
+  const monthlyFee = isFormula ? parseEuros(body.monthlyFee) : NaN;
 
   // Mismas comprobaciones que en el navegador, por si alguien envía directamente al endpoint.
   const fields = {};
-  if (!name) fields.name = "Escribe tu nombre.";
-  if (isContactForm && !company) fields.company = "Escribe el nombre de tu empresa.";
+  if (!name && !isFormula) fields.name = "Escribe tu nombre.";
+  if ((isContactForm || isFormula) && !company) fields.company = "Escribe el nombre de tu empresa.";
+  if (isFormula && !(monthlyFee > 0 && monthlyFee <= LIMITS.monthlyFee)) fields.monthlyFee = "Escribe el importe en euros, por ejemplo 120.";
+  if (isFormula && !email && !phone) fields.phone = "Indica un WhatsApp o un correo para enviarte la propuesta.";
   if (isContactForm && !message) fields.message = "Cuéntanos qué te gustaría mejorar.";
   if (name.length > LIMITS.name) fields.name = "El nombre es demasiado largo.";
   if (company.length > LIMITS.company) fields.company = "El nombre de la empresa es demasiado largo.";
@@ -561,7 +626,8 @@ const handlePost = async (request, response) => {
     phone: contactPreference === "Correo electrónico" ? "" : phone,
     company,
     contactPreference: contactPreference || (email ? "Correo electrónico" : ""),
-    message,
+    message: isFormula ? `Fórmula Banteq: paga ${formatEuros(monthlyFee)} €/mes por el mantenimiento de su web.` : message,
+    monthlyFee: isFormula ? monthlyFee : undefined,
     areas: Array.isArray(body.areas) ? body.areas.join(", ") : normalizeText(body.areas),
     origin: normalizeText(body.origin || body.origen),
     page: /^https?:\/\//.test(page) ? page.slice(0, LIMITS.page) : "",
@@ -571,6 +637,7 @@ const handlePost = async (request, response) => {
     microsoftApps: Array.isArray(body.microsoftApps) ? body.microsoftApps.join(", ") : normalizeText(body.microsoftApps || body.aplicacionesMicrosoft || body.aplicaciones_microsoft),
     submittedAt: getBrevoDate(now),
     submittedAtLocal: getMadridDateTime(now),
+    submittedAtMs: now.getTime(),
   };
 
   console.log("Lead endpoint received", safeStringify({
@@ -603,7 +670,7 @@ const handlePost = async (request, response) => {
   let confirmation = false;
   if (lead.email) {
     try {
-      await sendConfirmationEmail({ name, email: lead.email });
+      await sendConfirmationEmail({ name, email: lead.email, formType, company });
       confirmation = true;
     } catch (error) {
       console.error("Brevo confirmation email error", safeStringify({

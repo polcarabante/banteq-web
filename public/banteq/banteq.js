@@ -482,7 +482,10 @@
     true,
   );
 
-  const scanForms = () => document.querySelectorAll("form:not([data-bq-contacto])").forEach(enhanceContactForm);
+  const scanForms = () => {
+    document.querySelectorAll("form:not([data-bq-contacto]):not([data-bq-propio])").forEach(enhanceContactForm);
+    anclaPie();
+  };
   // En cuanto Framer monta un formulario o una tarjeta con demo (al cargar, al cambiar de página o
   // al rehacer la página en móvil), antes de que se pinte: solo se miran los nodos recién añadidos.
   new MutationObserver((mutations) => {
@@ -506,6 +509,374 @@
   // Framer reanuda sus tiras al volver a la pestaña; después se vuelve a pausar lo que no se ve.
   document.addEventListener("visibilitychange", () => setTimeout(scanTickers, 0));
   reduceMotion.addEventListener("change", scanTickers);
+
+
+  // ---------------------------------------------------------------------------------------------
+  // Formulario del pie como destino de «Hablemos», «Solicitar diagnóstico» y «Cuéntanos tu caso»
+  // (ya no hay página de contacto): enlaces a #hablemos. Baja suave hasta el formulario de la misma
+  // página; con ratón, deja el cursor en el primer campo (en el móvil no, para no abrir el teclado).
+  // ---------------------------------------------------------------------------------------------
+  function anclaPie() {
+    const caja = document.querySelector(".framer-cc1k0w-container");
+    if (caja && !caja.id) caja.id = "hablemos";
+    return caja;
+  }
+  const irAlFormulario = (suave) => {
+    const caja = anclaPie();
+    if (!caja) return false;
+    caja.scrollIntoView({ behavior: suave && !reduceMotion.matches ? "smooth" : "auto", block: "start" });
+    if (conRaton.matches) {
+      const primero = caja.querySelector("input:not([type=hidden]):not([type=radio]):not(:disabled), textarea");
+      if (primero) setTimeout(() => primero.focus({ preventScroll: true }), suave ? 650 : 0);
+    }
+    return true;
+  };
+
+  // ---------------------------------------------------------------------------------------------
+  // Fórmula Banteq: ventana con la oferta y un formulario mínimo (empresa, cuota mensual actual y
+  // WhatsApp o correo). Se abre desde los botones «Fórmula Banteq» (enlaces a #formula-banteq, en
+  // la sección Desarrollo web de la home y en /desarrollo-web) o con esa dirección. Se envía a
+  // /api/leads como «Fórmula Banteq». Textos de la oferta: siempre «hasta 50 €/mes» y «hasta
+  // 600 €/año»; el ahorro máximo no está garantizado para todos (contenido.py → FORMULA_BOTON).
+  // ---------------------------------------------------------------------------------------------
+  const ICONO_CERRAR = '<svg viewBox="0 0 20 20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M5 5l10 10M15 5 5 15"/></svg>';
+  const ICONO_OK = '<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>';
+  const FORMULA_HTML =
+    '<div class="bq-fx-panel">' +
+    `<button type="button" class="bq-fx-cerrar" aria-label="Cerrar">${ICONO_CERRAR}</button>` +
+    '<div class="bq-fx-contenido">' +
+    '<section class="bq-fx-oferta">' +
+    '<p class="bq-fx-sello">Fórmula Banteq</p>' +
+    '<h2 class="bq-fx-titulo" id="bq-fx-titulo">Tu web, renovada sin coste. <span>Y su mantenimiento, más barato.</span></h2>' +
+    '<p class="bq-fx-intro">Si contratas con Banteq el mantenimiento de tu web, te la remodelamos gratis: nueva imagen, mejor estructura y pensada primero para el móvil. Y pagas menos de lo que pagas hoy por mantenerla.</p>' +
+    '<ul class="bq-fx-cifras">' +
+    '<li><strong>0 €</strong><span>por remodelar tu web</span></li>' +
+    '<li><strong><small>hasta</small> 50 €</strong><span>menos al mes en mantenimiento</span></li>' +
+    '<li><strong><small>hasta</small> 600 €</strong><span>de ahorro al año</span></li>' +
+    "</ul>" +
+    '<button type="button" class="bq-fx-ir">Pedir mi propuesta</button>' +
+    '<ol class="bq-fx-pasos">' +
+    "<li><b>Nos dices cuánto pagas hoy</b> por el mantenimiento de tu web.</li>" +
+    "<li><b>En menos de 48 h</b> te enviamos la propuesta de tu web remodelada y la oferta de mantenimiento.</li>" +
+    "<li><b>Si te convence,</b> renovamos tu web y empiezas a pagar menos.</li>" +
+    "</ol>" +
+    '<p class="bq-fx-letra">La remodelación es gratuita al contratar con Banteq el mantenimiento de esa web. La rebaja sobre tu cuota actual es de hasta 50 €/mes (hasta 600 €/año): depende de lo que pagas hoy y de lo que necesita tu web, y te la concretamos en la propuesta.</p>' +
+    "</section>" +
+    '<section class="bq-fx-pedir" aria-labelledby="bq-fx-pedir-titulo">' +
+    '<div class="bq-fx-formulario">' +
+    '<h3 class="bq-fx-subtitulo" id="bq-fx-pedir-titulo">Pide tu propuesta</h3>' +
+    '<p class="bq-fx-nota">Tres datos y te respondemos en menos de 48 h.</p>' +
+    '<form class="bq-fx-form" data-bq-propio="formula" novalidate>' +
+    '<div class="bq-fx-campo"><label for="bq-fx-empresa">Empresa</label>' +
+    '<input id="bq-fx-empresa" name="company" type="text" autocomplete="organization" maxlength="160" placeholder="Nombre de tu empresa"></div>' +
+    '<div class="bq-fx-campo"><label for="bq-fx-cuota">¿Cuánto pagas al mes por el mantenimiento de tu web?</label>' +
+    '<div class="bq-fx-caja bq-fx-euros"><input id="bq-fx-cuota" name="monthlyFee" type="text" inputmode="decimal" autocomplete="off" maxlength="12" placeholder="Por ejemplo, 120"><span aria-hidden="true">€/mes</span></div>' +
+    '<p class="bq-fx-ahorro" aria-live="polite"></p></div>' +
+    '<div class="bq-fx-campo"><span class="bq-fx-etiqueta" id="bq-fx-metodo-etiqueta">¿Por dónde te enviamos la propuesta?</span>' +
+    '<div class="bq-metodo" role="radiogroup" aria-labelledby="bq-fx-metodo-etiqueta">' +
+    '<label class="bq-metodo-opcion"><input type="radio" name="ContactMethod" value="whatsapp" checked>' +
+    `<span class="bq-metodo-cara">${ICONO_WHATSAPP}<span>WhatsApp</span></span><span class="bq-metodo-sello">Recomendado</span></label>` +
+    '<label class="bq-metodo-opcion"><input type="radio" name="ContactMethod" value="email">' +
+    `<span class="bq-metodo-cara">${ICONO_CORREO}<span>Correo electrónico</span></span></label></div></div>` +
+    '<div class="bq-fx-campo" data-bq-campo="tel"><label class="bq-fx-caja bq-fx-tel">' +
+    '<input name="Phone" type="tel" inputmode="tel" autocomplete="tel-national" placeholder="Número de WhatsApp" aria-label="Número de WhatsApp">' +
+    `<span class="bq-prefijo"><span class="bq-prefijo-valor">+34</span>${FLECHA}<select name="PhonePrefix" aria-label="Prefijo del país"></select></span></label></div>` +
+    '<div class="bq-fx-campo" data-bq-campo="email"><input name="Email" type="email" autocomplete="email" maxlength="254" placeholder="Tu correo electrónico" aria-label="Correo electrónico"></div>' +
+    '<input class="bq-fx-trampa" name="website" type="text" tabindex="-1" autocomplete="off" aria-hidden="true">' +
+    '<button type="submit" class="bq-fx-enviar">Quiero mi propuesta</button>' +
+    '<p class="bq-fx-estado" aria-live="polite"></p>' +
+    '<p class="bq-fx-legal">Usaremos estos datos solo para preparar y enviarte la propuesta. <a href="/privacidad">Política de privacidad</a></p>' +
+    "</form></div>" +
+    '<div class="bq-fx-hecho" hidden tabindex="-1">' +
+    `<span class="bq-fx-hecho-icono">${ICONO_OK}</span>` +
+    '<h3 class="bq-fx-subtitulo">Solicitud recibida</h3>' +
+    '<p class="bq-fx-hecho-texto"></p>' +
+    '<button type="button" class="bq-fx-enviar bq-fx-listo">Cerrar</button>' +
+    "</div></section></div></div>";
+
+  const FX_TEXTOS = {
+    company: "Escribe el nombre de tu empresa.",
+    cuota: "Indica cuánto pagas al mes, aunque sea aproximado.",
+    cuotaMal: "Escribe el importe en euros, por ejemplo 120.",
+  };
+  // «120», «120,50», «1.200», «1.200,50 €» → número (o NaN).
+  const leerEuros = (texto) => {
+    let v = String(texto || "").replace(/[\s€]/g, "").replace(/(eur(os)?|\/mes|al?mes)$/i, "");
+    if (!v) return NaN;
+    if (v.includes(",") && v.includes(".")) v = v.replace(/\./g, "").replace(",", ".");
+    else if (v.includes(",")) v = v.replace(",", ".");
+    else if (/^\d{1,3}(\.\d{3})+$/.test(v)) v = v.replace(/\./g, "");
+    return /^\d+(\.\d{1,2})?$/.test(v) ? Number(v) : NaN;
+  };
+  const euros = (n) => new Intl.NumberFormat("es-ES", { maximumFractionDigits: 2 }).format(n);
+
+  let formula = null; // { dialog, form, … } una vez montada
+  let formulaOrigen = null; // botón que la abrió (vuelve ahí el foco al cerrar)
+
+  const montarFormula = () => {
+    if (formula) return formula;
+    const dialog = document.createElement("dialog");
+    dialog.className = "bq-fx";
+    dialog.setAttribute("aria-labelledby", "bq-fx-titulo");
+    dialog.innerHTML = FORMULA_HTML;
+    document.body.appendChild(dialog);
+    const form = dialog.querySelector("form");
+    const select = form.querySelector('select[name="PhonePrefix"]');
+    for (const item of PREFIJOS.split(",")) {
+      const [country, code] = item.split("|");
+      select.add(new Option(`${country} (+${code})`, code, code === "34", code === "34"));
+    }
+    const cuota = form.querySelector('[name="monthlyFee"]');
+    const ahorro = form.querySelector(".bq-fx-ahorro");
+    const hecho = dialog.querySelector(".bq-fx-hecho");
+    const caja = dialog.querySelector(".bq-fx-formulario");
+    const sync = () => {
+      const whatsapp = (form.querySelector('input[name="ContactMethod"]:checked') || {}).value !== "email";
+      form.dataset.bqMetodo = whatsapp ? "whatsapp" : "email";
+      form.querySelector(".bq-prefijo-valor").textContent = `+${select.value}`;
+    };
+    // Lo que puede ahorrar según lo que paga hoy: nunca más de 50 €/mes, y nunca más de lo que paga.
+    const calcular = () => {
+      const n = leerEuros(cuota.value);
+      ahorro.dataset.tipo = "";
+      if (!cuota.value.trim() || !(n > 0)) ahorro.textContent = "";
+      else if (n > 50) {
+        ahorro.dataset.tipo = "max";
+        ahorro.innerHTML = "Con lo que pagas hoy, podrías ahorrar <b>hasta 50 €/mes</b>: hasta 600 € al año.";
+      } else ahorro.textContent = `Con ${euros(n)} €/mes, la rebaja sería inferior a 50 €/mes. Te diremos la cifra exacta en la propuesta.`;
+    };
+    form.addEventListener("change", sync);
+    cuota.addEventListener("input", calcular);
+    form.addEventListener("input", (event) => {
+      if (event.target.matches && event.target.matches("[aria-invalid]")) fxDesmarcar(event.target);
+    });
+    form.querySelector(".bq-metodo").addEventListener("change", () => {
+      for (const input of form.querySelectorAll("[aria-invalid]")) fxDesmarcar(input);
+    });
+    form.addEventListener("submit", (event) => {
+      event.preventDefault();
+      enviarFormula();
+    });
+    dialog.querySelector(".bq-fx-cerrar").addEventListener("click", () => cerrarFormula());
+    dialog.querySelector(".bq-fx-listo").addEventListener("click", () => cerrarFormula());
+    // Móvil: la oferta va primero y el formulario debajo; este botón baja hasta él.
+    dialog.querySelector(".bq-fx-ir").addEventListener("click", () => {
+      dialog.querySelector(".bq-fx-pedir").scrollIntoView({ behavior: reduceMotion.matches ? "auto" : "smooth", block: "start" });
+    });
+    // Clic fuera del panel (en el fondo oscurecido) = cerrar. Esc lo gestiona el navegador.
+    dialog.addEventListener("click", (event) => {
+      if (event.target === dialog) cerrarFormula();
+    });
+    dialog.addEventListener("cancel", (event) => {
+      event.preventDefault();
+      cerrarFormula();
+    });
+    dialog.addEventListener("close", () => {
+      document.documentElement.classList.remove("bq-fx-abierta");
+      if (location.hash === "#formula-banteq") history.replaceState(history.state, "", location.pathname + location.search);
+      if (formulaOrigen && formulaOrigen.isConnected) formulaOrigen.focus({ preventScroll: true });
+      formulaOrigen = null;
+    });
+    sync();
+    formula = { dialog, form, ahorro, hecho, caja, enviando: false, enviado: "", inicio: 0 };
+    return formula;
+  };
+
+  const abrirFormula = (origen) => {
+    const f = montarFormula();
+    if (f.dialog.open) return;
+    formulaOrigen = origen || null;
+    if (!f.inicio) f.inicio = Date.now();
+    f.dialog.classList.remove("bq-fx-cerrando");
+    document.documentElement.classList.add("bq-fx-abierta");
+    f.dialog.showModal();
+    // El foco va al panel (no a un campo: en el móvil abriría el teclado tapando la oferta).
+    f.dialog.querySelector(".bq-fx-contenido").scrollTop = 0;
+    f.dialog.querySelector(".bq-fx-cerrar").focus({ preventScroll: true });
+  };
+  const cerrarFormula = () => {
+    if (!formula || !formula.dialog.open) return;
+    const { dialog } = formula;
+    if (reduceMotion.matches) return dialog.close();
+    dialog.classList.add("bq-fx-cerrando");
+    setTimeout(() => {
+      dialog.classList.remove("bq-fx-cerrando");
+      dialog.close();
+    }, 180);
+  };
+
+  const fxError = (input, crear) => {
+    const campo = input.closest(".bq-fx-campo");
+    let error = campo && campo.querySelector(".bq-error");
+    if (error || !crear || !campo) return error;
+    error = document.createElement("p");
+    error.className = "bq-error";
+    error.id = `bq-fx-error-${input.name}`;
+    error.setAttribute("role", "alert");
+    campo.appendChild(error);
+    return error;
+  };
+  const fxMarcar = (input, texto) => {
+    fxError(input, true).textContent = texto;
+    input.setAttribute("aria-invalid", "true");
+    input.setAttribute("aria-describedby", `bq-fx-error-${input.name}`);
+  };
+  const fxDesmarcar = (input) => {
+    const error = fxError(input, false);
+    if (error) error.remove();
+    input.removeAttribute("aria-invalid");
+    input.removeAttribute("aria-describedby");
+  };
+  const fxEstado = (tipo, texto) => {
+    const estado = formula.form.querySelector(".bq-fx-estado");
+    estado.dataset.tipo = tipo;
+    estado.textContent = texto;
+  };
+
+  const enviarFormula = () => {
+    const f = formula;
+    const { form } = f;
+    if (f.enviando) return;
+    for (const input of form.querySelectorAll("[aria-invalid]")) fxDesmarcar(input);
+    const errores = [];
+    const company = form.querySelector('[name="company"]');
+    const cuota = form.querySelector('[name="monthlyFee"]');
+    const tel = form.querySelector('[name="Phone"]');
+    const email = form.querySelector('[name="Email"]');
+    const prefijo = form.querySelector('[name="PhonePrefix"]').value || "34";
+    const whatsapp = form.dataset.bqMetodo !== "email";
+    if (!company.value.trim()) errores.push([company, FX_TEXTOS.company]);
+    const importe = leerEuros(cuota.value);
+    if (!cuota.value.trim()) errores.push([cuota, FX_TEXTOS.cuota]);
+    else if (!(importe > 0) || importe > 100000) errores.push([cuota, FX_TEXTOS.cuotaMal]);
+    let cifras = "";
+    if (whatsapp) {
+      cifras = tel.value.replace(/\D/g, "");
+      if (prefijo !== "39") cifras = cifras.replace(/^0+/, "");
+      if (!cifras) errores.push([tel, TEXTOS.Phone]);
+      else if (prefijo === "34" && !/^[6-9]\d{8}$/.test(cifras)) errores.push([tel, TEXTOS.PhoneMal34]);
+      else if (cifras.length < 6 || cifras.length + prefijo.length > 15) errores.push([tel, TEXTOS.PhoneMal]);
+    } else {
+      const valor = email.value.trim();
+      if (!valor) errores.push([email, TEXTOS.Email]);
+      else if (!/^[^\s@]+@[^\s@.]+(\.[^\s@.]+)*\.[a-z]{2,}$/i.test(valor)) errores.push([email, TEXTOS.EmailMal]);
+    }
+    if (errores.length) {
+      for (const [input, texto] of errores) fxMarcar(input, texto);
+      errores[0][0].focus();
+      fxEstado("error", errores.length > 1 ? "Revisa los campos marcados." : "Revisa el campo marcado.");
+      return;
+    }
+    const payload = {
+      formType: "Fórmula Banteq",
+      origin: window.location.pathname,
+      company: company.value.trim(),
+      monthlyFee: importe,
+      contactPreference: whatsapp ? "WhatsApp" : "Correo electrónico",
+      phone: whatsapp ? `+${prefijo}${cifras}` : "",
+      email: whatsapp ? "" : email.value.trim(),
+    };
+    const clave = JSON.stringify(payload);
+    const destino = whatsapp ? `por WhatsApp al ${payload.phone}` : `a ${payload.email}`;
+    const terminar = (confirmacion) => {
+      f.caja.hidden = true;
+      f.hecho.hidden = false;
+      f.hecho.querySelector(".bq-fx-hecho-texto").textContent =
+        `Te responderemos en menos de 48 h ${destino} con la propuesta de tu web remodelada y la oferta de mantenimiento.` +
+        (confirmacion ? " Te hemos enviado una confirmación a tu correo." : "");
+      f.hecho.focus({ preventScroll: true });
+    };
+    // La misma solicitud ya llegó: no se envía otra vez.
+    if (f.enviado === clave) return terminar(false);
+    payload.page = window.location.href;
+    payload.pageTitle = document.title;
+    payload.elapsedMs = Date.now() - f.inicio;
+    payload.hp = form.querySelector('[name="website"]').value;
+    f.enviando = true;
+    form.dataset.bqEnviando = "1";
+    fxEstado("enviando", "Enviando tu solicitud…");
+    const guarda = setTimeout(() => {
+      if (!f.enviando) return;
+      f.enviando = false;
+      delete form.dataset.bqEnviando;
+      fxEstado("error", "No hemos podido confirmar el envío. Inténtalo de nuevo.");
+    }, 30000);
+    nativeFetch("/api/leads", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) })
+      .then(async (res) => {
+        let data = {};
+        try {
+          data = await res.json();
+        } catch {}
+        return { res, data };
+      })
+      .then(
+        ({ res, data }) => {
+          clearTimeout(guarda);
+          f.enviando = false;
+          delete form.dataset.bqEnviando;
+          if (res.ok && data.ok) {
+            f.enviado = clave;
+            fxEstado("ok", "");
+            return terminar(Boolean(data.confirmation));
+          }
+          const campos = { company: "company", monthlyFee: "monthlyFee", phone: "Phone", email: "Email" };
+          for (const [k, texto] of Object.entries(data.fields || {})) {
+            const input = campos[k] && form.querySelector(`[name="${campos[k]}"]`);
+            if (input) fxMarcar(input, texto);
+          }
+          fxEstado("error", data.code === "validation" || data.code === "rate_limit"
+            ? data.error
+            : "No hemos podido enviar tu solicitud. Inténtalo de nuevo en unos minutos.");
+        },
+        () => {
+          clearTimeout(guarda);
+          f.enviando = false;
+          delete form.dataset.bqEnviando;
+          fxEstado("error", "No hemos podido enviar tu solicitud. Revisa tu conexión e inténtalo de nuevo.");
+        },
+      );
+  };
+
+  // Clics en los enlaces a #formula-banteq y #hablemos (antes que el router de Framer).
+  document.addEventListener(
+    "click",
+    (event) => {
+      const link = event.target.closest && event.target.closest('a[href$="#formula-banteq"], a[href$="#hablemos"]');
+      if (!link || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+      const url = new URL(link.href, window.location.href);
+      if (url.origin !== window.location.origin) return;
+      if (url.hash === "#formula-banteq") {
+        event.preventDefault();
+        event.stopPropagation();
+        abrirFormula(link);
+      } else if (
+        // Framer escribe «#hablemos» como «./#hablemos», que fuera de la home apuntaría a la home:
+        // siempre es el formulario de la misma página.
+        (/^(\.\/)?#hablemos$/.test(link.getAttribute("href") || "") || url.pathname.replace(/\/+$/, "") === window.location.pathname.replace(/\/+$/, "")) &&
+        irAlFormulario(true)
+      ) {
+        // El menú, si estaba abierto, lo cierra el manejador de enlaces de más abajo.
+        event.preventDefault();
+        event.stopPropagation();
+      }
+    },
+    true,
+  );
+  // Llegada con la dirección …#formula-banteq o …#hablemos (p. ej. desde /contacto, que redirige).
+  const alLlegar = () => {
+    if (location.hash === "#formula-banteq") abrirFormula(null);
+    else if (location.hash === "#hablemos") {
+      let intentos = 0;
+      const probar = () => {
+        if (irAlFormulario(false) || ++intentos > 40) return;
+        setTimeout(probar, 150);
+      };
+      setTimeout(probar, 300);
+    }
+  };
+  if (document.readyState === "complete") alLlegar();
+  else window.addEventListener("load", alLlegar, { once: true });
+  window.addEventListener("hashchange", () => location.hash === "#formula-banteq" && abrirFormula(null));
 
   // Menú de la cabecera: al elegir un enlace, la página cambiaba (o bajaba hasta la sección, como
   // «Servicios» en la home) pero el menú seguía abierto encima: el router de Framer mantiene la
