@@ -485,13 +485,13 @@
   function enlazarDiagnostico(root) {
     const links = root.querySelectorAll ? root.querySelectorAll("a") : [];
     for (const link of links) {
-      if (/^solicitar diagn[oó]stico(?:\s*solicitar diagn[oó]stico)?$/i.test(link.textContent.trim())) link.setAttribute("href", "/diagnostico");
+      if (/^(?:solicitar diagn[oó]stico|quiero mejorar)(?:\s*(?:solicitar diagn[oó]stico|quiero mejorar))?$/i.test(link.textContent.trim())) link.setAttribute("href", "/diagnostico");
     }
   }
   // Respaldo para las variantes de Framer al cambiar de página o de tamaño.
   document.addEventListener("click", event => {
     const link = event.target.closest?.("a");
-    if (link && /^solicitar diagn[oó]stico(?:\s*solicitar diagn[oó]stico)?$/i.test(link.textContent.trim())) {
+    if (link && /^(?:solicitar diagn[oó]stico|quiero mejorar)(?:\s*(?:solicitar diagn[oó]stico|quiero mejorar))?$/i.test(link.textContent.trim())) {
       link.setAttribute("href", "/diagnostico");
       if (!event.ctrlKey && !event.metaKey && !event.shiftKey && event.button === 0) {
         event.preventDefault(); event.stopImmediatePropagation(); window.location.assign("/diagnostico");
@@ -512,7 +512,7 @@
       for (const node of mutation.addedNodes) {
         if (node.nodeType !== 1) continue;
         enlazarDiagnostico(node);
-        if (node.tagName === "A" && /^solicitar diagn[oó]stico(?:\s*solicitar diagn[oó]stico)?$/i.test(node.textContent.trim())) node.setAttribute("href", "/diagnostico");
+        if (node.tagName === "A" && /^(?:solicitar diagn[oó]stico|quiero mejorar)(?:\s*(?:solicitar diagn[oó]stico|quiero mejorar))?$/i.test(node.textContent.trim())) node.setAttribute("href", "/diagnostico");
         forms = forms || node.tagName === "FORM" || !!node.querySelector("form");
         cards = cards || (!!DEMO_IMG && (node.matches(DEMO_IMG) || !!node.querySelector(DEMO_IMG)));
       }
@@ -552,8 +552,8 @@
   };
 
   // ---------------------------------------------------------------------------------------------
-  // Fórmula Banteq: ventana con la oferta y un formulario mínimo (empresa, cuota mensual actual y
-  // WhatsApp o correo). Se abre desde los botones «Fórmula Banteq» (enlaces a #formula-banteq, en
+  // Fórmula Banteq: ventana con la oferta y un formulario mínimo (empresa, web actual, cuota
+  // mensual actual y WhatsApp o correo). Se abre desde los botones «Fórmula Banteq» (enlaces a #formula-banteq, en
   // la sección Desarrollo web de la home y en /desarrollo-web) o con esa dirección. Se envía a
   // /api/leads como «Fórmula Banteq». Textos de la oferta: siempre «hasta 50 €/mes» y «hasta
   // 600 €/año»; el ahorro máximo no está garantizado para todos (contenido.py → FORMULA_BOTON).
@@ -584,10 +584,12 @@
     '<section class="bq-fx-pedir" aria-labelledby="bq-fx-pedir-titulo">' +
     '<div class="bq-fx-formulario">' +
     '<h3 class="bq-fx-subtitulo" id="bq-fx-pedir-titulo">Pide tu propuesta</h3>' +
-    '<p class="bq-fx-nota">Tres datos y te respondemos en menos de 48 h.</p>' +
+    '<p class="bq-fx-nota">Cuatro datos y te respondemos en menos de 48 h.</p>' +
     '<form class="bq-fx-form" data-bq-propio="formula" novalidate>' +
     '<div class="bq-fx-campo"><label for="bq-fx-empresa">Empresa</label>' +
     '<input id="bq-fx-empresa" name="company" type="text" autocomplete="organization" maxlength="160" placeholder="Nombre de tu empresa"></div>' +
+    '<div class="bq-fx-campo"><label for="bq-fx-web">Tu web actual</label>' +
+    '<input id="bq-fx-web" name="currentWebsite" type="text" inputmode="url" autocomplete="url" autocapitalize="off" spellcheck="false" maxlength="300" placeholder="tuempresa.com"></div>' +
     '<div class="bq-fx-campo"><label for="bq-fx-cuota">¿Cuánto pagas al mes por el mantenimiento de tu web?</label>' +
     '<div class="bq-fx-caja bq-fx-euros"><input id="bq-fx-cuota" name="monthlyFee" type="text" inputmode="decimal" autocomplete="off" maxlength="12" placeholder="Por ejemplo, 120"><span aria-hidden="true">€/mes</span></div>' +
     '<p class="bq-fx-ahorro" aria-live="polite"></p></div>' +
@@ -615,6 +617,8 @@
 
   const FX_TEXTOS = {
     company: "Escribe el nombre de tu empresa.",
+    web: "Escribe la dirección de tu web actual.",
+    webMal: "Revisa la dirección: por ejemplo, tuempresa.com.",
     cuota: "Indica cuánto pagas al mes, aunque sea aproximado.",
     cuotaMal: "Escribe el importe en euros, por ejemplo 120.",
   };
@@ -626,6 +630,18 @@
     else if (v.includes(",")) v = v.replace(",", ".");
     else if (/^\d{1,3}(\.\d{3})+$/.test(v)) v = v.replace(/\./g, "");
     return /^\d+(\.\d{1,2})?$/.test(v) ? Number(v) : NaN;
+  };
+  // «tuempresa.com», «www.tuempresa.com/inicio» o con https:// → «https://…» (o "" si no parece una web).
+  const leerWeb = (texto) => {
+    let v = String(texto || "").trim().replace(/\s+/g, "");
+    if (!v) return "";
+    if (!/^https?:\/\//i.test(v)) v = "https://" + v.replace(/^\/+/, "");
+    try {
+      const u = new URL(v);
+      return /^[a-z0-9-]+(\.[a-z0-9-]+)*\.[a-z]{2,}$/i.test(u.hostname) ? u.href : "";
+    } catch {
+      return "";
+    }
   };
   const euros = (n) => new Intl.NumberFormat("es-ES", { maximumFractionDigits: 2 }).format(n);
 
@@ -765,6 +781,10 @@
     const prefijo = form.querySelector('[name="PhonePrefix"]').value || "34";
     const whatsapp = form.dataset.bqMetodo !== "email";
     if (!company.value.trim()) errores.push([company, FX_TEXTOS.company]);
+    const webInput = form.querySelector('[name="currentWebsite"]');
+    const web = leerWeb(webInput.value);
+    if (!webInput.value.trim()) errores.push([webInput, FX_TEXTOS.web]);
+    else if (!web) errores.push([webInput, FX_TEXTOS.webMal]);
     const importe = leerEuros(cuota.value);
     if (!cuota.value.trim()) errores.push([cuota, FX_TEXTOS.cuota]);
     else if (!(importe > 0) || importe > 100000) errores.push([cuota, FX_TEXTOS.cuotaMal]);
@@ -790,6 +810,7 @@
       formType: "Fórmula Banteq",
       origin: window.location.pathname,
       company: company.value.trim(),
+      currentWebsite: web,
       monthlyFee: importe,
       contactPreference: whatsapp ? "WhatsApp" : "Correo electrónico",
       phone: whatsapp ? `+${prefijo}${cifras}` : "",
@@ -838,7 +859,7 @@
             fxEstado("ok", "");
             return terminar(Boolean(data.confirmation));
           }
-          const campos = { company: "company", monthlyFee: "monthlyFee", phone: "Phone", email: "Email" };
+          const campos = { company: "company", currentWebsite: "currentWebsite", monthlyFee: "monthlyFee", phone: "Phone", email: "Email" };
           for (const [k, texto] of Object.entries(data.fields || {})) {
             const input = campos[k] && form.querySelector(`[name="${campos[k]}"]`);
             if (input) fxMarcar(input, texto);

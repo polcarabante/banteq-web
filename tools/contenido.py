@@ -204,7 +204,7 @@ HOME = [
             "Enviar el cuestionario no supone contratar ni pagar."
         ),
     ),
-    ("Schedule a Session", "Solicitar diagnóstico"),
+    ("Schedule a Session", "Quiero mejorar"),
     # Copilot y FUNDAE (antes: precios)
     (
         "Whether you're starting small or scaling fast, we have an automation plan that fits.",
@@ -368,7 +368,7 @@ HOME = [
     ("Have any other questions?", "¿Tienes otra pregunta?"),
     ("Contact Us", "Contactar"),
     # Botón principal
-    ("Get this Template", "Solicitar diagnóstico"),
+    ("Get this Template", "Quiero mejorar"),
 ]
 
 

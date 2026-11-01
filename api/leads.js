@@ -81,6 +81,18 @@ const parseEuros = (value) => {
   else if (/^\d{1,3}(\.\d{3})+$/.test(v)) v = v.replace(/\./g, "");
   return /^\d+(\.\d{1,2})?$/.test(v) ? Number(v) : NaN;
 };
+// Web actual de la empresa (Fórmula Banteq): «tuempresa.com» → «https://tuempresa.com/»; "" si no vale.
+const normalizeWebsite = (value) => {
+  let v = normalizeText(value).replace(/\s+/g, "");
+  if (!v || v.length > 300) return "";
+  if (!/^https?:\/\//i.test(v)) v = `https://${v.replace(/^\/+/, "")}`;
+  try {
+    const url = new URL(v);
+    return /^[a-z0-9-]+(\.[a-z0-9-]+)*\.[a-z]{2,}$/i.test(url.hostname) ? url.href : "";
+  } catch {
+    return "";
+  }
+};
 const formatEuros = (n) => new Intl.NumberFormat("es-ES", { maximumFractionDigits: 2 }).format(n);
 
 // Error con código para la respuesta: el navegador recibe el código y un texto, nunca detalles internos.
@@ -306,6 +318,7 @@ const sendAdminNotification = async (lead) => {
     const formulaHtml = `
     <h2>Nueva solicitud de la Fórmula Banteq</h2>
     <p><strong>Empresa:</strong> ${text(lead.company)}</p>
+    <p><strong>Web actual:</strong> <a href="${escapeHtml(lead.currentWebsite)}">${text(lead.currentWebsite)}</a></p>
     <p><strong>Paga hoy por el mantenimiento de su web:</strong> ${formatEuros(lead.monthlyFee)} €/mes</p>
     <p><strong>Rebaja máxima de la oferta para este importe:</strong> hasta ${formatEuros(rebaja)} €/mes${lead.monthlyFee <= FORMULA_REBAJA_MAX ? " (paga 50 € o menos: la rebaja tiene que ser menor que su cuota)" : ""}</p>
     <p><strong>Prefiere que le contactemos por:</strong> ${text(lead.contactPreference)}</p>
@@ -395,6 +408,7 @@ const buildContactPayload = (lead) => {
   addAttribute(attributes, "PAGINA", lead.page || lead.origin);
   addAttribute(attributes, "TIPO_SOLICITUD", lead.formType);
   if (Number.isFinite(lead.monthlyFee)) addAttribute(attributes, "PAGO_MANTENIMIENTO", lead.monthlyFee);
+  addAttribute(attributes, "WEB_ACTUAL", lead.currentWebsite);
   addAttribute(attributes, "FECHA_HORA", lead.submittedAtLocal);
 
   if (phone) {
@@ -447,6 +461,7 @@ const requiredContactAttributes = [
   { name: "FECHA_HORA", type: "text" },
   { name: "TIPO_SOLICITUD", type: "text" },
   { name: "PAGO_MANTENIMIENTO", type: "float" },
+  { name: "WEB_ACTUAL", type: "text" },
 ];
 
 let attributesReady = false;
@@ -597,11 +612,13 @@ const handlePost = async (request, response) => {
   const isContactForm = formType.startsWith("Contacto");
   const isFormula = isFormulaType(formType);
   const monthlyFee = isFormula ? parseEuros(body.monthlyFee) : NaN;
+  const currentWebsite = isFormula ? normalizeWebsite(body.currentWebsite) : "";
 
   // Mismas comprobaciones que en el navegador, por si alguien envía directamente al endpoint.
   const fields = {};
   if (!name && !isFormula) fields.name = "Escribe tu nombre.";
   if ((isContactForm || isFormula) && !company) fields.company = "Escribe el nombre de tu empresa.";
+  if (isFormula && !currentWebsite) fields.currentWebsite = normalizeText(body.currentWebsite) ? "Revisa la dirección: por ejemplo, tuempresa.com." : "Escribe la dirección de tu web actual.";
   if (isFormula && !(monthlyFee > 0 && monthlyFee <= LIMITS.monthlyFee)) fields.monthlyFee = "Escribe el importe en euros, por ejemplo 120.";
   if (isFormula && !email && !phone) fields.phone = "Indica un WhatsApp o un correo para enviarte la propuesta.";
   if (isContactForm && !message) fields.message = "Cuéntanos qué te gustaría mejorar.";
@@ -626,8 +643,9 @@ const handlePost = async (request, response) => {
     phone: contactPreference === "Correo electrónico" ? "" : phone,
     company,
     contactPreference: contactPreference || (email ? "Correo electrónico" : ""),
-    message: isFormula ? `Fórmula Banteq: paga ${formatEuros(monthlyFee)} €/mes por el mantenimiento de su web.` : message,
+    message: isFormula ? `Fórmula Banteq: paga ${formatEuros(monthlyFee)} €/mes por el mantenimiento de su web (${currentWebsite}).` : message,
     monthlyFee: isFormula ? monthlyFee : undefined,
+    currentWebsite,
     areas: Array.isArray(body.areas) ? body.areas.join(", ") : normalizeText(body.areas),
     origin: normalizeText(body.origin || body.origen),
     page: /^https?:\/\//.test(page) ? page.slice(0, LIMITS.page) : "",

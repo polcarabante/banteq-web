@@ -133,12 +133,12 @@ pasa a costar menos que el actual, **hasta** 50 €/mes menos (hasta 600 €/añ
   en `/desarrollo-web` (`contenido.SERVICIOS`). Los dos son enlaces a `#formula-banteq`; esa
   dirección también abre la ventana.
 - La ventana (`<dialog>`) y su formulario los monta `banteq.js` («Fórmula Banteq»); estilos en
-  `banteq.css`. Pide empresa, cuota mensual actual y WhatsApp o correo (mismo selector y prefijos
+  `banteq.css`. Pide empresa, web actual, cuota mensual actual y WhatsApp o correo (mismo selector y prefijos
   que el formulario del pie). Con la cuota escrita dice lo que podría ahorrar: «hasta 50 €/mes» si
   paga más de 50 €; si paga 50 € o menos, que la rebaja será menor y se concreta en la propuesta.
 - Se envía a `/api/leads` con `formType: "Fórmula Banteq"` y `monthlyFee`. El endpoint lo valida
   (empresa, importe > 0, contacto), lo guarda en la misma lista de Brevo que el contacto
-  (`BREVO_CONTACT_LIST_ID`) con `TIPO_SOLICITUD` = «Fórmula Banteq» y `PAGO_MANTENIMIENTO` (número;
+  (`BREVO_CONTACT_LIST_ID`) con `TIPO_SOLICITUD` = «Fórmula Banteq», `WEB_ACTUAL` y `PAGO_MANTENIMIENTO` (número;
   los crea si no existen) y avisa a `BREVO_ADMIN_EMAIL` con el asunto «Fórmula Banteq: empresa ·
   importe €/mes» y el plazo de 48 h. Si dio correo, recibe una confirmación. No usa variables nuevas.
 
