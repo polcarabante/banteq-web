@@ -562,7 +562,7 @@ PAGINA_404 = [
 # ---------------------------------------------------------------------------
 
 LEGAL_ACTUALIZACION = "Última actualización: 1 de noviembre de 2026"
-LEGAL_TITULAR = "Titular: Pol Carabante Martin, profesional autónomo que opera bajo la marca Banteq. NIF: 54166747E. Domicilio profesional: C/Casal dels Mogoda, 127, 08130 Santa Perpètua de Mogoda. Contacto: pol@banteq.org."
+LEGAL_TITULAR = "Titular: Pol Carabante Martin, profesional autónomo que opera bajo la marca Banteq. NIF: 54166747E. Domicilio profesional: C/Casal dels Mogoda, 08130 Santa Perpètua de Mogoda. Contacto: pol@banteq.org."
 LEGAL_CONTACTO = LEGAL_TITULAR
 
 AVISO_LEGAL = [
