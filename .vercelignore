@@ -6,3 +6,8 @@ assets-banteq
 tools
 README.md
 .env.example
+
+tests
+
+DIAGNOSTICO.env.example
+DIAGNOSTICO.md

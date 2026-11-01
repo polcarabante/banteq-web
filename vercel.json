@@ -21,5 +21,10 @@
       "destination": "/automatizacion-procesos",
       "permanent": true
     }
-  ]
+  ],
+  "functions": {
+    "api/diagnosticos.js": {
+      "maxDuration": 120
+    }
+  }
 }

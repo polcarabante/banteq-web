@@ -72,9 +72,21 @@ try {
     await page.goto(BASE + path, { waitUntil: "networkidle0", timeout: 90000 });
     await page.evaluate(() => document.fonts.ready);
     await wait(2500);
+    // El pie aparece con animación al entrar en pantalla (formulario, enlaces, logo): se baja hasta
+    // él para que quede en su estado final y se vuelve arriba (cabecera en su estado inicial).
+    const alto = await page.evaluate(() => document.documentElement.scrollHeight);
+    for (let y = 0; y <= alto; y += 400) {
+      await page.evaluate((y) => window.scrollTo(0, y), y);
+      await wait(60);
+    }
+    await wait(2000);
+    await page.evaluate(() => window.scrollTo(0, 0));
+    await wait(1200);
     const snap = await page.evaluate(() => {
       const main = document.getElementById("main");
       const clone = main.cloneNode(true);
+      // En el pie se queda el estilo actual (ya aparecido); en el resto, el de la primera pintura.
+      clone.querySelectorAll("footer [data-bq-s0]").forEach((el) => el.removeAttribute("data-bq-s0"));
       clone.querySelectorAll("[data-bq-s0]").forEach((el) => {
         const s = el.getAttribute("data-bq-s0");
         if (s === "\u0000") el.removeAttribute("style");
@@ -84,18 +96,18 @@ try {
       // Fuera lo que no es contenido: scripts, lienzos y el vídeo que banteq.js monta sobre las
       // tarjetas con demo (lo vuelve a montar sobre la página de verdad).
       clone.querySelectorAll("script, canvas, .bq-demo").forEach((el) => el.remove());
-      // Vídeos: sin descargarlos dos veces (el de verdad lo pone React). Si el vídeo está en la
-      // primera pantalla (el fondo de la página de contacto), su primer fotograma como póster.
+      // Vídeos: sin descargarlos dos veces (el de verdad lo pone React).
       const reales = [...main.querySelectorAll("video")];
       clone.querySelectorAll("video").forEach((v, k) => {
         const real = reales[k];
-        const r = real.getBoundingClientRect();
         const src = real.currentSrc || real.src || "";
         v.removeAttribute("src");
         v.removeAttribute("autoplay");
         v.setAttribute("preload", "none");
         v.querySelectorAll("source").forEach((s) => s.remove());
-        if (r.width > 0 && r.bottom > 0 && r.top < innerHeight && /S4N88TVzCfxigg9YZYcSIYNPk4/.test(src)) v.setAttribute("poster", "/banteq/pie-video-poster.jpg");
+        // Vídeo de fondo del pie: su primer fotograma como póster (9 KB), para que el pie se vea
+        // negro, como cuando carga el vídeo, y no gris.
+        if (/S4N88TVzCfxigg9YZYcSIYNPk4/.test(src)) v.setAttribute("poster", "/banteq/pie-video-poster.jpg");
       });
       // Formularios: sin envío nativo mientras no haya JavaScript.
       clone.querySelectorAll("form").forEach((f) => f.setAttribute("onsubmit", "return false"));

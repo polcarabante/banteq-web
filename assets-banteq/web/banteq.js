@@ -482,9 +482,26 @@
     true,
   );
 
+  function enlazarDiagnostico(root) {
+    const links = root.querySelectorAll ? root.querySelectorAll("a") : [];
+    for (const link of links) {
+      if (/^solicitar diagn[oó]stico(?:\s*solicitar diagn[oó]stico)?$/i.test(link.textContent.trim())) link.setAttribute("href", "/diagnostico");
+    }
+  }
+  // Respaldo para las variantes de Framer al cambiar de página o de tamaño.
+  document.addEventListener("click", event => {
+    const link = event.target.closest?.("a");
+    if (link && /^solicitar diagn[oó]stico(?:\s*solicitar diagn[oó]stico)?$/i.test(link.textContent.trim())) {
+      link.setAttribute("href", "/diagnostico");
+      if (!event.ctrlKey && !event.metaKey && !event.shiftKey && event.button === 0) {
+        event.preventDefault(); event.stopImmediatePropagation(); window.location.assign("/diagnostico");
+      }
+    }
+  }, true);
   const scanForms = () => {
     document.querySelectorAll("form:not([data-bq-contacto]):not([data-bq-propio])").forEach(enhanceContactForm);
     anclaPie();
+    enlazarDiagnostico(document);
   };
   // En cuanto Framer monta un formulario o una tarjeta con demo (al cargar, al cambiar de página o
   // al rehacer la página en móvil), antes de que se pinte: solo se miran los nodos recién añadidos.
@@ -494,6 +511,8 @@
     for (const mutation of mutations) {
       for (const node of mutation.addedNodes) {
         if (node.nodeType !== 1) continue;
+        enlazarDiagnostico(node);
+        if (node.tagName === "A" && /^solicitar diagn[oó]stico(?:\s*solicitar diagn[oó]stico)?$/i.test(node.textContent.trim())) node.setAttribute("href", "/diagnostico");
         forms = forms || node.tagName === "FORM" || !!node.querySelector("form");
         cards = cards || (!!DEMO_IMG && (node.matches(DEMO_IMG) || !!node.querySelector(DEMO_IMG)));
       }
@@ -877,6 +896,24 @@
   if (document.readyState === "complete") alLlegar();
   else window.addEventListener("load", alLlegar, { once: true });
   window.addEventListener("hashchange", () => location.hash === "#formula-banteq" && abrirFormula(null));
+
+  // Home o subpágina (data-bq-pagina en <html>): el HTML de cada subpágina ya lo trae; el router de
+  // Framer cambia de página sin recargar, así que se actualiza en cada cambio de dirección.
+  const marcarPagina = () => {
+    const sub = window.location.pathname.replace(/\/+$/, "") !== "";
+    if (sub) document.documentElement.dataset.bqPagina = "sub";
+    else delete document.documentElement.dataset.bqPagina;
+  };
+  for (const metodo of ["pushState", "replaceState"]) {
+    const original = history[metodo];
+    history[metodo] = function (...args) {
+      const r = original.apply(this, args);
+      marcarPagina();
+      return r;
+    };
+  }
+  window.addEventListener("popstate", marcarPagina);
+  marcarPagina();
 
   // Menú de la cabecera: al elegir un enlace, la página cambiaba (o bajaba hasta la sección, como
   // «Servicios» en la home) pero el menú seguía abierto encima: el router de Framer mantiene la

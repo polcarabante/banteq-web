@@ -194,14 +194,14 @@ HOME = [
         "Informes automáticos, métricas semanales y alertas para decidir con información al día.",
     ),
     ("Not sure what to automate first?", "¿No sabes por dónde empezar?"),
-    ("Book a free 30-minute AI strategy session.<br class=\"framer-text\">", "Analizamos cómo trabaja tu empresa y creamos un mapa conceptual de sus procesos, herramientas y conexiones.<br class=\"framer-text\">"),
-    ("`Book a free 30-minute AI strategy session.`,g(`br`,{})", "`Analizamos cómo trabaja tu empresa y creamos un mapa conceptual de sus procesos, herramientas y conexiones.`,g(`br`,{})"),
+    ("Book a free 30-minute AI strategy session.<br class=\"framer-text\">", "En unos 30 minutos puedes dar el primer paso para cambiar cómo trabaja tu empresa y descubrir dónde recuperar tiempo.<br class=\"framer-text\">"),
+    ("`Book a free 30-minute AI strategy session.`,g(`br`,{})", "`En unos 30 minutos puedes dar el primer paso para cambiar cómo trabaja tu empresa y descubrir dónde recuperar tiempo.`,g(`br`,{})"),
     (
         "We’ll analyze your current workflows and identify the highest-ROI automation opportunities for your business.",
         (
-            "Al finalizar el diagnóstico, recibirás un mapa completo y documentado de los procesos de tu empresa, "
-            "estructurado para facilitar la implantación de un Sistema de Gestión de Calidad conforme a ISO 9001 y "
-            "servir como base para un futuro proceso de certificación."
+            "Preparamos dos diagnósticos separados: procesos y oportunidades de automatización. El primero organiza cómo trabajáis y ayuda a preparar el camino hacia ISO 9001. "
+            "El segundo identifica tareas que podrían hacerse con menos tiempo y errores. Te contactaremos en menos de 72 horas naturales para comentar las conclusiones, los honorarios y las condiciones de entrega. "
+            "Enviar el cuestionario no supone contratar ni pagar."
         ),
     ),
     ("Schedule a Session", "Solicitar diagnóstico"),
@@ -621,7 +621,7 @@ PRIVACIDAD = [
     "Correo electrónico",
     "Empresa",
     "Teléfono",
-    "Lo que nos cuentes en los formularios de contacto",
+    "Lo que nos cuentes en los formularios de contacto y diagnóstico: procesos, herramientas, tiempos, categorías de datos y, si lo indicas, rangos de facturación y costes. No envíes datos personales de terceros ni credenciales.",
     "Datos de uso",
     "Dirección IP",
     "Navegador",
@@ -635,7 +635,7 @@ PRIVACIDAD = [
     "Prestar los servicios contratados",
     "Mejorar la web y la experiencia de uso",
     "Informarte sobre nuestros servicios, si lo solicitas",
-    "Gestionar proyectos y la relación con clientes",
+    "Gestionar proyectos y la relación con clientes. Las respuestas del cuestionario y los borradores de diagnóstico se guardan en el espacio de trabajo de Banteq en Notion. Se preparan propuestas internas de honorarios que Banteq revisa; no generan una contratación ni un cobro automático.",
     "Mantener la seguridad y evitar usos indebidos",
     "Solo recogemos los datos necesarios para estas finalidades.",
     "3. Inteligencia artificial y datos de clientes",
@@ -706,7 +706,7 @@ SERVICIOS = [
             ]),
             ("Empezamos por un diagnóstico", [
                 ("p", "Antes de automatizar nada, analizamos cómo trabaja tu empresa y dibujamos un mapa de sus procesos, herramientas y conexiones. Ese mapa muestra dónde se pierde tiempo y qué conviene automatizar primero."),
-                ("p", "Al finalizar el diagnóstico, recibirás un mapa completo y documentado de los procesos de tu empresa, estructurado para facilitar la implantación de un Sistema de Gestión de Calidad conforme a ISO 9001 y servir como base para un futuro proceso de certificación."),
+                ("p", "Preparamos dos diagnósticos separados: procesos y oportunidades de automatización. El primero organiza cómo trabajáis y ayuda a preparar el camino hacia ISO 9001. El segundo identifica tareas que podrían hacerse con menos tiempo y errores. Te contactaremos en menos de 72 horas naturales para comentar las conclusiones, los honorarios y las condiciones de entrega. Enviar el cuestionario no supone contratar ni pagar."),
                 ("p", ["Después seguimos un proceso claro: diseño, desarrollo, pruebas y formación de tu equipo. Así es ", ("a", "cómo trabajamos", "/#como-trabajamos"), "."]),
             ]),
             ("Sobre las herramientas que ya usas", [

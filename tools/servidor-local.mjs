@@ -79,6 +79,13 @@ const handler = async (req, res) => {
     return;
   }
 
+  if (url.pathname === "/api/diagnosticos") {
+    let raw = "";
+    for await (const chunk of req) { raw += chunk; if (raw.length > 350000) { res.writeHead(413); res.end(); return; } }
+    try { req.body = JSON.parse(raw || "{}"); } catch { res.writeHead(400); res.end(); return; }
+    const { default: diagnosticHandler } = await import("../api/diagnosticos.js");
+    return diagnosticHandler(req, res);
+  }
   const file = await resolveFile(url.pathname);
   if (!file) {
     const notFound = await resolveFile("/404.html");

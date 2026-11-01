@@ -1516,6 +1516,10 @@ def make_shells():
         page = re.sub(r"<title>[^<]*</title>", f"<title>{html.escape(title)}</title>", shell)
         page = re.sub(r'(<meta name="description" content=")[^"]*(")', lambda m: m.group(1) + html.escape(desc) + m.group(2), page)
         page = page_preloads(page, path)
+        # Marca de subpágina: los ajustes del pie en móvil (banteq.css, «Pie de las subpáginas») no
+        # tocan la home. banteq.js la mantiene al navegar sin recargar.
+        assert page.count('<html lang="es"') == 1
+        page = page.replace('<html lang="es"', '<html lang="es" data-bq-pagina="sub"', 1)
         snap = PRERENDER / (path.replace("/", "__") + ".json")
         if snap.exists():
             data = json.loads(snap.read_text(encoding="utf-8"))
@@ -2335,6 +2339,8 @@ def main():
     convert_heavy_images()
     check_html_structure()
     S.save()
+    from diagnostico import integrar
+    integrar()
     version_assets()
     if MISSES:
         print("\nTextos originales NO encontrados:")
