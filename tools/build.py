@@ -1776,6 +1776,27 @@ def apply_formula_home():
     S[INDEX] = h[:j] + formula_boton_html() + h[j:]
 
 
+def apply_demos_home():
+    """Sección «Automatización e inteligencia artificial»: las cinco tarjetas de la plantilla se
+    sustituyen por seis demostraciones animadas (tools/demos.py; movimiento en banteq.js, aspecto en
+    banteq.css). Mismo HTML en el módulo (dangerouslySetInnerHTML: React no lo toca al hidratar ni
+    al volver a pintar) y en el HTML inicial. La fila del diagnóstico de debajo no cambia."""
+    import demos
+    contenido = demos.seccion_html()
+    t = S[HOME_MOD]
+    i = t.find("className:`framer-1tg9hql`")
+    assert i > 0 and t.count("className:`framer-1tg9hql`") == 1, "no se encuentran las tarjetas de la sección de servicios"
+    a, b = jsx.call_containing(t, i)
+    assert t.count("g(`div`,{className:`framer-eipeh8`") == 1, "g ya no es la función jsx del módulo de la home"
+    S[HOME_MOD] = t[:a] + "g(`div`,{className:`bq-demos`,dangerouslySetInnerHTML:{__html:`" + contenido + "`}})" + t[b:]
+    h = S[INDEX]
+    assert h.count('class="framer-1tg9hql"') == 1
+    k = h.find('class="framer-1tg9hql"')
+    s = h.rfind("<div", 0, k)
+    e = html_element_extent(h, s, "div")
+    S[INDEX] = h[:s] + f'<div class="bq-demos">{contenido}</div>' + h[e:]
+
+
 CONTACTO_ID = "mow46yhcP"  # página /contacto de la plantilla
 
 
@@ -2326,6 +2347,7 @@ def main():
     apply_project_seo()
     apply_project_links()
     apply_formula_home()
+    apply_demos_home()
     remove_contact_page()
     apply_alts()
     for rel in html_pages():

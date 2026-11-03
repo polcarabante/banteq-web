@@ -122,6 +122,18 @@ las páginas. Solo en las subpáginas (`data-bq-pagina="sub"` en `<html>`: lo po
 La instantánea de carga (`npm run prerender`) guarda el pie ya aparecido (antes salía con el
 formulario y los enlaces invisibles) y con el póster del vídeo de fondo.
 
+### Demostraciones de «Automatización e inteligencia artificial» (home)
+
+Las cinco tarjetas de la plantilla se sustituyen por seis demostraciones animadas (facturas,
+asistente con documentación interna, CRM, informe semanal, tienda–ERP–logística y reservas con
+WhatsApp). El contenido está en `tools/demos.py` (pasos con su duración, textos y etiquetas) y
+`apply_demos_home` lo pone igual en el módulo de la home y en su HTML inicial. El movimiento lo
+hace `banteq.js` («Demostraciones»): solo corre la demostración que se ve (fuera de pantalla, con la
+pestaña oculta o en pausa no hay temporizadores), se puede pausar y repetir, va en bucle y, con
+«reducir movimiento», enseña el resultado final sin animar. Las animaciones son de opacidad y
+transformaciones (compositor). Los datos son de ejemplo y la sección lo dice al pie. La fila del
+diagnóstico de debajo no cambia.
+
 ### Fórmula Banteq
 
 Oferta: remodelación gratuita de la web de una empresa si contrata con Banteq su mantenimiento, que

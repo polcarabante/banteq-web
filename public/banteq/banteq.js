@@ -243,6 +243,221 @@
   };
   const scanDemos = () => DEMO_IMG && document.querySelectorAll(DEMO_IMG).forEach(mountDemo);
 
+
+  // ---------------------------------------------------------------------------------------------
+  // Demostraciones de la sección «Automatización e inteligencia artificial» (HTML en
+  // tools/demos.py). Cada una es una línea de tiempo de pasos (data-pasos, en ms): un elemento con
+  // data-en="k" aparece en el paso k y con data-hasta="m" desaparece en el m; data-marca="k" lo
+  // resalta (botón pulsado, mesa elegida…); data-escribe teclea su texto. Solo corre la que se ve:
+  // fuera de pantalla, con la pestaña oculta o en pausa no hay temporizadores. Con «reducir
+  // movimiento» no arranca sola y enseña el resultado final. La barra de progreso es una animación
+  // del compositor (Web Animations); los pasos cambian clases y el CSS hace las transiciones.
+  // ---------------------------------------------------------------------------------------------
+  const ICO_PAUSA = '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M5 3.5v9M11 3.5v9"/></svg>';
+  const ICO_PLAY = '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M5 3.2v9.6L12.8 8z" fill="currentColor"/></svg>';
+  const ICO_OTRA = '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8a5 5 0 1 0 1.5-3.6M3 2.8v2.6h2.6"/></svg>';
+  const mmss = (ms) => {
+    const s = Math.max(0, Math.round(ms / 1000));
+    return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`;
+  };
+  const demosActivas = new Set();
+  let relojDemos = 0;
+  const tickDemos = () => {
+    for (const d of demosActivas) d.tick();
+    if (!demosActivas.size) {
+      clearInterval(relojDemos);
+      relojDemos = 0;
+    }
+  };
+  const montarDemo = (video) => {
+    if (video.dataset.bqListo) return;
+    video.dataset.bqListo = "1";
+    const pasos = video.dataset.pasos.split(",").map(Number);
+    const inicio = [];
+    let total = 0;
+    for (const p of pasos) {
+      inicio.push(total);
+      total += p;
+    }
+    const titulo = video.getAttribute("aria-label") || "Demostración";
+    const ctrl = document.createElement("div");
+    ctrl.className = "bq-dm-ctrl";
+    ctrl.innerHTML =
+      `<button type="button" class="bq-dm-play" aria-label="Reproducir ${titulo}">${ICO_PLAY}</button>` +
+      `<span class="bq-dm-tiempo">0:00 / ${mmss(total)}</span><span class="bq-dm-barra"><i></i></span>` +
+      `<button type="button" class="bq-dm-otra" aria-label="Volver a empezar ${titulo}">${ICO_OTRA}</button>`;
+    video.appendChild(ctrl);
+    const boton = ctrl.querySelector(".bq-dm-play");
+    const tiempo = ctrl.querySelector(".bq-dm-tiempo");
+    const barra = ctrl.querySelector(".bq-dm-barra i");
+    const items = [...video.querySelectorAll("[data-en]")];
+    const marcas = [...video.querySelectorAll("[data-marca]")];
+    const fases = [...video.querySelectorAll(".bq-dm-fases li")];
+    const escribir = [...video.querySelectorAll("[data-escribe]")];
+    for (const el of escribir) el.dataset.texto = el.textContent;
+    const anim = barra.animate([{ transform: "scaleX(0)" }, { transform: "scaleX(1)" }], { duration: total, fill: "both" });
+    anim.pause();
+    let paso = -1;
+    let visible = false;
+    let pausadaPorUsuario = false;
+    const tecleos = new Map();
+    const pararTecleos = () => {
+      for (const id of tecleos.values()) clearInterval(id);
+      tecleos.clear();
+    };
+    const teclear = (el) => {
+      const texto = el.dataset.texto;
+      if (reduceMotion.matches) return (el.textContent = texto);
+      let n = Number(el.dataset.n || 0);
+      el.classList.add("bq-tecleando");
+      const id = setInterval(() => {
+        n += 1;
+        el.dataset.n = String(n);
+        el.textContent = texto.slice(0, n);
+        if (n >= texto.length) {
+          clearInterval(id);
+          tecleos.delete(el);
+          el.classList.remove("bq-tecleando");
+        }
+      }, Math.max(18, Math.min(55, 900 / texto.length)));
+      tecleos.set(el, id);
+    };
+    const aplicar = (k) => {
+      if (k === paso) return;
+      const atras = k < paso;
+      paso = k;
+      video.dataset.paso = String(k);
+      for (const el of items) {
+        const fuera = Boolean(el.dataset.hasta) && k >= Number(el.dataset.hasta);
+        el.classList.toggle("on", k >= Number(el.dataset.en) && !fuera);
+        el.classList.toggle("fuera", fuera);
+      }
+      for (const el of marcas) el.classList.toggle("marcado", k >= Number(el.dataset.marca));
+      let actual = -1;
+      fases.forEach((li, i) => {
+        if (k >= Number(li.dataset.desde)) actual = i;
+      });
+      fases.forEach((li, i) => {
+        li.classList.toggle("activa", i === actual);
+        li.classList.toggle("hecha", i < actual);
+      });
+      for (const el of escribir) {
+        const visibleEl = el.classList.contains("on") || !el.hasAttribute("data-en");
+        const tocaEscribir = el.closest("[data-en]") ? el.closest("[data-en]").classList.contains("on") : true;
+        if (atras || !visibleEl || !tocaEscribir) {
+          if (tecleos.has(el)) {
+            clearInterval(tecleos.get(el));
+            tecleos.delete(el);
+          }
+          if (atras || !tocaEscribir) {
+            el.dataset.n = "0";
+            el.textContent = "";
+          }
+          continue;
+        }
+        if (Number(el.dataset.n || 0) < el.dataset.texto.length && !tecleos.has(el)) teclear(el);
+      }
+    };
+    const pasoEn = (ms) => {
+      let k = 0;
+      for (let i = 0; i < inicio.length; i++) if (ms >= inicio[i]) k = i + 1;
+      return k;
+    };
+    const ponerBoton = (reproduce) => {
+      boton.innerHTML = reproduce ? ICO_PAUSA : ICO_PLAY;
+      boton.setAttribute("aria-label", `${reproduce ? "Pausar" : "Reproducir"} ${titulo}`);
+      video.classList.toggle("reproduce", reproduce);
+    };
+    const estado = {
+      tick() {
+        const ms = anim.currentTime || 0;
+        aplicar(pasoEn(ms));
+        tiempo.textContent = `${mmss(ms)} / ${mmss(total)}`;
+      },
+    };
+    // Para revisar la demostración en un momento concreto (pruebas): video.bqIr(ms).
+    video.bqIr = (ms) => {
+      anim.currentTime = ms;
+      paso = -1;
+      estado.tick();
+    };
+    const reproducir = () => {
+      if (anim.playState === "finished") reiniciar(false);
+      // Los tecleos a medias siguen donde se quedaron.
+      paso = -1;
+      estado.tick();
+      anim.play();
+      ponerBoton(true);
+      demosActivas.add(estado);
+      if (!relojDemos) relojDemos = setInterval(tickDemos, 150);
+    };
+    const pausar = () => {
+      anim.pause();
+      pararTecleos();
+      for (const el of escribir) el.classList.remove("bq-tecleando");
+      ponerBoton(false);
+      demosActivas.delete(estado);
+    };
+    const reiniciar = (seguir) => {
+      pararTecleos();
+      for (const el of escribir) {
+        el.dataset.n = "0";
+        el.textContent = "";
+      }
+      anim.currentTime = 0;
+      aplicar(0);
+      tiempo.textContent = `0:00 / ${mmss(total)}`;
+      if (seguir) reproducir();
+    };
+    // Al acabar: un momento con el resultado a la vista, fundido y otra vez desde el principio.
+    anim.onfinish = () => {
+      demosActivas.delete(estado);
+      estado.tick();
+      ponerBoton(false);
+      if (pausadaPorUsuario || !visible || reduceMotion.matches) return;
+      video.classList.add("bq-dm-fundido");
+      setTimeout(() => {
+        video.classList.remove("bq-dm-fundido");
+        if (visible && !pausadaPorUsuario && !document.hidden) reiniciar(true);
+      }, 450);
+    };
+    const decidir = () => {
+      const debe = visible && !pausadaPorUsuario && !document.hidden && !reduceMotion.matches;
+      if (debe && anim.playState !== "running") reproducir();
+      else if (!debe && anim.playState === "running") pausar();
+    };
+    boton.addEventListener("click", () => {
+      if (anim.playState === "running") {
+        pausadaPorUsuario = true;
+        pausar();
+      } else {
+        pausadaPorUsuario = false;
+        reproducir();
+      }
+    });
+    ctrl.querySelector(".bq-dm-otra").addEventListener("click", () => {
+      pausadaPorUsuario = false;
+      reiniciar(true);
+    });
+    // Clic en la propia demostración = pausa / sigue, como en un vídeo.
+    video.querySelector(".bq-dm-escena").addEventListener("click", () => boton.click());
+    new IntersectionObserver(([entrada]) => {
+      visible = entrada.isIntersecting;
+      decidir();
+    }, { threshold: 0.45 }).observe(video);
+    document.addEventListener("visibilitychange", decidir);
+    reduceMotion.addEventListener("change", decidir);
+    // Estado inicial: en blanco para empezar a contar la historia; con «reducir movimiento», el
+    // resultado final.
+    if (reduceMotion.matches) {
+      anim.currentTime = total;
+      aplicar(pasos.length);
+      for (const el of escribir) el.textContent = el.dataset.texto;
+      tiempo.textContent = `${mmss(total)} / ${mmss(total)}`;
+    } else aplicar(0);
+  };
+  const montarDemos = () => document.querySelectorAll(".bq-dm-video:not([data-bq-listo])").forEach(montarDemo);
+
   // ---------------------------------------------------------------------------------------------
   // Formulario de contacto: el cliente elige cómo prefiere que le contactemos, WhatsApp (por
   // defecto) o correo, y solo tiene que dar ese dato. El formulario es el de Framer; aquí se le
@@ -508,6 +723,7 @@
   new MutationObserver((mutations) => {
     let forms = false;
     let cards = false;
+    let demos = false;
     for (const mutation of mutations) {
       for (const node of mutation.addedNodes) {
         if (node.nodeType !== 1) continue;
@@ -515,13 +731,16 @@
         if (node.tagName === "A" && /^(?:solicitar diagn[oó]stico|quiero mejorar)(?:\s*(?:solicitar diagn[oó]stico|quiero mejorar))?$/i.test(node.textContent.trim())) node.setAttribute("href", "/diagnostico");
         forms = forms || node.tagName === "FORM" || !!node.querySelector("form");
         cards = cards || (!!DEMO_IMG && (node.matches(DEMO_IMG) || !!node.querySelector(DEMO_IMG)));
+        demos = demos || node.classList.contains("bq-demos") || !!node.querySelector(".bq-dm-video");
       }
     }
     if (forms) scanForms();
     if (cards) scanDemos();
+    if (demos) montarDemos();
   }).observe(document.documentElement, { childList: true, subtree: true });
   scanForms();
   scanDemos();
+  montarDemos();
 
   setInterval(scanTickers, 1500);
   window.addEventListener("load", scanTickers);
