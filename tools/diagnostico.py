@@ -9,6 +9,13 @@ def integrar():
     source=ROOT/'assets-banteq/diagnostico'
     s=(source/'cuestionario-procesos.src.html').read_text()
     s=s.replace('__GEIST__',base64.b64encode((source/'geist.woff2').read_bytes()).decode())
+    # Mismo favicon que el resto de la web: los enlaces de iconos de la home (con su versión) en
+    # lugar del SVG propio del cuestionario, que dibujaba otra B.
+    iconos=''.join(re.findall(r'<link rel="(?:icon|apple-touch-icon|manifest)"[^>]*>',(public/'index.html').read_text()))
+    assert iconos and 'favicon.ico' in iconos, 'no se encuentran los iconos de la home'
+    s,n=re.subn(r'<link rel="icon"[^>]*>',lambda m:'',s)
+    assert n>=1, 'el cuestionario ya no trae su propio icono: revisar'
+    s=s.replace('</head>',iconos+'</head>',1)
     (public/'diagnostico.html').write_text(s)
     for p in public.rglob('*'):
         if p.suffix not in ('.html','.mjs') or p.name=='diagnostico.html':continue
