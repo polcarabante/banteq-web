@@ -71,6 +71,12 @@ const FORMULA = "Fórmula Banteq";
 const FORMULA_REBAJA_MAX = 50;
 const isFormulaType = (type) => normalizeText(type) === FORMULA;
 
+// «Quiero mejorar» → «Enviar mi idea»: texto libre con lo que quiere mejorar, nombre, empresa y
+// WhatsApp o correo. Va a la lista de contacto de Brevo, marcada con TIPO_SOLICITUD = «Idea de
+// mejora» (los diagnósticos avanzados van aparte, por /api/diagnosticos).
+const IDEA = "Idea de mejora";
+const isIdeaType = (type) => normalizeText(type) === IDEA;
+
 // «120», «120,50», «1.200» o un número → número con dos decimales como mucho (o NaN).
 const parseEuros = (value) => {
   if (typeof value === "number") return Number.isFinite(value) ? Math.round(value * 100) / 100 : NaN;
@@ -166,7 +172,7 @@ const parseBrevoListId = (value) => Number(String(value || "").replace("#", "").
 
 const getListIdForType = (type) => {
   if (type === "FUNDAE") return parseBrevoListId(process.env.BREVO_FUNDAE_LIST_ID);
-  if (String(type || "").startsWith("Contacto") || isFormulaType(type)) return parseBrevoListId(process.env.BREVO_CONTACT_LIST_ID);
+  if (String(type || "").startsWith("Contacto") || isFormulaType(type) || isIdeaType(type)) return parseBrevoListId(process.env.BREVO_CONTACT_LIST_ID);
   return parseBrevoListId(process.env.BREVO_DIAGNOSTIC_LIST_ID);
 };
 
@@ -283,7 +289,7 @@ const sendConfirmationEmail = async ({ name, email, formType, company }) => {
     body: JSON.stringify({
       sender: { name: senderName, email: senderEmail },
       to: [{ email, name: name || company || email }],
-      subject: formula ? "Hemos recibido tu solicitud de la Fórmula Banteq" : "Hemos recibido tu solicitud",
+      subject: formula ? "Hemos recibido tu solicitud de la Fórmula Banteq" : isIdeaType(formType) ? "Hemos recibido tu idea" : "Hemos recibido tu solicitud",
       htmlContent,
     }),
   });
@@ -340,13 +346,14 @@ const sendAdminNotification = async (lead) => {
     return result?.messageId || null;
   }
 
+  const idea = isIdeaType(lead.formType);
   const htmlContent = `
-    <h2>Nueva solicitud desde la web de Banteq</h2>
+    <h2>${idea ? "Nueva idea de mejora (botón «Quiero mejorar»)" : "Nueva solicitud desde la web de Banteq"}</h2>
     <p><strong>Prefiere que le contactemos por:</strong> ${text(lead.contactPreference)}</p>
     ${contactLine}
     <p><strong>Nombre:</strong> ${text(lead.name)}</p>
     <p><strong>Empresa:</strong> ${text(lead.company)}</p>
-    <p><strong>Qué quiere mejorar:</strong><br>${text(lead.message).replace(/\n/g, "<br>")}</p>
+    <p><strong>${idea ? "Su idea" : "Qué quiere mejorar"}:</strong><br>${text(lead.message).replace(/\n/g, "<br>")}</p>
     ${pageLine}
     <p><strong>Fecha y hora:</strong> ${text(lead.submittedAtLocal)}</p>
   `;
@@ -357,7 +364,7 @@ const sendAdminNotification = async (lead) => {
       sender: { name: senderName, email: senderEmail },
       to: [{ email: adminEmail, name: "Banteq" }],
       replyTo: lead.email ? { email: lead.email, name: lead.name || "Contacto web" } : undefined,
-      subject: `Nueva solicitud web (${isWhatsappLead ? "WhatsApp" : "correo"}): ${lead.name}${lead.company ? ` · ${lead.company}` : ""}`,
+      subject: `${idea ? "Idea de mejora" : "Nueva solicitud web"} (${isWhatsappLead ? "WhatsApp" : "correo"}): ${lead.name}${lead.company ? ` · ${lead.company}` : ""}`,
       htmlContent,
     }),
   });
@@ -611,17 +618,20 @@ const handlePost = async (request, response) => {
   const page = normalizeText(body.page);
   const isContactForm = formType.startsWith("Contacto");
   const isFormula = isFormulaType(formType);
+  const isIdea = isIdeaType(formType);
   const monthlyFee = isFormula ? parseEuros(body.monthlyFee) : NaN;
   const currentWebsite = isFormula ? normalizeWebsite(body.currentWebsite) : "";
 
   // Mismas comprobaciones que en el navegador, por si alguien envía directamente al endpoint.
   const fields = {};
   if (!name && !isFormula) fields.name = "Escribe tu nombre.";
-  if ((isContactForm || isFormula) && !company) fields.company = "Escribe el nombre de tu empresa.";
+  if ((isContactForm || isFormula || isIdea) && !company) fields.company = "Escribe el nombre de tu empresa.";
   if (isFormula && !currentWebsite) fields.currentWebsite = normalizeText(body.currentWebsite) ? "Revisa la dirección: por ejemplo, tuempresa.com." : "Escribe la dirección de tu web actual.";
   if (isFormula && !(monthlyFee > 0 && monthlyFee <= LIMITS.monthlyFee)) fields.monthlyFee = "Escribe el importe en euros, por ejemplo 120.";
   if (isFormula && !email && !phone) fields.phone = "Indica un WhatsApp o un correo para enviarte la propuesta.";
   if (isContactForm && !message) fields.message = "Cuéntanos qué te gustaría mejorar.";
+  if (isIdea && !message) fields.message = "Cuéntanos brevemente qué quieres mejorar.";
+  if (isIdea && !email && !phone) fields.phone = "Indica un WhatsApp o un correo para responderte.";
   if (name.length > LIMITS.name) fields.name = "El nombre es demasiado largo.";
   if (company.length > LIMITS.company) fields.company = "El nombre de la empresa es demasiado largo.";
   if (message.length > LIMITS.message) fields.message = "El mensaje es demasiado largo (máximo 5.000 caracteres).";

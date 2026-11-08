@@ -154,6 +154,23 @@ pasa a costar menos que el actual, **hasta** 50 €/mes menos (hasta 600 €/añ
   los crea si no existen) y avisa a `BREVO_ADMIN_EMAIL` con el asunto «Fórmula Banteq: empresa ·
   importe €/mes» y el plazo de 48 h. Si dio correo, recibe una confirmación. No usa variables nuevas.
 
+### Botón «Quiero mejorar»: ventana con dos opciones
+
+- Los dos botones «Quiero mejorar» de la home (cabecera del hero y tarjeta «¿No sabes por dónde
+  empezar?») abren una ventana (`banteq.js`, `montarMejorar`; estilos `.bq-qm-*` en `banteq.css`,
+  sobre el armazón `.bq-fx-*` de la Fórmula). También se abre con la dirección `…#quiero-mejorar`.
+  El enlace sigue apuntando a `/diagnostico` (sin JS, o con Cmd/Ctrl+clic). «Solicitar diagnóstico»
+  sigue yendo directo al cuestionario.
+- Arriba, «Enviar mi idea»: texto libre, nombre, empresa y WhatsApp o correo. Va a `/api/leads` con
+  `formType: "Idea de mejora"`: contacto en la lista de contacto de Brevo (`BREVO_CONTACT_LIST_ID`)
+  con `TIPO_SOLICITUD` = «Idea de mejora», aviso a `BREVO_ADMIN_EMAIL` con el asunto «Idea de
+  mejora (…)» y confirmación al cliente si eligió correo. La ventana solo da las gracias si el
+  endpoint responde `ok`.
+- Debajo, destacado, el diagnóstico avanzado: **servicio de pago** (no usar «gratis», «gratuito» ni
+  «sin coste»); el botón lleva a `/diagnostico` sin cambiar el cuestionario, que envía aparte a
+  `/api/diagnosticos`. No hay precio definido: el texto dice que los honorarios se explican al
+  presentar el diagnóstico.
+
 ### Identidad en buscadores (SEO)
 
 Todo sale de `tools/contenido.py` (`META_TITLE`, `META_DESCRIPTION`, `SITIO`, `NOMBRE_SITIO`,

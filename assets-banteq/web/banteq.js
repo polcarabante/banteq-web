@@ -703,13 +703,18 @@
       if (/^(?:solicitar diagn[oó]stico|quiero mejorar)(?:\s*(?:solicitar diagn[oó]stico|quiero mejorar))?$/i.test(link.textContent.trim())) link.setAttribute("href", "/diagnostico");
     }
   }
-  // Respaldo para las variantes de Framer al cambiar de página o de tamaño.
+  // Respaldo para las variantes de Framer al cambiar de página o de tamaño. «Quiero mejorar» abre la
+  // ventana con las dos opciones (contar su idea o hacer el diagnóstico avanzado); «Solicitar
+  // diagnóstico» va directo al cuestionario. El enlace sigue apuntando a /diagnostico (sin JS, o
+  // abierto en otra pestaña con Cmd/Ctrl).
   document.addEventListener("click", event => {
     const link = event.target.closest?.("a");
     if (link && /^(?:solicitar diagn[oó]stico|quiero mejorar)(?:\s*(?:solicitar diagn[oó]stico|quiero mejorar))?$/i.test(link.textContent.trim())) {
       link.setAttribute("href", "/diagnostico");
       if (!event.ctrlKey && !event.metaKey && !event.shiftKey && event.button === 0) {
-        event.preventDefault(); event.stopImmediatePropagation(); window.location.assign("/diagnostico");
+        event.preventDefault(); event.stopImmediatePropagation();
+        if (/^quiero mejorar/i.test(link.textContent.trim())) abrirMejorar(link);
+        else window.location.assign("/diagnostico");
       }
     }
   }, true);
@@ -959,13 +964,15 @@
     }, 180);
   };
 
+  // Una id por ventana: las dos tienen campos «Phone» y «Email».
+  const fxErrorId = (input) => `bq-${input.closest(".bq-qm") ? "qm" : "fx"}-error-${input.name}`;
   const fxError = (input, crear) => {
     const campo = input.closest(".bq-fx-campo");
     let error = campo && campo.querySelector(".bq-error");
     if (error || !crear || !campo) return error;
     error = document.createElement("p");
     error.className = "bq-error";
-    error.id = `bq-fx-error-${input.name}`;
+    error.id = fxErrorId(input);
     error.setAttribute("role", "alert");
     campo.appendChild(error);
     return error;
@@ -973,7 +980,7 @@
   const fxMarcar = (input, texto) => {
     fxError(input, true).textContent = texto;
     input.setAttribute("aria-invalid", "true");
-    input.setAttribute("aria-describedby", `bq-fx-error-${input.name}`);
+    input.setAttribute("aria-describedby", fxErrorId(input));
   };
   const fxDesmarcar = (input) => {
     const error = fxError(input, false);
@@ -1096,6 +1103,271 @@
       );
   };
 
+  // ---------------------------------------------------------------------------------------------
+  // «Quiero mejorar»: ventana con dos opciones. Arriba, la rápida: contar la idea con texto libre y
+  // dejar nombre, empresa y WhatsApp o correo (se envía a /api/leads como «Idea de mejora», aparte
+  // de los diagnósticos). Debajo, destacada, la de más valor: el diagnóstico avanzado (de pago), que
+  // lleva al cuestionario de /diagnostico sin cambiarlo. Se abre desde los botones «Quiero mejorar»
+  // (home) o con la dirección …#quiero-mejorar. Mismo armazón y estilos que la de la Fórmula.
+  // ---------------------------------------------------------------------------------------------
+  const ICONO_PUNTO = '<svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="m3.5 8.5 3 3 6-7"/></svg>';
+  const MEJORAR_HTML =
+    '<div class="bq-fx-panel">' +
+    `<button type="button" class="bq-fx-cerrar" aria-label="Cerrar">${ICONO_CERRAR}</button>` +
+    '<div class="bq-fx-contenido">' +
+    '<section class="bq-qm-idea" aria-labelledby="bq-qm-titulo">' +
+    '<p class="bq-qm-antetitulo">Si sabes qué necesitas, cuéntanoslo.</p>' +
+    '<h2 class="bq-qm-titulo" id="bq-qm-titulo">¿Ya tienes claro qué quieres mejorar?</h2>' +
+    '<p class="bq-qm-intro">Cuéntanos qué tienes en mente y estudiaremos cómo podemos ayudarte a hacerlo realidad.</p>' +
+    // Móvil: el diagnóstico queda lejos, abajo; este enlace baja hasta él.
+    '<button type="button" class="bq-qm-saltar">¿No sabes por dónde empezar? <span>Ver el diagnóstico avanzado</span></button>' +
+    '<div class="bq-qm-formulario">' +
+    '<form class="bq-fx-form bq-qm-form" data-bq-propio="idea" novalidate>' +
+    '<div class="bq-fx-campo"><label class="bq-qm-oculto" for="bq-qm-mensaje">Qué quieres mejorar</label>' +
+    '<textarea id="bq-qm-mensaje" name="Message" rows="4" maxlength="5000" placeholder="Explícanos qué quieres mejorar, automatizar o desarrollar en tu empresa..."></textarea></div>' +
+    '<div class="bq-qm-fila">' +
+    '<div class="bq-fx-campo"><label for="bq-qm-nombre">Nombre</label>' +
+    '<input id="bq-qm-nombre" name="Name" type="text" autocomplete="name" maxlength="120" placeholder="Tu nombre"></div>' +
+    '<div class="bq-fx-campo"><label for="bq-qm-empresa">Empresa</label>' +
+    '<input id="bq-qm-empresa" name="Company" type="text" autocomplete="organization" maxlength="160" placeholder="Tu empresa"></div>' +
+    "</div>" +
+    '<div class="bq-fx-campo"><span class="bq-fx-etiqueta" id="bq-qm-metodo-etiqueta">¿Cómo prefieres que te contactemos?</span>' +
+    '<div class="bq-metodo" role="radiogroup" aria-labelledby="bq-qm-metodo-etiqueta">' +
+    '<label class="bq-metodo-opcion"><input type="radio" name="ContactMethod" value="whatsapp" checked>' +
+    `<span class="bq-metodo-cara">${ICONO_WHATSAPP}<span>WhatsApp</span></span></label>` +
+    '<label class="bq-metodo-opcion"><input type="radio" name="ContactMethod" value="email">' +
+    `<span class="bq-metodo-cara">${ICONO_CORREO}<span>Correo electrónico</span></span></label></div></div>` +
+    '<div class="bq-fx-campo" data-bq-campo="tel"><label class="bq-fx-caja bq-fx-tel">' +
+    '<input name="Phone" type="tel" inputmode="tel" autocomplete="tel-national" placeholder="Número de WhatsApp" aria-label="Número de WhatsApp">' +
+    `<span class="bq-prefijo"><span class="bq-prefijo-valor">+34</span>${FLECHA}<select name="PhonePrefix" aria-label="Prefijo del país"></select></span></label></div>` +
+    '<div class="bq-fx-campo" data-bq-campo="email"><input name="Email" type="email" autocomplete="email" maxlength="254" placeholder="Tu correo electrónico" aria-label="Correo electrónico"></div>' +
+    '<input class="bq-fx-trampa" name="website" type="text" tabindex="-1" autocomplete="off" aria-hidden="true">' +
+    '<button type="submit" class="bq-fx-enviar">Enviar mi idea</button>' +
+    '<p class="bq-fx-estado" aria-live="polite"></p>' +
+    '<p class="bq-fx-legal">Usaremos estos datos solo para responderte. <a href="/privacidad">Política de privacidad</a></p>' +
+    "</form></div>" +
+    '<div class="bq-fx-hecho bq-qm-hecho" hidden tabindex="-1">' +
+    `<span class="bq-fx-hecho-icono">${ICONO_OK}</span>` +
+    '<h3 class="bq-fx-subtitulo">Hemos recibido tu idea</h3>' +
+    '<p class="bq-fx-hecho-texto"></p>' +
+    "</div>" +
+    "</section>" +
+    '<div class="bq-qm-o" aria-hidden="true"><span>o bien</span></div>' +
+    '<section class="bq-qm-diag" aria-labelledby="bq-qm-diag-titulo">' +
+    '<div class="bq-qm-diag-cabeza"><p class="bq-fx-sello">Diagnóstico avanzado</p><p class="bq-qm-pago">Servicio de pago</p></div>' +
+    '<h3 class="bq-qm-diag-titulo" id="bq-qm-diag-titulo">¿No sabes por dónde empezar?</h3>' +
+    '<p class="bq-qm-diag-texto">Descubre las oportunidades que tu empresa todavía no está aprovechando. Con nuestro diagnóstico avanzado analizamos cómo trabajas, detectamos procesos que puedes automatizar y preparamos propuestas de mejora adaptadas a tu negocio.</p>' +
+    '<ul class="bq-qm-puntos">' +
+    `<li>${ICONO_PUNTO}<span><b>Avanzado y personalizado:</b> se adapta a tu empresa y a tu forma de trabajar.</span></li>` +
+    `<li>${ICONO_PUNTO}<span><b>Analizamos tus procesos</b> y las herramientas que usáis.</span></li>` +
+    `<li>${ICONO_PUNTO}<span><b>Identificamos oportunidades concretas</b> de automatización.</span></li>` +
+    `<li>${ICONO_PUNTO}<span><b>Preparamos un mapa conceptual</b> de cómo funciona tu negocio.</span></li>` +
+    `<li>${ICONO_PUNTO}<span><b>Revisamos tus respuestas</b> y te contactamos para presentarte el diagnóstico y las oportunidades detectadas.</span></li>` +
+    "</ul>" +
+    '<p class="bq-qm-lema">Si no sabes por dónde empezar, nosotros analizamos tu negocio y encontramos las oportunidades.</p>' +
+    '<a class="bq-qm-diag-boton" href="/diagnostico"><span>Realizar diagnóstico avanzado</span><span class="bq-qm-flecha" aria-hidden="true"></span></a>' +
+    '<p class="bq-qm-precio">El diagnóstico avanzado es un servicio de pago. Responder el cuestionario no supone contratarlo: cuando te presentemos el diagnóstico te explicaremos los honorarios y las condiciones de entrega.</p>' +
+    "</section></div></div>";
+
+  let mejorar = null; // { dialog, form, … } una vez montada
+  let mejorarOrigen = null; // botón que la abrió (vuelve ahí el foco al cerrar)
+
+  const montarMejorar = () => {
+    if (mejorar) return mejorar;
+    const dialog = document.createElement("dialog");
+    dialog.className = "bq-fx bq-qm";
+    dialog.setAttribute("aria-labelledby", "bq-qm-titulo");
+    dialog.innerHTML = MEJORAR_HTML;
+    document.body.appendChild(dialog);
+    const form = dialog.querySelector("form");
+    const select = form.querySelector('select[name="PhonePrefix"]');
+    for (const item of PREFIJOS.split(",")) {
+      const [country, code] = item.split("|");
+      select.add(new Option(`${country} (+${code})`, code, code === "34", code === "34"));
+    }
+    const sync = () => {
+      const whatsapp = (form.querySelector('input[name="ContactMethod"]:checked') || {}).value !== "email";
+      form.dataset.bqMetodo = whatsapp ? "whatsapp" : "email";
+      form.querySelector(".bq-prefijo-valor").textContent = `+${select.value}`;
+    };
+    form.addEventListener("change", sync);
+    form.addEventListener("input", (event) => {
+      if (event.target.matches && event.target.matches("[aria-invalid]")) fxDesmarcar(event.target);
+    });
+    form.querySelector(".bq-metodo").addEventListener("change", () => {
+      for (const input of form.querySelectorAll('[name="Phone"], [name="Email"]')) fxDesmarcar(input);
+    });
+    form.addEventListener("submit", (event) => {
+      event.preventDefault();
+      enviarMejorar();
+    });
+    dialog.querySelector(".bq-fx-cerrar").addEventListener("click", () => cerrarMejorar());
+    dialog.querySelector(".bq-qm-saltar").addEventListener("click", () => {
+      dialog.querySelector(".bq-qm-diag").scrollIntoView({ behavior: reduceMotion.matches ? "auto" : "smooth", block: "start" });
+    });
+    // Clic fuera del panel (en el fondo oscurecido) = cerrar. Esc lo gestiona el navegador.
+    dialog.addEventListener("click", (event) => {
+      if (event.target === dialog) cerrarMejorar();
+    });
+    dialog.addEventListener("cancel", (event) => {
+      event.preventDefault();
+      cerrarMejorar();
+    });
+    dialog.addEventListener("close", () => {
+      document.documentElement.classList.remove("bq-fx-abierta");
+      if (location.hash === "#quiero-mejorar") history.replaceState(history.state, "", location.pathname + location.search);
+      if (mejorarOrigen && mejorarOrigen.isConnected) mejorarOrigen.focus({ preventScroll: true });
+      mejorarOrigen = null;
+    });
+    sync();
+    mejorar = {
+      dialog,
+      form,
+      caja: dialog.querySelector(".bq-qm-formulario"),
+      hecho: dialog.querySelector(".bq-qm-hecho"),
+      enviando: false,
+      enviado: "",
+      inicio: 0,
+    };
+    return mejorar;
+  };
+
+  const abrirMejorar = (origen) => {
+    const m = montarMejorar();
+    if (m.dialog.open) return;
+    mejorarOrigen = origen || null;
+    if (!m.inicio) m.inicio = Date.now();
+    m.dialog.classList.remove("bq-fx-cerrando");
+    document.documentElement.classList.add("bq-fx-abierta");
+    m.dialog.showModal();
+    m.dialog.querySelector(".bq-fx-contenido").scrollTop = 0;
+    // Con ratón, el cursor ya en el texto; en el móvil no (el teclado taparía la ventana).
+    if (conRaton.matches && !m.enviado) m.form.querySelector("textarea").focus({ preventScroll: true });
+    else m.dialog.querySelector(".bq-fx-cerrar").focus({ preventScroll: true });
+  };
+  const cerrarMejorar = () => {
+    if (!mejorar || !mejorar.dialog.open) return;
+    const { dialog } = mejorar;
+    if (reduceMotion.matches) return dialog.close();
+    dialog.classList.add("bq-fx-cerrando");
+    setTimeout(() => {
+      dialog.classList.remove("bq-fx-cerrando");
+      dialog.close();
+    }, 180);
+  };
+  const qmEstado = (tipo, texto) => {
+    const estado = mejorar.form.querySelector(".bq-fx-estado");
+    estado.dataset.tipo = tipo;
+    estado.textContent = texto;
+  };
+
+  const enviarMejorar = () => {
+    const m = mejorar;
+    const { form } = m;
+    if (m.enviando) return;
+    for (const input of form.querySelectorAll("[aria-invalid]")) fxDesmarcar(input);
+    const errores = [];
+    const mensaje = form.querySelector('[name="Message"]');
+    const nombre = form.querySelector('[name="Name"]');
+    const empresa = form.querySelector('[name="Company"]');
+    const tel = form.querySelector('[name="Phone"]');
+    const email = form.querySelector('[name="Email"]');
+    const prefijo = form.querySelector('[name="PhonePrefix"]').value || "34";
+    const whatsapp = form.dataset.bqMetodo !== "email";
+    if (!mensaje.value.trim()) errores.push([mensaje, "Cuéntanos brevemente qué quieres mejorar."]);
+    if (!nombre.value.trim()) errores.push([nombre, TEXTOS.Name]);
+    if (!empresa.value.trim()) errores.push([empresa, TEXTOS.Company]);
+    let cifras = "";
+    if (whatsapp) {
+      cifras = tel.value.replace(/\D/g, "");
+      if (prefijo !== "39") cifras = cifras.replace(/^0+/, "");
+      if (!cifras) errores.push([tel, TEXTOS.Phone]);
+      else if (prefijo === "34" && !/^[6-9]\d{8}$/.test(cifras)) errores.push([tel, TEXTOS.PhoneMal34]);
+      else if (cifras.length < 6 || cifras.length + prefijo.length > 15) errores.push([tel, TEXTOS.PhoneMal]);
+    } else {
+      const valor = email.value.trim();
+      if (!valor) errores.push([email, TEXTOS.Email]);
+      else if (!/^[^\s@]+@[^\s@.]+(\.[^\s@.]+)*\.[a-z]{2,}$/i.test(valor)) errores.push([email, TEXTOS.EmailMal]);
+    }
+    if (errores.length) {
+      for (const [input, texto] of errores) fxMarcar(input, texto);
+      errores[0][0].focus();
+      qmEstado("error", errores.length > 1 ? "Revisa los campos marcados." : "Revisa el campo marcado.");
+      return;
+    }
+    const payload = {
+      formType: "Idea de mejora",
+      origin: window.location.pathname,
+      message: mensaje.value.trim(),
+      name: nombre.value.trim(),
+      company: empresa.value.trim(),
+      contactPreference: whatsapp ? "WhatsApp" : "Correo electrónico",
+      phone: whatsapp ? `+${prefijo}${cifras}` : "",
+      email: whatsapp ? "" : email.value.trim(),
+    };
+    const clave = JSON.stringify(payload);
+    const destino = whatsapp ? `por WhatsApp al ${payload.phone}` : `en ${payload.email}`;
+    const terminar = (confirmacion) => {
+      m.caja.hidden = true;
+      m.hecho.hidden = false;
+      m.hecho.querySelector(".bq-fx-hecho-texto").textContent =
+        `Gracias, ${payload.name}. Revisaremos lo que nos cuentas y te contactaremos ${destino}.` +
+        (confirmacion ? " Te hemos enviado una confirmación a tu correo." : "");
+      m.hecho.focus({ preventScroll: true });
+    };
+    // La misma solicitud ya llegó: no se envía otra vez.
+    if (m.enviado === clave) return terminar(false);
+    payload.page = window.location.href;
+    payload.pageTitle = document.title;
+    payload.elapsedMs = Date.now() - m.inicio;
+    payload.hp = form.querySelector('[name="website"]').value;
+    m.enviando = true;
+    form.dataset.bqEnviando = "1";
+    qmEstado("enviando", "Enviando tu idea…");
+    const guarda = setTimeout(() => {
+      if (!m.enviando) return;
+      m.enviando = false;
+      delete form.dataset.bqEnviando;
+      qmEstado("error", "No hemos podido confirmar el envío. Inténtalo de nuevo.");
+    }, 30000);
+    const fallo = (texto) => {
+      clearTimeout(guarda);
+      m.enviando = false;
+      delete form.dataset.bqEnviando;
+      qmEstado("error", texto);
+    };
+    nativeFetch("/api/leads", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) })
+      .then(async (res) => {
+        let data = {};
+        try {
+          data = await res.json();
+        } catch {}
+        return { res, data };
+      })
+      .then(
+        ({ res, data }) => {
+          // Solo se confirma si el servidor dice que la ha guardado y avisado.
+          if (res.ok && data.ok) {
+            clearTimeout(guarda);
+            m.enviando = false;
+            delete form.dataset.bqEnviando;
+            m.enviado = clave;
+            qmEstado("ok", "");
+            return terminar(Boolean(data.confirmation));
+          }
+          const campos = { message: "Message", name: "Name", company: "Company", phone: "Phone", email: "Email" };
+          for (const [k, texto] of Object.entries(data.fields || {})) {
+            const input = campos[k] && form.querySelector(`[name="${campos[k]}"]`);
+            if (input) fxMarcar(input, texto);
+          }
+          fallo(data.code === "validation" || data.code === "rate_limit"
+            ? data.error
+            : "No hemos podido enviar tu idea. Inténtalo de nuevo en unos minutos.");
+        },
+        () => fallo("No hemos podido enviar tu idea. Revisa tu conexión e inténtalo de nuevo."),
+      );
+  };
+
   // Clics en los enlaces a #formula-banteq y #hablemos (antes que el router de Framer).
   document.addEventListener(
     "click",
@@ -1124,6 +1396,7 @@
   // Llegada con la dirección …#formula-banteq o …#hablemos (p. ej. desde /contacto, que redirige).
   const alLlegar = () => {
     if (location.hash === "#formula-banteq") abrirFormula(null);
+    else if (location.hash === "#quiero-mejorar") abrirMejorar(null);
     else if (location.hash === "#hablemos") {
       let intentos = 0;
       const probar = () => {
@@ -1135,7 +1408,10 @@
   };
   if (document.readyState === "complete") alLlegar();
   else window.addEventListener("load", alLlegar, { once: true });
-  window.addEventListener("hashchange", () => location.hash === "#formula-banteq" && abrirFormula(null));
+  window.addEventListener("hashchange", () => {
+    if (location.hash === "#formula-banteq") abrirFormula(null);
+    else if (location.hash === "#quiero-mejorar") abrirMejorar(null);
+  });
 
   // Home o subpágina (data-bq-pagina en <html>): el HTML de cada subpágina ya lo trae; el router de
   // Framer cambia de página sin recargar, así que se actualiza en cada cambio de dirección.

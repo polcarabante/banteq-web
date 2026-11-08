@@ -1371,6 +1371,347 @@ dialog.bq-fx.bq-fx-cerrando::backdrop {
 }
 
 /* ------------------------------------------------------------------------------------------
+   «Quiero mejorar»: ventana con dos opciones (banteq.js, montarMejorar). Reutiliza el armazón,
+   los campos, el selector WhatsApp/correo y el estado de envío de la ventana de la Fórmula
+   (.bq-fx-*). Una sola columna: arriba la opción rápida (contar la idea) y debajo, destacada con
+   el filo iridiscente de la marca, el diagnóstico avanzado. Sin animaciones continuas.
+   ------------------------------------------------------------------------------------------ */
+.bq-qm .bq-fx-panel {
+  width: min(720px, 100%);
+  max-height: min(900px, calc(100dvh - 48px));
+}
+.bq-qm .bq-fx-contenido {
+  display: block;
+}
+.bq-qm .bq-fx-cerrar {
+  top: 22px;
+  right: 22px;
+}
+.bq-qm-oculto {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  margin: -1px !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+  clip: rect(0 0 0 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+/* Opción 1: la idea */
+.bq-qm-idea {
+  padding: 44px 44px 4px;
+}
+.bq-qm-antetitulo {
+  margin: 0;
+  padding-right: 56px;
+  color: rgba(255, 255, 255, 0.55);
+  font-size: 13.5px;
+  font-weight: 500;
+  line-height: 1.4;
+  letter-spacing: -0.005em;
+}
+.bq-qm-titulo {
+  margin: 10px 0 10px;
+  padding-right: 40px;
+  color: #fff;
+  font-size: clamp(27px, 3vw, 34px);
+  font-weight: 500;
+  line-height: 1.1;
+  letter-spacing: -0.035em;
+}
+.bq-qm-intro {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 15.5px;
+  line-height: 1.55;
+}
+.bq-qm-formulario {
+  margin-top: 22px;
+}
+.bq-qm-saltar {
+  display: none;
+}
+.bq-qm-form {
+  gap: 14px;
+}
+.bq-qm textarea {
+  display: block;
+  width: 100%;
+  min-height: 128px;
+  margin: 0;
+  padding: 14px 16px;
+  border: 0;
+  border-radius: 16px;
+  background: rgba(0, 0, 0, 0.28);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.12);
+  color: #fff;
+  font: 400 16px/1.5 "Geist", "Geist Placeholder", sans-serif;
+  resize: vertical;
+  transition: box-shadow 0.2s ease, background-color 0.2s ease;
+}
+.bq-qm textarea:focus {
+  outline: none;
+  background: rgba(0, 0, 0, 0.36);
+  box-shadow: inset 0 0 0 1.5px rgba(255, 255, 255, 0.72);
+}
+.bq-qm textarea::placeholder {
+  color: rgba(255, 255, 255, 0.4);
+  opacity: 1;
+}
+.bq-qm textarea[aria-invalid="true"] {
+  box-shadow: inset 0 0 0 1.5px rgba(255, 170, 160, 0.75);
+}
+.bq-qm-fila {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+.bq-qm .bq-fx-enviar {
+  margin-top: 4px;
+}
+.bq-qm-hecho {
+  margin-top: 22px;
+  padding: 36px 24px 32px;
+}
+.bq-qm-hecho .bq-fx-hecho-texto {
+  max-width: 420px;
+  margin-bottom: 0;
+}
+
+/* Separador entre las dos opciones */
+.bq-qm-o {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin: 30px 44px 22px;
+  color: rgba(255, 255, 255, 0.42);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.bq-qm-o::before,
+.bq-qm-o::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* Opción 2: diagnóstico avanzado. Fondo un poco más claro con dos halos fijos de los tonos de la
+   marca y filo iridiscente (borde transparente sobre un degradado: sin capas ni filtros extra). */
+.bq-qm-diag {
+  margin: 0 20px 20px;
+  padding: 32px 28px 26px;
+  border: 1px solid transparent;
+  border-radius: 26px;
+  background:
+    radial-gradient(70% 90% at 100% 0%, rgba(201, 170, 255, 0.16), transparent 70%) padding-box,
+    radial-gradient(60% 80% at 0% 100%, rgba(168, 230, 255, 0.09), transparent 70%) padding-box,
+    linear-gradient(180deg, #1b1b20, #101013) padding-box,
+    linear-gradient(125deg, rgba(180, 195, 255, 0.6), rgba(201, 251, 241, 0.32) 40%, rgba(214, 204, 255, 0.55) 75%, rgba(168, 230, 255, 0.4)) border-box;
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.3);
+}
+.bq-qm-diag-cabeza {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 10px;
+}
+.bq-qm-pago {
+  margin: 0;
+  padding: 5px 11px;
+  border-radius: 999px;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.24);
+  color: rgba(255, 255, 255, 0.88);
+  font-size: 12.5px;
+  font-weight: 500;
+  line-height: 1.2;
+}
+.bq-qm-diag-titulo {
+  margin: 18px 0 10px;
+  color: #fff;
+  font-size: clamp(23px, 2.4vw, 27px);
+  font-weight: 500;
+  line-height: 1.15;
+  letter-spacing: -0.03em;
+}
+.bq-qm-diag-texto {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.74);
+  font-size: 15px;
+  line-height: 1.55;
+}
+.bq-qm-puntos {
+  display: grid;
+  gap: 11px;
+  margin: 22px 0 22px;
+  padding: 0;
+  list-style: none;
+}
+.bq-qm-puntos li {
+  display: grid;
+  grid-template-columns: 22px 1fr;
+  gap: 12px;
+  align-items: start;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 14.5px;
+  line-height: 1.5;
+}
+.bq-qm-puntos svg {
+  width: 22px;
+  height: 22px;
+  padding: 4px;
+  border-radius: 50%;
+  background: rgba(201, 251, 241, 0.12);
+  color: rgb(201, 251, 241);
+}
+.bq-qm-puntos b {
+  color: #fff;
+  font-weight: 500;
+}
+.bq-qm-lema {
+  margin: 0 0 18px;
+  padding-top: 18px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  background: linear-gradient(90deg, rgb(200, 210, 255), rgb(216, 252, 244) 40%, rgb(226, 218, 255) 75%, rgb(190, 236, 255));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  font-size: 16.5px;
+  font-weight: 500;
+  line-height: 1.4;
+  letter-spacing: -0.015em;
+}
+.bq-qm-diag-boton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  min-height: 54px;
+  padding: 0 22px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, rgb(180, 195, 255), rgb(201, 251, 241) 35%, rgb(214, 204, 255) 70%, rgb(168, 230, 255));
+  box-shadow: 0 10px 28px rgba(180, 195, 255, 0.16);
+  color: rgb(17, 17, 17);
+  font: 500 16px/1.2 "Geist", "Geist Placeholder", sans-serif;
+  letter-spacing: -0.01em;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.2s ease;
+}
+.bq-qm-flecha {
+  flex: none;
+  width: 13px;
+  height: 13px;
+  background: currentColor;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' fill='none' stroke='black' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M2 6h8M6.5 2.5 10 6l-3.5 3.5'/%3E%3C/svg%3E") center / contain no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' fill='none' stroke='black' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M2 6h8M6.5 2.5 10 6l-3.5 3.5'/%3E%3C/svg%3E") center / contain no-repeat;
+  transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+@media (hover: hover) {
+  .bq-qm-diag-boton:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 12px 32px rgba(180, 195, 255, 0.24);
+  }
+  .bq-qm-diag-boton:hover .bq-qm-flecha {
+    transform: translateX(2px);
+  }
+}
+.bq-qm-diag-boton:active {
+  transform: scale(0.985);
+}
+.bq-qm-precio {
+  margin: 14px 4px 0;
+  color: rgba(255, 255, 255, 0.55);
+  font-size: 12.5px;
+  line-height: 1.5;
+  text-align: center;
+}
+
+/* Teléfono: hoja que sube desde abajo (reglas de .bq-fx) con márgenes más ajustados. */
+@media (max-width: 799.98px) {
+  .bq-qm .bq-fx-panel {
+    max-height: calc(100dvh - 10px);
+  }
+  .bq-qm .bq-fx-cerrar {
+    top: 12px;
+    right: 12px;
+  }
+  .bq-qm-idea {
+    padding: 22px 20px 2px;
+  }
+  .bq-qm-titulo {
+    font-size: clamp(25px, 7.2vw, 30px);
+  }
+  .bq-qm-intro {
+    font-size: 15px;
+  }
+  .bq-qm-formulario {
+    margin-top: 18px;
+  }
+  .bq-qm-saltar {
+    display: block;
+    margin: 14px 0 0;
+    padding: 0;
+    border: 0;
+    background: none;
+    color: rgba(255, 255, 255, 0.6);
+    font: 500 14px/1.45 "Geist", "Geist Placeholder", sans-serif;
+    text-align: left;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .bq-qm-saltar span {
+    background: linear-gradient(90deg, rgb(200, 210, 255), rgb(216, 252, 244) 40%, rgb(226, 218, 255) 75%, rgb(190, 236, 255));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    white-space: nowrap;
+  }
+  .bq-qm-saltar span::after {
+    content: " ↓";
+    color: rgb(216, 252, 244);
+  }
+  .bq-qm textarea {
+    min-height: 112px;
+  }
+  .bq-qm-o {
+    margin: 26px 20px 18px;
+  }
+  .bq-qm-diag {
+    margin: 0 12px calc(12px + env(safe-area-inset-bottom));
+    padding: 26px 18px 20px;
+    border-radius: 22px;
+  }
+  .bq-qm-diag-titulo {
+    margin-top: 16px;
+  }
+}
+@media (max-width: 559.98px) {
+  .bq-qm-fila {
+    gap: 10px;
+  }
+}
+@media (max-width: 359.98px) {
+  .bq-qm-fila {
+    grid-template-columns: 1fr;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .bq-qm-diag-boton,
+  .bq-qm-flecha,
+  .bq-qm textarea {
+    transition: none;
+  }
+}
+
+/* ------------------------------------------------------------------------------------------
    Pie en el teléfono. Mismo componente en la home y en las subpáginas; solo se corrige lo que no
    cabía a 320 px, sin cambiar el diseño:
    - El logotipo medía 357 px fijos y se cortaba («bante»): ahora ocupa como mucho el ancho
