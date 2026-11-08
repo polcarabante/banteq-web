@@ -63,12 +63,19 @@ const getClientIp = (request) => String(request.headers["x-forwarded-for"] || re
 
 const LIMITS = { name: 120, company: 160, message: 5000, email: 254, page: 500, monthlyFee: 100000 };
 
-// Fórmula Banteq: remodelación gratuita de la web al contratar con Banteq su mantenimiento, que
-// cuesta menos que el actual (hasta 50 €/mes menos). La solicitud trae empresa, cuota mensual
-// actual y un contacto; va a la misma lista de Brevo que el formulario de contacto, marcada con
-// TIPO_SOLICITUD = «Fórmula Banteq».
+// Fórmula Banteq: remodelación gratuita de una web informativa básica al contratar con Banteq su
+// mantenimiento, con un 25 % de descuento sobre la cuota actual, hasta 50 €/mes y con una cuota
+// mínima de 35 €/mes (sin IVA; condiciones en el aviso legal y en tools/contenido.py). La solicitud
+// trae empresa, web, cuota mensual actual y un contacto; va a la misma lista de Brevo que el
+// formulario de contacto, marcada con TIPO_SOLICITUD = «Fórmula Banteq».
 const FORMULA = "Fórmula Banteq";
-const FORMULA_REBAJA_MAX = 50;
+const FORMULA_DESCUENTO = 0.25;
+const FORMULA_AHORRO_MAX = 50;
+const FORMULA_CUOTA_MIN = 35;
+const formulaQuote = (actual) => {
+  const rebaja = Math.max(0, Math.min(actual * FORMULA_DESCUENTO, FORMULA_AHORRO_MAX, actual - FORMULA_CUOTA_MIN));
+  return { nueva: Math.max(actual - rebaja, FORMULA_CUOTA_MIN), rebaja };
+};
 const isFormulaType = (type) => normalizeText(type) === FORMULA;
 
 // «120», «120,50», «1.200» o un número → número con dos decimales como mucho (o NaN).
@@ -93,7 +100,10 @@ const normalizeWebsite = (value) => {
     return "";
   }
 };
-const formatEuros = (n) => new Intl.NumberFormat("es-ES", { maximumFractionDigits: 2 }).format(n);
+const formatEuros = (n) => {
+  const r = Math.round(n * 100) / 100;
+  return new Intl.NumberFormat("es-ES", { minimumFractionDigits: r % 1 ? 2 : 0, maximumFractionDigits: 2 }).format(r);
+};
 
 // Error con código para la respuesta: el navegador recibe el código y un texto, nunca detalles internos.
 const failure = (code, message, status = 502, extra = {}) => Object.assign(new Error(message), { publicCode: code, publicStatus: status, ...extra });
@@ -313,14 +323,14 @@ const sendAdminNotification = async (lead) => {
     : `<p><strong>Página:</strong> ${text(lead.origin)}</p>`;
 
   if (isFormulaType(lead.formType)) {
-    const rebaja = Math.min(FORMULA_REBAJA_MAX, lead.monthlyFee);
+    const { nueva, rebaja } = formulaQuote(lead.monthlyFee);
     const plazo = getMadridDateTime(new Date(lead.submittedAtMs + 48 * 3600 * 1000));
     const formulaHtml = `
     <h2>Nueva solicitud de la Fórmula Banteq</h2>
     <p><strong>Empresa:</strong> ${text(lead.company)}</p>
     <p><strong>Web actual:</strong> <a href="${escapeHtml(lead.currentWebsite)}">${text(lead.currentWebsite)}</a></p>
-    <p><strong>Paga hoy por el mantenimiento de su web:</strong> ${formatEuros(lead.monthlyFee)} €/mes</p>
-    <p><strong>Rebaja máxima de la oferta para este importe:</strong> hasta ${formatEuros(rebaja)} €/mes${lead.monthlyFee <= FORMULA_REBAJA_MAX ? " (paga 50 € o menos: la rebaja tiene que ser menor que su cuota)" : ""}</p>
+    <p><strong>Paga hoy por el mantenimiento de su web (según indica, sin IVA):</strong> ${formatEuros(lead.monthlyFee)} €/mes</p>
+    <p><strong>Cuota con la Fórmula Banteq:</strong> ${formatEuros(nueva)} €/mes${rebaja > 0 ? ` (ahorro de ${formatEuros(rebaja)} €/mes)` : " (paga 35 € o menos: sin descuento, cuota mínima)"}. Pendiente de acreditar su cuota actual con una factura y de revisar su web.</p>
     <p><strong>Prefiere que le contactemos por:</strong> ${text(lead.contactPreference)}</p>
     ${contactLine}
     <p><strong>Compromiso:</strong> enviarle en menos de 48 h la propuesta de web remodelada y la oferta de mantenimiento (antes del ${text(plazo)}).</p>

@@ -768,6 +768,11 @@ form[data-bq-contacto] .bq-estado[data-tipo="ok"] {
   min-width: 0;
   color: rgba(255, 255, 255, 0.86);
 }
+@media (max-width: 359.98px) {
+  .bq-formula-resto {
+    display: none;
+  }
+}
 .bq-formula-flecha {
   position: relative;
   flex: none;
@@ -1231,10 +1236,14 @@ dialog.bq-fx.bq-fx-cerrando::backdrop {
   line-height: 1.5;
   text-align: center;
 }
-.bq-fx-legal a {
+.bq-fx-legal a,
+.bq-fx-letra a {
   color: inherit;
   text-decoration: underline;
   text-underline-offset: 2px;
+}
+.bq-fx-letra a {
+  color: rgba(255, 255, 255, 0.7);
 }
 .bq-fx-hecho {
   display: flex;
@@ -3019,5 +3028,49 @@ dialog.bq-fx.bq-fx-cerrando::backdrop {
   }
   .bq-dm:hover {
     transform: none;
+  }
+}
+
+/* Aviso legal, apartado de la Fórmula Banteq: tabla de ejemplos de cálculo, con la letra del texto
+   de la página (Geist 16 px) y líneas finas. */
+.bq-tabla {
+  width: 100%;
+  margin: 6px 0 4px;
+  overflow-x: auto;
+}
+.bq-tabla table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: "Geist", "Geist Placeholder", sans-serif;
+  font-size: 16px;
+  line-height: 1.35;
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+}
+.bq-tabla th,
+.bq-tabla td {
+  padding: 10px 12px 10px 0;
+  border-bottom: 1px solid rgba(26, 26, 26, 0.12);
+  text-align: left;
+  vertical-align: top;
+}
+.bq-tabla th {
+  color: rgb(26, 26, 26);
+  font-weight: 500;
+}
+.bq-tabla td {
+  color: rgb(60, 60, 60);
+  white-space: nowrap;
+}
+.bq-tabla tr > :last-child {
+  padding-right: 0;
+}
+@media (max-width: 479.98px) {
+  .bq-tabla table {
+    font-size: 14.5px;
+  }
+  .bq-tabla th,
+  .bq-tabla td {
+    padding: 9px 8px 9px 0;
   }
 }
