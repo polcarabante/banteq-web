@@ -181,6 +181,16 @@ definidas: no añadirlas.
   `/api/diagnosticos`. No hay precio definido: el texto dice que los honorarios se explican al
   presentar el diagnóstico.
 
+### Garantía de 60 días (automatizaciones)
+
+- Textos en `contenido.py` (`GARANTIA_*`); condiciones completas en el apartado 6 del aviso legal
+  (`CONDICIONES_GARANTIA`, ancla `/aviso-legal#garantia`). «Datos de contacto» pasa a ser el 7.
+- Home: tarjeta bajo las demostraciones de «Automatización e IA» (`tools/demos.py`, `garantia_html`),
+  con un fundido corto al entrar en pantalla (`banteq.js`, `montarGarantia`; nada con movimiento
+  reducido). /automatizacion-procesos: bloque `("garantia", None)` (`build.py`, `garantia_ref_js`).
+- Solo cubre el importe de implementación de las automatizaciones que el presupuesto marque como
+  cubiertas: nunca desarrollo web, diagnósticos ni mantenimiento (no mostrarla en esas páginas).
+
 ### Identidad en buscadores (SEO)
 
 Todo sale de `tools/contenido.py` (`META_TITLE`, `META_DESCRIPTION`, `SITIO`, `NOMBRE_SITIO`,

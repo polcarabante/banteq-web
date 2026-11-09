@@ -266,10 +266,35 @@ def tarjeta(d):
     )
 
 
+# Escudo con marca de verificación (garantía de 60 días: home y /automatizacion-procesos).
+ESCUDO = ('<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" '
+          'stroke-linejoin="round" aria-hidden="true"><path d="M12 2.8 4.6 5.7v5.5c0 4.6 3.1 8.5 7.4 9.9 4.3-1.4 '
+          '7.4-5.3 7.4-9.9V5.7z"/><path d="m8.7 12.1 2.3 2.4 4.4-4.7"/></svg>')
+
+
+def garantia_html():
+    """Tarjeta de la garantía de 60 días, bajo las demostraciones (textos en contenido.GARANTIA_*;
+    condiciones en el apartado 6 del aviso legal). Aparece con un fundido suave (banteq.js)."""
+    import contenido as C
+    dias, resto = C.GARANTIA_TITULO
+    texto, destino = C.GARANTIA_ENLACE
+    return (
+        '<aside class="bq-garantia" aria-labelledby="bq-garantia-titulo">'
+        f'<span class="bq-garantia-icono">{ESCUDO}</span>'
+        '<div class="bq-garantia-principal">'
+        f'<p class="bq-garantia-sello">{esc(C.GARANTIA_SELLO)}</p>'
+        f'<h3 class="bq-garantia-titulo" id="bq-garantia-titulo"><span class="bq-garantia-dias">{esc(dias)}</span>{esc(resto)}</h3>'
+        '</div><div class="bq-garantia-detalle">'
+        f'<p class="bq-garantia-texto">{esc(C.GARANTIA_TEXTO)}</p>'
+        f'<p class="bq-garantia-alcance">{esc(C.GARANTIA_ALCANCE)} <a href="{destino}">{esc(texto)}</a></p>'
+        '</div></aside>'
+    )
+
+
 def seccion_html():
     """Contenido que sustituye a las tarjetas de la sección (dentro de un div.bq-demos)."""
     tarjetas = "".join(tarjeta(f()) for f in DEMOS)
     h = (f'<p class="bq-demos-sub">{esc(SUBTITULO)}</p><div class="bq-demos-rejilla">{tarjetas}</div>'
-         f'<p class="bq-demos-nota">{esc(NOTA)}</p>')
+         f'<p class="bq-demos-nota">{esc(NOTA)}</p>{garantia_html()}')
     assert "`" not in h and "${" not in h and "\\" not in h, "el HTML de las demostraciones no puede ir en un template de JS"
     return h

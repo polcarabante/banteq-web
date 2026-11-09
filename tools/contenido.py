@@ -562,8 +562,9 @@ PAGINA_404 = [
 # ---------------------------------------------------------------------------
 
 LEGAL_ACTUALIZACION = "Última actualización: 1 de noviembre de 2026"
-# El aviso legal cambió el 8 de noviembre de 2026 (condiciones de la Fórmula Banteq); la privacidad, no.
-AVISO_ACTUALIZACION = "Última actualización: 8 de noviembre de 2026"
+# El aviso legal cambió el 8 de noviembre de 2026 (condiciones de la Fórmula Banteq) y el 9 (garantía
+# de 60 días); la privacidad, no.
+AVISO_ACTUALIZACION = "Última actualización: 9 de noviembre de 2026"
 LEGAL_TITULAR = "Titular: Pol Carabante Martin, profesional autónomo que opera bajo la marca Banteq. NIF: 54166747E. Domicilio profesional: C/Casal dels Mogoda, 08130 Santa Perpètua de Mogoda. Contacto: pol@banteq.org."
 LEGAL_CONTACTO = LEGAL_TITULAR
 
@@ -609,7 +610,7 @@ AVISO_LEGAL = [
     "Componentes reutilizables",
     "Herramientas internas de desarrollo",
     "El cliente recibe los derechos de uso de los entregables creados para él, pero no puede revender ni redistribuir los sistemas propios de Banteq sin acuerdo expreso.",
-    "6. Datos de contacto",
+    "7. Datos de contacto",
     LEGAL_CONTACTO,
 ]
 
@@ -748,6 +749,67 @@ CONDICIONES_FORMULA = ("5. Condiciones de la Fórmula Banteq", [
     ]),
 ])
 
+# ---------------------------------------------------------------------------
+# Garantía de satisfacción de 60 días (automatizaciones). Se muestra en la home (tarjeta bajo las
+# demostraciones de «Automatización e IA», tools/demos.py), en /automatizacion-procesos (bloque
+# "garantia" de SERVICIOS) y, con todas sus condiciones, en el apartado 6 del aviso legal
+# (CONDICIONES_GARANTIA). Solo cubre el importe de implementación de las automatizaciones que el
+# presupuesto marque como cubiertas: nunca desarrollo web, diagnósticos ni mantenimiento.
+# ---------------------------------------------------------------------------
+GARANTIA_DIAS = 60
+GARANTIA_SELLO = "Garantía de satisfacción"
+GARANTIA_TITULO = ("60 días", " de garantía. Si no ahorras tiempo, te devolvemos el coste de implementación.")
+GARANTIA_TEXTO = (
+    "Confiamos en el valor de nuestras automatizaciones. Si durante los primeros 60 días desde su puesta en "
+    "funcionamiento no consigues ahorrar tiempo con la solución que hemos implantado, te devolvemos el importe "
+    "de la implementación conforme a las condiciones de la garantía."
+)
+# Lo que no cubre, dicho en la propia tarjeta para no prometer más de la cuenta.
+GARANTIA_ALCANCE = (
+    "Cubre la implementación de las automatizaciones incluidas en la garantía. No incluye mantenimiento, "
+    "herramientas externas ni costes de terceros."
+)
+GARANTIA_ENLACE = ("Condiciones de la garantía", "/aviso-legal#garantia")
+# Referencia breve en /automatizacion-procesos.
+GARANTIA_REF = (
+    "Las automatizaciones que implantamos con garantía tienen 60 días para demostrar que te ahorran tiempo. "
+    "Si no lo hacen, te devolvemos el coste de implementación."
+)
+
+CONDICIONES_GARANTIA = ("6. Garantía de satisfacción de 60 días", [
+    ("p", "Las automatizaciones que Banteq implanta pueden incluir una garantía de satisfacción de 60 días. "
+          "Este apartado explica qué cubre, cómo se comprueba el ahorro de tiempo y cómo se pide la devolución. "
+          "La garantía se suma a los derechos que la ley reconoce al cliente; no los limita."),
+    ("h", "Qué cubre"),
+    ("ul", [
+        "Solo el importe de implementación de las automatizaciones que el presupuesto o contrato aceptado identifique expresamente como cubiertas por la garantía.",
+        "No incluye las cuotas de mantenimiento, las suscripciones o licencias de herramientas externas ni los costes de terceros, aunque los gestione Banteq.",
+        "No se aplica a los servicios de desarrollo web, a los diagnósticos ni al mantenimiento, salvo que el presupuesto lo indique expresamente.",
+    ]),
+    ("h", "Duración"),
+    ("p", "60 días naturales a partir de la puesta en funcionamiento y aceptación de la automatización. Esa fecha se "
+          "deja por escrito, por ejemplo por correo electrónico, cuando la automatización empieza a funcionar en el "
+          "trabajo real del cliente y este la acepta."),
+    ("h", "Cómo se comprueba el ahorro de tiempo"),
+    ("p", "Antes de comenzar el proyecto, Banteq y el cliente acuerdan por escrito, para cada automatización cubierta, "
+          "el proceso al que se aplica, el tiempo que el equipo le dedica antes de automatizarlo y cómo se medirá "
+          "después (por ejemplo, minutos por pedido, horas por semana o los registros de la propia herramienta)."),
+    ("p", "Hay ahorro de tiempo verificable cuando, medido de esa forma, el tiempo dedicado al proceso durante la "
+          "garantía es menor que el de antes de automatizarlo o, si se acordó un ahorro mínimo, cuando lo alcanza."),
+    ("h", "Qué hace el cliente"),
+    ("ul", [
+        "Utilizar la automatización durante la garantía para la finalidad y en el proceso para los que se implantó.",
+        "Facilitar la información acordada para comprobar los resultados, como registros de tiempo o datos de uso de la herramienta.",
+    ]),
+    ("h", "Cómo se pide la devolución"),
+    ("ul", [
+        "El cliente la solicita por escrito, en la dirección de contacto del apartado 7, dentro de los 60 días de garantía.",
+        "Banteq revisa los resultados con el cliente aplicando la forma de medir acordada y responde por escrito en un plazo máximo de 15 días naturales.",
+        "Si no hay ahorro de tiempo verificable, Banteq devuelve el importe de implementación cubierto en un plazo máximo de 30 días naturales desde esa respuesta, por el mismo medio con el que se pagó.",
+        "Banteq solo puede denegar la devolución si la solicitud llega fuera de plazo, si la automatización no está cubierta por la garantía, si no se ha utilizado para su finalidad o si el cliente no ha facilitado la información acordada. La respuesta indicará el motivo.",
+    ]),
+])
+
 
 # ---------------------------------------------------------------------------
 # Zona y páginas de servicio (SEO). Solo lo que Banteq ofrece hoy y lo que ya está documentado en
@@ -759,6 +821,7 @@ CONDICIONES_FORMULA = ("5. Condiciones de la Fórmula Banteq", [
 # "/#como-trabajamos"), ancla de la misma página ("#hablemos": el formulario del pie;
 # "#formula-banteq": abre la Fórmula Banteq) o URL completa.
 # ("formula", texto del botón): botón que abre la Fórmula Banteq (ver FORMULA, más abajo).
+# ("garantia", None): distintivo de la garantía de 60 días (GARANTIA_REF, enlace a las condiciones).
 # Bloques de una sección: ("p", texto) · ("ul", [texto, …]) · ("faq", [(pregunta, respuesta), …]).
 _CIERRE = [
     ZONA_FRASE + " ",
@@ -811,6 +874,9 @@ SERVICIOS = [
                     "Integraciones seguras y protección de datos",
                     "Pruebas con datos reales o de prueba antes de ponerlo en marcha",
                 ]),
+            ]),
+            ("Garantía de 60 días", [
+                ("garantia", None),
             ]),
             ("Un caso real: RentUp Capital", [
                 ("p", "Para RentUp Capital, una firma de inversión inmobiliaria, automatizamos todo lo que ocurre después de enviar un formulario en su web: cada contacto se guarda en su lista, la persona recibe una confirmación por email y el equipo, un aviso con todos los datos."),
