@@ -204,7 +204,8 @@ HOME = [
             "Enviar el cuestionario no supone contratar ni pagar."
         ),
     ),
-    ("Schedule a Session", "Quiero mejorar"),
+    # Botón de la tarjeta «Primero entendemos cómo trabajas»: va directo al cuestionario (/diagnostico).
+    ("Schedule a Session", "Realizar diagnóstico avanzado"),
     # Copilot y FUNDAE (antes: precios)
     (
         "Whether you're starting small or scaling fast, we have an automation plan that fits.",

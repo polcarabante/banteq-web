@@ -166,11 +166,12 @@ definidas: no añadirlas.
 
 ### Botón «Quiero mejorar»: ventana con dos opciones
 
-- Los dos botones «Quiero mejorar» de la home (cabecera del hero y tarjeta «¿No sabes por dónde
-  empezar?») abren una ventana (`banteq.js`, `montarMejorar`; estilos `.bq-qm-*` en `banteq.css`,
+- El botón «Quiero mejorar» del hero abre una ventana (`banteq.js`, `montarMejorar`; estilos `.bq-qm-*` en `banteq.css`,
   sobre el armazón `.bq-fx-*` de la Fórmula). También se abre con la dirección `…#quiero-mejorar`.
   El enlace sigue apuntando a `/diagnostico` (sin JS, o con Cmd/Ctrl+clic). «Solicitar diagnóstico»
-  sigue yendo directo al cuestionario.
+  y el botón de la tarjeta «Primero entendemos cómo trabajas» («Realizar diagnóstico avanzado»,
+  `"Schedule a Session"` en contenido.py) van directo al cuestionario. En el móvil ese botón no cabe
+  en una línea: no pasa del ancho de la tarjeta y el texto va en dos líneas (banteq.css).
 - Arriba, «Enviar mi idea»: texto libre, nombre, empresa y WhatsApp o correo. Va a `/api/leads` con
   `formType: "Idea de mejora"`: contacto en la lista de contacto de Brevo (`BREVO_CONTACT_LIST_ID`)
   con `TIPO_SOLICITUD` = «Idea de mejora», aviso a `BREVO_ADMIN_EMAIL` con el asunto «Idea de

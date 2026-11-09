@@ -700,16 +700,17 @@
   function enlazarDiagnostico(root) {
     const links = root.querySelectorAll ? root.querySelectorAll("a") : [];
     for (const link of links) {
-      if (/^(?:solicitar diagn[oó]stico|quiero mejorar)(?:\s*(?:solicitar diagn[oó]stico|quiero mejorar))?$/i.test(link.textContent.trim())) link.setAttribute("href", "/diagnostico");
+      if (/^(?:solicitar diagn[oó]stico|realizar diagn[oó]stico avanzado|quiero mejorar)(?:\s*(?:solicitar diagn[oó]stico|realizar diagn[oó]stico avanzado|quiero mejorar))?$/i.test(link.textContent.trim())) link.setAttribute("href", "/diagnostico");
     }
   }
   // Respaldo para las variantes de Framer al cambiar de página o de tamaño. «Quiero mejorar» abre la
   // ventana con las dos opciones (contar su idea o hacer el diagnóstico avanzado); «Solicitar
-  // diagnóstico» va directo al cuestionario. El enlace sigue apuntando a /diagnostico (sin JS, o
+  // diagnóstico» y «Realizar diagnóstico avanzado» (botón de la tarjeta «Primero entendemos cómo
+  // trabajas») van directo al cuestionario. El enlace sigue apuntando a /diagnostico (sin JS, o
   // abierto en otra pestaña con Cmd/Ctrl).
   document.addEventListener("click", event => {
     const link = event.target.closest?.("a");
-    if (link && /^(?:solicitar diagn[oó]stico|quiero mejorar)(?:\s*(?:solicitar diagn[oó]stico|quiero mejorar))?$/i.test(link.textContent.trim())) {
+    if (link && /^(?:solicitar diagn[oó]stico|realizar diagn[oó]stico avanzado|quiero mejorar)(?:\s*(?:solicitar diagn[oó]stico|realizar diagn[oó]stico avanzado|quiero mejorar))?$/i.test(link.textContent.trim())) {
       link.setAttribute("href", "/diagnostico");
       if (!event.ctrlKey && !event.metaKey && !event.shiftKey && event.button === 0) {
         event.preventDefault(); event.stopImmediatePropagation();
@@ -733,7 +734,7 @@
       for (const node of mutation.addedNodes) {
         if (node.nodeType !== 1) continue;
         enlazarDiagnostico(node);
-        if (node.tagName === "A" && /^(?:solicitar diagn[oó]stico|quiero mejorar)(?:\s*(?:solicitar diagn[oó]stico|quiero mejorar))?$/i.test(node.textContent.trim())) node.setAttribute("href", "/diagnostico");
+        if (node.tagName === "A" && /^(?:solicitar diagn[oó]stico|realizar diagn[oó]stico avanzado|quiero mejorar)(?:\s*(?:solicitar diagn[oó]stico|realizar diagn[oó]stico avanzado|quiero mejorar))?$/i.test(node.textContent.trim())) node.setAttribute("href", "/diagnostico");
         forms = forms || node.tagName === "FORM" || !!node.querySelector("form");
         cards = cards || (!!DEMO_IMG && (node.matches(DEMO_IMG) || !!node.querySelector(DEMO_IMG)));
         demos = demos || node.classList.contains("bq-demos") || !!node.querySelector(".bq-dm-video");

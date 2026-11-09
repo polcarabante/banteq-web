@@ -547,6 +547,39 @@ a.bq-enlace {
   }
 }
 
+/* Botón de la tarjeta clara: «Realizar diagnóstico avanzado» (304 px en una línea) no cabe en la
+   tarjeta del móvil (270 px útiles a 390 px, 200 px a 320 px). Mismo botón; solo que no pasa del ancho
+   de la tarjeta y, si hace falta, el texto va en dos líneas. Se oculta la segunda copia del texto,
+   que solo sirve para el efecto al pasar el ratón (sin ella el texto no se mueve). */
+@media (max-width: 809.98px) {
+  .framer-ldlgjv-container {
+    max-width: 100%;
+  }
+  /* Framer los mide con «min-content» (la palabra más larga): aquí, lo que ocupe el texto en una
+     línea, como mucho el ancho de la tarjeta. */
+  .framer-ldlgjv-container > a {
+    width: max-content !important; /* Framer: .framer-eXIUD.framer-gdd23 { width: min-content } */
+    max-width: 100%;
+  }
+  .framer-ldlgjv-container .framer-cqh2ye {
+    width: 100% !important;
+  }
+  .framer-ldlgjv-container .framer-1oc21iq {
+    flex: 0 1 auto !important;
+    width: auto !important;
+    min-width: 0;
+    height: auto !important;
+  }
+  .framer-ldlgjv-container .framer-1kpngxl,
+  .framer-ldlgjv-container .framer-1kpngxl p {
+    white-space: normal !important;
+    text-wrap: balance;
+  }
+  .framer-ldlgjv-container .framer-xpcrm8 {
+    display: none;
+  }
+}
+
 /* Tarjetas de proyecto con demo (banteq.js, mountDemo): el vídeo ocupa exactamente el sitio de la
    imagen, con su mismo recorte y sus mismas esquinas, y solo se ve mientras se reproduce. */
 .bq-demo {
