@@ -558,6 +558,7 @@ a.bq-enlace {
   }
   #main .framer-Paghq .framer-ldlgjv-container {
     margin: 20px 10px 24px;
+    max-width: calc(100% - 20px); /* descuenta los márgenes: el botón acaba donde acaba el texto */
   }
 }
 
