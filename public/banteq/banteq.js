@@ -779,8 +779,9 @@
   // Fórmula Banteq: ventana con la oferta y un formulario mínimo (empresa, web actual, cuota
   // mensual actual y WhatsApp o correo). Se abre desde los botones «Fórmula Banteq» (enlaces a #formula-banteq, en
   // la sección Desarrollo web de la home y en /desarrollo-web) o con esa dirección. Se envía a
-  // /api/leads como «Fórmula Banteq». Textos de la oferta: siempre «hasta 50 €/mes» y «hasta
-  // 600 €/año»; el ahorro máximo no está garantizado para todos (contenido.py → FORMULA_BOTON).
+  // /api/leads como «Fórmula Banteq». Condiciones (contenido.py → FORMULA_*, y el apartado 5 del
+  // aviso legal): remodelación gratuita de una web informativa básica; cuota de mantenimiento con un
+  // 25 % de descuento sobre la actual, hasta 50 €/mes, y nunca por debajo de 35 €/mes. Sin IVA.
   // ---------------------------------------------------------------------------------------------
   const ICONO_CERRAR = '<svg viewBox="0 0 20 20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M5 5l10 10M15 5 5 15"/></svg>';
   const ICONO_OK = '<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>';
@@ -790,20 +791,20 @@
     '<div class="bq-fx-contenido">' +
     '<section class="bq-fx-oferta">' +
     '<p class="bq-fx-sello">Fórmula Banteq</p>' +
-    '<h2 class="bq-fx-titulo" id="bq-fx-titulo">Tu web, renovada sin coste. <span>Y su mantenimiento, más barato.</span></h2>' +
-    '<p class="bq-fx-intro">Si contratas con Banteq el mantenimiento de tu web, te la remodelamos gratis: nueva imagen, mejor estructura y pensada primero para el móvil. Y pagas menos de lo que pagas hoy por mantenerla.</p>' +
+    '<h2 class="bq-fx-titulo" id="bq-fx-titulo">Tu web, renovada. <span>Tú solo contratas su mantenimiento.</span></h2>' +
+    '<p class="bq-fx-intro">Remodelamos tu web sin coste de desarrollo básico al contratar nuestro mantenimiento. Ahorra un 25 % de tu cuota actual, hasta 50 €/mes, con una cuota mínima de 35 €/mes.</p>' +
     '<ul class="bq-fx-cifras">' +
-    '<li><strong>0 €</strong><span>por remodelar tu web</span></li>' +
-    '<li><strong><small>hasta</small> 50 €</strong><span>menos al mes en mantenimiento</span></li>' +
-    '<li><strong><small>hasta</small> 600 €</strong><span>de ahorro al año</span></li>' +
+    '<li><strong>0 €</strong><span>de desarrollo en tu web informativa</span></li>' +
+    '<li><strong>25 %</strong><span>menos que tu cuota actual</span></li>' +
+    '<li><strong><small>hasta</small> 50 €</strong><span>de ahorro al mes</span></li>' +
     "</ul>" +
     '<button type="button" class="bq-fx-ir">Pedir mi propuesta</button>' +
     '<ol class="bq-fx-pasos">' +
     "<li><b>Nos dices cuánto pagas hoy</b> por el mantenimiento de tu web.</li>" +
     "<li><b>En menos de 48 h</b> te enviamos la propuesta de tu web remodelada y la oferta de mantenimiento.</li>" +
-    "<li><b>Si te convence,</b> renovamos tu web y empiezas a pagar menos.</li>" +
+    "<li><b>Si te convence,</b> dejamos por escrito qué incluye y renovamos tu web.</li>" +
     "</ol>" +
-    '<p class="bq-fx-letra">La remodelación es gratuita al contratar con Banteq el mantenimiento de esa web. La rebaja sobre tu cuota actual es de hasta 50 €/mes (hasta 600 €/año): depende de lo que pagas hoy y de lo que necesita tu web, y te la concretamos en la propuesta.</p>' +
+    '<p class="bq-fx-letra">La remodelación gratuita incluye una web informativa básica con formulario de contacto; las funcionalidades adicionales se presupuestan aparte. Importes sin IVA. <a href="/aviso-legal">Condiciones completas</a></p>' +
     "</section>" +
     '<section class="bq-fx-pedir" aria-labelledby="bq-fx-pedir-titulo">' +
     '<div class="bq-fx-formulario">' +
@@ -814,7 +815,7 @@
     '<input id="bq-fx-empresa" name="company" type="text" autocomplete="organization" maxlength="160" placeholder="Nombre de tu empresa"></div>' +
     '<div class="bq-fx-campo"><label for="bq-fx-web">Tu web actual</label>' +
     '<input id="bq-fx-web" name="currentWebsite" type="text" inputmode="url" autocomplete="url" autocapitalize="off" spellcheck="false" maxlength="300" placeholder="tuempresa.com"></div>' +
-    '<div class="bq-fx-campo"><label for="bq-fx-cuota">¿Cuánto pagas al mes por el mantenimiento de tu web?</label>' +
+    '<div class="bq-fx-campo"><label for="bq-fx-cuota">¿Cuánto pagas al mes por el mantenimiento de tu web? (sin IVA)</label>' +
     '<div class="bq-fx-caja bq-fx-euros"><input id="bq-fx-cuota" name="monthlyFee" type="text" inputmode="decimal" autocomplete="off" maxlength="12" placeholder="Por ejemplo, 120"><span aria-hidden="true">€/mes</span></div>' +
     '<p class="bq-fx-ahorro" aria-live="polite"></p></div>' +
     '<div class="bq-fx-campo"><span class="bq-fx-etiqueta" id="bq-fx-metodo-etiqueta">¿Por dónde te enviamos la propuesta?</span>' +
@@ -867,7 +868,18 @@
       return "";
     }
   };
-  const euros = (n) => new Intl.NumberFormat("es-ES", { maximumFractionDigits: 2 }).format(n);
+  const euros = (n) => {
+    const r = Math.round(n * 100) / 100;
+    return new Intl.NumberFormat("es-ES", { minimumFractionDigits: r % 1 ? 2 : 0, maximumFractionDigits: 2 }).format(r);
+  };
+  // Descuento de la Fórmula: el menor de 25 % de la cuota actual, 50 €/mes y lo que pase de 35 €/mes.
+  const FX_DESCUENTO = 0.25;
+  const FX_AHORRO_MAX = 50;
+  const FX_CUOTA_MIN = 35;
+  const cuotaFormula = (actual) => {
+    const rebaja = Math.max(0, Math.min(actual * FX_DESCUENTO, FX_AHORRO_MAX, actual - FX_CUOTA_MIN));
+    return { nueva: Math.max(actual - rebaja, FX_CUOTA_MIN), rebaja };
+  };
 
   let formula = null; // { dialog, form, … } una vez montada
   let formulaOrigen = null; // botón que la abrió (vuelve ahí el foco al cerrar)
@@ -894,15 +906,18 @@
       form.dataset.bqMetodo = whatsapp ? "whatsapp" : "email";
       form.querySelector(".bq-prefijo-valor").textContent = `+${select.value}`;
     };
-    // Lo que puede ahorrar según lo que paga hoy: nunca más de 50 €/mes, y nunca más de lo que paga.
+    // Cuota orientativa con Banteq según lo que paga hoy (se confirma al revisar su mantenimiento).
     const calcular = () => {
       const n = leerEuros(cuota.value);
       ahorro.dataset.tipo = "";
       if (!cuota.value.trim() || !(n > 0)) ahorro.textContent = "";
-      else if (n > 50) {
-        ahorro.dataset.tipo = "max";
-        ahorro.innerHTML = "Con lo que pagas hoy, podrías ahorrar <b>hasta 50 €/mes</b>: hasta 600 € al año.";
-      } else ahorro.textContent = `Con ${euros(n)} €/mes, la rebaja sería inferior a 50 €/mes. Te diremos la cifra exacta en la propuesta.`;
+      else {
+        const { nueva, rebaja } = cuotaFormula(n);
+        if (rebaja > 0) {
+          if (rebaja >= FX_AHORRO_MAX) ahorro.dataset.tipo = "max";
+          ahorro.innerHTML = `Con ${euros(n)} €/mes, tu cuota con Banteq sería de <b>${euros(nueva)} €/mes</b>: ${euros(rebaja)} € menos al mes. Te la confirmamos al revisar tu mantenimiento actual.`;
+        } else ahorro.textContent = `La cuota mínima de mantenimiento con Banteq es de ${FX_CUOTA_MIN} €/mes, así que con ${euros(n)} €/mes no habría descuento.`;
+      }
     };
     form.addEventListener("change", sync);
     cuota.addEventListener("input", calcular);

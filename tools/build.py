@@ -1100,6 +1100,66 @@ def apply_project_pages():
         assert len(originales) == len(textos), (rel, len(originales), len(textos))
         for old, new in sorted(zip(originales, textos), key=lambda p: -len(p[0])):
             replace(rel, f"children:`{old}`", f"children:`{js_template(new)}`")
+    apply_formula_terms()
+
+
+def js_subtitulo(texto):
+    """Subtítulo dentro de un apartado, como «Pertenece al cliente» en el aviso legal."""
+    return _rt(f"o(t,{{children:{_el('h4', 'p6ud8h', 'uIOe7s18L', COL_TITULO, f'`{js_template(texto)}`')}}})", "framer-ldnjif", "Subtitulo")
+
+
+def js_tabla(cabeceras, filas):
+    """Tabla sencilla (ejemplos de cálculo); estilos en banteq.css (.bq-tabla)."""
+    th = ",".join(f"o(`th`,{{scope:`col`,children:`{js_template(c)}`}})" for c in cabeceras)
+    trs = ",".join(
+        "a(`tr`,{children:[" + ",".join(f"o(`td`,{{children:`{js_template(c)}`}})" for c in fila) + "]})" for fila in filas
+    )
+    return (f"o(`div`,{{className:`bq-tabla`,children:a(`table`,{{children:[o(`thead`,{{children:a(`tr`,{{children:[{th}]}})}}),"
+            f"a(`tbody`,{{children:[{trs}]}})]}})}})")
+
+
+def apply_formula_terms():
+    """Aviso legal: apartado «5. Condiciones de la Fórmula Banteq» (contenido.CONDICIONES_FORMULA)
+    antes de «6. Datos de contacto», con los mismos componentes y estilos que los demás apartados."""
+    titulo, bloques = C.CONDICIONES_FORMULA
+    scope, contador = "H6u27ToU_", [0]
+    hijos, grupo = [js_titulo(titulo, "h3")], None
+    for tipo, *valor in bloques:
+        if tipo == "h":  # un subtítulo abre un grupo (Stack de 8 px, como en el apartado 4)
+            grupo = [js_subtitulo(valor[0])]
+            hijos.append(grupo)
+            continue
+        if tipo == "p":
+            nodo = js_parrafo(valor[0], scope, contador)
+        elif tipo == "ul":
+            nodo = js_lista(valor[0], scope, contador)
+        elif tipo == "tabla":
+            nodo = js_tabla(*valor)
+        else:
+            raise ValueError(tipo)
+        (grupo if grupo is not None else hijos).append(nodo)
+    cuerpo = ",".join(
+        f"a(`div`,{{className:`framer-10noxlw`,\"data-framer-name\":`Stack`,children:[{','.join(h)}]}})" if isinstance(h, list) else h
+        for h in hijos
+    )
+    seccion = f"a(`div`,{{className:`framer-1dcxdhn bq-legal-formula`,\"data-framer-name\":`Stack`,children:[{cuerpo}]}}),"
+    t = S[TERMS_MOD]
+    marca = 'a(`div`,{className:`framer-la2ytv`,"data-framer-name":`Stack`,children:['
+    assert t.count(marca) == 1 and "6. Datos de contacto" in t[t.find(marca):], "no se encuentra el apartado de contacto"
+    t = t.replace(marca, seccion + marca)
+    # Con el apartado nuevo la página es más larga y su final queda sobre la parte gris del fondo:
+    # el texto de la columna pasa al mismo gris que las páginas de servicio (COL_TEXTO_SERVICIO).
+    i = t.find('className:`framer-inyegz`,"data-framer-name":`Main`,children:[')
+    k = t.find("children:[", i) + len("children:")
+    j = jsx.match_bracket(t, k)
+    assert i > 0 and t[k:j].count(COL_TEXTO) > 20
+    S[TERMS_MOD] = t[:k] + t[k:j].replace(COL_TEXTO, COL_TEXTO_SERVICIO) + t[j:]
+    # Mismas cifras en la ventana de la Fórmula y en el aviso que recibe Banteq.
+    for rel, nombres in (("assets-banteq/web/banteq.js", ("FX_DESCUENTO", "FX_AHORRO_MAX", "FX_CUOTA_MIN")),
+                         ("api/leads.js", ("FORMULA_DESCUENTO", "FORMULA_AHORRO_MAX", "FORMULA_CUOTA_MIN"))):
+        codigo = (ROOT / rel).read_text(encoding="utf-8")
+        for nombre, valor in zip(nombres, (C.FORMULA_DESCUENTO, C.FORMULA_AHORRO_MAX, C.FORMULA_CUOTA_MIN)):
+            assert f"const {nombre} = {valor};" in codigo, f"{rel}: {nombre} debe valer {valor} (contenido.py)"
 
 
 # ---------------------------------------------------------------------------
@@ -1185,27 +1245,28 @@ def _el(tag, preset, preset_id, color, children):
             f"style:{{\"--framer-text-color\":`{color}`}},children:{children}}})")
 
 
-def js_titulo(texto):
-    """Título de sección (h2): en el teléfono la plantilla usa otro tamaño de letra."""
+def js_titulo(texto, tag="h2"):
+    """Título de sección (h2; h3 en el aviso legal, como sus otros apartados): en el teléfono la
+    plantilla usa otro tamaño de letra."""
     txt = f"`{js_template(texto)}`"
-    movil = _el("h2", "dmuwar", "PnTPvlabJ", COL_TITULO, txt)
-    resto = _el("h2", "1nvzal8", "FYvoJIwJT", COL_TITULO, txt)
+    movil = _el(tag, "dmuwar", "PnTPvlabJ", COL_TITULO, txt)
+    resto = _el(tag, "1nvzal8", "FYvoJIwJT", COL_TITULO, txt)
     return (f"o(p,{{breakpoint:S,overrides:{{xH4VXQETc:{{children:o(t,{{children:{movil}}})}}}},"
             f"children:{_rt(f'o(t,{{children:{resto}}})', 'framer-n8m9sc', 'Titulo')}}})")
 
 
-def js_parrafo(texto, scope, contador):
-    return _rt(f"o(t,{{children:{_el('p', '1qlfxwt', 'Ref37fLYE', COL_TEXTO_SERVICIO, js_inline(texto, scope, contador))}}})", "framer-4mj00g", "Texto")
+def js_parrafo(texto, scope, contador, color=COL_TEXTO_SERVICIO):
+    return _rt(f"o(t,{{children:{_el('p', '1qlfxwt', 'Ref37fLYE', color, js_inline(texto, scope, contador))}}})", "framer-4mj00g", "Texto")
 
 
-def js_lista(items, scope, contador):
+def js_lista(items, scope, contador, color=COL_TEXTO_SERVICIO):
     lis = []
     for it in items:
         hijos = js_inline(it, scope, contador)
         fn = "a" if hijos.startswith("[") else "o"
-        lis.append(f"o(`li`,{{\"data-preset-tag\":`p`,children:{fn}(`p`,{{style:{{\"--framer-text-color\":`{COL_TEXTO_SERVICIO}`}},children:{hijos}}})}})")
+        lis.append(f"o(`li`,{{\"data-preset-tag\":`p`,children:{fn}(`p`,{{style:{{\"--framer-text-color\":`{color}`}},children:{hijos}}})}})")
     ul = (f"a(`ul`,{{className:`framer-styles-preset-1qlfxwt`,\"data-styles-preset\":`Ref37fLYE`,dir:`auto`,"
-          f"style:{{\"--framer-text-color\":`{COL_TEXTO_SERVICIO}`}},children:[{','.join(lis)}]}})")
+          f"style:{{\"--framer-text-color\":`{color}`}},children:[{','.join(lis)}]}})")
     return _rt(f"o(t,{{children:{ul}}})", "framer-nbxqjv", "Lista")
 
 
@@ -1260,7 +1321,7 @@ def build_service_pages():
     base = S[TERMS_MOD]
     for sv in C.SERVICIOS:
         t = base
-        for viejo, nuevo in ((C.AVISO_LEGAL[0], sv["h1"]), (C.LEGAL_ACTUALIZACION, sv["subtitulo"])):
+        for viejo, nuevo in ((C.AVISO_LEGAL[0], sv["h1"]), (C.AVISO_LEGAL[1], sv["subtitulo"])):
             marca = f"children:`{js_template(viejo)}`"
             assert t.count(marca) == 1, (sv["slug"], viejo, t.count(marca))
             t = t.replace(marca, f"children:`{js_template(nuevo)}`")
@@ -1744,17 +1805,21 @@ def apply_project_links():
 def formula_boton(jsx_fn, jsxs_fn, texto=None):
     """Botón que abre la Fórmula Banteq (la ventana la monta banteq.js al pulsarlo). Es un enlace a
     #formula-banteq: sin JavaScript no hace nada raro, y la dirección con ese ancla abre la ventana."""
-    sello, texto_def = C.FORMULA_BOTON
+    sello, texto_def, resto = C.FORMULA_BOTON
+    hijos = (f"`{js_template(texto)}`" if texto else
+             f"[`{js_template(texto_def)}`,{jsx_fn}(`span`,{{className:`bq-formula-resto`,children:`{js_template(resto)}`}})]")
+    fn_texto = jsx_fn if texto else jsxs_fn
     return (f"{jsx_fn}(`div`,{{className:`bq-formula-entrada`,children:{jsxs_fn}(`a`,{{className:`bq-formula-boton`,href:`#formula-banteq`,"
             f"\"aria-haspopup\":`dialog`,children:[{jsx_fn}(`span`,{{className:`bq-formula-sello`,children:`{js_template(sello)}`}}),"
-            f"{jsx_fn}(`span`,{{className:`bq-formula-texto`,children:`{js_template(texto or texto_def)}`}}),"
+            f"{fn_texto}(`span`,{{className:`bq-formula-texto`,children:{hijos}}}),"
             f"{jsx_fn}(`span`,{{className:`bq-formula-flecha`,\"aria-hidden\":`true`}})]}})}})")
 
 
 def formula_boton_html(texto=None):
-    sello, texto_def = C.FORMULA_BOTON
+    sello, texto_def, resto = C.FORMULA_BOTON
+    interior = html.escape(texto) if texto else f'{html.escape(texto_def)}<span class="bq-formula-resto">{html.escape(resto)}</span>'
     return ('<div class="bq-formula-entrada"><a class="bq-formula-boton" href="#formula-banteq" aria-haspopup="dialog">'
-            f'<span class="bq-formula-sello">{html.escape(sello)}</span><span class="bq-formula-texto">{html.escape(texto or texto_def)}</span>'
+            f'<span class="bq-formula-sello">{html.escape(sello)}</span><span class="bq-formula-texto">{interior}</span>'
             '<span class="bq-formula-flecha" aria-hidden="true"></span></a></div>')
 
 

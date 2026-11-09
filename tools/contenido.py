@@ -562,11 +562,13 @@ PAGINA_404 = [
 # ---------------------------------------------------------------------------
 
 LEGAL_ACTUALIZACION = "Última actualización: 1 de noviembre de 2026"
+# El aviso legal cambió el 8 de noviembre de 2026 (condiciones de la Fórmula Banteq); la privacidad, no.
+AVISO_ACTUALIZACION = "Última actualización: 8 de noviembre de 2026"
 LEGAL_TITULAR = "Titular: Pol Carabante Martin, profesional autónomo que opera bajo la marca Banteq. NIF: 54166747E. Domicilio profesional: C/Casal dels Mogoda, 08130 Santa Perpètua de Mogoda. Contacto: pol@banteq.org."
 LEGAL_CONTACTO = LEGAL_TITULAR
 
 AVISO_LEGAL = [
-    "Aviso legal y condiciones de uso", LEGAL_ACTUALIZACION,
+    "Aviso legal y condiciones de uso", AVISO_ACTUALIZACION,
     "Este aviso legal regula el acceso y el uso de la web de Banteq y la contratación de sus servicios de automatización, inteligencia artificial, formación y desarrollo web.",
     "Al navegar por esta web o contratar nuestros servicios, aceptas estas condiciones.",
     "Si no estás de acuerdo con alguna de ellas, te pedimos que no utilices la web.",
@@ -607,7 +609,7 @@ AVISO_LEGAL = [
     "Componentes reutilizables",
     "Herramientas internas de desarrollo",
     "El cliente recibe los derechos de uso de los entregables creados para él, pero no puede revender ni redistribuir los sistemas propios de Banteq sin acuerdo expreso.",
-    "5. Datos de contacto",
+    "6. Datos de contacto",
     LEGAL_CONTACTO,
 ]
 
@@ -656,6 +658,95 @@ PRIVACIDAD = [
     "5. Contacto y derechos",
     "Puedes ejercer tus derechos de acceso, rectificación, supresión y oposición escribiéndonos. " + LEGAL_CONTACTO,
 ]
+
+
+# Fórmula Banteq (pedida por Pol el 2026-11-01; condiciones del 2026-11-08). Al contratar con Banteq
+# el mantenimiento de su web, la empresa recibe una remodelación gratuita de una web informativa
+# sencilla (lo demás se presupuesta aparte) y una cuota de mantenimiento con descuento:
+#   descuento = el menor de: 25 % de su cuota actual, 50 €/mes, o cuota actual − 35 € (nunca negativo).
+# La cuota con Banteq nunca baja de 35 €/mes. Importes sin IVA. No hay permanencia ni penalizaciones
+# definidas: no añadirlas. Mismas cifras en banteq.js (FX_*) y api/leads.js (FORMULA_*); build.py
+# comprueba que coinciden. Las condiciones completas están en el aviso legal (CONDICIONES_FORMULA).
+# Se abre con un botón en la sección «Desarrollo web» de la home (FORMULA_BOTON) y en /desarrollo-web
+# (bloque "formula" de SERVICIOS). La ventana y su formulario los monta banteq.js; el envío va a
+# /api/leads como «Fórmula Banteq».
+FORMULA_DESCUENTO = 0.25
+FORMULA_AHORRO_MAX = 50
+FORMULA_CUOTA_MIN = 35
+
+
+def formula_cuota(actual):
+    """(cuota con Banteq, ahorro mensual) para una cuota actual en euros sin IVA."""
+    ahorro = max(0.0, min(actual * FORMULA_DESCUENTO, FORMULA_AHORRO_MAX, actual - FORMULA_CUOTA_MIN))
+    return max(actual - ahorro, FORMULA_CUOTA_MIN), ahorro
+
+
+def _euros(n):
+    return f"{n:.0f}" if n == int(n) else f"{n:.2f}".replace(".", ",")
+
+
+# Ejemplos de las condiciones (los que dio Pol); se comprueban contra la fórmula.
+FORMULA_EJEMPLOS = [(40, 35, 5), (60, 45, 15), (100, 75, 25), (150, 112.5, 37.5), (200, 150, 50), (300, 250, 50)]
+for _actual, _nuevo, _ahorro in FORMULA_EJEMPLOS:
+    assert formula_cuota(_actual) == (_nuevo, _ahorro), (_actual, formula_cuota(_actual))
+
+# Botón de la home: sello, texto y final del texto (se oculta en pantallas de menos de 360 px,
+# donde la frase entera ocuparía tres líneas).
+FORMULA_BOTON = ("Fórmula Banteq", "Renueva tu web", " sin coste de desarrollo")
+
+# Frase comercial (la fijó Pol) y nota breve; se usan en /desarrollo-web y en la ventana (banteq.js).
+FORMULA_FRASE = (
+    "Remodelamos tu web sin coste de desarrollo básico al contratar nuestro mantenimiento. "
+    "Ahorra un 25 % de tu cuota actual, hasta 50 €/mes, con una cuota mínima de 35 €/mes."
+)
+FORMULA_NOTA = (
+    "La remodelación gratuita incluye una web informativa básica con formulario de contacto; "
+    "las funcionalidades adicionales se presupuestan aparte. Importes sin IVA."
+)
+
+# Aviso legal, apartado 5 (entre «4. Propiedad intelectual» y «6. Datos de contacto»).
+# Bloques: ("p", texto) · ("ul", [texto, …]) · ("h", subtítulo) · ("tabla", cabeceras, filas).
+CONDICIONES_FORMULA = ("5. Condiciones de la Fórmula Banteq", [
+    ("p", "La Fórmula Banteq es una oferta para las empresas que contratan con Banteq el mantenimiento de su página web. "
+          "Incluye una remodelación gratuita de la web y una reducción de la cuota de mantenimiento respecto a la que pagan actualmente."),
+    ("h", "Remodelación gratuita de la web"),
+    ("p", "La remodelación gratuita consiste en una web sencilla, de carácter informativo, que incluye:"),
+    ("ul", [
+        "Diseño moderno, profesional y adaptable a móviles",
+        "Contenido básico de la empresa, sus servicios y datos de contacto",
+        "Un formulario de contacto funcional",
+        "Estructura y navegación básicas",
+    ]),
+    ("p", "No están incluidos gratuitamente los desarrollos avanzados, funcionalidades especiales, tiendas online, "
+          "integraciones complejas, animaciones personalizadas, sistemas de reservas ni otras funcionalidades adicionales "
+          "que excedan el alcance de una web informativa sencilla."),
+    ("p", "Cualquier funcionalidad, personalización o desarrollo adicional se presupuesta y se contrata por separado, "
+          "con la aceptación previa del cliente."),
+    ("h", "Descuento en el mantenimiento"),
+    ("p", "La cuota de mantenimiento con Banteq se calcula a partir de la cuota mensual que el cliente paga actualmente "
+          "por el mantenimiento de su web:"),
+    ("ul", [
+        "Descuento del 25 % sobre la cuota mensual actual de mantenimiento.",
+        "Ahorro máximo de 50 € al mes, equivalente a 600 € al año.",
+        "Cuota mínima de mantenimiento con Banteq de 35 € al mes.",
+    ]),
+    ("p", "El descuento efectivo es el menor de estos tres importes: el 25 % de la cuota actual, 50 € al mes o la "
+          "diferencia entre la cuota actual y 35 €. El precio resultante nunca es inferior a 35 € al mes y no se aplican "
+          "descuentos negativos: si la cuota actual es de 35 € al mes o menos, no hay descuento."),
+    ("p", "Todos los importes de la Fórmula Banteq, incluida la cuota actual del cliente que sirve de referencia, se "
+          "expresan sin IVA. A las cuotas se les añade el IVA correspondiente."),
+    ("p", "Ejemplos de cálculo (importes sin IVA):"),
+    ("tabla", ("Mantenimiento actual", "Nuevo precio Banteq", "Ahorro mensual"),
+     [(f"{_euros(a)} €/mes", f"{_euros(n)} €/mes", f"{_euros(h)} €") for a, n, h in FORMULA_EJEMPLOS]),
+    ("h", "Condiciones de contratación"),
+    ("ul", [
+        "La cuota actual declarada por el cliente debe poder acreditarse mediante una factura o un documento equivalente.",
+        "La propuesta está sujeta a la revisión del mantenimiento actual y de las necesidades técnicas de la web.",
+        "La remodelación gratuita está condicionada a la contratación del mantenimiento con Banteq.",
+        "Antes de comenzar el proyecto, se especifican por escrito las funcionalidades incluidas y las que tendrían un coste adicional.",
+        "Banteq no realiza cargos adicionales sin la autorización previa del cliente.",
+    ]),
+])
 
 
 # ---------------------------------------------------------------------------
@@ -765,8 +856,9 @@ SERVICIOS = [
                     [("b", "Funcionalidades propias. "), "Newsletter, áreas específicas o lo que tu negocio necesite."],
                 ]),
             ]),
-            ("Fórmula Banteq: tu web, renovada sin coste", [
-                ("p", "Si contratas con Banteq el mantenimiento de tu web, te la remodelamos gratis. Y el mantenimiento te cuesta menos de lo que pagas hoy: hasta 50 €/mes menos, hasta 600 € de ahorro al año."),
+            ("Fórmula Banteq: tu web, renovada al contratar el mantenimiento", [
+                ("p", FORMULA_FRASE),
+                ("p", [FORMULA_NOTA + " ", ("a", "Condiciones completas", "/aviso-legal"), "."]),
                 ("formula", "Descubre cómo funciona"),
             ]),
             ("Una web conectada, no un folleto", [
@@ -800,14 +892,6 @@ SERVICIOS = [
         ],
     },
 ]
-
-# Fórmula Banteq (pedida por Pol el 2026-11-01): remodelación gratuita de la web al contratar con
-# Banteq su mantenimiento, que pasa a costar menos que el actual: HASTA 50 €/mes menos (hasta
-# 600 €/año). Decir siempre «hasta»: quien paga menos de 50 € no ahorra 50 €, y el máximo no está
-# garantizado. Se abre con un botón en la sección «Desarrollo web» de la home (FORMULA_BOTON) y en
-# la página /desarrollo-web (bloque "formula" de SERVICIOS). La ventana y su formulario los monta
-# banteq.js; el envío va a /api/leads como «Fórmula Banteq».
-FORMULA_BOTON = ("Fórmula Banteq", "Renueva tu web sin coste")
 
 # Servicios de cada proyecto (enlaces desde su página) y web pública del cliente (en la línea
 # «Relacionado» del final de la ficha).

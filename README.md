@@ -136,9 +136,19 @@ diagnóstico de debajo no cambia.
 
 ### Fórmula Banteq
 
-Oferta: remodelación gratuita de la web de una empresa si contrata con Banteq su mantenimiento, que
-pasa a costar menos que el actual, **hasta** 50 €/mes menos (hasta 600 €/año). Nunca se promete
-50 € a quien paga menos ni un ahorro garantizado.
+Oferta (condiciones del 8 de noviembre de 2026): al contratar con Banteq el mantenimiento de su web,
+la empresa recibe la remodelación gratuita de una **web informativa sencilla** (diseño adaptable,
+contenido básico, formulario de contacto, estructura y navegación; lo demás se presupuesta aparte) y
+una cuota con descuento: el menor de 25 % de su cuota actual, 50 €/mes o lo que pase de 35 €/mes.
+La cuota con Banteq nunca baja de 35 €/mes. Importes sin IVA. Sin permanencia ni penalizaciones
+definidas: no añadirlas.
+
+- Cifras y textos: `contenido.py` (`FORMULA_DESCUENTO`, `FORMULA_AHORRO_MAX`, `FORMULA_CUOTA_MIN`,
+  `FORMULA_FRASE`, `FORMULA_NOTA`, ejemplos comprobados en `FORMULA_EJEMPLOS`). `banteq.js` (`FX_*`)
+  y `api/leads.js` (`FORMULA_*`) repiten las tres cifras; `build.py` falla si no coinciden.
+- Condiciones completas: apartado «5. Condiciones de la Fórmula Banteq» del aviso legal
+  (`contenido.CONDICIONES_FORMULA`, insertado por `apply_formula_terms` en `build.py`, con tabla de
+  ejemplos `.bq-tabla`). La ventana y `/desarrollo-web` enlazan a `/aviso-legal`.
 
 - Entrada: botón «Fórmula Banteq» bajo el título de la sección «Desarrollo web» de la home
   (`apply_formula_home` en `build.py`, en el módulo y en el HTML inicial) y bloque `("formula", …)`
@@ -146,13 +156,13 @@ pasa a costar menos que el actual, **hasta** 50 €/mes menos (hasta 600 €/añ
   dirección también abre la ventana.
 - La ventana (`<dialog>`) y su formulario los monta `banteq.js` («Fórmula Banteq»); estilos en
   `banteq.css`. Pide empresa, web actual, cuota mensual actual y WhatsApp o correo (mismo selector y prefijos
-  que el formulario del pie). Con la cuota escrita dice lo que podría ahorrar: «hasta 50 €/mes» si
-  paga más de 50 €; si paga 50 € o menos, que la rebaja será menor y se concreta en la propuesta.
+  que el formulario del pie). Con la cuota escrita (sin IVA) calcula la cuota orientativa con Banteq
+  y el ahorro; si paga 35 € o menos, avisa de que no hay descuento.
 - Se envía a `/api/leads` con `formType: "Fórmula Banteq"` y `monthlyFee`. El endpoint lo valida
   (empresa, importe > 0, contacto), lo guarda en la misma lista de Brevo que el contacto
   (`BREVO_CONTACT_LIST_ID`) con `TIPO_SOLICITUD` = «Fórmula Banteq», `WEB_ACTUAL` y `PAGO_MANTENIMIENTO` (número;
   los crea si no existen) y avisa a `BREVO_ADMIN_EMAIL` con el asunto «Fórmula Banteq: empresa ·
-  importe €/mes» y el plazo de 48 h. Si dio correo, recibe una confirmación. No usa variables nuevas.
+  importe €/mes», la cuota resultante y el plazo de 48 h. Si dio correo, recibe una confirmación. No usa variables nuevas.
 
 ### Botón «Quiero mejorar»: ventana con dos opciones
 
