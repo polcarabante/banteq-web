@@ -3462,3 +3462,191 @@ dialog.bq-fx.bq-fx-cerrando::backdrop {
     padding: 9px 8px 9px 0;
   }
 }
+
+/* ------------------------------------------------------------------------------------------
+   Garantía de 60 días (contenido.GARANTIA_*). En la home, tarjeta bajo las demostraciones de
+   «Automatización e IA» (tools/demos.py); en /automatizacion-procesos, distintivo compacto
+   (.bq-garantia-ref, build.py). Blanco con el filo iridiscente de la marca, el mismo radio que las
+   tarjetas de las demostraciones y «60 días» resaltado con el degradado. Aparece con un fundido
+   corto (banteq.js, montarGarantia: solo opacidad y desplazamiento).
+   ------------------------------------------------------------------------------------------ */
+.bq-garantia {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) minmax(0, 1.05fr);
+  align-items: center;
+  gap: 18px 36px;
+  margin: 10px 0 18px;
+  padding: 32px 40px;
+  border: 1px solid transparent;
+  border-radius: 32px;
+  background:
+    radial-gradient(60% 140% at 0% 0%, rgba(201, 251, 241, 0.32), transparent 70%) padding-box,
+    radial-gradient(50% 120% at 100% 100%, rgba(214, 204, 255, 0.3), transparent 70%) padding-box,
+    linear-gradient(#fff, #fff) padding-box,
+    linear-gradient(120deg, rgb(180, 195, 255), rgb(201, 251, 241) 45%, rgb(214, 204, 255) 75%, rgb(168, 230, 255)) border-box;
+  box-shadow: 0 14px 40px rgba(26, 26, 26, 0.06);
+  font-family: "Geist", "Geist Placeholder", sans-serif;
+  transition: opacity 0.7s ease, transform 0.7s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.bq-garantia.bq-garantia-espera {
+  opacity: 0;
+  transform: translateY(16px);
+}
+.bq-garantia-icono {
+  display: grid;
+  place-items: center;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: var(--dm-iris, linear-gradient(120deg, rgb(180, 195, 255), rgb(201, 251, 241) 45%, rgb(214, 204, 255) 75%, rgb(168, 230, 255)));
+  color: rgb(26, 26, 26);
+  transition: transform 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) 0.12s;
+}
+.bq-garantia-espera .bq-garantia-icono {
+  transform: scale(0.86);
+}
+.bq-garantia-icono svg {
+  width: 28px;
+  height: 28px;
+}
+.bq-garantia-sello {
+  margin: 0 0 8px;
+  color: rgb(82, 82, 82);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+.bq-garantia-titulo {
+  margin: 0;
+  color: rgb(26, 26, 26);
+  font-size: clamp(21px, 1.9vw, 26px);
+  font-weight: 500;
+  line-height: 1.22;
+  letter-spacing: -0.03em;
+  text-wrap: balance;
+}
+.bq-garantia-dias {
+  padding: 0 0.26em;
+  border-radius: 0.3em;
+  background: linear-gradient(120deg, rgb(180, 195, 255), rgb(201, 251, 241) 45%, rgb(214, 204, 255) 75%, rgb(168, 230, 255));
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+  white-space: nowrap;
+}
+.bq-garantia-texto {
+  margin: 0;
+  color: rgb(60, 60, 60);
+  font-size: 15.5px;
+  line-height: 1.55;
+}
+.bq-garantia-alcance {
+  margin: 10px 0 0;
+  color: rgb(82, 82, 82);
+  font-size: 13px;
+  line-height: 1.5;
+}
+.bq-garantia-alcance a {
+  color: rgb(26, 26, 26);
+  font-weight: 500;
+  text-decoration: underline;
+  text-decoration-color: rgba(26, 26, 26, 0.35);
+  text-underline-offset: 3px;
+  white-space: nowrap;
+}
+@media (hover: hover) {
+  .bq-garantia-alcance a:hover {
+    text-decoration-color: currentColor;
+  }
+}
+/* Tableta: escudo y titular arriba, texto debajo. */
+@media (max-width: 1199.98px) {
+  .bq-garantia {
+    grid-template-columns: auto minmax(0, 1fr);
+    padding: 30px 32px;
+  }
+  .bq-garantia-detalle {
+    grid-column: 2;
+  }
+}
+/* Teléfono: una columna; el escudo, pequeño, encima del sello. */
+@media (max-width: 809.98px) {
+  .bq-garantia {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 14px;
+    padding: 26px 22px 24px;
+    border-radius: 28px;
+  }
+  .bq-garantia-detalle {
+    grid-column: auto;
+  }
+  .bq-garantia-icono {
+    width: 48px;
+    height: 48px;
+  }
+  .bq-garantia-icono svg {
+    width: 24px;
+    height: 24px;
+  }
+  .bq-garantia-titulo {
+    font-size: clamp(20px, 5.6vw, 23px);
+  }
+  .bq-garantia-texto {
+    font-size: 15px;
+  }
+}
+
+/* Distintivo en /automatizacion-procesos (sobre el fondo gris de las páginas de servicio). */
+.bq-garantia-ref {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 20px 22px;
+  border: 1px solid transparent;
+  border-radius: 22px;
+  background:
+    linear-gradient(rgba(255, 255, 255, 0.86), rgba(255, 255, 255, 0.86)) padding-box,
+    linear-gradient(120deg, rgb(180, 195, 255), rgb(201, 251, 241) 45%, rgb(214, 204, 255) 75%, rgb(168, 230, 255)) border-box;
+  font-family: "Geist", "Geist Placeholder", sans-serif;
+}
+.bq-garantia-ref .bq-garantia-icono {
+  flex: none;
+  width: 44px;
+  height: 44px;
+  transition: none;
+}
+.bq-garantia-ref .bq-garantia-icono svg {
+  width: 22px;
+  height: 22px;
+}
+.bq-garantia-ref-texto {
+  margin: 0;
+  color: rgb(26, 26, 26);
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1.45;
+  letter-spacing: -0.015em;
+}
+.bq-garantia-ref .bq-garantia-alcance {
+  margin-top: 6px;
+  color: rgb(60, 60, 60);
+}
+@media (max-width: 479.98px) {
+  .bq-garantia-ref {
+    flex-direction: column;
+    gap: 12px;
+    padding: 18px;
+  }
+}
+
+/* Aviso legal: el enlace …/aviso-legal#garantia deja el título bajo la cabecera fija. */
+.bq-legal-garantia {
+  scroll-margin-top: 120px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .bq-garantia,
+  .bq-garantia-icono {
+    transition: none;
+  }
+}

@@ -458,6 +458,22 @@
   };
   const montarDemos = () => document.querySelectorAll(".bq-dm-video:not([data-bq-listo])").forEach(montarDemo);
 
+  // Garantía de 60 días (tarjeta bajo las demostraciones): fundido corto la primera vez que entra
+  // en pantalla. Si ya está a la vista, con movimiento reducido o sin IntersectionObserver, se
+  // queda como está (visible). Solo cambian opacidad y desplazamiento (banteq.css).
+  const montarGarantia = () => document.querySelectorAll(".bq-garantia:not([data-bq-listo])").forEach((g) => {
+    g.dataset.bqListo = "1";
+    if (reduceMotion.matches || !("IntersectionObserver" in window)) return;
+    if (g.getBoundingClientRect().top < window.innerHeight * 0.9) return;
+    g.classList.add("bq-garantia-espera");
+    const io = new IntersectionObserver((entradas) => {
+      if (!entradas.some((e) => e.isIntersecting)) return;
+      io.disconnect();
+      requestAnimationFrame(() => g.classList.remove("bq-garantia-espera"));
+    }, { rootMargin: "0px 0px -12% 0px" });
+    io.observe(g);
+  });
+
   // ---------------------------------------------------------------------------------------------
   // Formulario de contacto: el cliente elige cómo prefiere que le contactemos, WhatsApp (por
   // defecto) o correo, y solo tiene que dar ese dato. El formulario es el de Framer; aquí se le
@@ -742,11 +758,15 @@
     }
     if (forms) scanForms();
     if (cards) scanDemos();
-    if (demos) montarDemos();
+    if (demos) {
+      montarDemos();
+      montarGarantia();
+    }
   }).observe(document.documentElement, { childList: true, subtree: true });
   scanForms();
   scanDemos();
   montarDemos();
+  montarGarantia();
 
   setInterval(scanTickers, 1500);
   window.addEventListener("load", scanTickers);

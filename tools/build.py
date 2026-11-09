@@ -1118,11 +1118,11 @@ def js_tabla(cabeceras, filas):
             f"a(`tbody`,{{children:[{trs}]}})]}})}})")
 
 
-def apply_formula_terms():
-    """Aviso legal: apartado «5. Condiciones de la Fórmula Banteq» (contenido.CONDICIONES_FORMULA)
-    antes de «6. Datos de contacto», con los mismos componentes y estilos que los demás apartados."""
-    titulo, bloques = C.CONDICIONES_FORMULA
-    scope, contador = "H6u27ToU_", [0]
+def js_seccion_legal(titulo, bloques, clase, ancla=None, contador=None):
+    """Apartado del aviso legal hecho con los mismos componentes y estilos que los demás: título h3,
+    párrafos, listas, subtítulos ("h", que abren un grupo como en el apartado 4) y tablas."""
+    scope = "H6u27ToU_"
+    contador = contador if contador is not None else [0]
     hijos, grupo = [js_titulo(titulo, "h3")], None
     for tipo, *valor in bloques:
         if tipo == "h":  # un subtítulo abre un grupo (Stack de 8 px, como en el apartado 4)
@@ -1142,11 +1142,23 @@ def apply_formula_terms():
         f"a(`div`,{{className:`framer-10noxlw`,\"data-framer-name\":`Stack`,children:[{','.join(h)}]}})" if isinstance(h, list) else h
         for h in hijos
     )
-    seccion = f"a(`div`,{{className:`framer-1dcxdhn bq-legal-formula`,\"data-framer-name\":`Stack`,children:[{cuerpo}]}}),"
+    id_ = f"id:`{ancla}`," if ancla else ""
+    return f"a(`div`,{{className:`framer-1dcxdhn {clase}`,{id_}\"data-framer-name\":`Stack`,children:[{cuerpo}]}}),"
+
+
+def apply_formula_terms():
+    """Aviso legal: apartados «5. Condiciones de la Fórmula Banteq» (contenido.CONDICIONES_FORMULA) y
+    «6. Garantía de satisfacción de 60 días» (contenido.CONDICIONES_GARANTIA, ancla #garantia) antes
+    de «7. Datos de contacto»."""
+    contador = [0]
+    secciones = (js_seccion_legal(*C.CONDICIONES_FORMULA, "bq-legal-formula", contador=contador)
+                 + js_seccion_legal(*C.CONDICIONES_GARANTIA, "bq-legal-garantia", "garantia", contador=contador))
     t = S[TERMS_MOD]
     marca = 'a(`div`,{className:`framer-la2ytv`,"data-framer-name":`Stack`,children:['
-    assert t.count(marca) == 1 and "6. Datos de contacto" in t[t.find(marca):], "no se encuentra el apartado de contacto"
-    t = t.replace(marca, seccion + marca)
+    contacto = C.AVISO_LEGAL[-2]
+    assert contacto.startswith("7.") and C.CONDICIONES_GARANTIA[0].startswith("6.") and C.CONDICIONES_FORMULA[0].startswith("5.")
+    assert t.count(marca) == 1 and contacto in t[t.find(marca):], "no se encuentra el apartado de contacto"
+    t = t.replace(marca, secciones + marca)
     # Con el apartado nuevo la página es más larga y su final queda sobre la parte gris del fondo:
     # el texto de la columna pasa al mismo gris que las páginas de servicio (COL_TEXTO_SERVICIO).
     i = t.find('className:`framer-inyegz`,"data-framer-name":`Main`,children:[')
@@ -1298,6 +1310,8 @@ def js_service_main(sv):
                 hijos.extend(js_faq(valor, scope, contador))
             elif tipo == "formula":
                 hijos.append(formula_boton("o", "a", valor))
+            elif tipo == "garantia":
+                hijos.append(garantia_ref_js())
             else:
                 raise ValueError(tipo)
         bloques.append(f"a(`div`,{{className:`framer-1dcxdhn`,\"data-framer-name\":`Stack`,children:[{','.join(hijos)}]}})")
@@ -1801,6 +1815,18 @@ def apply_project_links():
 # ---------------------------------------------------------------------------
 # Fórmula Banteq y fin de la página de contacto (2026-11-01)
 # ---------------------------------------------------------------------------
+
+def garantia_ref_js():
+    """Distintivo de la garantía de 60 días en /automatizacion-procesos: escudo, frase breve, lo que no
+    cubre y enlace a las condiciones (apartado 6 del aviso legal). Estilos: .bq-garantia-ref."""
+    import demos
+    texto, destino = C.GARANTIA_ENLACE
+    return (f"a(`div`,{{className:`bq-garantia-ref`,children:["
+            f"o(`span`,{{className:`bq-garantia-icono`,\"aria-hidden\":`true`,dangerouslySetInnerHTML:{{__html:`{demos.ESCUDO}`}}}}),"
+            f"a(`div`,{{children:[o(`p`,{{className:`bq-garantia-ref-texto`,children:`{js_template(C.GARANTIA_REF)}`}}),"
+            f"a(`p`,{{className:`bq-garantia-alcance`,children:[`{js_template(C.GARANTIA_ALCANCE)} `,"
+            f"o(`a`,{{href:`{destino}`,children:`{js_template(texto)}`}})]}})]}})]}})")
+
 
 def formula_boton(jsx_fn, jsxs_fn, texto=None):
     """Botón que abre la Fórmula Banteq (la ventana la monta banteq.js al pulsarlo). Es un enlace a
