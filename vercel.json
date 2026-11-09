@@ -2,15 +2,43 @@
   "framework": null,
   "buildCommand": "echo 'Sin build en Vercel: public/ ya viene generado (python3 tools/build.py en local)'",
   "outputDirectory": "public",
-  "cleanUrls": true,
   "trailingSlash": false,
   "rewrites": [
     {
       "source": "/framerusercontent.com/sites/70yiSpZyA9Z5dxDKIiuNjl-:version/:path*",
       "destination": "/framerusercontent.com/sites/70yiSpZyA9Z5dxDKIiuNjl/:path*"
+    },
+    {
+      "source": "/diagnostico",
+      "destination": "/diagnostico.html"
     }
   ],
   "redirects": [
+    {
+      "source": "/index.html",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/index",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/:path+/index.html",
+      "destination": "/:path+",
+      "permanent": true
+    },
+    {
+      "source": "/:path+/index",
+      "destination": "/:path+",
+      "permanent": true
+    },
+    {
+      "source": "/:path((?!e35445b6-9b36-474d-a3dc-2cc36fe1c7b3\\.html).+)\\.html",
+      "destination": "/:path",
+      "permanent": true
+    },
     {
       "source": "/contacto",
       "destination": "/#hablemos",

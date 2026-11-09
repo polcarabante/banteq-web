@@ -2262,6 +2262,16 @@ def apply_seo():
     )
 
 
+def copy_root_files():
+    """Archivos que deben servirse tal cual en la raíz del dominio (verificaciones de servicios
+    externos, como el .html de Trustpilot): se copian byte a byte desde assets-banteq/raiz/ al final
+    del build, sin pasar por ningún otro paso. vercel.json los excluye de la redirección de .html."""
+    for f in sorted((ROOT / "assets-banteq" / "raiz").iterdir()):
+        if f.is_file() and not f.name.startswith("."):
+            assert not (OUT / f.name).exists(), f"assets-banteq/raiz/{f.name} pisaría un archivo de la web"
+            shutil.copyfile(f, OUT / f.name)
+
+
 def html_pages():
     return [p.relative_to(OUT).as_posix() for p in OUT.rglob("index.html")]
 
@@ -2455,6 +2465,7 @@ def main():
     from diagnostico import integrar
     integrar()
     version_assets()
+    copy_root_files()
     if MISSES:
         print("\nTextos originales NO encontrados:")
         for rel, old in MISSES:

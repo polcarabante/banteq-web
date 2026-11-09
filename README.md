@@ -264,6 +264,15 @@ en local antes de hacer commit.
 - `vercel.json` → `"framework": null` (sitio estático, preset «Other»), `outputDirectory: public` y
   un `buildCommand` que no hace nada. El `framework` del archivo manda sobre el preset guardado en el
   panel de Vercel.
+- URLs sin extensión: no se usa `cleanUrls`, porque redirige **cualquier** dirección acabada en
+  `.html` y Trustpilot necesita leer su archivo de verificación con 200 directo. `vercel.json` hace
+  lo mismo a mano: redirige `…/index`, `…/index.html` y `….html` a la ruta limpia (salvo el archivo
+  de Trustpilot) y reescribe `/diagnostico` → `/diagnostico.html`. Si se añade otra página suelta
+  `x.html` (no `x/index.html`), hay que añadir su reescritura.
+- Archivos de verificación en la raíz del dominio (Trustpilot:
+  `/e35445b6-9b36-474d-a3dc-2cc36fe1c7b3.html`): van en `assets-banteq/raiz/` y el build los copia
+  byte a byte al final (`copy_root_files`). Uno nuevo acabado en `.html` necesita también su
+  excepción en la redirección de `….html` de `vercel.json`.
 - `.vercelignore` → no sube la plantilla original, las herramientas ni las fuentes de los recursos.
 - **No crear `server.js`/`server.mjs`/`server.ts` en la raíz ni en `src/`.** Vercel detecta esos
   nombres como el servidor de la web (preset «Node»), los convierte en una función y le envía todas
