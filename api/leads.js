@@ -78,11 +78,13 @@ const formulaQuote = (actual) => {
 };
 const isFormulaType = (type) => normalizeText(type) === FORMULA;
 
-// «Quiero mejorar» → «Enviar mi idea»: texto libre con lo que quiere mejorar, nombre, empresa y
-// WhatsApp o correo. Va a la lista de contacto de Brevo, marcada con TIPO_SOLICITUD = «Idea de
-// mejora» (los diagnósticos avanzados van aparte, por /api/diagnosticos).
-const IDEA = "Idea de mejora";
-const isIdeaType = (type) => normalizeText(type) === IDEA;
+// «Quiero mejorar» → diagnóstico inicial gratuito: texto libre con a qué se dedica la empresa y qué
+// quiere mejorar, nombre, empresa y WhatsApp o correo. Va a la lista de contacto de Brevo, marcada
+// con TIPO_SOLICITUD = «Diagnóstico inicial gratuito» (los diagnósticos avanzados van aparte, por
+// /api/diagnosticos). «Idea de mejora» es el nombre anterior: lo siguen enviando los navegadores con
+// la versión antigua en caché y se guarda con el nombre nuevo.
+const DIAGNOSTICO_INICIAL = "Diagnóstico inicial gratuito";
+const isIdeaType = (type) => [DIAGNOSTICO_INICIAL, "Idea de mejora"].includes(normalizeText(type));
 
 // «120», «120,50», «1.200» o un número → número con dos decimales como mucho (o NaN).
 const parseEuros = (value) => {
@@ -272,6 +274,15 @@ Hemos recibido tu solicitud. Revisaremos lo que nos cuentas y te escribiremos pa
 Un saludo,
 Equipo de Banteq`;
 
+const getInitialDiagnosisConfirmationText = (name) => `Hola ${name},
+
+Gracias por contactar con Banteq.
+
+Hemos recibido tu solicitud de diagnóstico inicial gratuito. Con lo que nos cuentas prepararemos una primera valoración orientativa de dónde podrías ahorrar tiempo con nuestras automatizaciones y te escribiremos para comentarla.
+
+Un saludo,
+Equipo de Banteq`;
+
 const getFormulaConfirmationText = (company) => `Hola,
 
 Gracias por tu interés en la Fórmula Banteq.
@@ -292,14 +303,15 @@ const sendConfirmationEmail = async ({ name, email, formType, company }) => {
     throw new Error("Missing BREVO_SENDER_EMAIL");
   }
 
-  const htmlContent = escapeHtml(formula ? getFormulaConfirmationText(company) : getConfirmationText(name)).replace(/\n/g, "<br>");
+  const texto = formula ? getFormulaConfirmationText(company) : isIdeaType(formType) ? getInitialDiagnosisConfirmationText(name) : getConfirmationText(name);
+  const htmlContent = escapeHtml(texto).replace(/\n/g, "<br>");
 
   await brevoFetch("/smtp/email", {
     method: "POST",
     body: JSON.stringify({
       sender: { name: senderName, email: senderEmail },
       to: [{ email, name: name || company || email }],
-      subject: formula ? "Hemos recibido tu solicitud de la Fórmula Banteq" : isIdeaType(formType) ? "Hemos recibido tu idea" : "Hemos recibido tu solicitud",
+      subject: formula ? "Hemos recibido tu solicitud de la Fórmula Banteq" : isIdeaType(formType) ? "Hemos recibido tu solicitud de diagnóstico inicial" : "Hemos recibido tu solicitud",
       htmlContent,
     }),
   });
@@ -358,12 +370,12 @@ const sendAdminNotification = async (lead) => {
 
   const idea = isIdeaType(lead.formType);
   const htmlContent = `
-    <h2>${idea ? "Nueva idea de mejora (botón «Quiero mejorar»)" : "Nueva solicitud desde la web de Banteq"}</h2>
+    <h2>${idea ? "Nuevo diagnóstico inicial gratuito (botón «Quiero mejorar»)" : "Nueva solicitud desde la web de Banteq"}</h2>
     <p><strong>Prefiere que le contactemos por:</strong> ${text(lead.contactPreference)}</p>
     ${contactLine}
     <p><strong>Nombre:</strong> ${text(lead.name)}</p>
     <p><strong>Empresa:</strong> ${text(lead.company)}</p>
-    <p><strong>${idea ? "Su idea" : "Qué quiere mejorar"}:</strong><br>${text(lead.message).replace(/\n/g, "<br>")}</p>
+    <p><strong>${idea ? "Su negocio y qué quiere mejorar" : "Qué quiere mejorar"}:</strong><br>${text(lead.message).replace(/\n/g, "<br>")}</p>
     ${pageLine}
     <p><strong>Fecha y hora:</strong> ${text(lead.submittedAtLocal)}</p>
   `;
@@ -374,7 +386,7 @@ const sendAdminNotification = async (lead) => {
       sender: { name: senderName, email: senderEmail },
       to: [{ email: adminEmail, name: "Banteq" }],
       replyTo: lead.email ? { email: lead.email, name: lead.name || "Contacto web" } : undefined,
-      subject: `${idea ? "Idea de mejora" : "Nueva solicitud web"} (${isWhatsappLead ? "WhatsApp" : "correo"}): ${lead.name}${lead.company ? ` · ${lead.company}` : ""}`,
+      subject: `${idea ? DIAGNOSTICO_INICIAL : "Nueva solicitud web"} (${isWhatsappLead ? "WhatsApp" : "correo"}): ${lead.name}${lead.company ? ` · ${lead.company}` : ""}`,
       htmlContent,
     }),
   });
@@ -640,7 +652,7 @@ const handlePost = async (request, response) => {
   if (isFormula && !(monthlyFee > 0 && monthlyFee <= LIMITS.monthlyFee)) fields.monthlyFee = "Escribe el importe en euros, por ejemplo 120.";
   if (isFormula && !email && !phone) fields.phone = "Indica un WhatsApp o un correo para enviarte la propuesta.";
   if (isContactForm && !message) fields.message = "Cuéntanos qué te gustaría mejorar.";
-  if (isIdea && !message) fields.message = "Cuéntanos brevemente qué quieres mejorar.";
+  if (isIdea && !message) fields.message = "Cuéntanos a qué se dedica tu empresa y qué te gustaría mejorar.";
   if (isIdea && !email && !phone) fields.phone = "Indica un WhatsApp o un correo para responderte.";
   if (name.length > LIMITS.name) fields.name = "El nombre es demasiado largo.";
   if (company.length > LIMITS.company) fields.company = "El nombre de la empresa es demasiado largo.";
@@ -657,7 +669,7 @@ const handlePost = async (request, response) => {
 
   const now = new Date();
   const lead = {
-    formType,
+    formType: isIdea ? DIAGNOSTICO_INICIAL : formType,
     name,
     email: contactPreference === "WhatsApp" ? "" : email,
     phone: contactPreference === "Correo electrónico" ? "" : phone,

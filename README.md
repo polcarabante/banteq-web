@@ -172,15 +172,19 @@ definidas: no añadirlas.
   y el botón de la tarjeta «Primero entendemos cómo trabajas» («Realizar diagnóstico avanzado»,
   `"Schedule a Session"` en contenido.py) van directo al cuestionario. En el móvil ese botón no cabe
   en una línea: no pasa del ancho de la tarjeta y el texto va en dos líneas (banteq.css).
-- Arriba, «Enviar mi idea»: texto libre, nombre, empresa y WhatsApp o correo. Va a `/api/leads` con
-  `formType: "Idea de mejora"`: contacto en la lista de contacto de Brevo (`BREVO_CONTACT_LIST_ID`)
-  con `TIPO_SOLICITUD` = «Idea de mejora», aviso a `BREVO_ADMIN_EMAIL` con el asunto «Idea de
-  mejora (…)» y confirmación al cliente si eligió correo. La ventana solo da las gracias si el
-  endpoint responde `ok`.
-- Debajo, destacado, el diagnóstico avanzado: **servicio de pago** (no usar «gratis», «gratuito» ni
-  «sin coste»); el botón lleva a `/diagnostico` sin cambiar el cuestionario, que envía aparte a
-  `/api/diagnosticos`. No hay precio definido: el texto dice que los honorarios se explican al
-  presentar el diagnóstico.
+- Arriba, el **diagnóstico inicial gratuito** (sello «Diagnóstico inicial» + «Gratuito»): para
+  pequeños negocios, a qué se dedica la empresa y qué quiere mejorar, nombre, empresa y WhatsApp
+  (por defecto, con el sello «Recomendado») o correo. Es una primera valoración orientativa con lo
+  que cuenta el cliente, no un estudio de todos sus procesos (así lo dice la ventana). Va a
+  `/api/leads` con `formType: "Diagnóstico inicial gratuito"`: contacto en la lista de contacto de
+  Brevo (`BREVO_CONTACT_LIST_ID`) con `TIPO_SOLICITUD` = «Diagnóstico inicial gratuito», aviso a
+  `BREVO_ADMIN_EMAIL` con ese asunto y confirmación al cliente si eligió correo. `"Idea de mejora"`
+  (nombre anterior, de navegadores con la versión vieja en caché) se acepta y se guarda con el
+  nombre nuevo. La ventana solo da las gracias si el endpoint responde `ok`.
+- Debajo, destacado, el diagnóstico avanzado («¿Necesitas un análisis más completo?»): **servicio de
+  pago** (nunca «gratis», «gratuito» ni «sin coste» para el avanzado); el botón lleva a
+  `/diagnostico` sin cambiar el cuestionario, que envía aparte a `/api/diagnosticos`. No hay precio
+  definido: el texto dice que los honorarios se explican al presentar el diagnóstico.
 
 ### Garantía de 60 días (automatizaciones)
 

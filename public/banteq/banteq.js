@@ -720,7 +720,7 @@
     }
   }
   // Respaldo para las variantes de Framer al cambiar de página o de tamaño. «Quiero mejorar» abre la
-  // ventana con las dos opciones (contar su idea o hacer el diagnóstico avanzado); «Solicitar
+  // ventana con las dos opciones (diagnóstico inicial gratuito o diagnóstico avanzado); «Solicitar
   // diagnóstico» y «Realizar diagnóstico avanzado» (botón de la tarjeta «Primero entendemos cómo
   // trabajas») van directo al cuestionario. El enlace sigue apuntando a /diagnostico (sin JS, o
   // abierto en otra pestaña con Cmd/Ctrl).
@@ -1140,10 +1140,11 @@
   };
 
   // ---------------------------------------------------------------------------------------------
-  // «Quiero mejorar»: ventana con dos opciones. Arriba, la rápida: contar la idea con texto libre y
-  // dejar nombre, empresa y WhatsApp o correo (se envía a /api/leads como «Idea de mejora», aparte
-  // de los diagnósticos). Debajo, destacada, la de más valor: el diagnóstico avanzado (de pago), que
-  // lleva al cuestionario de /diagnostico sin cambiarlo. Se abre desde los botones «Quiero mejorar»
+  // «Quiero mejorar»: ventana con dos opciones. Arriba, el diagnóstico inicial gratuito: contar a
+  // qué se dedica la empresa y qué quiere mejorar, con nombre, empresa y WhatsApp o correo (se envía
+  // a /api/leads como «Diagnóstico inicial gratuito»; es una primera valoración orientativa, no un
+  // estudio de todos los procesos). Debajo, destacado, el diagnóstico avanzado (de pago), que lleva
+  // al cuestionario de /diagnostico sin cambiarlo. Se abre desde los botones «Quiero mejorar»
   // (home) o con la dirección …#quiero-mejorar. Mismo armazón y estilos que la de la Fórmula.
   // ---------------------------------------------------------------------------------------------
   const ICONO_PUNTO = '<svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="m3.5 8.5 3 3 6-7"/></svg>';
@@ -1152,15 +1153,15 @@
     `<button type="button" class="bq-fx-cerrar" aria-label="Cerrar">${ICONO_CERRAR}</button>` +
     '<div class="bq-fx-contenido">' +
     '<section class="bq-qm-idea" aria-labelledby="bq-qm-titulo">' +
-    '<p class="bq-qm-antetitulo">Si sabes qué necesitas, cuéntanoslo.</p>' +
+    '<div class="bq-qm-cabeza"><p class="bq-fx-sello">Diagnóstico inicial</p><p class="bq-qm-gratis">Gratuito</p></div>' +
     '<h2 class="bq-qm-titulo" id="bq-qm-titulo">¿Ya tienes claro qué quieres mejorar?</h2>' +
-    '<p class="bq-qm-intro">Cuéntanos qué tienes en mente y estudiaremos cómo podemos ayudarte a hacerlo realidad.</p>' +
+    '<p class="bq-qm-intro"><span class="bq-qm-intro-lead">Queremos ayudar a los pequeños negocios a crecer.</span> Cuéntanos a qué se dedica tu empresa y qué te gustaría mejorar. Con esa información prepararemos un diagnóstico inicial gratuito para identificar dónde podrías ahorrar tiempo gracias a nuestras automatizaciones.</p>' +
     // Móvil: el diagnóstico queda lejos, abajo; este enlace baja hasta él.
-    '<button type="button" class="bq-qm-saltar">¿No sabes por dónde empezar? <span>Ver el diagnóstico avanzado</span></button>' +
+    '<button type="button" class="bq-qm-saltar">¿Necesitas un análisis más completo? <span>Ver el diagnóstico avanzado</span></button>' +
     '<div class="bq-qm-formulario">' +
     '<form class="bq-fx-form bq-qm-form" data-bq-propio="idea" novalidate>' +
-    '<div class="bq-fx-campo"><label class="bq-qm-oculto" for="bq-qm-mensaje">Qué quieres mejorar</label>' +
-    '<textarea id="bq-qm-mensaje" name="Message" rows="4" maxlength="5000" placeholder="Explícanos qué quieres mejorar, automatizar o desarrollar en tu empresa..."></textarea></div>' +
+    '<div class="bq-fx-campo"><label class="bq-qm-oculto" for="bq-qm-mensaje">Tu negocio y qué te gustaría mejorar</label>' +
+    '<textarea id="bq-qm-mensaje" name="Message" rows="4" maxlength="5000" placeholder="Cuéntanos qué tipo de negocio tienes y qué tareas o procesos te gustaría mejorar..."></textarea></div>' +
     '<div class="bq-qm-fila">' +
     '<div class="bq-fx-campo"><label for="bq-qm-nombre">Nombre</label>' +
     '<input id="bq-qm-nombre" name="Name" type="text" autocomplete="name" maxlength="120" placeholder="Tu nombre"></div>' +
@@ -1170,7 +1171,7 @@
     '<div class="bq-fx-campo"><span class="bq-fx-etiqueta" id="bq-qm-metodo-etiqueta">¿Cómo prefieres que te contactemos?</span>' +
     '<div class="bq-metodo" role="radiogroup" aria-labelledby="bq-qm-metodo-etiqueta">' +
     '<label class="bq-metodo-opcion"><input type="radio" name="ContactMethod" value="whatsapp" checked>' +
-    `<span class="bq-metodo-cara">${ICONO_WHATSAPP}<span>WhatsApp</span></span></label>` +
+    `<span class="bq-metodo-cara">${ICONO_WHATSAPP}<span>WhatsApp</span></span><span class="bq-metodo-sello">Recomendado</span></label>` +
     '<label class="bq-metodo-opcion"><input type="radio" name="ContactMethod" value="email">' +
     `<span class="bq-metodo-cara">${ICONO_CORREO}<span>Correo electrónico</span></span></label></div></div>` +
     '<div class="bq-fx-campo" data-bq-campo="tel"><label class="bq-fx-caja bq-fx-tel">' +
@@ -1178,21 +1179,22 @@
     `<span class="bq-prefijo"><span class="bq-prefijo-valor">+34</span>${FLECHA}<select name="PhonePrefix" aria-label="Prefijo del país"></select></span></label></div>` +
     '<div class="bq-fx-campo" data-bq-campo="email"><input name="Email" type="email" autocomplete="email" maxlength="254" placeholder="Tu correo electrónico" aria-label="Correo electrónico"></div>' +
     '<input class="bq-fx-trampa" name="website" type="text" tabindex="-1" autocomplete="off" aria-hidden="true">' +
-    '<button type="submit" class="bq-fx-enviar">Enviar mi idea</button>' +
+    '<button type="submit" class="bq-fx-enviar">Solicitar diagnóstico gratuito</button>' +
+    '<p class="bq-qm-alcance">Es una primera valoración orientativa a partir de lo que nos cuentes, no un estudio completo de tus procesos.</p>' +
     '<p class="bq-fx-estado" aria-live="polite"></p>' +
     '<p class="bq-fx-legal">Usaremos estos datos solo para responderte. <a href="/privacidad">Política de privacidad</a></p>' +
     "</form></div>" +
     '<div class="bq-fx-hecho bq-qm-hecho" hidden tabindex="-1">' +
     `<span class="bq-fx-hecho-icono">${ICONO_OK}</span>` +
-    '<h3 class="bq-fx-subtitulo">Hemos recibido tu idea</h3>' +
+    '<h3 class="bq-fx-subtitulo">Hemos recibido tu solicitud</h3>' +
     '<p class="bq-fx-hecho-texto"></p>' +
     "</div>" +
     "</section>" +
     '<div class="bq-qm-o" aria-hidden="true"><span>o bien</span></div>' +
     '<section class="bq-qm-diag" aria-labelledby="bq-qm-diag-titulo">' +
     '<div class="bq-qm-diag-cabeza"><p class="bq-fx-sello">Diagnóstico avanzado</p><p class="bq-qm-pago">Servicio de pago</p></div>' +
-    '<h3 class="bq-qm-diag-titulo" id="bq-qm-diag-titulo">¿No sabes por dónde empezar?</h3>' +
-    '<p class="bq-qm-diag-texto">Descubre las oportunidades que tu empresa todavía no está aprovechando. Con nuestro diagnóstico avanzado analizamos cómo trabajas, detectamos procesos que puedes automatizar y preparamos propuestas de mejora adaptadas a tu negocio.</p>' +
+    '<h3 class="bq-qm-diag-titulo" id="bq-qm-diag-titulo">¿Necesitas un análisis más completo?</h3>' +
+    '<p class="bq-qm-diag-texto">Si quieres que estudiemos todos los procesos de tu empresa, detectemos las oportunidades de automatización y preparemos un mapa detallado de mejoras, puedes solicitar nuestro diagnóstico avanzado.</p>' +
     '<ul class="bq-qm-puntos">' +
     `<li>${ICONO_PUNTO}<span><b>Avanzado y personalizado:</b> se adapta a tu empresa y a tu forma de trabajar.</span></li>` +
     `<li>${ICONO_PUNTO}<span><b>Analizamos tus procesos</b> y las herramientas que usáis.</span></li>` +
@@ -1310,7 +1312,7 @@
     const email = form.querySelector('[name="Email"]');
     const prefijo = form.querySelector('[name="PhonePrefix"]').value || "34";
     const whatsapp = form.dataset.bqMetodo !== "email";
-    if (!mensaje.value.trim()) errores.push([mensaje, "Cuéntanos brevemente qué quieres mejorar."]);
+    if (!mensaje.value.trim()) errores.push([mensaje, "Cuéntanos a qué se dedica tu empresa y qué te gustaría mejorar."]);
     if (!nombre.value.trim()) errores.push([nombre, TEXTOS.Name]);
     if (!empresa.value.trim()) errores.push([empresa, TEXTOS.Company]);
     let cifras = "";
@@ -1332,7 +1334,7 @@
       return;
     }
     const payload = {
-      formType: "Idea de mejora",
+      formType: "Diagnóstico inicial gratuito",
       origin: window.location.pathname,
       message: mensaje.value.trim(),
       name: nombre.value.trim(),
@@ -1347,7 +1349,7 @@
       m.caja.hidden = true;
       m.hecho.hidden = false;
       m.hecho.querySelector(".bq-fx-hecho-texto").textContent =
-        `Gracias, ${payload.name}. Revisaremos lo que nos cuentas y te contactaremos ${destino}.` +
+        `Gracias, ${payload.name}. Con lo que nos cuentas prepararemos tu diagnóstico inicial y te contactaremos ${destino}.` +
         (confirmacion ? " Te hemos enviado una confirmación a tu correo." : "");
       m.hecho.focus({ preventScroll: true });
     };
@@ -1359,7 +1361,7 @@
     payload.hp = form.querySelector('[name="website"]').value;
     m.enviando = true;
     form.dataset.bqEnviando = "1";
-    qmEstado("enviando", "Enviando tu idea…");
+    qmEstado("enviando", "Enviando tu solicitud…");
     const guarda = setTimeout(() => {
       if (!m.enviando) return;
       m.enviando = false;
@@ -1398,9 +1400,9 @@
           }
           fallo(data.code === "validation" || data.code === "rate_limit"
             ? data.error
-            : "No hemos podido enviar tu idea. Inténtalo de nuevo en unos minutos.");
+            : "No hemos podido enviar tu solicitud. Inténtalo de nuevo en unos minutos.");
         },
-        () => fallo("No hemos podido enviar tu idea. Revisa tu conexión e inténtalo de nuevo."),
+        () => fallo("No hemos podido enviar tu solicitud. Revisa tu conexión e inténtalo de nuevo."),
       );
   };
 

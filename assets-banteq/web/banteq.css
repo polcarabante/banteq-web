@@ -1460,17 +1460,34 @@ dialog.bq-fx.bq-fx-cerrando::backdrop {
 .bq-qm-idea {
   padding: 44px 44px 4px;
 }
-.bq-qm-antetitulo {
+/* Cabecera del diagnóstico inicial: mismas piezas que la del avanzado (sello + etiqueta), pero en
+   cristal neutro, para que el avanzado siga siendo el destacado; «Gratuito» en el verde menta de la
+   marca, como contrapunto de «Servicio de pago». */
+.bq-qm-cabeza {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 10px;
+  padding-right: 48px;
+}
+.bq-qm-cabeza .bq-fx-sello {
+  background: rgba(255, 255, 255, 0.08);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.16);
+  color: rgba(255, 255, 255, 0.9);
+}
+.bq-qm-gratis {
   margin: 0;
-  padding-right: 56px;
-  color: rgba(255, 255, 255, 0.55);
-  font-size: 13.5px;
+  padding: 5px 11px;
+  border-radius: 999px;
+  background: rgba(201, 251, 241, 0.08);
+  box-shadow: inset 0 0 0 1px rgba(201, 251, 241, 0.38);
+  color: rgb(201, 251, 241);
+  font-size: 12.5px;
   font-weight: 500;
-  line-height: 1.4;
-  letter-spacing: -0.005em;
+  line-height: 1.2;
 }
 .bq-qm-titulo {
-  margin: 10px 0 10px;
+  margin: 18px 0 10px;
   padding-right: 40px;
   color: #fff;
   font-size: clamp(27px, 3vw, 34px);
@@ -1483,6 +1500,18 @@ dialog.bq-fx.bq-fx-cerrando::backdrop {
   color: rgba(255, 255, 255, 0.72);
   font-size: 15.5px;
   line-height: 1.55;
+}
+.bq-qm-intro-lead {
+  color: #fff;
+  font-weight: 500;
+}
+/* Alcance del diagnóstico inicial, bajo el botón de enviar: discreto, como la nota legal. */
+.bq-qm-alcance {
+  margin: -2px 4px 0;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 12.5px;
+  line-height: 1.5;
+  text-align: center;
 }
 .bq-qm-formulario {
   margin-top: 22px;
