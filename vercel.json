@@ -43,11 +43,41 @@
       "source": "/contacto",
       "destination": "/#hablemos",
       "permanent": true
+    }
+  ],
+  "headers": [
+    {
+      "source": "/framerusercontent.com/sites/70yiSpZyA9Z5dxDKIiuNjl-:version/:path*",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
     },
     {
-      "source": "/inteligencia-artificial",
-      "destination": "/automatizacion-procesos",
-      "permanent": true
+      "source": "/fonts.gstatic.com/:path*",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    },
+    {
+      "source": "/banteq/:archivo(banteq\\.css|banteq\\.js|banteq-liquid\\.js)",
+      "has": [
+        {
+          "type": "query",
+          "key": "v"
+        }
+      ],
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
     }
   ],
   "functions": {

@@ -468,8 +468,10 @@ def apply_service_links():
     «Automatización · Desarrollo web» (el menú sigue con 3 filas) y en el pie «Servicios» se
     convierte en dos enlaces, con los mismos componentes y clases."""
     t = S[NAV_MOD]
-    sv = C.SERVICIOS
+    # Menú: los dos servicios principales (la fila de la plantilla tiene dos huecos). Pie: todos.
+    sv = [s_ for s_ in C.SERVICIOS if s_.get("principal")]
     assert len(sv) == 2
+    pie = C.SERVICIOS
     # Menú: la fila «Contacto · Servicios» pasa a ser la de los dos servicios.
     a = t.find("o(d.div,{className:`framer-f26tnn`,\"data-framer-name\":`Row`")
     assert a > 0 and t.count("o(d.div,{className:`framer-f26tnn`") == 1
@@ -496,7 +498,7 @@ def apply_service_links():
     bloque = t[a:b]
     assert "href:{webPageId:`augiA20Il`,hash:`v30xxKYcD`}" in bloque and bloque.count("cjjEg1nHt") == 2, "no se encuentra el enlace «Servicios» del pie"
     nuevos = []
-    for k, s_ in enumerate(sv, 1):
+    for k, s_ in enumerate(pie, 1):
         nuevos.append(bloque.replace("href:{webPageId:`augiA20Il`,hash:`v30xxKYcD`}", f"href:{{webPageId:`{s_['id']}`}}")
                       .replace("children:`Servicios`", f"children:`{s_['menu']}`").replace("cjjEg1nHt", f"bqPieSrv{k}"))
     S[NAV_MOD] = t[:a] + ",".join(nuevos) + t[b:]
@@ -507,7 +509,7 @@ def apply_service_links():
     b = html_element_extent(h, a, "div")
     bloque = h[a:b]
     assert bloque.count('href="/#servicios"') == 1
-    S[INDEX] = h[:a] + "".join(bloque.replace('href="/#servicios"', f'href="/{s_["slug"]}"').replace(">Servicios<", f">{s_['menu']}<") for s_ in sv) + h[b:]
+    S[INDEX] = h[:a] + "".join(bloque.replace('href="/#servicios"', f'href="/{s_["slug"]}"').replace(">Servicios<", f">{s_['menu']}<") for s_ in pie) + h[b:]
 
 
 def fix_cards():
@@ -841,10 +843,13 @@ def apply_hero_b():
             '<div class="framer-1tph0pi" data-framer-name="Overlay"></div>' + HERO_VIDEO_OVERLAY +
             '<div class="framer-11lkxjs-container">')
     assert f"className:`{HERO_VIDEO_OVERLAY_CLASS}`" in S[HOME_MOD], "el módulo ya no pinta el Video Overlay así"
-    # Al principio del <head> (lleva ~300 KB de CSS en línea): el póster se pide con los primeros
-    # bytes y ya está cuando se pinta la portada por primera vez.
+    # Al principio del <head> (lleva ~300 KB de CSS en línea): la fuente y el póster se piden con los
+    # primeros bytes y ya están cuando se pinta la portada por primera vez. Los pósters van justo
+    # detrás del <meta viewport>: sus media queries dependen del ancho, y antes de esa etiqueta un
+    # teléfono aún se mide con 980 px, así que pedía también el póster de escritorio (70 KB).
     h = S[INDEX]
-    S[INDEX] = h.replace("<head>", "<head>" + PRELOAD_FONT + PRELOAD_POSTERS, 1)
+    assert h.count(VIEWPORT) == 1 and h.find(VIEWPORT) < 20_000, "el <meta viewport> ya no está al principio del <head>"
+    S[INDEX] = h.replace("<head>", "<head>" + PRELOAD_FONT, 1).replace(VIEWPORT, VIEWPORT + PRELOAD_POSTERS, 1)
     # El script principal de Framer es async y va después de #main: este script en línea, justo tras
     # #main, elige el vídeo del móvil antes de que Framer pueda arrancarlo (así el móvil no descarga
     # también el de escritorio). banteq-liquid.js mantiene la elección si luego cambia el tamaño.
@@ -856,10 +861,13 @@ def apply_hero_b():
 # del primer pintado y, al sustituir a la fuente de reserva, mueve los textos: era el salto de
 # diseño de la home en móvil (CLS 0,10: el subtítulo subía una línea). Va en todas las páginas.
 PRELOAD_FONT = '<link rel="preload" as="font" type="font/woff2" crossorigin href="/fonts.gstatic.com/s/geist/v5/gyByhwUxId8gMEwcGFU.woff2">'
+# fetchpriority="high": el póster es el elemento más grande de la portada (LCP). Sin esa marca el
+# navegador lo pide con prioridad baja, detrás de los ~370 KB de módulos de Framer.
 PRELOAD_POSTERS = (
-    '<link rel="preload" as="image" href="/banteq/hero-b-poster.jpg" media="(min-width: 810px)">'
-    '<link rel="preload" as="image" href="/banteq/hero-b-movil-poster.jpg" media="(max-width: 809.98px)">'
+    '<link rel="preload" as="image" fetchpriority="high" href="/banteq/hero-b-poster.jpg" media="(min-width: 810px)">'
+    '<link rel="preload" as="image" fetchpriority="high" href="/banteq/hero-b-movil-poster.jpg" media="(max-width: 809.98px)">'
 )
+VIEWPORT = '<meta name="viewport" content="width=device-width">'
 HERO_VIDEO_OVERLAY_CLASS = "framer-4gsoix hidden-72rtr7"
 HERO_VIDEO_OVERLAY = f'<div class="{HERO_VIDEO_OVERLAY_CLASS}" data-framer-name="Video Overlay"></div>'
 HERO_SOURCE_SCRIPT = (
@@ -953,6 +961,51 @@ def apply_performance():
     for pr in C.PROYECTOS:
         if pr.get("demo"):
             shutil.copy2(GEN / pr["demo"], OUT / "banteq" / pr["demo"])  # ver tools/demo_margon.mjs
+
+
+URBANIST_IMPORT = "@import url('/fonts.googleapis.com/css2.css');"
+PRECONNECT_GSTATIC = '<link href="https://fonts.gstatic.com" rel="preconnect" crossorigin="">'
+
+
+def remove_unused_requests():
+    """Dos peticiones que no sirven para nada (medido con Lighthouse el 2026-11-13):
+    - la hoja de la fuente Urbanist, que bloqueaba el primer pintado (~150 ms en móvil): ningún texto
+      la usa (la instancia de Reveal Text usa Geist y build.py ya quitó el @import del módulo);
+    - la preconexión a fonts.gstatic.com: las fuentes se sirven desde el propio dominio, así que
+      abría una conexión con Google en cada visita sin llegar a usarla.
+    El <style> se queda vacío en su sitio (está dentro del árbol que React hidrata)."""
+    h = S[INDEX]
+    assert h.count(URBANIST_IMPORT) == 1 and h.count(PRECONNECT_GSTATIC) == 1
+    S[INDEX] = h.replace(URBANIST_IMPORT, "").replace(PRECONNECT_GSTATIC, "")
+    assert "`Urbanist`" in S[HOME_MOD] and "Urbanist" not in S[INDEX].replace("GF;Urbanist", ""), "revisar el uso de Urbanist"
+
+
+REDES = ("linkedin.com", "Instagram.com", "facebook.com", "x.com")
+
+
+def remove_social_links():
+    """El pie de la plantilla trae cuatro iconos de redes que enlazan a la portada de LinkedIn,
+    Instagram, Facebook y X (no a perfiles de Banteq). banteq.css los oculta, pero seguían en el
+    HTML: enlaces invisibles a webs genéricas en todas las páginas. Se quitan del componente y del
+    HTML inicial; el contenedor se queda (vacío y oculto) para no tocar la maquetación del pie.
+    Cuando existan perfiles reales: contenido.py → datos estructurados (sameAs) y este pie."""
+    t = S[NAV_MOD]
+    a = t.find("\"data-framer-name\":`Social Wrap`")
+    assert a > 0 and t.count("\"data-framer-name\":`Social Wrap`") == 1
+    k = t.find("children:[", a)
+    fin = jsx.match_bracket(t, k + len("children:"))
+    assert all(r in t[k:fin] for r in REDES), "el bloque de redes ya no es el esperado"
+    t = t[:k] + "children:[]" + t[fin:]
+    assert not any(f"`{r}`" in t for r in REDES)
+    S[NAV_MOD] = t
+    h = S[INDEX]
+    a = h.find('data-framer-name="Social Wrap"')
+    assert a > 0 and h.count('data-framer-name="Social Wrap"') == 1
+    a = h.rfind("<div", 0, a)
+    ini = h.find(">", a) + 1
+    fin = html_element_extent(h, a, "div") - len("</div>")
+    assert h[ini:fin].count("<a ") == 4, h[ini:fin].count("<a ")
+    S[INDEX] = h[:ini] + h[fin:]
 
 
 def copy_logos():
@@ -1370,6 +1423,18 @@ def apply_project_seo():
         viejo = 'o(`p`,{className:`framer-styles-preset-1nvzal8`,"data-styles-preset":`FYvoJIwJT`,dir:`auto`,children:`' + rotulo + "`})"
         assert t.count(viejo) == 1, rotulo
         t = t.replace(viejo, viejo.replace("o(`p`,", "o(`h2`,", 1))
+    # Tarjeta de proyecto (home y /proyectos): el título es un h3 en escritorio, pero en tableta y
+    # teléfono la plantilla lo pinta como párrafo, y Google rastrea con un teléfono. Pasa a ser h3
+    # también ahí, con la misma clase (se ve igual).
+    c = S[CARD_MOD]
+    h3 = c.find("s(d.h3,{className:`framer-styles-preset-1l2axwu`")
+    parrafo = "s(d.p,{className:`framer-styles-preset-1nvzal8`,\"data-styles-preset\":`FYvoJIwJT`"
+    a = c.find(parrafo, h3)
+    b = c.find(parrafo, a + 1)
+    assert 0 < h3 < a < b < h3 + 1500, "la tarjeta de proyecto ya no tiene el título donde se esperaba"
+    for k in (b, a):
+        c = c[:k] + parrafo.replace("s(d.p,", "s(d.h3,", 1) + c[k + len(parrafo):]
+    S[CARD_MOD] = c
     nombres = {sv["slug"]: sv["nombre"].lower() for sv in C.SERVICIOS}
     rutas = {sv["slug"]: sv["id"] for sv in C.SERVICIOS}
     n = [0]
@@ -1467,7 +1532,9 @@ def apply_alts():
 # ---------------------------------------------------------------------------
 
 PAGINAS = {
-    "proyectos": ("Proyectos | Banteq", "Empresas que ya confían en Banteq y el trabajo que hemos hecho con ellas."),
+    "proyectos": ("Proyectos: webs y automatizaciones reales | Banteq",
+                  "Casos reales de Banteq: la web corporativa en cinco idiomas de Margon y la web con formularios "
+                  "automatizados de RentUp Capital. Qué necesitaban y qué hicimos."),
     "aviso-legal": ("Aviso legal | Banteq", "Aviso legal y condiciones de uso de la web y de los servicios de Banteq."),
     "privacidad": ("Política de privacidad | Banteq", "Qué datos personales trata Banteq, para qué los usa, cómo los protege y cómo ejercer tus derechos."),
     "404": ("Página no encontrada | Banteq", C.META_DESCRIPTION),
@@ -1602,6 +1669,18 @@ def make_shells():
                 desactualizadas.append(path)
             vacio = re.findall(r'<div id="main"[^>]*></div>', page)
             assert len(vacio) == 1, (path, vacio)
+            # Imagen principal de las páginas de proyecto en el teléfono (la tarjeta del proyecto; en
+            # /proyectos, la del primero). Es el elemento más grande de la primera pantalla (LCP) y
+            # el navegador no la descubría hasta pasar los ~300 KB de estilos del <head>: se precarga
+            # con prioridad alta, solo donde se enseña la instantánea, y deja de ser diferida.
+            principal = next((pr["tarjeta"] for pr in C.PROYECTOS if path in ("proyectos", f"proyectos/{pr['slug']}")), None)
+            grande = principal and re.search(r"<img\b[^>]*" + re.escape(principal) + r"[^>]*>", data["html"])
+            if grande:
+                src = re.search(r'src="([^"]+)"', grande.group(0)).group(1)
+                etiqueta = grande.group(0).replace(' loading="lazy"', "").replace("<img ", '<img fetchpriority="high" ', 1)
+                data["html"] = data["html"].replace(grande.group(0), etiqueta, 1)
+                assert page.count(VIEWPORT) == 1
+                page = page.replace(VIEWPORT, VIEWPORT + f'<link rel="preload" as="image" fetchpriority="high" href="{html.escape(src)}" media="(max-width: 799.98px)">', 1)
             page = page.replace(vacio[0], f'<div id="bq-pre">{data["html"]}</div>{vacio[0]}{PRE_SWAP}', 1)
             page = page.replace("</head>", f'<style data-bq-pre="">{PRE_CSS}{data["css"]}</style>{PRE_BOOT}</head>', 1)
         S[f"{path}/index.html"] = page
@@ -2106,35 +2185,61 @@ def _ld(*nodos):
 
 
 ORG_ID = f"{C.SITIO}/#organization"
-AREA = {"@type": "AdministrativeArea", "name": C.PROVINCIA}
+WEB_ID = f"{C.SITIO}/#website"
+# Zona de servicio: de la comarca a toda España (contenido.ZONAS_SERVICIO).
+AREA = [{"@type": tipo, "name": nombre} for tipo, nombre in C.ZONAS_SERVICIO]
 
 
-def ld_organizacion():
-    """La empresa: nombre, logo y localidad. Solo datos ciertos: sin calle, teléfono ni perfiles
-    hasta tenerlos (cuando existan, aquí; y entonces tiene sentido pasar a LocalBusiness)."""
-    return {
+def ld_organizacion(completa=False):
+    """La empresa: nombre, logo, localidad, correo y zona de servicio. Solo datos que la propia web
+    publica (aviso legal): sin calle, teléfono ni perfiles hasta tenerlos. Cuando haya ficha de
+    Google Business Profile verificada y teléfono, tiene sentido pasar a ProfessionalService y
+    añadir sameAs. En la home (completa) lleva además el catálogo de servicios."""
+    org = {
         "@type": "Organization",
         "@id": ORG_ID,
         "name": C.NOMBRE_SITIO,
         "alternateName": C.NOMBRE_ALTERNATIVO,
         "url": f"{C.SITIO}/",
         "logo": {"@type": "ImageObject", "url": f"{C.SITIO}/icon-512.png", "width": 512, "height": 512},
+        "image": f"{C.SITIO}/framerusercontent.com/images/{OG_IMAGE}",
         "description": C.META_DESCRIPTION,
-        "address": {"@type": "PostalAddress", "addressLocality": C.LOCALIDAD, "addressRegion": C.PROVINCIA, "addressCountry": "ES"},
+        "email": C.EMAIL_CONTACTO,
+        "address": {"@type": "PostalAddress", "addressLocality": C.LOCALIDAD, "postalCode": C.CODIGO_POSTAL,
+                    "addressRegion": C.PROVINCIA, "addressCountry": "ES"},
         "areaServed": AREA,
+        "knowsAbout": C.TEMAS,
+        "contactPoint": {"@type": "ContactPoint", "contactType": "customer service", "email": C.EMAIL_CONTACTO,
+                         "availableLanguage": "es", "areaServed": "ES"},
     }
+    if C.PERFILES:
+        org["sameAs"] = C.PERFILES
+    if completa:
+        org["hasOfferCatalog"] = {
+            "@type": "OfferCatalog", "name": "Servicios de Banteq",
+            "itemListElement": [{"@type": "Offer", "itemOffered": {"@type": "Service", "@id": f"{C.SITIO}/{sv['slug']}#servicio",
+                                                                  "name": sv["nombre"], "url": f"{C.SITIO}/{sv['slug']}"}}
+                                for sv in C.SERVICIOS],
+        }
+    return org
 
 
 def ld_sitio():
     return {
         "@type": "WebSite",
-        "@id": f"{C.SITIO}/#website",
+        "@id": WEB_ID,
         "name": C.NOMBRE_SITIO,
         "alternateName": C.NOMBRE_ALTERNATIVO,
         "url": f"{C.SITIO}/",
         "inLanguage": "es",
         "publisher": {"@id": ORG_ID},
     }
+
+
+def ld_pagina(url, titulo, descripcion, tipo="WebPage", **extra):
+    """La página dentro del sitio: qué es, de quién y de qué trata."""
+    return {"@type": tipo, "@id": f"{url}#webpage", "url": url, "name": titulo, "description": descripcion,
+            "inLanguage": "es", "isPartOf": {"@id": WEB_ID}, "publisher": {"@id": ORG_ID}, **extra}
 
 
 def ld_migas(*pasos):
@@ -2165,39 +2270,45 @@ def faq_home():
     return out
 
 
-def structured_data(rel):
+def structured_data(rel, titulo="", descripcion=""):
     """JSON-LD de cada página. Todo sale de contenido.py: lo mismo que se lee en la página."""
     url = page_url(rel)
     servicios = {sv["slug"]: sv for sv in C.SERVICIOS}
     proyectos = {pr["slug"]: pr for pr in C.PROYECTOS}
     ruta = rel[: -len("index.html")].strip("/")
     if rel == INDEX:
-        return _ld(ld_organizacion(), ld_sitio(), ld_faq(faq_home()))
+        return _ld(ld_organizacion(completa=True), ld_sitio(),
+                   ld_pagina(url, titulo, descripcion, about={"@id": ORG_ID}), ld_faq(faq_home()))
     if ruta in servicios:
         sv = servicios[ruta]
         preguntas = [par for _, bloques in sv["secciones"] for tipo, valor in bloques if tipo == "faq" for par in valor]
         servicio = {
             "@type": "Service", "@id": f"{url}#servicio", "name": sv["nombre"], "serviceType": sv["nombre"],
             "description": sv["descripcion"], "url": url, "provider": {"@id": ORG_ID}, "areaServed": AREA,
+            "audience": {"@type": "BusinessAudience", "audienceType": "Pymes y pequeños negocios"},
         }
-        return _ld(ld_organizacion(), servicio, ld_faq(preguntas), ld_migas((sv["nombre"], url)))
+        return _ld(ld_organizacion(), ld_pagina(url, titulo, descripcion, mainEntity={"@id": f"{url}#servicio"}),
+                   servicio, ld_faq(preguntas), ld_migas((sv["nombre"], url)))
     if ruta == "proyectos":
         lista = {
             "@type": "ItemList",
             "itemListElement": [{"@type": "ListItem", "position": k, "name": pr["titulo"], "url": f"{C.SITIO}/proyectos/{pr['slug']}"}
                                 for k, pr in enumerate(C.PROYECTOS, 1)],
         }
-        return _ld(ld_organizacion(), {"@type": "CollectionPage", "@id": f"{url}#pagina", "name": "Proyectos", "url": url, "mainEntity": lista},
+        return _ld(ld_organizacion(), ld_pagina(url, titulo, descripcion, tipo="CollectionPage", mainEntity=lista),
                    ld_migas(("Proyectos", url)))
     if ruta.startswith("proyectos/"):
         pr = proyectos[ruta.split("/")[1]]
         obra = {
             "@type": "CreativeWork", "@id": f"{url}#proyecto", "name": pr["titulo"], "description": pr["descripcion"], "url": url,
             "image": f"{C.SITIO}/framerusercontent.com/images/{pr['tarjeta']}", "dateCreated": pr["ano"], "about": pr["sector"],
-            "creator": {"@id": ORG_ID}, "inLanguage": "es",
+            "creator": {"@id": ORG_ID}, "inLanguage": "es", "keywords": pr["servicios"],
+            "mentions": [{"@type": "Service", "@id": f"{C.SITIO}/{s_}#servicio"} for s_ in C.PROYECTO_SERVICIOS[pr["slug"]]],
         }
-        return _ld(ld_organizacion(), obra, ld_migas(("Proyectos", f"{C.SITIO}/proyectos"), (pr["cliente"], url)))
-    return ""
+        return _ld(ld_organizacion(), ld_pagina(url, titulo, descripcion, mainEntity={"@id": f"{url}#proyecto"}),
+                   obra, ld_migas(("Proyectos", f"{C.SITIO}/proyectos"), (pr["cliente"], url)))
+    # Páginas legales: quién es el titular y de qué sitio forman parte.
+    return _ld(ld_organizacion(), ld_pagina(url, titulo, descripcion), ld_migas((titulo.split(" | ")[0], url)))
 
 
 def apply_seo():
@@ -2226,9 +2337,15 @@ def apply_seo():
             head = meta(attr, title, head)
         for attr in ('property="og:description"', 'name="twitter:description"'):
             head = meta(attr, desc, head)
+        # Las páginas de proyecto se comparten con su propia imagen (la tarjeta del proyecto).
+        m_pr = re.match(r"proyectos/([^/]+)/index\.html$", rel)
+        pr = next((x for x in C.PROYECTOS if m_pr and x["slug"] == m_pr.group(1)), None)
+        imagen = f"{C.SITIO}/framerusercontent.com/images/{pr['tarjeta']}" if pr else og_image
+        imagen_alt = f"Web de {pr['cliente']}, proyecto de Banteq" if pr else f"{C.NOMBRE_ALTERNATIVO}: automatización, inteligencia artificial y desarrollo web"
         for attr in ('property="og:image"', 'name="twitter:image"'):
-            head = meta(attr, og_image, head)
-        extra = f'<meta property="og:site_name" content="{C.NOMBRE_SITIO}"><meta property="og:locale" content="es_ES">'
+            head = meta(attr, imagen, head)
+        extra = (f'<meta property="og:image:alt" content="{html.escape(imagen_alt)}">'
+                 f'<meta property="og:site_name" content="{C.NOMBRE_SITIO}"><meta property="og:locale" content="es_ES">')
         assert head.count('<link rel="canonical" href="/">') == 1 and head.count('<meta property="og:url" content="/">') == 1, rel
         if es_404:
             # La página de error no se indexa ni señala a ninguna URL como suya.
@@ -2239,8 +2356,8 @@ def apply_seo():
             url = page_url(rel)
             head = head.replace('<link rel="canonical" href="/">', f'<link rel="canonical" href="{url}">')
             head = head.replace('<meta property="og:url" content="/">', f'<meta property="og:url" content="{url}">' + extra)
-            indexables.append(url)
-            head += structured_data(rel)
+            indexables.append((url, rel))
+            head += structured_data(rel, title, desc)
         S[rel] = head + rest
     # Framer, en el navegador (y Google ejecuta JavaScript): al navegar reescribe la canónica con el
     # dominio del sitio, que en la exportación era el de la plantilla en framer.app…
@@ -2254,12 +2371,39 @@ def apply_seo():
         "s(()=>{document.title=(" + json.dumps(titulos, ensure_ascii=False) + ")[location.pathname.replace(/\\/+$/,``)||`/`]||e.title||``,"
         "e.viewport&&document.querySelector(`meta[name=\"viewport\"]`)?.setAttribute(`content`,e.viewport)},[e.title,e.viewport,location.pathname])",
     )
-    (OUT / "robots.txt").write_text(f"User-agent: *\nAllow: /\n\nSitemap: {C.SITIO}/sitemap.xml\n", encoding="utf-8")
-    urls = "".join(f"  <url><loc>{html.escape(u)}</loc></url>\n" for u in sorted(indexables, key=lambda u: (u.count("/"), u)))
+    # /api/ no es contenido; /diagnostico (cuestionario) ya lleva noindex y debe poder rastrearse para
+    # que Google lea esa etiqueta, así que no se bloquea aquí.
+    (OUT / "robots.txt").write_text(f"User-agent: *\nAllow: /\nDisallow: /api/\n\nSitemap: {C.SITIO}/sitemap.xml\n", encoding="utf-8")
+    fechas = page_dates({u: S[rel] for u, rel in indexables})
+    urls = "".join(f"  <url><loc>{html.escape(u)}</loc><lastmod>{fechas[u]}</lastmod></url>\n"
+                   for u, _ in sorted(indexables, key=lambda x: (x[0].count("/"), x[0])))
     (OUT / "sitemap.xml").write_text(
         '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + urls + "</urlset>\n",
         encoding="utf-8",
     )
+
+
+LASTMOD = ROOT / "assets-banteq" / "seo" / "lastmod.json"
+
+
+def page_dates(paginas):
+    """Fecha de última modificación de cada página para el sitemap (<lastmod>). Google solo la tiene
+    en cuenta si es cierta, así que no es la fecha del build: se guarda una huella del texto visible
+    de cada página (assets-banteq/seo/lastmod.json) y la fecha solo cambia cuando cambia ese texto."""
+    import datetime
+
+    previo = json.loads(LASTMOD.read_text(encoding="utf-8")) if LASTMOD.exists() else {}
+    hoy, nuevo = datetime.date.today().isoformat(), {}
+    for url, pagina in sorted(paginas.items()):
+        cuerpo = pagina[pagina.find("</head>"):]
+        texto = re.sub(r"<(script|style|template)\b.*?</\1>", " ", cuerpo, flags=re.S)
+        texto = " ".join(html.unescape(re.sub(r"<[^>]+>", " ", texto)).split())
+        firma = hashlib.sha1(texto.encode()).hexdigest()[:12]
+        antes = previo.get(url, {})
+        nuevo[url] = {"firma": firma, "fecha": antes["fecha"] if antes.get("firma") == firma else hoy}
+    LASTMOD.parent.mkdir(parents=True, exist_ok=True)
+    LASTMOD.write_text(json.dumps(nuevo, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
+    return {u: d["fecha"] for u, d in nuevo.items()}
 
 
 def copy_root_files():
@@ -2438,6 +2582,8 @@ def main():
     apply_feature_cards()
     apply_hero_marquee()
     apply_hero_b()
+    remove_unused_requests()
+    remove_social_links()
     apply_performance()
     apply_cuadro()
     build_cms()

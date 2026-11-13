@@ -201,11 +201,20 @@ Todo sale de `tools/contenido.py` (`META_TITLE`, `META_DESCRIPTION`, `SITIO`, `N
   dejaba `/` en todas: para Google, todas eran copias de la home.
 - **Open Graph y Twitter** con el título y la descripción de cada página y la imagen en URL
   absoluta; `og:site_name` y `og:locale`.
-- **Datos estructurados** (JSON-LD, `structured_data()`): organización (nombre, logo y localidad;
-  sin calle ni teléfono hasta tenerlos) en todas; sitio y preguntas frecuentes en la home; servicio,
-  preguntas y migas de pan en cada página de servicio; obra y migas en cada proyecto; lista en
-  `/proyectos`. Solo lo que se lee en la propia página.
-- **`robots.txt`** (todo permitido, con el sitemap) y **`sitemap.xml`** con las páginas indexables.
+- **Datos estructurados** (JSON-LD, `structured_data()`): organización (nombre, logo, localidad y
+  código postal, correo, zona de servicio `ZONAS_SERVICIO`, temas `TEMAS` y perfiles oficiales
+  `PERFILES`; sin calle ni teléfono hasta tenerlos) y página (`WebPage`) en todas; sitio, catálogo
+  de servicios y preguntas frecuentes en la home; servicio, preguntas y migas de pan en cada página
+  de servicio; obra y migas en cada proyecto; lista en `/proyectos`. Solo lo que se lee en la
+  propia página; sin valoraciones.
+- **`robots.txt`** (todo permitido menos `/api/`, con el sitemap) y **`sitemap.xml`** con las
+  páginas indexables y su `<lastmod>`. La fecha no es la del build: `page_dates()` guarda una
+  huella del texto visible de cada página en `assets-banteq/seo/lastmod.json` y solo cambia la
+  fecha cuando cambia ese texto (hay que subir ese archivo con cada cambio de contenido).
+- Las páginas de proyecto se comparten en redes con su propia imagen (la tarjeta del proyecto); el
+  resto, con la imagen general. Todas llevan `og:image:alt`.
+- El pie no lleva los iconos de redes de la plantilla (enlazaban a la portada de LinkedIn,
+  Instagram, Facebook y X): `remove_social_links()`. Cuando haya perfiles reales, van en `PERFILES`.
 - La página 404 lleva `noindex`.
 - En el navegador, Framer ponía a cada página el título de la home y tenía como dominio el de la
   plantilla (`framer.app`): ahora usa el `<title>` de cada ruta y `SITIO`.
@@ -214,20 +223,26 @@ Todo sale de `tools/contenido.py` (`META_TITLE`, `META_DESCRIPTION`, `SITIO`, `N
 
 ### Páginas de servicio
 
-`/automatizacion-procesos` y `/desarrollo-web` (contenido en
-`contenido.SERVICIOS`: título, subtítulo, secciones, listas, preguntas frecuentes y enlaces). Cada una
+`/automatizacion-procesos`, `/inteligencia-artificial`, `/automatizacion-n8n`, `/desarrollo-web` y
+`/mantenimiento-web` (contenido en `contenido.SERVICIOS`: título, subtítulo, secciones, listas,
+preguntas frecuentes y enlaces). Cada página responde a una búsqueda distinta, para que no compitan
+entre sí: qué procesos automatizar · cuándo aporta la IA · la herramienta (n8n, Make, API) · webs a
+medida · mantenimiento y Fórmula Banteq. Cada una
 es una copia del módulo de la página de texto de la plantilla (la del aviso legal) con otra columna
 de contenido, registrada como una ruta más de Framer: misma cabecera, mismo pie con formulario,
-mismas tipografías y puntos de corte. El menú y el pie de todas las páginas enlazan a las dos
-(`apply_service_links`), y cada proyecto enlaza a sus servicios (`apply_project_seo`). La página
-`/inteligencia-artificial` («IA aplicada») se quitó el 2026-11-01 y redirige a
-`/automatizacion-procesos` (`vercel.json`).
+mismas tipografías y puntos de corte. El menú enlaza a las dos marcadas como `"principal"` (su
+fila tiene dos huecos) y el pie de todas las páginas, a las cinco (`apply_service_links`); cada
+proyecto enlaza a sus servicios (`apply_project_seo`). `/inteligencia-artificial` se quitó el
+2026-11-01 y vuelve el 2026-11-13 con contenido nuevo (auditoría SEO; pendiente de que Pol la
+apruebe): ya no hay redirección en `vercel.json`. La página de mantenimiento no describe qué incluye
+el mantenimiento porque no está definido: solo lo que fijan las condiciones de la Fórmula Banteq.
 
 Para añadir o cambiar una: editar `SERVICIOS`, `npm run build` y `npm run prerender`.
 
 ### SEO local
 
-Banteq está en Santa Perpètua de Mogoda y trabaja en Barcelona y alrededores. Se dice una vez por
+Banteq está en Santa Perpètua de Mogoda y trabaja con empresas de Barcelona, el Vallès y, en
+remoto, del resto de España (desde el 2026-11-13). Se dice una vez por
 página y con naturalidad (`ZONA_FRASE`): en el título de la home y de los servicios, en el cierre de
 cada página de servicio, en una pregunta frecuente de la home, en el copyright del pie y en los
 datos estructurados. Sin listas de municipios.
@@ -384,6 +399,22 @@ a 1500 px/s, hilo principal original → ahora: 270 → 190 ms/s (JavaScript 142
 en móvil con la CPU a ¼: 731 → 426 ms/s. En WebKit, el mismo scroll pasa de 22 FPS a 60 FPS, y el
 tirón al entrar en «Conectamos tus herramientas» baja de 54–59 ms a 25 ms. En reposo, el hilo
 principal está prácticamente libre (hero 190 → 4 ms/s). Imágenes de la home: 482 → 210 KB.
+
+### Carga de la portada en móvil (LCP)
+
+Medido con Lighthouse el 2026-11-13 (móvil simulado): el elemento más grande de la portada es el
+póster de la B, y tardaba 4,9 s en pintarse.
+
+- Las precargas de los pósters iban antes del `<meta viewport>`: en ese punto un teléfono aún se
+  mide con 980 px, así que cumplía la condición de escritorio y descargaba también ese póster
+  (70 KB). Ahora van justo detrás del `viewport` (`apply_hero_b`).
+- Llevan `fetchpriority="high"`: sin esa marca el navegador las pedía con prioridad baja, detrás de
+  los módulos de Framer.
+- Fuera la hoja de la fuente Urbanist (bloqueaba el primer pintado y ningún texto la usa) y la
+  preconexión a `fonts.gstatic.com` (las fuentes son propias): `remove_unused_requests()`.
+- `vercel.json` → `headers`: caché de un año (`immutable`) solo para lo que cambia de dirección
+  cuando cambia de contenido: los módulos (carpeta con versión), las fuentes y `banteq.css/.js`
+  con `?v=`. Las imágenes y los vídeos no: se llaman igual aunque cambien.
 
 ### Rendimiento durante el hover
 

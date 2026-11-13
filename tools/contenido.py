@@ -43,7 +43,21 @@ NOMBRE_ALTERNATIVO = "Banteq Digital"
 # municipios.
 LOCALIDAD = "Santa Perpètua de Mogoda"
 PROVINCIA = "Barcelona"
-ZONA_FRASE = "Estamos en Santa Perpètua de Mogoda y trabajamos con empresas de Barcelona, el Vallès y alrededores."
+# Desde el 2026-11-13 (auditoría SEO): la sede es la real y la zona de servicio, toda España en remoto.
+ZONA_FRASE = "Estamos en Santa Perpètua de Mogoda (Barcelona) y trabajamos con empresas de Barcelona, el Vallès y, en remoto, del resto de España."
+# Zona de servicio en los datos estructurados (de más cercana a más amplia). Sin lista de municipios.
+ZONAS_SERVICIO = [("AdministrativeArea", "Vallès Occidental"), ("AdministrativeArea", "Barcelona"),
+                  ("AdministrativeArea", "Cataluña"), ("Country", "España")]
+CODIGO_POSTAL = "08130"
+EMAIL_CONTACTO = "pol@banteq.org"  # el que ya publican el aviso legal y la política de privacidad
+# Perfiles oficiales de Banteq en otras webs (datos estructurados: sameAs). Solo perfiles reales y
+# reclamados: el de Trustpilot (verificado con el archivo de assets-banteq/raiz/). Añadir aquí los de
+# LinkedIn, Google Business Profile, etc. cuando existan.
+PERFILES = ["https://es.trustpilot.com/review/banteq.com"]
+# Temas de los que trata la web (datos estructurados: knowsAbout). Solo lo que Banteq ofrece.
+TEMAS = ["Automatización de procesos", "Inteligencia artificial aplicada a empresas", "n8n", "Make",
+         "Integración de herramientas mediante API", "Desarrollo web a medida", "Rediseño de páginas web",
+         "Mantenimiento web"]
 
 # Pregunta nueva de la home (ocupa el hueco de la de FUNDAE, que ya no se publica).
 FAQ_ZONA = ("¿Dónde trabajáis?", ZONA_FRASE + " Cuéntanos tu caso y vemos la mejor forma de empezar.")
@@ -830,18 +844,26 @@ _CIERRE = [
     " y te proponemos un primer paso razonable.",
 ]
 
+# Cada página responde a una búsqueda distinta (para que no compitan entre sí):
+#   /automatizacion-procesos  → qué procesos automatizar y cómo se hace (el problema del negocio)
+#   /inteligencia-artificial  → cuándo aporta la IA y qué hace dentro de la empresa
+#   /automatizacion-n8n       → la herramienta: n8n, Make, APIs e integración entre programas
+#   /desarrollo-web           → diseño y desarrollo de webs a medida y rediseños
+#   /mantenimiento-web        → mantenimiento y Fórmula Banteq (precio y condiciones)
+# "principal": va en el menú (dos filas de la plantilla: no caben más). Todas van en el pie.
 SERVICIOS = [
     {
         "slug": "automatizacion-procesos",
         "id": "bqSvAuto1",
         "menu": "Automatización",
+        "principal": True,
         "nombre": "Automatización de procesos",
-        "title": "Automatización de procesos para empresas en Barcelona | Banteq",
+        "title": "Automatización de procesos para pymes en Barcelona | Banteq",
         "descripcion": (
-            "Automatizamos facturas, documentos, correos, formularios y seguimiento comercial conectando "
-            "las herramientas que ya usa tu empresa. En Barcelona y alrededores."
+            "Automatizamos facturas, correos, formularios y tareas repetitivas conectando las herramientas "
+            "que ya usa tu empresa. Para pymes de Barcelona y de toda España."
         ),
-        "h1": "Automatización de procesos para empresas",
+        "h1": "Automatización de procesos para empresas y pymes",
         "subtitulo": "Tareas repetitivas que se resuelven solas, conectadas con las herramientas que ya usa tu equipo.",
         "intro": [
             "Facturas que se registran a mano, correos que hay que reenviar, datos que se copian de un Excel a otro, "
@@ -860,13 +882,24 @@ SERVICIOS = [
                     [("b", "Conexión entre herramientas. "), "Correo, Drive, Excel, CRM, ERP o WhatsApp conectados entre sí, para que la información pase de una a otra sin copiar y pegar."],
                 ]),
             ]),
+            ("Ejemplos de automatizaciones", [
+                ("p", "Así queda una tarea cuando deja de hacerse a mano. Son ejemplos habituales; en tu empresa se adaptan a tus programas y a tu forma de trabajar."),
+                ("ul", [
+                    [("b", "Facturas de proveedores. "), "La factura llega por correo, se leen el proveedor, la fecha y los importes, se anota en tu hoja de cálculo o en tu programa de gestión y el PDF se archiva en su carpeta. Una persona revisa solo las que no cuadran."],
+                    [("b", "Solicitudes de la web. "), "Cada formulario crea el contacto en tu CRM, envía una confirmación a quien escribe y avisa a la persona del equipo que debe responder."],
+                    [("b", "Presupuestos y consultas. "), "Los correos entrantes se clasifican por tipo, se crea la ficha con los datos y se prepara un borrador de respuesta para revisar y enviar."],
+                    [("b", "Informe semanal. "), "Los datos de ventas, pedidos o incidencias se recogen de cada herramienta y llegan resumidos al correo cada lunes."],
+                    [("b", "Reservas y citas. "), "La cita queda en el calendario, el cliente recibe la confirmación y un recordatorio, y los cambios se actualizan solos."],
+                ]),
+            ]),
             ("Empezamos por un diagnóstico", [
                 ("p", "Antes de automatizar nada, analizamos cómo trabaja tu empresa y dibujamos un mapa de sus procesos, herramientas y conexiones. Ese mapa muestra dónde se pierde tiempo y qué conviene automatizar primero."),
                 ("p", "Preparamos dos diagnósticos separados: procesos y oportunidades de automatización. El primero organiza cómo trabajáis y ayuda a preparar el camino hacia ISO 9001. El segundo identifica tareas que podrían hacerse con menos tiempo y errores. Te contactaremos en menos de 72 horas naturales para comentar las conclusiones, los honorarios y las condiciones de entrega. Enviar el cuestionario no supone contratar ni pagar."),
                 ("p", ["Después seguimos un proceso claro: diseño, desarrollo, pruebas y formación de tu equipo. Así es ", ("a", "cómo trabajamos", "/#como-trabajamos"), "."]),
             ]),
             ("Sobre las herramientas que ya usas", [
-                ("p", "No hace falta cambiar de programas. Trabajamos con Microsoft 365, Google Drive, WhatsApp, Notion, Airtable u Odoo, y las conectamos con n8n, Make o integraciones a medida cuando el proceso lo requiere."),
+                ("p", ["No hace falta cambiar de programas. Trabajamos con Microsoft 365, Google Drive, WhatsApp, Notion, Airtable u Odoo, y las conectamos con n8n, Make o integraciones a medida cuando el proceso lo requiere. Lo explicamos en ", ("a", "automatización con n8n e integración de herramientas", "/automatizacion-n8n"), "."]),
+                ("p", ["Cuando la tarea exige entender un texto, como leer un documento, clasificar un correo o redactar una respuesta, añadimos ", ("a", "inteligencia artificial", "/inteligencia-artificial"), " al proceso."]),
             ]),
             ("Con control y supervisión", [
                 ("ul", [
@@ -889,11 +922,139 @@ SERVICIOS = [
                     ("¿Tenemos que cambiar de herramientas?", "No. Partimos de las que ya usa tu empresa y las conectamos entre sí. Solo proponemos una herramienta nueva cuando resuelve algo que las actuales no pueden."),
                     ("¿Qué pasa si una automatización se equivoca?", "Las diseñamos con validaciones, registro de acciones y revisión humana en los pasos sensibles, y las probamos antes de ponerlas en marcha. Las decisiones importantes siguen pasando por una persona."),
                     ("¿Necesitamos conocimientos técnicos?", "No. Nos encargamos del análisis, el desarrollo, las integraciones y las pruebas. Después formamos a tu equipo y dejamos documentación para que use el sistema con autonomía."),
+                    ("¿Cuánto cuesta automatizar un proceso?", "Depende del proceso y de las herramientas que haya que conectar. Por eso empezamos por el diagnóstico: después recibes una propuesta con el alcance, las fases y el importe, y decides con esa información."),
+                    ("¿Cuánto tiempo se ahorra?", "Depende de cuántas veces se repite la tarea y de cuánto tarda hoy. En las automatizaciones con garantía lo dejamos por escrito antes de empezar: cuánto tiempo dedica tu equipo al proceso y cómo se medirá después."),
+                    ("¿Trabajáis con empresas de fuera de Barcelona?", "Sí. El análisis, el desarrollo y la formación pueden hacerse en remoto, así que trabajamos con empresas de toda España. Con las de Barcelona y el Vallès también podemos vernos en persona."),
                 ]),
             ]),
             ("¿Hablamos de tus procesos?", [
                 ("p", _CIERRE),
-                ("p", ["También te puede interesar: ", ("a", "desarrollo web a medida", "/desarrollo-web"), "."]),
+                ("p", ["También te puede interesar: ", ("a", "inteligencia artificial para empresas", "/inteligencia-artificial"), ", ", ("a", "automatización con n8n", "/automatizacion-n8n"), " y ", ("a", "desarrollo web a medida", "/desarrollo-web"), "."]),
+            ]),
+        ],
+    },
+    {
+        "slug": "inteligencia-artificial",
+        "id": "bqSvIntA1",
+        "menu": "Inteligencia artificial",
+        "nombre": "Inteligencia artificial para empresas",
+        "title": "Inteligencia artificial para pymes en Barcelona | Banteq",
+        "descripcion": (
+            "Asistentes de IA que responden consultas, leen documentos, clasifican solicitudes y preparan "
+            "borradores dentro de tus herramientas, con revisión humana."
+        ),
+        "h1": "Inteligencia artificial para empresas",
+        "subtitulo": "Asistentes que atienden, clasifican y redactan dentro de tus herramientas, con tu equipo al mando.",
+        "intro": [
+            "La inteligencia artificial ya es útil en el día a día de una pyme: responde consultas, encuentra información "
+            "en tus documentos, clasifica lo que entra y prepara borradores. Lo difícil no es usarla, sino aplicarla donde de verdad aporta.",
+            "En Banteq la integramos en tus procesos y en las herramientas que ya utilizas, y dejamos claro qué hace la IA y qué sigue decidiendo una persona.",
+        ],
+        "secciones": [
+            ("Qué hacemos con inteligencia artificial", [
+                ("ul", [
+                    [("b", "Atención al cliente. "), "Asistentes que responden las consultas habituales y pasan a tu equipo las que necesitan a una persona."],
+                    [("b", "Consultas sobre tu documentación interna. "), "Tu equipo pregunta con sus palabras y el asistente responde a partir de los documentos de la empresa."],
+                    [("b", "Lectura de documentos. "), "Facturas, pedidos o formularios de los que se extraen los datos para registrarlos sin teclearlos."],
+                    [("b", "Clasificación de solicitudes. "), "Cada correo o formulario llega etiquetado y a quien corresponde."],
+                    [("b", "Borradores de respuesta. "), "La IA prepara el texto; una persona lo revisa y lo envía."],
+                ]),
+            ]),
+            ("Cuándo tiene sentido usar IA y cuándo no", [
+                ("p", "La IA aporta cuando la tarea exige entender lenguaje: leer un texto que no viene siempre igual, decidir de qué trata un mensaje o redactar una respuesta. Si la tarea sigue reglas fijas, como pasar un dato de un programa a otro, suele bastar una automatización más sencilla, que es más barata y más predecible."),
+                ("p", ["Por eso no empezamos por la tecnología. Primero miramos el proceso y después decidimos si necesita IA, una ", ("a", "automatización de procesos", "/automatizacion-procesos"), " sin IA o las dos cosas."]),
+            ]),
+            ("La IA propone, tu equipo decide", [
+                ("p", "No dejamos procesos sensibles sin supervisión. Diseñamos cada solución con revisión humana, registro de acciones y validaciones: la IA prepara, clasifica y ejecuta tareas, y las decisiones importantes siguen pasando por una persona."),
+            ]),
+            ("Tus datos, bajo control", [
+                ("ul", [
+                    "Usamos los datos que aportas solo para el alcance acordado",
+                    "Los protegemos con medidas de seguridad adecuadas",
+                    "No los usamos para entrenar modelos de IA públicos sin tu permiso expreso",
+                ]),
+                ("p", ["Lo explicamos con detalle en nuestra ", ("a", "política de privacidad", "/privacidad"), "."]),
+            ]),
+            ("Integrada en lo que ya usas", [
+                ("p", ["Trabajamos con modelos de OpenAI y los conectamos con tu correo, tus documentos, tu CRM o WhatsApp mediante ", ("a", "n8n, Make o integraciones a medida", "/automatizacion-n8n"), ". Después formamos a tu equipo y dejamos documentación para que use el sistema con autonomía."]),
+            ]),
+            ("Preguntas frecuentes", [
+                ("faq", [
+                    ("¿Qué diferencia hay entre automatización e inteligencia artificial?", "Una automatización sigue reglas fijas: si pasa esto, haz aquello. La inteligencia artificial interpreta textos, documentos o mensajes que no siguen un formato. Lo habitual es combinarlas: la IA entiende lo que entra y la automatización hace el resto."),
+                    ("¿La IA sustituye a las personas del equipo?", "No. Se ocupa de tareas repetitivas, como clasificar, buscar información o redactar un primer borrador, para que tu equipo dedique su tiempo a lo que requiere criterio. Las decisiones importantes siguen pasando por una persona."),
+                    ("¿Qué pasa con los datos de nuestra empresa?", "Se usan solo para el alcance acordado, se protegen con medidas de seguridad adecuadas y no se emplean para entrenar modelos de IA públicos sin tu permiso expreso."),
+                    ("¿Sirve para un negocio pequeño?", "Sí, si hay una tarea concreta que se repite: responder siempre las mismas preguntas, leer documentos o clasificar correos. Lo importante no es el tamaño de la empresa, sino elegir bien el primer caso de uso."),
+                    ("¿Por dónde empezamos?", "Por un diagnóstico de procesos: analizamos cómo trabaja tu empresa y elegimos contigo el primer caso de uso, el que más tiempo ahorra con menos riesgo."),
+                ]),
+            ]),
+            ("¿Hablamos de tu caso?", [
+                ("p", _CIERRE),
+                ("p", ["También te puede interesar: ", ("a", "automatización de procesos", "/automatizacion-procesos"), " y ", ("a", "automatización con n8n", "/automatizacion-n8n"), "."]),
+            ]),
+        ],
+    },
+    {
+        "slug": "automatizacion-n8n",
+        "id": "bqSvN8nI1",
+        "menu": "n8n e integraciones",
+        "nombre": "Automatización con n8n e integración de herramientas",
+        "title": "Automatización con n8n e integración de herramientas | Banteq",
+        "descripcion": (
+            "Conectamos tu correo, Excel, CRM, ERP, WhatsApp y tu web con n8n, Make o integraciones por API "
+            "a medida. Los datos pasan de un programa a otro sin copiar y pegar."
+        ),
+        "h1": "Automatización con n8n e integración de herramientas",
+        "subtitulo": "Tus programas, conectados entre sí: la información pasa de uno a otro sin copiar y pegar.",
+        "intro": [
+            "La mayoría de las empresas ya tiene buenas herramientas. El problema es que no se hablan: el pedido está en un programa, el cliente en otro y la factura en un tercero, y alguien dedica parte del día a pasar datos de un sitio a otro.",
+            "En Banteq conectamos esas herramientas con n8n, con Make o con integraciones a medida mediante sus API, según lo que convenga a cada caso.",
+        ],
+        "secciones": [
+            ("Qué es n8n y para qué lo usamos", [
+                ("p", "n8n es una herramienta de automatización que conecta aplicaciones mediante flujos: cuando ocurre algo en un programa, se ejecutan una serie de pasos en otros. Puede usarse en la nube de n8n o instalarse en un servidor propio, y permite añadir lógica a medida e inteligencia artificial cuando el flujo lo necesita."),
+                ("p", "La usamos para los procesos que cruzan varias herramientas: recoger un dato, transformarlo, comprobarlo y dejarlo donde debe estar, con avisos si algo falla."),
+            ]),
+            ("Qué herramientas conectamos", [
+                ("ul", [
+                    [("b", "Correo y documentos. "), "Microsoft 365 y Google Drive."],
+                    [("b", "Datos y gestión. "), "Excel, Airtable, Notion y Odoo."],
+                    [("b", "Clientes. "), "Tu CRM, WhatsApp y los formularios de tu web."],
+                    [("b", "Inteligencia artificial. "), "Modelos de OpenAI para leer, clasificar o redactar dentro del flujo."],
+                    [("b", "Programas sin conector. "), "Si la herramienta tiene API, la integramos a medida."],
+                ]),
+            ]),
+            ("Ejemplos de flujos", [
+                ("ul", [
+                    [("b", "De Excel al CRM. "), "Cada fila nueva crea o actualiza el contacto, sin duplicados."],
+                    [("b", "Del correo a la carpeta. "), "Los adjuntos de un tipo de correo se guardan con su nombre y en su sitio, y se anota quién los envió."],
+                    [("b", "Del formulario al equipo. "), "La solicitud queda registrada, se confirma a quien escribe y se avisa a la persona responsable."],
+                    [("b", "De varias herramientas a un informe. "), "Los datos se reúnen cada semana y llegan resumidos por correo."],
+                ]),
+                ("p", ["En ", ("a", "automatización de procesos", "/automatizacion-procesos"), " explicamos qué tareas conviene automatizar primero y cómo lo decidimos."]),
+            ]),
+            ("n8n, Make o una integración a medida", [
+                ("p", "No hay una herramienta mejor para todo. Elegimos según el volumen de operaciones, lo sensibles que sean los datos, las herramientas que ya tienes y quién va a mantener el flujo después. Si ya trabajas con Make o con otra plataforma, partimos de ahí."),
+            ]),
+            ("Flujos que se pueden mantener", [
+                ("ul", [
+                    "Registro de cada ejecución y avisos cuando algo falla",
+                    "Revisión humana en los pasos sensibles",
+                    "Pruebas con datos reales o de prueba antes de ponerlo en marcha",
+                    "Documentación y formación para que tu equipo entienda qué hace cada flujo",
+                ]),
+            ]),
+            ("Preguntas frecuentes", [
+                ("faq", [
+                    ("¿Necesito tener n8n contratado?", "No. Si ya lo usas, trabajamos sobre tu instalación. Si no, te proponemos la opción que encaja con tu caso: la nube de n8n, un servidor propio u otra herramienta."),
+                    ("¿n8n o Make?", "Depende del proceso. Valoramos el volumen, los datos que se manejan y quién lo mantendrá, y te explicamos por qué recomendamos una u otra."),
+                    ("¿Podéis conectar un programa que no tiene integración?", "Si el programa ofrece una API, sí: desarrollamos la integración a medida. Si no la tiene, buscamos una alternativa, como trabajar con sus exportaciones."),
+                    ("¿Qué pasa si un flujo falla?", "Cada flujo registra lo que hace y avisa cuando algo no sale como debe, para corregirlo cuanto antes. Los pasos sensibles llevan revisión humana."),
+                    ("¿Los datos salen de nuestra empresa?", "Solo pasan por las herramientas que acordemos y se usan para el alcance pactado. Cuando conviene, n8n puede instalarse en un servidor propio."),
+                ]),
+            ]),
+            ("¿Hablamos de tus herramientas?", [
+                ("p", _CIERRE),
+                ("p", ["También te puede interesar: ", ("a", "automatización de procesos", "/automatizacion-procesos"), " e ", ("a", "inteligencia artificial para empresas", "/inteligencia-artificial"), "."]),
             ]),
         ],
     },
@@ -901,11 +1062,12 @@ SERVICIOS = [
         "slug": "desarrollo-web",
         "id": "bqSvWebM1",
         "menu": "Desarrollo web",
+        "principal": True,
         "nombre": "Desarrollo web a medida",
-        "title": "Desarrollo web a medida en Barcelona | Banteq",
+        "title": "Diseño y desarrollo web a medida en Barcelona | Banteq",
         "descripcion": (
-            "Diseñamos y desarrollamos webs corporativas a medida, rediseños y webs conectadas con tu CRM y "
-            "tus automatizaciones. Sin plantillas. En Barcelona y alrededores."
+            "Webs corporativas a medida, rediseños y webs conectadas con tu CRM y tus automatizaciones. "
+            "Sin plantillas. Para empresas de Barcelona y de toda España."
         ),
         "h1": "Desarrollo web a medida",
         "subtitulo": "Webs corporativas diseñadas y desarrolladas desde cero, conectadas con tu negocio.",
@@ -926,6 +1088,7 @@ SERVICIOS = [
             ("Fórmula Banteq: tu web, renovada al contratar el mantenimiento", [
                 ("p", FORMULA_FRASE),
                 ("p", [FORMULA_NOTA + " ", ("a", "Condiciones completas", "/aviso-legal"), "."]),
+                ("p", ["Los ejemplos de cuota y lo que incluye están en ", ("a", "mantenimiento web para empresas", "/mantenimiento-web"), "."]),
                 ("formula", "Descubre cómo funciona"),
             ]),
             ("Una web conectada, no un folleto", [
@@ -954,7 +1117,69 @@ SERVICIOS = [
             ]),
             ("¿Hablamos de tu web?", [
                 ("p", _CIERRE),
-                ("p", ["También te puede interesar: ", ("a", "automatización de procesos", "/automatizacion-procesos"), "."]),
+                ("p", ["También te puede interesar: ", ("a", "mantenimiento web para empresas", "/mantenimiento-web"), " y ", ("a", "automatización de procesos", "/automatizacion-procesos"), "."]),
+            ]),
+        ],
+    },
+    {
+        "slug": "mantenimiento-web",
+        "id": "bqSvMant1",
+        "menu": "Mantenimiento web",
+        "nombre": "Mantenimiento web para empresas",
+        "title": "Mantenimiento web para empresas | Fórmula Banteq",
+        "descripcion": (
+            "Pasa el mantenimiento de tu web a Banteq: la remodelamos sin coste de desarrollo básico y pagas "
+            "un 25 % menos, hasta 50 €/mes. Cuota mínima: 35 €/mes."
+        ),
+        "h1": "Mantenimiento web para empresas",
+        "subtitulo": "Con la Fórmula Banteq, tu web se renueva al contratar el mantenimiento y la cuota baja respecto a la que pagas hoy.",
+        "intro": [
+            "Muchas empresas pagan cada mes el mantenimiento de una web que lleva años sin cambiar. La cuota sigue; la web se queda atrás.",
+            "La Fórmula Banteq junta las dos cosas: al contratar con nosotros el mantenimiento, remodelamos tu web y la cuota se calcula a partir de la que pagas actualmente, con descuento.",
+        ],
+        "secciones": [
+            ("Cómo funciona la Fórmula Banteq", [
+                ("p", FORMULA_FRASE),
+                ("ul", [
+                    "Nos indicas cuánto pagas hoy por el mantenimiento de tu web",
+                    "Revisamos tu web actual y sus necesidades técnicas",
+                    "Recibes una propuesta con la cuota y, por escrito, lo que incluye la remodelación",
+                    "Si la aceptas, remodelamos la web y pasamos a encargarnos del mantenimiento",
+                ]),
+                ("formula", "Calcular mi cuota"),
+            ]),
+            ("Cuánto pagarías", [
+                ("p", "El descuento es el menor de estos tres importes: el 25 % de tu cuota actual, 50 € al mes o la diferencia entre tu cuota y 35 €. La cuota con Banteq nunca baja de 35 € al mes. Algunos ejemplos, sin IVA:"),
+                ("ul", [f"Si pagas {_euros(a)} €/mes, pasarías a pagar {_euros(n)} €/mes: {_euros(h)} € menos cada mes." for a, n, h in FORMULA_EJEMPLOS]),
+            ]),
+            ("Qué incluye la remodelación gratuita", [
+                ("p", "Una web sencilla, de carácter informativo, con:"),
+                ("ul", list(CONDICIONES_FORMULA[1][3][1])),
+                ("p", "Las tiendas online, los sistemas de reservas, las integraciones complejas, las animaciones personalizadas y otros desarrollos avanzados no forman parte de la remodelación gratuita: se presupuestan aparte y solo se hacen si los aceptas."),
+            ]),
+            ("Condiciones claras", [
+                ("ul", [
+                    "La cuota actual debe poder acreditarse con una factura o un documento equivalente",
+                    "La remodelación gratuita está condicionada a contratar el mantenimiento con Banteq",
+                    "Antes de empezar se especifica por escrito qué está incluido y qué tendría un coste adicional",
+                    "No se realizan cargos adicionales sin tu autorización previa",
+                ]),
+                ("p", ["Las condiciones completas están en el ", ("a", "aviso legal", "/aviso-legal"), "."]),
+            ]),
+            ("Webs que hemos hecho", [
+                ("p", ["Si quieres ver cómo trabajamos, estos son dos proyectos reales: ", ("a", "la web de Margon", "/proyectos/margon"), ", en cinco idiomas, y ", ("a", "la web de RentUp Capital", "/proyectos/rentup-capital"), ", con formularios automatizados. Y si necesitas algo más que una web informativa, mira ", ("a", "desarrollo web a medida", "/desarrollo-web"), "."]),
+            ]),
+            ("Preguntas frecuentes", [
+                ("faq", [
+                    ("¿Cuánto cuesta el mantenimiento web con Banteq?", "Se calcula a partir de lo que pagas hoy: un 25 % menos, con un ahorro máximo de 50 € al mes y una cuota mínima de 35 € al mes. Los importes son sin IVA."),
+                    ("¿Y si ya pago 35 € al mes o menos?", "En ese caso no hay descuento: la cuota mínima con Banteq es de 35 € al mes."),
+                    ("¿La remodelación es gratis de verdad?", "Sí, para una web informativa sencilla con diseño adaptado a móviles, el contenido básico de la empresa y un formulario de contacto. Lo que exceda de eso se presupuesta aparte y solo se hace con tu aceptación."),
+                    ("¿Qué necesito para pedir la propuesta?", "Saber cuánto pagas ahora por el mantenimiento y poder acreditarlo con una factura. Con eso y una revisión de tu web actual preparamos la propuesta."),
+                    ("¿Qué incluye el mantenimiento?", "El alcance se concreta en la propuesta, después de revisar tu web actual y sus necesidades técnicas, y queda por escrito antes de empezar."),
+                ]),
+            ]),
+            ("¿Hablamos de tu web?", [
+                ("p", _CIERRE),
             ]),
         ],
     },
@@ -963,7 +1188,7 @@ SERVICIOS = [
 # Servicios de cada proyecto (enlaces desde su página) y web pública del cliente (en la línea
 # «Relacionado» del final de la ficha).
 PROYECTO_SERVICIOS = {
-    "margon": ["desarrollo-web"],
+    "margon": ["desarrollo-web", "automatizacion-procesos"],
     "rentup-capital": ["desarrollo-web", "automatizacion-procesos"],
 }
 PROYECTO_WEB = {"rentup-capital": ("rentupcapital.com", "https://www.rentupcapital.com/")}
