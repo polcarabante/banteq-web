@@ -1135,7 +1135,7 @@ SERVICIOS = [
         "subtitulo": "Con la Fórmula Banteq, tu web se renueva al contratar el mantenimiento y la cuota baja respecto a la que pagas hoy.",
         "intro": [
             "Muchas empresas pagan cada mes el mantenimiento de una web que lleva años sin cambiar. La cuota sigue; la web se queda atrás.",
-            "La Fórmula Banteq junta las dos cosas: al contratar con nosotros el mantenimiento, remodelamos tu web y la cuota se calcula a partir de la que pagas actualmente, con descuento.",
+            "La Fórmula Banteq junta las dos cosas: al contratar con nosotros el mantenimiento, rediseñamos tu web sin coste de desarrollo básico y la cuota se calcula a partir de la que pagas actualmente, con descuento.",
         ],
         "secciones": [
             ("Cómo funciona la Fórmula Banteq", [
@@ -1173,7 +1173,7 @@ SERVICIOS = [
                 ("faq", [
                     ("¿Cuánto cuesta el mantenimiento web con Banteq?", "Se calcula a partir de lo que pagas hoy: un 25 % menos, con un ahorro máximo de 50 € al mes y una cuota mínima de 35 € al mes. Los importes son sin IVA."),
                     ("¿Y si ya pago 35 € al mes o menos?", "En ese caso no hay descuento: la cuota mínima con Banteq es de 35 € al mes."),
-                    ("¿La remodelación es gratis de verdad?", "Sí, para una web informativa sencilla con diseño adaptado a móviles, el contenido básico de la empresa y un formulario de contacto. Lo que exceda de eso se presupuesta aparte y solo se hace con tu aceptación."),
+                    ("¿El rediseño de la web es gratis de verdad?", "Sí, para una web informativa sencilla con diseño adaptado a móviles, el contenido básico de la empresa y un formulario de contacto. Lo que exceda de eso se presupuesta aparte y solo se hace con tu aceptación."),
                     ("¿Qué necesito para pedir la propuesta?", "Saber cuánto pagas ahora por el mantenimiento y poder acreditarlo con una factura. Con eso y una revisión de tu web actual preparamos la propuesta."),
                     ("¿Qué incluye el mantenimiento?", "El alcance se concreta en la propuesta, después de revisar tu web actual y sus necesidades técnicas, y queda por escrito antes de empezar."),
                 ]),
