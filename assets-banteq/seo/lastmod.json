@@ -4,47 +4,115 @@
   "fecha": "2026-11-13"
  },
  "https://banteq.com/automatizacion-n8n": {
-  "firma": "3a878e4869b5",
+  "firma": "fa92dd746543",
   "fecha": "2026-11-14"
  },
  "https://banteq.com/automatizacion-procesos": {
-  "firma": "df0f0087755f",
+  "firma": "2042a35c41bf",
   "fecha": "2026-11-14"
  },
  "https://banteq.com/aviso-legal": {
   "firma": "9a0e99c8d4b5",
   "fecha": "2026-11-13"
  },
+ "https://banteq.com/ca": {
+  "firma": "4de12aa2f535",
+  "fecha": "2026-11-14"
+ },
  "https://banteq.com/ca/automatitzacio-n8n": {
-  "firma": "a518c183ccee",
+  "firma": "875b1e3797c8",
   "fecha": "2026-11-14"
  },
  "https://banteq.com/ca/automatitzacio-processos": {
-  "firma": "f656f64c3086",
+  "firma": "8edaa12a3a86",
+  "fecha": "2026-11-14"
+ },
+ "https://banteq.com/ca/avis-legal": {
+  "firma": "47a74825a0d9",
   "fecha": "2026-11-14"
  },
  "https://banteq.com/ca/desenvolupament-web": {
-  "firma": "37e4ec79db0d",
+  "firma": "9b17308c7685",
   "fecha": "2026-11-14"
  },
  "https://banteq.com/ca/intelligencia-artificial": {
-  "firma": "2367909f1b31",
+  "firma": "6195ef9653e9",
   "fecha": "2026-11-14"
  },
  "https://banteq.com/ca/manteniment-web": {
-  "firma": "e59091d1099d",
+  "firma": "2b4483e137ee",
+  "fecha": "2026-11-14"
+ },
+ "https://banteq.com/ca/privacitat": {
+  "firma": "22bcf24cd3a9",
+  "fecha": "2026-11-14"
+ },
+ "https://banteq.com/ca/projectes": {
+  "firma": "8de44d5b721c",
+  "fecha": "2026-11-14"
+ },
+ "https://banteq.com/ca/projectes/margon": {
+  "firma": "d4919bf1477c",
+  "fecha": "2026-11-14"
+ },
+ "https://banteq.com/ca/projectes/rentup-capital": {
+  "firma": "465b82e9fa1d",
   "fecha": "2026-11-14"
  },
  "https://banteq.com/desarrollo-web": {
-  "firma": "03ee78799fd1",
+  "firma": "e8ae5537d51a",
+  "fecha": "2026-11-14"
+ },
+ "https://banteq.com/en": {
+  "firma": "aac8a78d4cd0",
+  "fecha": "2026-11-14"
+ },
+ "https://banteq.com/en/artificial-intelligence": {
+  "firma": "7f78eb709176",
+  "fecha": "2026-11-14"
+ },
+ "https://banteq.com/en/legal-notice": {
+  "firma": "1b8e94fa396e",
+  "fecha": "2026-11-14"
+ },
+ "https://banteq.com/en/n8n-automation": {
+  "firma": "c47ef17c69f1",
+  "fecha": "2026-11-14"
+ },
+ "https://banteq.com/en/privacy": {
+  "firma": "121191c688d9",
+  "fecha": "2026-11-14"
+ },
+ "https://banteq.com/en/process-automation": {
+  "firma": "06cb9c611739",
+  "fecha": "2026-11-14"
+ },
+ "https://banteq.com/en/projects": {
+  "firma": "7aa813ed4562",
+  "fecha": "2026-11-14"
+ },
+ "https://banteq.com/en/projects/margon": {
+  "firma": "15028d97ec45",
+  "fecha": "2026-11-14"
+ },
+ "https://banteq.com/en/projects/rentup-capital": {
+  "firma": "67b66e79da70",
+  "fecha": "2026-11-14"
+ },
+ "https://banteq.com/en/web-development": {
+  "firma": "99d48c3ac878",
+  "fecha": "2026-11-14"
+ },
+ "https://banteq.com/en/web-maintenance": {
+  "firma": "3226c4e6912c",
   "fecha": "2026-11-14"
  },
  "https://banteq.com/inteligencia-artificial": {
-  "firma": "d82f67947ed3",
+  "firma": "b1ef231d8ed3",
   "fecha": "2026-11-14"
  },
  "https://banteq.com/mantenimiento-web": {
-  "firma": "853a388ed8a3",
+  "firma": "2821bf84be7f",
   "fecha": "2026-11-14"
  },
  "https://banteq.com/privacidad": {

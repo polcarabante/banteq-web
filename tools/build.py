@@ -15,6 +15,7 @@ errata en la tabla, el build falla en vez de dejar contenido a medias.
 import hashlib
 import html
 import json
+import os
 import re
 import shutil
 import sys
@@ -26,6 +27,8 @@ sys.path.insert(0, str(TOOLS))
 
 import contenido as C  # noqa: E402
 import contenido_ca as CA  # noqa: E402
+import contenido_en as EN  # noqa: E402
+import idiomas as ID  # noqa: E402
 import jsx  # noqa: E402
 
 ROOT = TOOLS.parent
@@ -546,6 +549,12 @@ def copy_banteq_static():
         t = re.sub(rf"/\* \[{re.escape(name)}\] .*?/\* \[/{re.escape(name)}\] \*/\n\n?", "", t, flags=re.S)
         assert f"[{name}]" not in t, f"banteq.css: bloque de {name} mal cerrado"
     css.write_text(t, encoding="utf-8")
+    # Tabla de direcciones para el selector de idioma: [castellano, catalán, inglés] de cada página.
+    js = dst / "banteq.js"
+    codigo = js.read_text(encoding="utf-8")
+    assert codigo.count("/*RUTAS_IDIOMAS*/ []") == 1
+    rutas = [["/" + g[l] if g[l] else "/" for l in ID.IDIOMAS] for g in ID.tabla()]
+    js.write_text(codigo.replace("/*RUTAS_IDIOMAS*/ []", json.dumps(rutas, ensure_ascii=False)), encoding="utf-8")
 
 
 # ---------------------------------------------------------------------------
@@ -1248,12 +1257,8 @@ LINK_IMPORT = 'import{h as BQL}from"./framer.DrTRbU-a.mjs";'  # componente Link 
 
 
 def todos_los_servicios():
-    """Páginas de servicio en castellano y sus versiones en catalán (/ca/…)."""
-    return C.SERVICIOS + CA.SERVICIOS_CA
-
-
-def es_catalan(ruta):
-    return ruta.strip("/").split("/")[0] == "ca"
+    """Páginas de servicio en castellano y sus versiones en catalán (/ca/…) e inglés (/en/…)."""
+    return C.SERVICIOS + CA.SERVICIOS_CA + EN.SERVICIOS_EN
 
 
 def service_mod_name(sv):
@@ -1385,8 +1390,7 @@ def js_service_main(sv):
             else:
                 raise ValueError(tipo)
         if sv.get("alterna") and titulo == sv["secciones"][-1][0]:
-            (antes, enlace, despues), destino, idioma = sv["alterna"]
-            hijos.append(js_parrafo([antes, ("idioma", enlace, destino, idioma), despues], scope, contador))
+            hijos.append(js_parrafo(frase_alterna(sv["alterna"]), scope, contador))
         bloques.append(f"a(`div`,{{className:`framer-1dcxdhn`,\"data-framer-name\":`Stack`,children:[{','.join(hijos)}]}})")
     return "[" + ",".join(bloques) + "]"
 
@@ -1404,16 +1408,60 @@ def neutralize_entrance():
         S[rel] = t
 
 
+ID_ALIAS = {"ca": "bqCa", "en": "bqEn"}
+
+
+def alias_routes(m):
+    """Rutas /ca…, /en…: la home, /proyectos, las páginas de proyecto y las legales en los otros dos
+    idiomas. Es la misma página de Framer (mismo módulo) con otra dirección; sus textos los traduce
+    i18n-<idioma>.js (apply_i18n_hooks). Devuelve el texto de las rutas y los ids nuevos."""
+    patron = re.compile(r"(\w+):\{(collectionId:`\w+`,)?(elements:\{[^}]*\}),(page:N\(\(\)=>import\(`[^`]+`\)\)),path:`([^`]+)`\}")
+    originales = {path: (rid, coleccion or "", elementos, pagina) for rid, coleccion, elementos, pagina, path in patron.findall(m)}
+    out, ids = [], []
+    for g in ID.tabla():
+        if g["servicio"] or g["es"].startswith("proyectos/"):
+            continue
+        rid, coleccion, elementos, pagina = originales["/" + g["es"]]
+        for idioma in ID.OTROS:
+            nuevo = f"{ID_ALIAS[idioma]}{len(ids):02d}"
+            ids.append(nuevo)
+            out.append(f"{nuevo}:{{{coleccion}{elementos},{pagina},path:`/{g[idioma]}`}},")
+    # Páginas de proyecto (CMS): una ruta con variable por idioma.
+    rid, coleccion, elementos, pagina = originales[next(p for p in originales if p.startswith("/proyectos/:"))]
+    variable = next(p for p in originales if p.startswith("/proyectos/:")).split("/:")[1]
+    for idioma, prefijo in ID.PREFIJO_PROYECTO.items():
+        nuevo = f"{ID_ALIAS[idioma]}{len(ids):02d}"
+        ids.append(nuevo)
+        out.append(f"{nuevo}:{{{coleccion}{elementos},{pagina},path:`/{prefijo}/:{variable}`}},")
+    return "".join(out), ids
+
+
+def frase_alterna(alterna):
+    """«Esta página también está disponible en catalán y en inglés.» con un enlace por idioma."""
+    antes, enlaces, union, despues = alterna
+    partes = [antes]
+    for k, (nombre, destino, codigo) in enumerate(enlaces):
+        if k:
+            partes.append(union)
+        partes.append(("idioma", nombre, destino, codigo))
+    partes.append(despues)
+    return partes
+
+
 def build_service_pages():
     base = S[TERMS_MOD]
-    # Cada página enlaza a su versión en el otro idioma (contenido_ca: "es" es la ruta en castellano).
-    catalan = {sv["es"]: sv for sv in CA.SERVICIOS_CA}
-    for sv in C.SERVICIOS:
-        if sv["slug"] in catalan:
-            sv["alterna"] = (CA.IDIOMA_ES, "/" + catalan[sv["slug"]]["slug"], "ca")
-    for sv in CA.SERVICIOS_CA:
-        assert any(x["slug"] == sv["es"] for x in C.SERVICIOS), sv["es"]
-        sv["alterna"] = (CA.IDIOMA_CA, "/" + sv["es"], "es")
+    # Cada página enlaza a sus versiones en los otros idiomas (cada módulo de idioma: "es" es la ruta
+    # en castellano).
+    por_idioma = {"es": {sv["slug"]: sv for sv in C.SERVICIOS}}
+    for idioma in ID.OTROS:
+        por_idioma[idioma] = {sv["es"]: sv for sv in ID.servicios(idioma)}
+        assert set(por_idioma[idioma]) == set(por_idioma["es"]), idioma
+    alterna = {"es": ID.ALTERNA_ES, "ca": CA.ALTERNA_CA, "en": EN.ALTERNA_EN}
+    for es in por_idioma["es"]:
+        for idioma, paginas in por_idioma.items():
+            antes, nombres, union, despues = alterna[idioma]
+            enlaces = [(nombres[otro], "/" + por_idioma[otro][es]["slug"], otro) for otro in ID.IDIOMAS if otro != idioma]
+            paginas[es]["alterna"] = (antes, enlaces, union, despues)
     for sv in todos_los_servicios():
         t = base
         for viejo, nuevo in ((C.AVISO_LEGAL[0], sv["h1"]), (C.AVISO_LEGAL[1], sv["subtitulo"])):
@@ -1435,8 +1483,9 @@ def build_service_pages():
     nuevas = "".join(
         f"{sv['id']}:{{elements:{{}},page:N(()=>import(`./{service_mod_name(sv)}`)),path:`/{sv['slug']}`}}," for sv in todos_los_servicios()
     )
-    m = m[: legal.end()] + nuevas + m[legal.end():]
-    casos = "".join(f"case`{sv['id']}`:" for sv in todos_los_servicios())
+    alias, ids_alias = alias_routes(m)
+    m = m[: legal.end()] + nuevas + alias + m[legal.end():]
+    casos = "".join(f"case`{sv['id']}`:" for sv in todos_los_servicios()) + "".join(f"case`{i}`:" for i in ids_alias)
     assert m.count("case`H6u27ToU_`:") == 2
     m = m.replace("case`H6u27ToU_`:", "case`H6u27ToU_`:" + casos)
     S[MAIN_MOD] = m
@@ -1619,27 +1668,124 @@ PRE_SWAP = (
 )
 
 
-# La capa de interfaz en catalán va justo detrás de banteq.js (inject_assets).
-CAPA_CA_ANTES = '<script src="/banteq/banteq.js" defer></script>'
+# La capa de idioma (i18n-<idioma>.js) va justo delante de banteq.js (make_shells): sin diferir, para
+# que BQT exista antes de que arranquen los módulos de Framer.
+CAPA_IDIOMA_ANTES = '<script src="/banteq/banteq.js" defer></script>'
 
 
-def build_ca_layer():
-    """assets-banteq/web/banteq-ca.js con su diccionario (contenido_ca.INTERFAZ_CA): los textos del
-    menú, el pie, el formulario y la ventana de la Fórmula que esas páginas traducen al vuelo, y la
-    ruta en catalán de cada página de servicio. Comprueba que cada texto en castellano sigue
-    existiendo tal cual en los componentes o en banteq.js: si alguien lo cambia, hay que actualizar
-    también su traducción (si no, ese texto se quedaría en castellano sin avisar)."""
-    fuentes = (OUT / "banteq" / "banteq.js").read_text(encoding="utf-8") + S[NAV_MOD] + S[FORM_MOD]
-    faltan = [es for es in CA.INTERFAZ_CA if es not in fuentes]
-    assert not faltan, f"contenido_ca.INTERFAZ_CA: textos que ya no existen en castellano: {faltan}"
-    enlaces = {"/" + sv["es"]: "/" + sv["slug"] for sv in CA.SERVICIOS_CA}
-    f = OUT / "banteq" / "banteq-ca.js"
-    t = f.read_text(encoding="utf-8")
-    for marca, valor in (("/*DICCIONARIO*/ {}", CA.INTERFAZ_CA), ("/*REGLAS*/ []", [list(r) for r in CA.INTERFAZ_CA_REGLAS]),
-                         ("/*ENLACES*/ {}", enlaces)):
-        assert t.count(marca) == 1, marca
-        t = t.replace(marca, json.dumps(valor, ensure_ascii=False))
-    f.write_text(t, encoding="utf-8")
+def tr(idioma, texto):
+    """Traducción de un texto en castellano de la web (falla si falta: así no sale una página a medias)."""
+    d = i18n_dictionary(idioma)
+    clave = " ".join(texto.split())
+    if clave not in d and os.environ.get("BANTEQ_LAX"):  # solo para probar el mecanismo mientras falta texto
+        return texto
+    assert clave in d, f"contenido_{idioma}.TEXTOS: falta la traducción de {texto[:90]!r}"
+    return d[clave]
+
+
+def tr_titulo(idioma, titulo):
+    sufijo = " | " + C.NOMBRE_SITIO
+    return tr(idioma, titulo[: -len(sufijo)]) + sufijo if titulo.endswith(sufijo) else tr(idioma, titulo)
+
+
+def modulos_framer():
+    """Módulos .mjs de la web (todos, estén cargados o no)."""
+    return sorted(p.relative_to(OUT).as_posix() for p in (OUT / SITE).glob("*.mjs"))
+
+
+def i18n_dictionary(idioma):
+    """Diccionario del idioma: castellano → traducción, con las claves normalizadas como las busca
+    banteq-i18n.js (espacios colapsados y recortados)."""
+    return {" ".join(k.split()): v for k, v in ID.textos(idioma).items()}
+
+
+def es_texto_compuesto(texto, fuentes):
+    """Textos que banteq.js monta con piezas (país + prefijo, etiqueta + título de demostración)."""
+    pais = re.match(r"^(.+) \(\+\d+\)$", texto)
+    if pais:
+        return pais.group(1) in fuentes
+    return texto.startswith(("Reproducir ", "Pausar ", "Volver a empezar "))
+
+
+def build_i18n_layers():
+    """assets-banteq/web/banteq-i18n.js → banteq/i18n-ca.js e i18n-en.js, cada uno con su diccionario
+    (contenido_<idioma>.TEXTOS_*: el menú, el pie, los formularios, la home, los proyectos, los avisos
+    legales, las demostraciones…), sus reglas y la dirección de cada página en ese idioma.
+    Comprueba que cada texto en castellano sigue existiendo tal cual en los módulos o en banteq.js:
+    si alguien lo cambia, hay que actualizar también su traducción (si no, ese texto se quedaría en
+    castellano sin avisar). Los textos de contenido.py (cuyas versiones traducidas viven en
+    ID.textos) se buscan también en los módulos ya con el contenido nuevo."""
+    plantilla = (ROOT / "assets-banteq" / "web" / "banteq-i18n.js").read_text(encoding="utf-8")
+    fuentes = (OUT / "banteq" / "banteq.js").read_text(encoding="utf-8") + "".join(S[r] for r in modulos_framer()) + S[INDEX]
+    # Textos que no pasan por un módulo (datos del CMS, enlaces y rótulos que añade este script).
+    fuentes += "".join((TOOLS / n).read_text(encoding="utf-8") for n in ("contenido.py", "build.py"))
+    fuentes += " ".join(x for par in PAGINAS.values() for x in par)
+    fuentes_js = html.unescape(fuentes.replace("\\`", "`").replace("\\\\", "\\"))
+    for idioma in ID.OTROS:
+        textos = i18n_dictionary(idioma)
+        faltan = [es for es in textos if es not in fuentes and es not in fuentes_js and es not in demos_textos()
+                  and not es_texto_compuesto(es, fuentes)]
+        assert not faltan, f"contenido_{idioma}.TEXTOS: textos que ya no existen en castellano: {faltan[:12]} (+{max(0, len(faltan) - 12)})"
+        datos = {"idioma": idioma, "textos": textos, "reglas": [list(r) for r in ID.reglas(idioma)], "enlaces": ID.pares_ruta(idioma)}
+        assert plantilla.count("/*DATOS*/ {}") == 1
+        (OUT / "banteq" / f"i18n-{idioma}.js").write_text(
+            plantilla.replace("/*DATOS*/ {}", json.dumps(datos, ensure_ascii=False, separators=(",", ":"))), encoding="utf-8")
+    (OUT / "banteq" / "banteq-i18n.js").unlink()
+
+
+_DEMOS_TEXTOS = None
+
+
+def demos_textos():
+    """Todos los textos de las demostraciones de la home (están en demos.py y llegan como HTML)."""
+    global _DEMOS_TEXTOS
+    if _DEMOS_TEXTOS is None:
+        import demos
+
+        _DEMOS_TEXTOS = set(demos.textos_visibles())
+    return _DEMOS_TEXTOS
+
+
+# ---------------------------------------------------------------------------
+# Textos de Framer: BQT()
+# ---------------------------------------------------------------------------
+
+BQT_FUNCION = "const __bqt=t=>globalThis.BQT?globalThis.BQT(t):t;"
+# Un texto que Framer pinta: children:`…`, text:`…` o un elemento de una lista de hijos.
+BQT_LITERAL = re.compile(r"(?P<pre>\b(?:children|text):|(?<=[\[,]))`(?P<s>(?:[^`\\]|\\.)*)`(?=[,\]})])")
+
+
+def apply_i18n_hooks():
+    """Cada texto que los módulos de Framer pintan y que tiene traducción pasa por __bqt(): en las
+    páginas en castellano devuelve el mismo texto (no hay BQT); en las de otro idioma lo traduce
+    antes de que React lo pinte (banteq-i18n.js). Solo se envuelven los textos que están en algún
+    diccionario, tal cual: los demás literales (clases, ids, nombres) no se tocan."""
+    claves = set()
+    for idioma in ID.OTROS:
+        claves.update(i18n_dictionary(idioma))
+    total = 0
+    for rel in modulos_framer():
+        if rel in (MAIN_MOD, FRAMER_MOD, SHARED_MOD):
+            continue
+        texto = S[rel]
+        if "children:" not in texto and "text:" not in texto:
+            continue
+        n = 0
+
+        def sub(m):
+            nonlocal n
+            crudo = m.group("s")
+            normal = " ".join(crudo.replace("\\`", "`").replace("\\\\", "\\").split())
+            if normal not in claves:
+                return m.group(0)
+            n += 1
+            return f"{m.group('pre')}__bqt(`{crudo}`)"
+
+        nuevo = BQT_LITERAL.sub(sub, texto)
+        if n:
+            S[rel] = BQT_FUNCION + nuevo
+            total += n
+    print(f"  BQT: {total} textos de Framer envueltos")
 
 
 def static_imports(rel):
@@ -1686,7 +1832,7 @@ def page_preloads(page, path):
 def prerender_signature():
     import hashlib
 
-    return hashlib.sha1((TOOLS / "contenido.py").read_bytes() + (TOOLS / "contenido_ca.py").read_bytes()).hexdigest()[:12]
+    return hashlib.sha1(b"".join((TOOLS / n).read_bytes() for n in ("contenido.py", "contenido_ca.py", "contenido_en.py", "idiomas.py"))).hexdigest()[:12]
 
 
 def make_shells():
@@ -1704,6 +1850,13 @@ def make_shells():
     pages = dict(PAGINAS)
     for pr in C.PROYECTOS:
         pages[f"proyectos/{pr['slug']}"] = (f"{pr['titulo']} | Banteq", pr["descripcion"])
+    # Las mismas páginas en catalán e inglés (misma página de Framer, otra dirección).
+    for g in ID.tabla():
+        if g["servicio"]:
+            continue
+        base = (C.META_TITLE, C.META_DESCRIPTION) if g["es"] == "" else pages[g["es"]]
+        for idioma in ID.OTROS:
+            pages[g[idioma]] = (tr_titulo(idioma, base[0]), tr(idioma, base[1]))
     desactualizadas = []
     for path, (title, desc) in pages.items():
         page = re.sub(r"<title>[^<]*</title>", f"<title>{html.escape(title)}</title>", shell)
@@ -1712,12 +1865,14 @@ def make_shells():
         # Marca de subpágina: los ajustes del pie en móvil (banteq.css, «Pie de las subpáginas») no
         # tocan la home. banteq.js la mantiene al navegar sin recargar.
         assert page.count('<html lang="es"') == 1
-        if es_catalan(path):
-            page = page.replace('<html lang="es"', '<html lang="ca" data-bq-pagina="sub" data-bq-idioma="ca"', 1)
-            assert page.count(CAPA_CA_ANTES) == 1
-            page = page.replace(CAPA_CA_ANTES, CAPA_CA_ANTES + '<script src="/banteq/banteq-ca.js" defer></script>', 1)
+        idioma = ID.idioma_de(path)
+        sub = "" if path in ("ca", "en") else ' data-bq-pagina="sub"'  # la portada de cada idioma no es subpágina
+        if idioma != "es":
+            page = page.replace('<html lang="es"', f'<html lang="{idioma}"{sub} data-bq-idioma="{idioma}"', 1)
+            assert page.count(CAPA_IDIOMA_ANTES) == 1
+            page = page.replace(CAPA_IDIOMA_ANTES, f'<script src="/banteq/i18n-{idioma}.js"></script>' + CAPA_IDIOMA_ANTES, 1)
         else:
-            page = page.replace('<html lang="es"', '<html lang="es" data-bq-pagina="sub"', 1)
+            page = page.replace('<html lang="es"', f'<html lang="es"{sub}', 1)
         snap = PRERENDER / (path.replace("/", "__") + ".json")
         if snap.exists():
             data = json.loads(snap.read_text(encoding="utf-8"))
@@ -2248,7 +2403,7 @@ WEB_ID = f"{C.SITIO}/#website"
 AREA = [{"@type": tipo, "name": nombre} for tipo, nombre in C.ZONAS_SERVICIO]
 
 
-def ld_organizacion(completa=False):
+def ld_organizacion(completa=False, idioma="es"):
     """La empresa: nombre, logo, localidad, correo y zona de servicio. Solo datos que la propia web
     publica (aviso legal): sin calle, teléfono ni perfiles hasta tenerlos. Cuando haya ficha de
     Google Business Profile verificada y teléfono, tiene sentido pasar a ProfessionalService y
@@ -2261,7 +2416,7 @@ def ld_organizacion(completa=False):
         "url": f"{C.SITIO}/",
         "logo": {"@type": "ImageObject", "url": f"{C.SITIO}/icon-512.png", "width": 512, "height": 512},
         "image": f"{C.SITIO}/framerusercontent.com/images/{OG_IMAGE}",
-        "description": C.META_DESCRIPTION,
+        "description": C.META_DESCRIPTION if idioma == "es" else tr(idioma, C.META_DESCRIPTION),
         "email": C.EMAIL_CONTACTO,
         "address": {"@type": "PostalAddress", "addressLocality": C.LOCALIDAD, "postalCode": C.CODIGO_POSTAL,
                     "addressRegion": C.PROVINCIA, "addressCountry": "ES"},
@@ -2300,6 +2455,19 @@ def ld_pagina(url, titulo, descripcion, tipo="WebPage", **extra):
             "inLanguage": "es", "isPartOf": {"@id": WEB_ID}, "publisher": {"@id": ORG_ID}, **extra}
 
 
+def structured_data_alias(idioma, es, url, titulo, descripcion):
+    """JSON-LD de las páginas /ca… y /en… que son la misma página de Framer que otra en castellano
+    (home, proyectos, avisos legales): organización, página, migas y, en la portada, las preguntas
+    frecuentes traducidas."""
+    inicio = ID.MODULO[idioma].INICIO
+    pagina = ld_pagina(url, titulo, descripcion, inLanguage=idioma, **({"about": {"@id": ORG_ID}} if not es else {}))
+    if not es:
+        return _ld(ld_organizacion(idioma=idioma), pagina, ld_faq([(tr(idioma, q), tr(idioma, r)) for q, r in faq_home()]))
+    nombre = titulo.split(" | ")[0]
+    pasos = ((tr(idioma, "Proyectos"), f"{C.SITIO}/{ID.tabla_por_es()['proyectos'][idioma]}"),) if es.startswith("proyectos/") else ()
+    return _ld(ld_organizacion(idioma=idioma), pagina, ld_migas(*pasos, (nombre, url), inicio=inicio))
+
+
 def ld_migas(*pasos, inicio="Inicio"):
     """Migas de pan: (nombre, url) desde la home hasta la página."""
     pasos = ((inicio, f"{C.SITIO}/"),) + pasos
@@ -2334,6 +2502,9 @@ def structured_data(rel, titulo="", descripcion=""):
     servicios = {sv["slug"]: sv for sv in todos_los_servicios()}
     proyectos = {pr["slug"]: pr for pr in C.PROYECTOS}
     ruta = rel[: -len("index.html")].strip("/")
+    alias = ID.es_de_alias(ruta)
+    if alias is not None:
+        return structured_data_alias(ID.idioma_de(ruta), alias, url, titulo, descripcion)
     if rel == INDEX:
         return _ld(ld_organizacion(completa=True), ld_sitio(),
                    ld_pagina(url, titulo, descripcion, about={"@id": ORG_ID}), ld_faq(faq_home()))
@@ -2345,9 +2516,12 @@ def structured_data(rel, titulo="", descripcion=""):
             "description": sv["descripcion"], "url": url, "provider": {"@id": ORG_ID}, "areaServed": AREA,
             "audience": {"@type": "BusinessAudience", "audienceType": "Pymes y pequeños negocios"},
         }
-        idioma = "ca" if es_catalan(ruta) else "es"
-        return _ld(ld_organizacion(), ld_pagina(url, titulo, descripcion, mainEntity={"@id": f"{url}#servicio"}, inLanguage=idioma),
-                   servicio, ld_faq(preguntas), ld_migas((sv["nombre"], url), inicio=CA.INICIO if idioma == "ca" else "Inicio"))
+        idioma = ID.idioma_de(ruta)
+        if idioma != "es":
+            servicio["audience"]["audienceType"] = ID.MODULO[idioma].AUDIENCIA
+        return _ld(ld_organizacion(idioma=idioma), ld_pagina(url, titulo, descripcion, mainEntity={"@id": f"{url}#servicio"}, inLanguage=idioma),
+                   servicio, ld_faq(preguntas),
+                   ld_migas((sv["nombre"], url), inicio=ID.MODULO[idioma].INICIO if idioma != "es" else "Inicio"))
     if ruta == "proyectos":
         lista = {
             "@type": "ItemList",
@@ -2386,6 +2560,8 @@ def apply_seo():
         es_404 = rel.startswith("404")
         if rel.endswith("index.html") and not re.match(r"proyectos/[^/]+/index\.html$", rel):  # las de proyecto ya lo traen del CMS
             titulos[rel] = title
+        elif re.match(r"(ca/projectes|en/projects)/[^/]+/index\.html$", rel):  # …pero el del CMS está en castellano
+            titulos[rel] = title
 
         def meta(attr, value, head):
             head, n = re.subn(rf'<meta {attr} content="[^"]*">', f'<meta {attr} content="{html.escape(value)}">', head)
@@ -2406,14 +2582,13 @@ def apply_seo():
         ruta_pagina = rel[: -len("index.html")].strip("/")
         extra = (f'<meta property="og:image:alt" content="{html.escape(imagen_alt)}">'
                  f'<meta property="og:site_name" content="{C.NOMBRE_SITIO}">'
-                 f'<meta property="og:locale" content="{"ca_ES" if es_catalan(ruta_pagina) else "es_ES"}">')
+                 f'<meta property="og:locale" content="{ID.LOCALE[ID.idioma_de(ruta_pagina)]}">')
         # Páginas con versión en los dos idiomas: cada una declara las dos (y la de castellano como
         # opción por defecto), para que Google enseñe a cada persona la de su idioma.
-        par = next(((sv["es"], sv["slug"]) for sv in CA.SERVICIOS_CA if ruta_pagina in (sv["es"], sv["slug"])), None)
-        if par:
-            extra += (f'<link rel="alternate" hreflang="es" href="{C.SITIO}/{par[0]}">'
-                      f'<link rel="alternate" hreflang="ca" href="{C.SITIO}/{par[1]}">'
-                      f'<link rel="alternate" hreflang="x-default" href="{C.SITIO}/{par[0]}">')
+        grupo = ID.grupo_de(ruta_pagina)
+        if grupo and not es_404:
+            extra += "".join(f'<link rel="alternate" hreflang="{l}" href="{C.SITIO}/{grupo[l]}">' for l in ID.IDIOMAS)
+            extra += f'<link rel="alternate" hreflang="x-default" href="{C.SITIO}/{grupo["es"]}">'
         assert head.count('<link rel="canonical" href="/">') == 1 and head.count('<meta property="og:url" content="/">') == 1, rel
         if es_404:
             # La página de error no se indexa ni señala a ninguna URL como suya.
@@ -2570,7 +2745,7 @@ def version_assets():
         huella.update(SEGUN_EQUIPO.sub(b"imagen", f.read_bytes()))
     version = huella.hexdigest()[:10]
     propios = {n: hashlib.sha1((OUT / "banteq" / n).read_bytes()).hexdigest()[:10]
-               for n in ("banteq.css", "banteq.js", "banteq-liquid.js", "banteq-ca.js")}
+               for n in ("banteq.css", "banteq.js", "banteq-liquid.js", "i18n-ca.js", "i18n-en.js")}
     total = 0
     for f in OUT.rglob("*.html"):
         t = f.read_text(encoding="utf-8")
@@ -2659,7 +2834,6 @@ def main():
     apply_wide_metric()
     neutralize_entrance()
     build_service_pages()
-    build_ca_layer()
     apply_project_seo()
     apply_project_links()
     apply_formula_home()
@@ -2671,6 +2845,8 @@ def main():
         apply_head_images(rel)
 
     hide_sections()
+    apply_i18n_hooks()
+    build_i18n_layers()
     make_shells()
     apply_seo()
     final_cleanup()

@@ -26,12 +26,11 @@ GARANTIA = {
             "Si no ho fan, et retornem el cost d'implementació."),
     "alcance": ("Cobreix la implementació de les automatitzacions incloses en la garantia. No inclou manteniment, "
                 "eines externes ni costos de tercers."),
-    "enlace": ("Condicions de la garantia (en castellà)", "/aviso-legal#garantia"),
+    "enlace": ("Condicions de la garantia", "/aviso-legal#garantia"),
 }
 
-# Frase y enlace de cambio de idioma, al final de cada página (en las dos direcciones).
-IDIOMA_ES = ("Esta página también está disponible en ", "catalán", ".")   # en las páginas en castellano
-IDIOMA_CA = ("Aquesta pàgina també està disponible en ", "castellà", ".")  # en las páginas en catalán
+# Frase de cambio de idioma al final de cada página de servicio, con un enlace por idioma.
+ALTERNA_CA = ("Aquesta pàgina també està disponible en ", {"es": "castellà", "en": "anglès"}, " i ", ".")
 
 SERVICIOS_CA = [
     {
@@ -76,7 +75,7 @@ SERVICIOS_CA = [
             ("Comencem per un diagnòstic", [
                 ("p", "Abans d'automatitzar res, analitzem com treballa la teva empresa i dibuixem un mapa dels seus processos, eines i connexions. Aquest mapa mostra on es perd temps i què convé automatitzar primer."),
                 ("p", "Preparem dos diagnòstics separats: processos i oportunitats d'automatització. El primer organitza com treballeu i ajuda a preparar el camí cap a la ISO 9001. El segon identifica tasques que es podrien fer amb menys temps i errors. Us contactarem en menys de 72 hores naturals per comentar les conclusions, els honoraris i les condicions de lliurament. Enviar el qüestionari no suposa contractar ni pagar."),
-                ("p", ["Després seguim un procés clar: disseny, desenvolupament, proves i formació del teu equip. Així és ", ("a", "com treballem", "/#como-trabajamos"), " (en castellà)."]),
+                ("p", ["Després seguim un procés clar: disseny, desenvolupament, proves i formació del teu equip. Així és ", ("a", "com treballem", "/#como-trabajamos"), "."]),
             ]),
             ("Sobre les eines que ja fas servir", [
                 ("p", ["No cal canviar de programes. Treballem amb Microsoft 365, Google Drive, WhatsApp, Notion, Airtable o Odoo, i les connectem amb n8n, Make o integracions a mida quan el procés ho requereix. Ho expliquem a ", ("a", "automatització amb n8n i integració d'eines", "/ca/automatitzacio-n8n"), "."]),
@@ -95,7 +94,7 @@ SERVICIOS_CA = [
             ]),
             ("Un cas real: RentUp Capital", [
                 ("p", "Per a RentUp Capital, una firma d'inversió immobiliària, vam automatitzar tot el que passa després d'enviar un formulari al seu web: cada contacte es desa a la seva llista, la persona rep una confirmació per correu i l'equip, un avís amb totes les dades."),
-                ("p", [("a", "Veure el projecte de RentUp Capital", "/proyectos/rentup-capital"), " (en castellà)"]),
+                ("p", [("a", "Veure el projecte de RentUp Capital", "/proyectos/rentup-capital")]),
             ]),
             ("Preguntes freqüents", [
                 ("faq", [
@@ -154,7 +153,7 @@ SERVICIOS_CA = [
                     "Les protegim amb mesures de seguretat adequades",
                     "No les fem servir per entrenar models d'IA públics sense el teu permís exprés",
                 ]),
-                ("p", ["Ho expliquem amb detall a la nostra ", ("a", "política de privacitat", "/privacidad"), " (en castellà)."]),
+                ("p", ["Ho expliquem amb detall a la nostra ", ("a", "política de privacitat", "/privacidad"), "."]),
             ]),
             ("Integrada en el que ja fas servir", [
                 ("p", ["Treballem amb models d'OpenAI i els connectem amb el teu correu, els teus documents, el teu CRM o WhatsApp mitjançant ", ("a", "n8n, Make o integracions a mida", "/ca/automatitzacio-n8n"), ". Després formem el teu equip i deixem documentació perquè faci servir el sistema amb autonomia."]),
@@ -267,7 +266,7 @@ SERVICIOS_CA = [
             ]),
             ("Fórmula Banteq: el teu web, renovat en contractar el manteniment", [
                 ("p", FORMULA_FRASE),
-                ("p", [FORMULA_NOTA + " ", ("a", "Condicions completes", "/aviso-legal"), " (en castellà)."]),
+                ("p", [FORMULA_NOTA + " ", ("a", "Condicions completes", "/aviso-legal"), "."]),
                 ("p", ["Els exemples de quota i el que inclou són a ", ("a", "manteniment web per a empreses", "/ca/manteniment-web"), "."]),
                 ("formula", "Descobreix com funciona"),
             ]),
@@ -284,8 +283,8 @@ SERVICIOS_CA = [
                 ("p", "Disseny adaptat a mòbil, tauleta i escriptori, bon rendiment i una base tècnica preparada per créixer amb tu. Cuidem també l'estructura i el SEO de cada pàgina, perquè els teus clients et trobin."),
             ]),
             ("Projectes reals", [
-                ("p", [("b", "Margon. "), "Web corporatiu en cinc idiomes per a una empresa metal·lúrgica, amb una pàgina per sector, un recorregut interactiu per l'interior d'un tren i una secció de notícies amb newsletter. ", ("a", "Veure el projecte de Margon", "/proyectos/margon"), " (en castellà)"]),
-                ("p", [("b", "RentUp Capital. "), "Web d'onze pàgines per a una firma d'inversió immobiliària, amb formularis connectats que registren cada contacte i avisen l'equip. ", ("a", "Veure el projecte de RentUp Capital", "/proyectos/rentup-capital"), " (en castellà)"]),
+                ("p", [("b", "Margon. "), "Web corporatiu en cinc idiomes per a una empresa metal·lúrgica, amb una pàgina per sector, un recorregut interactiu per l'interior d'un tren i una secció de notícies amb newsletter. ", ("a", "Veure el projecte de Margon", "/proyectos/margon"), ]),
+                ("p", [("b", "RentUp Capital. "), "Web d'onze pàgines per a una firma d'inversió immobiliària, amb formularis connectats que registren cada contacte i avisen l'equip. ", ("a", "Veure el projecte de RentUp Capital", "/proyectos/rentup-capital")]),
             ]),
             ("Preguntes freqüents", [
                 ("faq", [
@@ -349,7 +348,7 @@ SERVICIOS_CA = [
                     "Abans de començar s'especifica per escrit què està inclòs i què tindria un cost addicional",
                     "No es fan càrrecs addicionals sense la teva autorització prèvia",
                 ]),
-                ("p", ["Les condicions completes són a l'", ("a", "avís legal", "/aviso-legal"), " (en castellà)."]),
+                ("p", ["Les condicions completes són a l'", ("a", "avís legal", "/aviso-legal"), "."]),
             ]),
             ("Webs que hem fet", [
                 ("p", ["Si vols veure com treballem, aquests són dos projectes reals: ", ("a", "el web de Margon", "/proyectos/margon"), ", en cinc idiomes, i ", ("a", "el web de RentUp Capital", "/proyectos/rentup-capital"), ", amb formularis automatitzats. I si necessites alguna cosa més que un web informatiu, mira ", ("a", "desenvolupament web a mida", "/ca/desenvolupament-web"), "."]),
@@ -372,6 +371,7 @@ SERVICIOS_CA = [
 
 # Nombre de la portada en las migas de pan de los datos estructurados.
 INICIO = "Inici"
+AUDIENCIA = "Pimes i petits negocis"
 
 # ---------------------------------------------------------------------------
 # Interfaz (menú, pie, formulario de contacto y ventana de la Fórmula Banteq): texto exacto en
@@ -460,7 +460,7 @@ INTERFAZ_CA = {
 }
 
 # Textos con datos dentro (teléfono, correo, importes): expresión regular → sustitución ($1, $2…).
-INTERFAZ_CA_REGLAS = [
+REGLAS_CA = [
     (r"^Te escribiremos por WhatsApp al (.+)\.$", "T'escriurem per WhatsApp al $1."),
     (r"^Te responderemos a (.+) y te hemos enviado una confirmación\.$", "Et respondrem a $1 i t'hem enviat una confirmació."),
     (r"^Te responderemos a (.+)\.$", "Et respondrem a $1."),
@@ -478,3 +478,26 @@ INTERFAZ_CA_REGLAS = [
     (r"^Te responderemos en menos de 48 h a (.+) con la propuesta de tu web remodelada y la oferta de mantenimiento\.$",
      "Et respondrem en menys de 48 h a $1 amb la proposta del teu web remodelat i l'oferta de manteniment."),
 ]
+
+
+# Tablas (castellano, catalán, inglés) de la home, los proyectos, las demostraciones y los avisos
+# legales: tools/textos_*.py. Se funden con las de interfaz de arriba (si un texto está en las dos,
+# la traducción tiene que ser la misma).
+import textos_demos, textos_home, textos_legal, textos_proyectos, textos_meta  # noqa: E402
+
+TABLAS = [textos_home.TABLA, textos_demos.TABLA, textos_proyectos.TABLA, textos_legal.TABLA, textos_meta.TABLA]
+
+
+def fundir(base, columna):
+    """Diccionario castellano → idioma: la base de interfaz más las tablas. Las entradas que se
+    escriben igual en los dos idiomas no hacen falta (se omiten)."""
+    out = dict(base)
+    for tabla in TABLAS:
+        for fila in tabla:
+            es, nuevo = fila[0], fila[columna]
+            assert out.get(es, nuevo) == nuevo, f"traducción distinta para {es[:60]!r}: {out[es]!r} / {nuevo!r}"
+            out[es] = nuevo
+    return {k: v for k, v in out.items() if " ".join(k.split()) != " ".join(v.split())}
+
+
+TEXTOS_CA = fundir(INTERFAZ_CA, 1)

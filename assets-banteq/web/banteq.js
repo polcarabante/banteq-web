@@ -294,7 +294,8 @@
     const marcas = [...video.querySelectorAll("[data-marca]")];
     const fases = [...video.querySelectorAll(".bq-dm-fases li")];
     const escribir = [...video.querySelectorAll("[data-escribe]")];
-    for (const el of escribir) el.dataset.texto = el.textContent;
+    // En las páginas traducidas (window.BQT, banteq-i18n.js) el texto a teclear es el traducido.
+    for (const el of escribir) el.dataset.texto = window.BQT ? window.BQT(el.textContent) : el.textContent;
     const anim = barra.animate([{ transform: "scaleX(0)" }, { transform: "scaleX(1)" }], { duration: total, fill: "both" });
     anim.pause();
     let paso = -1;
@@ -1449,12 +1450,73 @@
     else if (location.hash === "#quiero-mejorar") abrirMejorar(null);
   });
 
+  // ---------------------------------------------------------------------------------------------
+  // Selector de idioma (arriba a la derecha): castellano, catalán, inglés. Cada opción es un enlace
+  // de verdad a la misma página en ese idioma (build.py pone la tabla de direcciones en
+  // RUTAS_IDIOMAS: [castellano, catalán, inglés] de cada página). Va fuera del árbol de React.
+  // ---------------------------------------------------------------------------------------------
+  const RUTAS_IDIOMAS = /*RUTAS_IDIOMAS*/ [];
+  const IDIOMAS = [
+    ["es", "ES", "Español"],
+    ["ca", "CA", "Català"],
+    ["en", "EN", "English"],
+  ];
+  const idiomaActual = () => (document.documentElement.lang || "es").slice(0, 2);
+  const direccionEn = (destino) => {
+    const ruta = window.location.pathname.replace(/\/+$/, "") || "/";
+    const grupo = RUTAS_IDIOMAS.find((g) => g.includes(ruta));
+    const k = IDIOMAS.findIndex(([codigo]) => codigo === destino);
+    if (!grupo) return RUTAS_IDIOMAS[0][k]; // sin equivalente (p. ej. la página 404): la portada
+    return grupo[k] + (grupo.includes(ruta) ? window.location.search + window.location.hash : "");
+  };
+  const montarIdioma = () => {
+    if (!RUTAS_IDIOMAS.length || document.querySelector(".bq-idioma")) return;
+    const actual = idiomaActual();
+    const etiqueta = { es: "Idioma", ca: "Idioma", en: "Language" }[actual] || "Language";
+    const caja = document.createElement("div");
+    caja.className = "bq-idioma";
+    caja.innerHTML =
+      `<button type="button" class="bq-idioma-boton" aria-haspopup="true" aria-expanded="false" aria-label="${etiqueta}">` +
+      '<svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6.2"/><path d="M1.8 8h12.4M8 1.8c1.8 1.7 2.7 3.8 2.7 6.2S9.8 12.5 8 14.2M8 1.8C6.2 3.5 5.3 5.6 5.3 8s.9 4.5 2.7 6.2"/></svg>' +
+      `<span>${(IDIOMAS.find(([c]) => c === actual) || IDIOMAS[0])[1]}</span>` +
+      '<svg class="bq-idioma-flecha" viewBox="0 0 10 10" aria-hidden="true"><path d="m2 3.6 3 3 3-3"/></svg></button>' +
+      '<ul class="bq-idioma-menu">' +
+      IDIOMAS.map(
+        ([c, , nombre]) =>
+          `<li><a href="#" lang="${c}" hreflang="${c}"${c === actual ? ' aria-current="true"' : ""}>${nombre}</a></li>`,
+      ).join("") +
+      "</ul>";
+    const boton = caja.querySelector("button");
+    const abrir = (si) => {
+      caja.classList.toggle("bq-idioma-abierto", si);
+      boton.setAttribute("aria-expanded", String(si));
+    };
+    boton.addEventListener("click", () => abrir(!caja.classList.contains("bq-idioma-abierto")));
+    document.addEventListener("click", (e) => caja.contains(e.target) || abrir(false));
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && caja.classList.contains("bq-idioma-abierto")) {
+        abrir(false);
+        boton.focus();
+      }
+    });
+    caja.addEventListener("focusout", (e) => e.relatedTarget && !caja.contains(e.relatedTarget) && abrir(false));
+    document.body.appendChild(caja);
+    actualizarIdioma();
+  };
+  const actualizarIdioma = () => {
+    document.querySelectorAll(".bq-idioma-menu a").forEach((a) => a.setAttribute("href", direccionEn(a.lang)));
+  };
+  if (document.body) montarIdioma();
+  else document.addEventListener("DOMContentLoaded", montarIdioma);
+
   // Home o subpágina (data-bq-pagina en <html>): el HTML de cada subpágina ya lo trae; el router de
-  // Framer cambia de página sin recargar, así que se actualiza en cada cambio de dirección.
+  // Framer cambia de página sin recargar, así que se actualiza en cada cambio de dirección. La
+  // portada de cada idioma (/, /ca, /en) es la home.
   const marcarPagina = () => {
-    const sub = window.location.pathname.replace(/\/+$/, "") !== "";
+    const sub = !["", "/ca", "/en"].includes(window.location.pathname.replace(/\/+$/, ""));
     if (sub) document.documentElement.dataset.bqPagina = "sub";
     else delete document.documentElement.dataset.bqPagina;
+    actualizarIdioma();
   };
   for (const metodo of ["pushState", "replaceState"]) {
     const original = history[metodo];

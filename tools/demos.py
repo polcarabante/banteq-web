@@ -298,3 +298,19 @@ def seccion_html():
          f'<p class="bq-demos-nota">{esc(NOTA)}</p>{garantia_html()}')
     assert "`" not in h and "${" not in h and "\\" not in h, "el HTML de las demostraciones no puede ir en un template de JS"
     return h
+
+
+def textos_visibles():
+    """Todos los textos que muestran las demostraciones (nodos de texto del HTML y sus atributos
+    aria-label/alt/title), con los espacios normalizados: build.py los usa para comprobar que cada
+    traducción de las demostraciones sigue teniendo su texto original."""
+    import re
+
+    h = seccion_html()
+    textos = set()
+    for m in re.finditer(r">([^<>]+)<", h):
+        textos.add(" ".join(html.unescape(m.group(1)).split()))
+    for m in re.finditer(r'(?:aria-label|alt|title|data-escribe)="([^"]*)"', h):
+        textos.add(" ".join(html.unescape(m.group(1)).split()))
+    textos.discard("")
+    return textos
