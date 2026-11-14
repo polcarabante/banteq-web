@@ -65,7 +65,7 @@
       ]
     },
     {
-      "source": "/banteq/:archivo(banteq\\.css|banteq\\.js|banteq-liquid\\.js|banteq-ca\\.js)",
+      "source": "/banteq/:archivo(banteq\\.css|banteq\\.js|banteq-liquid\\.js|i18n-ca\\.js|i18n-en\\.js)",
       "has": [
         {
           "type": "query",
