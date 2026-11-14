@@ -239,6 +239,36 @@ el mantenimiento porque no está definido: solo lo que fijan las condiciones de 
 
 Para añadir o cambiar una: editar `SERVICIOS`, `npm run build` y `npm run prerender`.
 
+### Versión en catalán de las páginas de servicio (`/ca/…`)
+
+Las cinco páginas de servicio tienen versión en catalán: `/ca/automatitzacio-processos`,
+`/ca/intelligencia-artificial`, `/ca/automatitzacio-n8n`, `/ca/desenvolupament-web` y
+`/ca/manteniment-web` (Search Console mostró búsquedas en catalán, 2026-11-14). La home, los
+proyectos y las páginas legales siguen solo en castellano; los enlaces hacia ellas dicen «(en
+castellà)».
+
+- **Contenido:** `tools/contenido_ca.py` (`SERVICIOS_CA`), con la misma forma que
+  `contenido.SERVICIOS` y `"es"`: la ruta de su par en castellano. Es una traducción: ningún dato
+  nuevo. Si cambia una página en castellano, hay que cambiar también la catalana.
+- **Rutas:** son rutas de Framer como las demás (`build_service_pages` recorre
+  `todos_los_servicios()`); su módulo se llama `bq-servicio-ca-….mjs`.
+- **Idioma:** `<html lang="ca">`, `og:locale` `ca_ES`, `inLanguage` en los datos estructurados y
+  `hreflang` en las dos páginas de cada par (`es`, `ca` y `x-default` = castellano). Al final de
+  cada página, una frase enlaza a la otra versión (enlace normal, con `hreflang`).
+- **Menú, pie, formulario y ventana de la Fórmula:** los pintan los componentes de Framer y
+  `banteq.js` en castellano. En las páginas en catalán los traduce `assets-banteq/web/banteq-ca.js`
+  sobre la página ya pintada, con el diccionario `contenido_ca.INTERFAZ_CA` (texto exacto en
+  castellano → catalán) y unas reglas para los textos con datos. Ese script **solo se carga en
+  `/ca/…`**: la web en castellano no ejecuta nada nuevo. El build comprueba que cada texto del
+  diccionario sigue existiendo tal cual; si alguien cambia un texto en castellano, falla y avisa.
+  No están traducidos: los nombres de país del selector de prefijo, los correos de confirmación de
+  Brevo ni el cuestionario `/diagnostico`.
+- **Navegación:** desde una página en catalán, los enlaces internos cargan la página entera (no la
+  navegación sin recarga de Framer), para que cada página llegue con su idioma. Los enlaces a
+  servicios del menú y del pie apuntan a la versión en catalán.
+- **Instantáneas:** `npm run prerender` captura también las `/ca/…` (ya traducidas); la firma
+  incluye `contenido_ca.py`.
+
 ### SEO local
 
 Banteq está en Santa Perpètua de Mogoda y trabaja con empresas de Barcelona, el Vallès y, en

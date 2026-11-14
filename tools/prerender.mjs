@@ -37,7 +37,7 @@ const browser = await puppeteer.launch({
 
 rmSync(OUT, { recursive: true, force: true });
 mkdirSync(OUT, { recursive: true });
-const firma = createHash("sha1").update(readFileSync(ROOT + "tools/contenido.py")).digest("hex").slice(0, 12);
+const firma = createHash("sha1").update(readFileSync(ROOT + "tools/contenido.py")).update(readFileSync(ROOT + "tools/contenido_ca.py")).digest("hex").slice(0, 12);
 
 try {
   for (const path of paths) {

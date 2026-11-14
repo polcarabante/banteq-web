@@ -25,6 +25,7 @@ TOOLS = Path(__file__).resolve().parent
 sys.path.insert(0, str(TOOLS))
 
 import contenido as C  # noqa: E402
+import contenido_ca as CA  # noqa: E402
 import jsx  # noqa: E402
 
 ROOT = TOOLS.parent
@@ -1246,15 +1247,28 @@ COL_SUBTITULO = "var(--token-c7252384-fca0-4580-9fcd-c3b52008f218, rgb(40, 40, 4
 LINK_IMPORT = 'import{h as BQL}from"./framer.DrTRbU-a.mjs";'  # componente Link de Framer (como lo importa la home)
 
 
+def todos_los_servicios():
+    """Páginas de servicio en castellano y sus versiones en catalán (/ca/…)."""
+    return C.SERVICIOS + CA.SERVICIOS_CA
+
+
+def es_catalan(ruta):
+    return ruta.strip("/").split("/")[0] == "ca"
+
+
+def service_mod_name(sv):
+    return f"bq-servicio-{sv['slug'].replace('/', '-')}.mjs"
+
+
 def service_mod(sv):
-    return f"{SITE}/bq-servicio-{sv['slug']}.mjs"
+    return f"{SITE}/{service_mod_name(sv)}"
 
 
 def static_routes():
     """Ruta → id de página de Framer, y ancla de la home → id del elemento (para enlaces internos)."""
     t = S[MAIN_MOD]
     rutas = {path: rid for rid, path in re.findall(r"(\w+):\{elements:\{[^}]*\},page:N\(\(\)=>import\(`[^`]+`\)\),path:`([^`:]+)`\}", t)}
-    rutas.update({"/" + sv["slug"]: sv["id"] for sv in C.SERVICIOS})
+    rutas.update({"/" + sv["slug"]: sv["id"] for sv in todos_los_servicios()})
     i = t.find(HOME_ROUTE + ":{elements:{") + len(HOME_ROUTE) + len(":{elements:{")
     anclas = {name: eid for eid, name in re.findall(r"(\w+):`([^`]+)`", t[i:t.find("}", i)])}
     return rutas, anclas
@@ -1293,6 +1307,9 @@ def js_inline(texto, scope, contador):
             out.append(f"`{js_template(parte)}`")
         elif parte[0] == "b":
             out.append(f"o(`strong`,{{children:`{js_template(parte[1])}`}})")
+        elif parte[0] == "idioma":  # (texto, destino, código de idioma): carga la página entera
+            out.append(f"o(`a`,{{className:`bq-enlace`,href:`{parte[2]}`,hrefLang:`{parte[3]}`,lang:`{parte[3]}`,"
+                       f"children:`{js_template(parte[1])}`}})")
         else:
             out.append(js_link(parte[1], parte[2], scope, contador))
     return "[" + ",".join(out) + "]"
@@ -1364,9 +1381,12 @@ def js_service_main(sv):
             elif tipo == "formula":
                 hijos.append(formula_boton("o", "a", valor))
             elif tipo == "garantia":
-                hijos.append(garantia_ref_js())
+                hijos.append(garantia_ref_js(valor))
             else:
                 raise ValueError(tipo)
+        if sv.get("alterna") and titulo == sv["secciones"][-1][0]:
+            (antes, enlace, despues), destino, idioma = sv["alterna"]
+            hijos.append(js_parrafo([antes, ("idioma", enlace, destino, idioma), despues], scope, contador))
         bloques.append(f"a(`div`,{{className:`framer-1dcxdhn`,\"data-framer-name\":`Stack`,children:[{','.join(hijos)}]}})")
     return "[" + ",".join(bloques) + "]"
 
@@ -1386,7 +1406,15 @@ def neutralize_entrance():
 
 def build_service_pages():
     base = S[TERMS_MOD]
+    # Cada página enlaza a su versión en el otro idioma (contenido_ca: "es" es la ruta en castellano).
+    catalan = {sv["es"]: sv for sv in CA.SERVICIOS_CA}
     for sv in C.SERVICIOS:
+        if sv["slug"] in catalan:
+            sv["alterna"] = (CA.IDIOMA_ES, "/" + catalan[sv["slug"]]["slug"], "ca")
+    for sv in CA.SERVICIOS_CA:
+        assert any(x["slug"] == sv["es"] for x in C.SERVICIOS), sv["es"]
+        sv["alterna"] = (CA.IDIOMA_CA, "/" + sv["es"], "es")
+    for sv in todos_los_servicios():
         t = base
         for viejo, nuevo in ((C.AVISO_LEGAL[0], sv["h1"]), (C.AVISO_LEGAL[1], sv["subtitulo"])):
             marca = f"children:`{js_template(viejo)}`"
@@ -1405,10 +1433,10 @@ def build_service_pages():
     legal = re.search(r"H6u27ToU_:\{elements:\{\},page:N\(\(\)=>import\(`[^`]+`\)\),path:`/aviso-legal`\},", m)
     assert legal, "no se encuentra la ruta del aviso legal"
     nuevas = "".join(
-        f"{sv['id']}:{{elements:{{}},page:N(()=>import(`./bq-servicio-{sv['slug']}.mjs`)),path:`/{sv['slug']}`}}," for sv in C.SERVICIOS
+        f"{sv['id']}:{{elements:{{}},page:N(()=>import(`./{service_mod_name(sv)}`)),path:`/{sv['slug']}`}}," for sv in todos_los_servicios()
     )
     m = m[: legal.end()] + nuevas + m[legal.end():]
-    casos = "".join(f"case`{sv['id']}`:" for sv in C.SERVICIOS)
+    casos = "".join(f"case`{sv['id']}`:" for sv in todos_los_servicios())
     assert m.count("case`H6u27ToU_`:") == 2
     m = m.replace("case`H6u27ToU_`:", "case`H6u27ToU_`:" + casos)
     S[MAIN_MOD] = m
@@ -1591,6 +1619,29 @@ PRE_SWAP = (
 )
 
 
+# La capa de interfaz en catalán va justo detrás de banteq.js (inject_assets).
+CAPA_CA_ANTES = '<script src="/banteq/banteq.js" defer></script>'
+
+
+def build_ca_layer():
+    """assets-banteq/web/banteq-ca.js con su diccionario (contenido_ca.INTERFAZ_CA): los textos del
+    menú, el pie, el formulario y la ventana de la Fórmula que esas páginas traducen al vuelo, y la
+    ruta en catalán de cada página de servicio. Comprueba que cada texto en castellano sigue
+    existiendo tal cual en los componentes o en banteq.js: si alguien lo cambia, hay que actualizar
+    también su traducción (si no, ese texto se quedaría en castellano sin avisar)."""
+    fuentes = (OUT / "banteq" / "banteq.js").read_text(encoding="utf-8") + S[NAV_MOD] + S[FORM_MOD]
+    faltan = [es for es in CA.INTERFAZ_CA if es not in fuentes]
+    assert not faltan, f"contenido_ca.INTERFAZ_CA: textos que ya no existen en castellano: {faltan}"
+    enlaces = {"/" + sv["es"]: "/" + sv["slug"] for sv in CA.SERVICIOS_CA}
+    f = OUT / "banteq" / "banteq-ca.js"
+    t = f.read_text(encoding="utf-8")
+    for marca, valor in (("/*DICCIONARIO*/ {}", CA.INTERFAZ_CA), ("/*REGLAS*/ []", [list(r) for r in CA.INTERFAZ_CA_REGLAS]),
+                         ("/*ENLACES*/ {}", enlaces)):
+        assert t.count(marca) == 1, marca
+        t = t.replace(marca, json.dumps(valor, ensure_ascii=False))
+    f.write_text(t, encoding="utf-8")
+
+
 def static_imports(rel):
     """Módulos que un módulo importa de forma estática (los dinámicos, import(`…`), no cuentan)."""
     base = rel.rsplit("/", 1)[0]
@@ -1635,7 +1686,7 @@ def page_preloads(page, path):
 def prerender_signature():
     import hashlib
 
-    return hashlib.sha1((TOOLS / "contenido.py").read_bytes()).hexdigest()[:12]
+    return hashlib.sha1((TOOLS / "contenido.py").read_bytes() + (TOOLS / "contenido_ca.py").read_bytes()).hexdigest()[:12]
 
 
 def make_shells():
@@ -1661,7 +1712,12 @@ def make_shells():
         # Marca de subpágina: los ajustes del pie en móvil (banteq.css, «Pie de las subpáginas») no
         # tocan la home. banteq.js la mantiene al navegar sin recargar.
         assert page.count('<html lang="es"') == 1
-        page = page.replace('<html lang="es"', '<html lang="es" data-bq-pagina="sub"', 1)
+        if es_catalan(path):
+            page = page.replace('<html lang="es"', '<html lang="ca" data-bq-pagina="sub" data-bq-idioma="ca"', 1)
+            assert page.count(CAPA_CA_ANTES) == 1
+            page = page.replace(CAPA_CA_ANTES, CAPA_CA_ANTES + '<script src="/banteq/banteq-ca.js" defer></script>', 1)
+        else:
+            page = page.replace('<html lang="es"', '<html lang="es" data-bq-pagina="sub"', 1)
         snap = PRERENDER / (path.replace("/", "__") + ".json")
         if snap.exists():
             data = json.loads(snap.read_text(encoding="utf-8"))
@@ -1895,15 +1951,17 @@ def apply_project_links():
 # Fórmula Banteq y fin de la página de contacto (2026-11-01)
 # ---------------------------------------------------------------------------
 
-def garantia_ref_js():
+def garantia_ref_js(textos=None):
     """Distintivo de la garantía de 60 días en /automatizacion-procesos: escudo, frase breve, lo que no
-    cubre y enlace a las condiciones (apartado 6 del aviso legal). Estilos: .bq-garantia-ref."""
+    cubre y enlace a las condiciones (apartado 6 del aviso legal). Estilos: .bq-garantia-ref.
+    textos: los de otro idioma (contenido_ca.GARANTIA); sin ellos, los de contenido.py."""
     import demos
-    texto, destino = C.GARANTIA_ENLACE
+    textos = textos or {"ref": C.GARANTIA_REF, "alcance": C.GARANTIA_ALCANCE, "enlace": C.GARANTIA_ENLACE}
+    texto, destino = textos["enlace"]
     return (f"a(`div`,{{className:`bq-garantia-ref`,children:["
             f"o(`span`,{{className:`bq-garantia-icono`,\"aria-hidden\":`true`,dangerouslySetInnerHTML:{{__html:`{demos.ESCUDO}`}}}}),"
-            f"a(`div`,{{children:[o(`p`,{{className:`bq-garantia-ref-texto`,children:`{js_template(C.GARANTIA_REF)}`}}),"
-            f"a(`p`,{{className:`bq-garantia-alcance`,children:[`{js_template(C.GARANTIA_ALCANCE)} `,"
+            f"a(`div`,{{children:[o(`p`,{{className:`bq-garantia-ref-texto`,children:`{js_template(textos['ref'])}`}}),"
+            f"a(`p`,{{className:`bq-garantia-alcance`,children:[`{js_template(textos['alcance'])} `,"
             f"o(`a`,{{href:`{destino}`,children:`{js_template(texto)}`}})]}})]}})]}})")
 
 
@@ -1976,7 +2034,7 @@ def remove_contact_page():
     (#hablemos), que sigue en todas las páginas y envía a /api/leads como siempre. Se quitan la
     ruta, su módulo, su enlace del pie y su HTML; /contacto redirige a /#hablemos (vercel.json)."""
     destino = "`#hablemos`"
-    for rel in [HOME_MOD, NAV_MOD] + [service_mod(sv) for sv in C.SERVICIOS]:
+    for rel in [HOME_MOD, NAV_MOD] + [service_mod(sv) for sv in todos_los_servicios()]:
         S[rel] = S[rel].replace(f"{{webPageId:`{CONTACTO_ID}`}}", destino)
     # Pie: el enlace «Contacto» (en el módulo y en el HTML inicial de la home).
     t = S[NAV_MOD]
@@ -2242,9 +2300,9 @@ def ld_pagina(url, titulo, descripcion, tipo="WebPage", **extra):
             "inLanguage": "es", "isPartOf": {"@id": WEB_ID}, "publisher": {"@id": ORG_ID}, **extra}
 
 
-def ld_migas(*pasos):
+def ld_migas(*pasos, inicio="Inicio"):
     """Migas de pan: (nombre, url) desde la home hasta la página."""
-    pasos = (("Inicio", f"{C.SITIO}/"),) + pasos
+    pasos = ((inicio, f"{C.SITIO}/"),) + pasos
     return {
         "@type": "BreadcrumbList",
         "itemListElement": [{"@type": "ListItem", "position": k, "name": n, "item": u} for k, (n, u) in enumerate(pasos, 1)],
@@ -2273,7 +2331,7 @@ def faq_home():
 def structured_data(rel, titulo="", descripcion=""):
     """JSON-LD de cada página. Todo sale de contenido.py: lo mismo que se lee en la página."""
     url = page_url(rel)
-    servicios = {sv["slug"]: sv for sv in C.SERVICIOS}
+    servicios = {sv["slug"]: sv for sv in todos_los_servicios()}
     proyectos = {pr["slug"]: pr for pr in C.PROYECTOS}
     ruta = rel[: -len("index.html")].strip("/")
     if rel == INDEX:
@@ -2287,8 +2345,9 @@ def structured_data(rel, titulo="", descripcion=""):
             "description": sv["descripcion"], "url": url, "provider": {"@id": ORG_ID}, "areaServed": AREA,
             "audience": {"@type": "BusinessAudience", "audienceType": "Pymes y pequeños negocios"},
         }
-        return _ld(ld_organizacion(), ld_pagina(url, titulo, descripcion, mainEntity={"@id": f"{url}#servicio"}),
-                   servicio, ld_faq(preguntas), ld_migas((sv["nombre"], url)))
+        idioma = "ca" if es_catalan(ruta) else "es"
+        return _ld(ld_organizacion(), ld_pagina(url, titulo, descripcion, mainEntity={"@id": f"{url}#servicio"}, inLanguage=idioma),
+                   servicio, ld_faq(preguntas), ld_migas((sv["nombre"], url), inicio=CA.INICIO if idioma == "ca" else "Inicio"))
     if ruta == "proyectos":
         lista = {
             "@type": "ItemList",
@@ -2344,8 +2403,17 @@ def apply_seo():
         imagen_alt = f"Web de {pr['cliente']}, proyecto de Banteq" if pr else f"{C.NOMBRE_ALTERNATIVO}: automatización, inteligencia artificial y desarrollo web"
         for attr in ('property="og:image"', 'name="twitter:image"'):
             head = meta(attr, imagen, head)
+        ruta_pagina = rel[: -len("index.html")].strip("/")
         extra = (f'<meta property="og:image:alt" content="{html.escape(imagen_alt)}">'
-                 f'<meta property="og:site_name" content="{C.NOMBRE_SITIO}"><meta property="og:locale" content="es_ES">')
+                 f'<meta property="og:site_name" content="{C.NOMBRE_SITIO}">'
+                 f'<meta property="og:locale" content="{"ca_ES" if es_catalan(ruta_pagina) else "es_ES"}">')
+        # Páginas con versión en los dos idiomas: cada una declara las dos (y la de castellano como
+        # opción por defecto), para que Google enseñe a cada persona la de su idioma.
+        par = next(((sv["es"], sv["slug"]) for sv in CA.SERVICIOS_CA if ruta_pagina in (sv["es"], sv["slug"])), None)
+        if par:
+            extra += (f'<link rel="alternate" hreflang="es" href="{C.SITIO}/{par[0]}">'
+                      f'<link rel="alternate" hreflang="ca" href="{C.SITIO}/{par[1]}">'
+                      f'<link rel="alternate" hreflang="x-default" href="{C.SITIO}/{par[0]}">')
         assert head.count('<link rel="canonical" href="/">') == 1 and head.count('<meta property="og:url" content="/">') == 1, rel
         if es_404:
             # La página de error no se indexa ni señala a ninguna URL como suya.
@@ -2502,7 +2570,7 @@ def version_assets():
         huella.update(SEGUN_EQUIPO.sub(b"imagen", f.read_bytes()))
     version = huella.hexdigest()[:10]
     propios = {n: hashlib.sha1((OUT / "banteq" / n).read_bytes()).hexdigest()[:10]
-               for n in ("banteq.css", "banteq.js", "banteq-liquid.js")}
+               for n in ("banteq.css", "banteq.js", "banteq-liquid.js", "banteq-ca.js")}
     total = 0
     for f in OUT.rglob("*.html"):
         t = f.read_text(encoding="utf-8")
@@ -2591,6 +2659,7 @@ def main():
     apply_wide_metric()
     neutralize_entrance()
     build_service_pages()
+    build_ca_layer()
     apply_project_seo()
     apply_project_links()
     apply_formula_home()
