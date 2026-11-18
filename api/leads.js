@@ -36,6 +36,13 @@ const parseRequestBody = (request) => {
 
 const normalizeText = (value = "") => String(value || "").trim();
 
+const sourceLabels = new Map([
+  ["paid", "Campaña de pago"], ["email", "Campaña de correo"], ["campaign", "Campaña etiquetada"],
+  ["google", "Referencia de Google"], ["search", "Referencia de otro buscador"],
+  ["ai", "Referencia de un asistente de IA"], ["referral", "Otro sitio web"],
+  ["internal", "Página anterior de Banteq"], ["unknown", "Sin referencia identificable"],
+]);
+
 const getBrevoDate = (date = new Date()) => date.toISOString().slice(0, 10);
 
 // Fecha y hora de España para el aviso y para Brevo («28/10/2026 10:52»).
@@ -328,6 +335,10 @@ const sendAdminNotification = async (lead) => {
     ? `<p><strong>Página:</strong> <a href="${escapeHtml(lead.page)}">${text(lead.pageTitle || lead.page)}</a><br><small>${text(lead.page)}</small></p>`
     : `<p><strong>Página:</strong> ${text(lead.origin)}</p>`;
 
+  const sourceLine = lead.sourceSignal
+    ? `<p><strong>Procedencia observada:</strong> ${text(lead.sourceSignal)}${lead.entryPath ? ` · ${text(lead.entryPath)}` : ""}.</p>`
+    : "";
+
   if (isFormulaType(lead.formType)) {
     const { nueva, rebaja } = formulaQuote(lead.monthlyFee);
     const plazo = getMadridDateTime(new Date(lead.submittedAtMs + 48 * 3600 * 1000));
@@ -341,6 +352,7 @@ const sendAdminNotification = async (lead) => {
     ${contactLine}
     <p><strong>Compromiso:</strong> enviarle en menos de 48 h la propuesta de web remodelada y la oferta de mantenimiento (antes del ${text(plazo)}).</p>
     ${pageLine}
+    ${sourceLine}
     <p><strong>Fecha y hora:</strong> ${text(lead.submittedAtLocal)}</p>
   `;
     const result = await brevoFetch("/smtp/email", {
@@ -365,6 +377,7 @@ const sendAdminNotification = async (lead) => {
     <p><strong>Empresa:</strong> ${text(lead.company)}</p>
     <p><strong>${idea ? "Su idea" : "Qué quiere mejorar"}:</strong><br>${text(lead.message).replace(/\n/g, "<br>")}</p>
     ${pageLine}
+    ${sourceLine}
     <p><strong>Fecha y hora:</strong> ${text(lead.submittedAtLocal)}</p>
   `;
 
@@ -423,6 +436,8 @@ const buildContactPayload = (lead) => {
   addAttribute(attributes, "MENSAJE", lead.message);
   addAttribute(attributes, "AREAS", lead.areas);
   addAttribute(attributes, "PAGINA", lead.page || lead.origin);
+  addAttribute(attributes, "ULTIMA_PROCEDENCIA_WEB", lead.sourceSignal);
+  addAttribute(attributes, "ULTIMA_ENTRADA_WEB", lead.entryPath);
   addAttribute(attributes, "TIPO_SOLICITUD", lead.formType);
   if (Number.isFinite(lead.monthlyFee)) addAttribute(attributes, "PAGO_MANTENIMIENTO", lead.monthlyFee);
   addAttribute(attributes, "WEB_ACTUAL", lead.currentWebsite);
@@ -475,6 +490,8 @@ const requiredContactAttributes = [
   { name: "ESTADO", type: "text" },
   { name: "MENSAJE", type: "text" },
   { name: "PAGINA", type: "text" },
+  { name: "ULTIMA_PROCEDENCIA_WEB", type: "text" },
+  { name: "ULTIMA_ENTRADA_WEB", type: "text" },
   { name: "FECHA_HORA", type: "text" },
   { name: "TIPO_SOLICITUD", type: "text" },
   { name: "PAGO_MANTENIMIENTO", type: "float" },
@@ -670,6 +687,9 @@ const handlePost = async (request, response) => {
     origin: normalizeText(body.origin || body.origen),
     page: /^https?:\/\//.test(page) ? page.slice(0, LIMITS.page) : "",
     pageTitle: normalizeText(body.pageTitle).slice(0, 200),
+    sourceSignal: sourceLabels.get(body.sourceSignal),
+    entryPath: typeof body.entryPath === "string" && body.entryPath.length <= 200
+      && /^\/(?:[a-z0-9-]+(?:\/[a-z0-9-]+)*\/?)?$/.test(body.entryPath) ? body.entryPath : undefined,
     employeesRange: normalizeText(body.employeesRange || body.numeroEmpleados || body.numero_empleados),
     microsoft365Usage: normalizeText(body.microsoft365Usage || body.usoActualMicrosoft365 || body.uso_actual_microsoft_365),
     microsoftApps: Array.isArray(body.microsoftApps) ? body.microsoftApps.join(", ") : normalizeText(body.microsoftApps || body.aplicacionesMicrosoft || body.aplicaciones_microsoft),

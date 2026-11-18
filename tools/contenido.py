@@ -897,6 +897,11 @@ SERVICIOS = [
                     [("b", "Reservas y citas. "), "La cita queda en el calendario, el cliente recibe la confirmación y un recordatorio, y los cambios se actualizan solos."],
                 ]),
             ]),
+            ("Cómo calcular si te compensa automatizar una tarea", [
+                ("p", "Elige una tarea de una semana normal, por ejemplo copiar pedidos del correo a Excel. Cuenta los pedidos y mide los minutos que lleva procesar cada uno. En una prueba del nuevo flujo, incluye también el tiempo de revisar excepciones y corregir errores."),
+                ("p", "Ejemplo orientativo: con 100 pedidos al mes, pasar de 6 a 2 minutos por pedido libera 6 horas y 40 minutos al mes. Si valoras la hora en 24 €, son 160 € mensuales de tiempo recuperado. Resta licencias y mantenimiento para estimar el beneficio mensual y divide el coste inicial entre ese beneficio para calcular los meses de recuperación. Si el beneficio es cero o negativo, la inversión no se recupera con ese ahorro."),
+                ("p", ["Para valorar tu caso, ", ("a", "cuéntanos qué tarea repites", "#hablemos"), ", con qué programas la haces y cuántas veces al mes. Una estimación de tiempo liberado solo se convierte en ahorro de caja si reduce un coste que realmente pagas."]),
+            ]),
             ("Empezamos por un diagnóstico", [
                 ("p", "Antes de automatizar nada, analizamos cómo trabaja tu empresa y dibujamos un mapa de sus procesos, herramientas y conexiones. Ese mapa muestra dónde se pierde tiempo y qué conviene automatizar primero."),
                 ("p", "Preparamos dos diagnósticos separados: procesos y oportunidades de automatización. El primero organiza cómo trabajáis y ayuda a preparar el camino hacia ISO 9001. El segundo identifica tareas que podrían hacerse con menos tiempo y errores. Te contactaremos en menos de 72 horas naturales para comentar las conclusiones, los honorarios y las condiciones de entrega. Enviar el cuestionario no supone contratar ni pagar."),

@@ -72,6 +72,11 @@ SERVICIOS_CA = [
                     [("b", "Reserves i cites. "), "La cita queda al calendari, el client rep la confirmació i un recordatori, i els canvis s'actualitzen sols."],
                 ]),
             ]),
+            ("Com pots calcular si et surt a compte automatitzar una tasca?", [
+                ("p", "Tria una tasca d’una setmana habitual, com ara passar comandes del correu a l’Excel. Compta les comandes i mesura quants minuts hi dediques cada vegada. Quan provis el nou procés, compta també el temps de revisar les excepcions i corregir els errors."),
+                ("p", "Exemple orientatiu: si tramites 100 comandes al mes i passes de 6 a 2 minuts per comanda, alliberes 6 hores i 40 minuts al mes. Si valores l’hora en 24 €, recuperes temps per valor de 160 € mensuals. Resta-hi les llicències i el manteniment i divideix la inversió inicial pel benefici mensual per saber en quants mesos l’amortitzaries. Si el benefici és zero o negatiu, aquest estalvi no permet recuperar la inversió."),
+                ("p", ["Per valorar el teu cas, ", ("a", "explica’ns quina tasca repeteixes", "#hablemos"), ", amb quins programes la fas i quantes vegades al mes. El temps alliberat només és un estalvi de diners si redueix una despesa real."]),
+            ]),
             ("Comencem per un diagnòstic", [
                 ("p", "Abans d'automatitzar res, analitzem com treballa la teva empresa i dibuixem un mapa dels seus processos, eines i connexions. Aquest mapa mostra on es perd temps i què convé automatitzar primer."),
                 ("p", "Preparem dos diagnòstics separats: processos i oportunitats d'automatització. El primer organitza com treballeu i ajuda a preparar el camí cap a la ISO 9001. El segon identifica tasques que es podrien fer amb menys temps i errors. Us contactarem en menys de 72 hores naturals per comentar les conclusions, els honoraris i les condicions de lliurament. Enviar el qüestionari no suposa contractar ni pagar."),

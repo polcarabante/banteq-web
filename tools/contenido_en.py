@@ -169,6 +169,11 @@ SERVICIOS_EN = [
                     [("b", "Bookings and appointments. "), "The appointment goes into the calendar, the customer receives a confirmation and a reminder, and changes update themselves."],
                 ]),
             ]),
+            ("How to estimate whether a task is worth automating", [
+                ("p", "Pick a task from a typical week, such as copying emailed orders into Excel. Count the orders and time how long each one takes. When you trial the new workflow, include the time someone still spends reviewing exceptions and correcting errors."),
+                ("p", "For example, processing 100 orders a month in 2 minutes each instead of 6 frees up 6 hours and 40 minutes. At €24 an hour, that time is worth €160 a month. Subtract ongoing software and maintenance costs, then divide the setup cost by the monthly benefit to estimate the payback period. If the monthly benefit is zero or negative, these savings will not cover the investment."),
+                ("p", ["To explore the numbers for your business, ", ("a", "tell us which task you repeat", "#hablemos"), ", which tools you use and how often you do it. Time saved translates into cash savings only if it reduces an actual expense."]),
+            ]),
             ("We start with a diagnostic", [
                 ("p", "Before automating anything, we analyse how your business works and draw a map of its processes, tools and connections. That map shows where time is lost and what is best to automate first."),
                 ("p", "We prepare two separate diagnostics: processes and automation opportunities. The first organises how you work and helps prepare the way towards ISO 9001. The second identifies tasks that could be done with less time and fewer errors. We will contact you within 72 calendar hours to go over the conclusions, fees and delivery terms. Submitting the questionnaire does not mean hiring us or paying anything."),
