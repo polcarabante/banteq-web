@@ -600,6 +600,8 @@ const mapContactToLead = (contact, sourceList = "") => {
     phone: attrs.TELEFONO || attrs.SMS || "",
     whatsapp: attrs.WHATSAPP || attrs.TELEFONO || attrs.SMS || "",
     contactPreference: attrs.PREFERENCIA_CONTACTO || "",
+    sourceSignal: attrs.ULTIMA_PROCEDENCIA_WEB || "",
+    entryPath: attrs.ULTIMA_ENTRADA_WEB || "",
     message: attrs.MENSAJE || "",
     areas: attrs.AREAS || "",
     status: attrs.ESTADO || "Nuevo",

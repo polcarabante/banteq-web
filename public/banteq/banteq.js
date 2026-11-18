@@ -4,6 +4,32 @@
   // endpoint propio (/api/leads), que guarda el contacto y avisa al equipo.
   const nativeFetch = window.fetch.bind(window);
 
+  // Señal de llegada de este documento. No guarda identificadores ni envía datos al navegar.
+  const entrada = window.location.pathname;
+  const procedencia = (() => {
+    const query = new URLSearchParams(window.location.search);
+    const medium = (query.get("utm_medium") || "").trim().toLowerCase();
+    if (["gclid", "dclid", "msclkid", "gbraid", "wbraid"].some(key => query.has(key)) ||
+        ["cpc", "ppc", "paid", "paid_search", "paid_social", "display", "cpm"].includes(medium)) return "paid";
+    if (["email", "e-mail", "newsletter"].includes(medium)) return "email";
+    if (medium && medium !== "organic") return "campaign";
+    if (!document.referrer) return "unknown";
+    let host;
+    try { host = new URL(document.referrer).hostname.toLowerCase(); }
+    catch { return "unknown"; }
+    const from = domain => host === domain || host.endsWith("." + domain);
+    if (host === location.hostname || from("banteq.com")) return "internal";
+    if (["chatgpt.com", "chat.openai.com", "perplexity.ai", "claude.ai",
+         "gemini.google.com", "copilot.microsoft.com"].some(from)) return "ai";
+    if (["google.es", "google.com", "google.cat"].some(domain => host === domain || host === "www." + domain)) return "google";
+    if (["bing.com", "duckduckgo.com", "search.yahoo.com", "search.brave.com", "ecosia.org"].some(from)) return "search";
+    return "referral";
+  })();
+  const contextoSolicitud = () => ({
+    sourceSignal: procedencia, entryPath: entrada,
+    page: window.location.origin + window.location.pathname, pageTitle: document.title,
+  });
+
   const readHeader = (headers, name) => {
     if (!headers) return undefined;
     if (typeof headers.get === "function") return headers.get(name);
@@ -56,8 +82,7 @@
       terminarEnvio(form, "ok", "Ya hemos recibido esta solicitud. Te escribiremos pronto.");
       return Promise.resolve(respuesta(200, { ok: true }));
     }
-    payload.page = window.location.href;
-    payload.pageTitle = document.title;
+    Object.assign(payload, contextoSolicitud());
     payload.elapsedMs = form ? Date.now() - Number(form.dataset.bqInicio || 0) : undefined;
 
     return nativeFetch("/api/leads", {
@@ -1091,8 +1116,7 @@
     };
     // La misma solicitud ya llegó: no se envía otra vez.
     if (f.enviado === clave) return terminar(false);
-    payload.page = window.location.href;
-    payload.pageTitle = document.title;
+    Object.assign(payload, contextoSolicitud());
     payload.elapsedMs = Date.now() - f.inicio;
     payload.hp = form.querySelector('[name="website"]').value;
     f.enviando = true;
@@ -1354,8 +1378,7 @@
     };
     // La misma solicitud ya llegó: no se envía otra vez.
     if (m.enviado === clave) return terminar(false);
-    payload.page = window.location.href;
-    payload.pageTitle = document.title;
+    Object.assign(payload, contextoSolicitud());
     payload.elapsedMs = Date.now() - m.inicio;
     payload.hp = form.querySelector('[name="website"]').value;
     m.enviando = true;
