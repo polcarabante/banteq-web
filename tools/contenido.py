@@ -50,6 +50,10 @@ ZONAS_SERVICIO = [("AdministrativeArea", "Vallès Occidental"), ("Administrative
                   ("AdministrativeArea", "Cataluña"), ("Country", "España")]
 CODIGO_POSTAL = "08130"
 EMAIL_CONTACTO = "pol@banteq.org"  # el que ya publican el aviso legal y la política de privacidad
+# IndexNow (Bing, Yandex, Seznam…; ChatGPT y Copilot buscan sobre el índice de Bing): clave pública que
+# prueba que el dominio es nuestro. build.py la publica en /<clave>.txt y tools/indexnow.py la usa
+# para avisar de páginas nuevas o cambiadas. No es secreta; si se cambia, cambia también ese archivo.
+INDEXNOW_CLAVE = "3aa6673d9a329961f6f02809a2197440"
 # Perfiles oficiales de Banteq en otras webs (datos estructurados: sameAs). Solo perfiles reales y
 # reclamados: el de Trustpilot (verificado con el archivo de assets-banteq/raiz/). Añadir aquí los de
 # LinkedIn, Google Business Profile, etc. cuando existan.
@@ -837,7 +841,8 @@ CONDICIONES_GARANTIA = ("6. Garantía de satisfacción de 60 días", [
 # "#formula-banteq": abre la Fórmula Banteq) o URL completa.
 # ("formula", texto del botón): botón que abre la Fórmula Banteq (ver FORMULA, más abajo).
 # ("garantia", None): distintivo de la garantía de 60 días (GARANTIA_REF, enlace a las condiciones).
-# Bloques de una sección: ("p", texto) · ("ul", [texto, …]) · ("faq", [(pregunta, respuesta), …]).
+# Bloques de una sección: ("p", texto) · ("ul", [texto, …]) · ("faq", [(pregunta, respuesta), …])
+# · ("tabla", (cabeceras, filas)): comparativa; la primera celda de cada fila es el criterio.
 _CIERRE = [
     ZONA_FRASE + " ",
     ("a", "Cuéntanos tu caso", "#hablemos"),
@@ -1032,8 +1037,22 @@ SERVICIOS = [
                 ]),
                 ("p", ["En ", ("a", "automatización de procesos", "/automatizacion-procesos"), " explicamos qué tareas conviene automatizar primero y cómo lo decidimos."]),
             ]),
-            ("n8n, Make o una integración a medida", [
-                ("p", "No hay una herramienta mejor para todo. Elegimos según el volumen de operaciones, lo sensibles que sean los datos, las herramientas que ya tienes y quién va a mantener el flujo después. Si ya trabajas con Make o con otra plataforma, partimos de ahí."),
+            # Comparativa: solo datos que publican las propias herramientas (webs de precios de n8n,
+            # Make y Zapier, consultadas el 2026-11-18). Sin precios: cambian a menudo. Revisarla
+            # si alguna cambia su modelo de cobro.
+            ("n8n, Make o Zapier: diferencias y cómo elegimos", [
+                ("p", "No hay una herramienta mejor para todo. Elegimos según el volumen de operaciones, lo sensibles que sean los datos, las herramientas que ya tienes y quién va a mantener el flujo después. Si ya trabajas con Make, con Zapier o con otra plataforma, partimos de ahí."),
+                ("tabla", (
+                    ["", "n8n", "Make", "Zapier"],
+                    [
+                        ["Qué se paga", "Cada ejecución del flujo, tenga los pasos que tenga", "Créditos: la mayoría de las acciones consume uno", "Tareas: cada paso que se completa (los disparadores y filtros no cuentan)"],
+                        ["Servidor propio", "Sí: la edición Community se instala gratis en tu servidor", "No, solo en su nube", "No, solo en su nube"],
+                        ["Dónde quedan los datos", "En tu servidor o en la nube de n8n", "En su nube; se puede elegir una zona de datos europea", "En su nube"],
+                        ["Dónde encaja mejor", "Flujos largos o con mucho volumen, y datos que conviene tener en casa", "Escenarios visuales de complejidad media sin servidor que mantener", "Automatizaciones sencillas entre aplicaciones muy conocidas"],
+                    ],
+                )),
+                ("p", "Por eso, en un flujo de diez pasos que se ejecuta mil veces al mes, n8n cuenta mil ejecuciones, mientras que en Make y Zapier se cuentan las acciones de cada paso. Cuando ninguna de las tres encaja, o el volumen es muy alto, desarrollamos una integración a medida con la API de cada programa."),
+                ("p", "Los precios y las condiciones de cada herramienta cambian a menudo: en cada propuesta los revisamos con sus tarifas del momento."),
             ]),
             ("Flujos que se pueden mantener", [
                 ("ul", [
@@ -1047,6 +1066,7 @@ SERVICIOS = [
                 ("faq", [
                     ("¿Necesito tener n8n contratado?", "No. Si ya lo usas, trabajamos sobre tu instalación. Si no, te proponemos la opción que encaja con tu caso: la nube de n8n, un servidor propio u otra herramienta."),
                     ("¿n8n o Make?", "Depende del proceso. Valoramos el volumen, los datos que se manejan y quién lo mantendrá, y te explicamos por qué recomendamos una u otra."),
+                    ("¿n8n es gratis?", "La edición Community de n8n se puede instalar gratis en un servidor propio para uso interno de la empresa: lo que se paga es el servidor y su mantenimiento. La nube de n8n tiene planes de pago según el número de ejecuciones al mes."),
                     ("¿Podéis conectar un programa que no tiene integración?", "Si el programa ofrece una API, sí: desarrollamos la integración a medida. Si no la tiene, buscamos una alternativa, como trabajar con sus exportaciones."),
                     ("¿Qué pasa si un flujo falla?", "Cada flujo registra lo que hace y avisa cuando algo no sale como debe, para corregirlo cuanto antes. Los pasos sensibles llevan revisión humana."),
                     ("¿Los datos salen de nuestra empresa?", "Solo pasan por las herramientas que acordemos y se usan para el alcance pactado. Cuando conviene, n8n puede instalarse en un servidor propio."),

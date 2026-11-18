@@ -3454,6 +3454,24 @@ dialog.bq-fx.bq-fx-cerrando::backdrop {
 .bq-tabla tr > :last-child {
   padding-right: 0;
 }
+/* Comparativas de las páginas de servicio (n8n, Make, Zapier): frases en las celdas, que se parten
+   en líneas; la columna del criterio, más estrecha. En el teléfono la tabla conserva un ancho
+   legible y se desplaza en horizontal dentro de su caja. */
+.bq-comparativa td {
+  white-space: normal;
+}
+.bq-comparativa th[scope="row"] {
+  width: 19%;
+}
+.bq-comparativa thead th:not(:first-child),
+.bq-comparativa td {
+  width: 27%;
+}
+@media (max-width: 799.98px) {
+  .bq-comparativa table {
+    min-width: 600px;
+  }
+}
 @media (max-width: 479.98px) {
   .bq-tabla table {
     font-size: 14.5px;

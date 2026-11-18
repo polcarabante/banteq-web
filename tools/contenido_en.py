@@ -309,8 +309,19 @@ SERVICIOS_EN = [
                 ]),
                 ("p", ["In ", ("a", "process automation", "/en/process-automation"), " we explain which tasks are best to automate first and how we decide."]),
             ]),
-            ("n8n, Make or a custom integration", [
-                ("p", "There is no single best tool for everything. We choose based on the volume of operations, how sensitive the data is, the tools you already have and who will maintain the workflow afterwards. If you already work with Make or another platform, we start from there."),
+            ("n8n, Make or Zapier: differences and how we choose", [
+                ("p", "There is no single best tool for everything. We choose based on the volume of operations, how sensitive the data is, the tools you already have and who will maintain the workflow afterwards. If you already work with Make, Zapier or another platform, we start from there."),
+                ("tabla", (
+                    ["", "n8n", "Make", "Zapier"],
+                    [
+                        ["What you pay for", "Each workflow execution, however many steps it has", "Credits: most actions use one", "Tasks: each step that completes (triggers and filters don't count)"],
+                        ["Own server", "Yes: the Community edition installs on your server for free", "No, only in their cloud", "No, only in their cloud"],
+                        ["Where the data stays", "On your server or in n8n's cloud", "In their cloud; a European data zone can be chosen", "In their cloud"],
+                        ["Best fit", "Long or high-volume workflows, and data you'd rather keep in-house", "Visual scenarios of medium complexity with no server to maintain", "Simple automations between well-known apps"],
+                    ],
+                )),
+                ("p", "So a ten-step workflow that runs a thousand times a month counts as a thousand executions in n8n, while Make and Zapier count the actions in each step. When none of the three fits, or the volume is very high, we build a custom integration with each program's API."),
+                ("p", "Prices and terms for each tool change often: we check them against current rates in every proposal."),
             ]),
             ("Workflows you can maintain", [
                 ("ul", [
@@ -324,6 +335,7 @@ SERVICIOS_EN = [
                 ("faq", [
                     ("Do I need to have n8n already?", "No. If you already use it, we work on your installation. If not, we suggest the option that fits your case: n8n's cloud, your own server or another tool."),
                     ("n8n or Make?", "It depends on the process. We look at the volume, the data involved and who will maintain it, and we explain why we recommend one or the other."),
+                    ("Is n8n free?", "n8n's Community edition can be installed for free on your own server for a company's internal use: what you pay for is the server and its maintenance. n8n's cloud has paid plans based on the number of executions per month."),
                     ("Can you connect a program that has no integration?", "If the program offers an API, yes: we build the integration to measure. If it doesn't, we look for an alternative, such as working with its exports."),
                     ("What happens if a workflow fails?", "Every workflow logs what it does and alerts you when something doesn't go as it should, so it can be fixed as soon as possible. Sensitive steps include human review."),
                     ("Does our data leave the company?", "It only passes through the tools we agree on and is used for the agreed scope. When it makes sense, n8n can be installed on your own server."),

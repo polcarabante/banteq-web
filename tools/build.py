@@ -1171,13 +1171,23 @@ def js_subtitulo(texto):
     return _rt(f"o(t,{{children:{_el('h4', 'p6ud8h', 'uIOe7s18L', COL_TITULO, f'`{js_template(texto)}`')}}})", "framer-ldnjif", "Subtitulo")
 
 
-def js_tabla(cabeceras, filas):
-    """Tabla sencilla (ejemplos de cálculo); estilos en banteq.css (.bq-tabla)."""
+def js_tabla(cabeceras, filas, cabecera_fila=False):
+    """Tabla sencilla (ejemplos de cálculo, comparativas); estilos en banteq.css (.bq-tabla). Con
+    cabecera_fila, la primera celda de cada fila es su encabezado (th scope=row), como en una
+    comparativa donde cada fila es un criterio, y el texto de las celdas sí se parte en líneas
+    (.bq-comparativa)."""
     th = ",".join(f"o(`th`,{{scope:`col`,children:`{js_template(c)}`}})" for c in cabeceras)
+
+    def celda(k, c):
+        if cabecera_fila and k == 0:
+            return f"o(`th`,{{scope:`row`,children:`{js_template(c)}`}})"
+        return f"o(`td`,{{children:`{js_template(c)}`}})"
+
     trs = ",".join(
-        "a(`tr`,{children:[" + ",".join(f"o(`td`,{{children:`{js_template(c)}`}})" for c in fila) + "]})" for fila in filas
+        "a(`tr`,{children:[" + ",".join(celda(k, c) for k, c in enumerate(fila)) + "]})" for fila in filas
     )
-    return (f"o(`div`,{{className:`bq-tabla`,children:a(`table`,{{children:[o(`thead`,{{children:a(`tr`,{{children:[{th}]}})}}),"
+    clase = "bq-tabla bq-comparativa" if cabecera_fila else "bq-tabla"
+    return (f"o(`div`,{{className:`{clase}`,children:a(`table`,{{children:[o(`thead`,{{children:a(`tr`,{{children:[{th}]}})}}),"
             f"a(`tbody`,{{children:[{trs}]}})]}})}})")
 
 
@@ -1383,6 +1393,8 @@ def js_service_main(sv):
                 hijos.append(js_lista(valor, scope, contador))
             elif tipo == "faq":
                 hijos.extend(js_faq(valor, scope, contador))
+            elif tipo == "tabla":  # (cabeceras, filas): comparativa con un criterio por fila
+                hijos.append(js_tabla(*valor, cabecera_fila=True))
             elif tipo == "formula":
                 hijos.append(formula_boton("o", "a", valor))
             elif tipo == "garantia":
@@ -2624,6 +2636,40 @@ def apply_seo():
         '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + urls + "</urlset>\n",
         encoding="utf-8",
     )
+    write_llms_txt()
+    write_indexnow_key()
+
+
+def write_llms_txt():
+    """/llms.txt (propuesta de llmstxt.org): resumen en Markdown de la web para asistentes de IA, con
+    los enlaces a cada servicio y proyecto. Se genera desde el mismo contenido que las páginas, así
+    que no se desfasa. Ningún buscador grande ha confirmado que lo lea: es barato y no molesta."""
+    def item(nombre, url, desc):
+        return f"- [{nombre}]({url}): {' '.join(desc.split())}"
+
+    lineas = [
+        f"# {C.NOMBRE_SITIO}", "",
+        f"> {C.META_DESCRIPTION}", "",
+        f"{C.ZONA_FRASE} Contacto: {C.EMAIL_CONTACTO} o el formulario de {C.SITIO}/#hablemos.", "",
+        "## Servicios", "",
+        *(item(sv["nombre"], f"{C.SITIO}/{sv['slug']}", sv["descripcion"]) for sv in C.SERVICIOS), "",
+        "## Proyectos", "",
+        *(item(pr["cliente"], f"{C.SITIO}/proyectos/{pr['slug']}", pr["descripcion"]) for pr in C.PROYECTOS), "",
+    ]
+    for idioma in ID.OTROS:
+        lineas += [f"## {ID.NOMBRE[idioma]}", "",
+                   *(item(sv["nombre"], f"{C.SITIO}/{sv['slug']}", sv["descripcion"]) for sv in ID.servicios(idioma)), ""]
+    lineas += ["## Optional", "",
+               f"- [Aviso legal]({C.SITIO}/aviso-legal): titular, condiciones de la Fórmula Banteq y garantía de 60 días",
+               f"- [Privacidad]({C.SITIO}/privacidad): tratamiento de datos personales", ""]
+    (OUT / "llms.txt").write_text("\n".join(lineas), encoding="utf-8")
+
+
+def write_indexnow_key():
+    """Archivo de verificación de IndexNow en la raíz (/<clave>.txt, con la clave dentro)."""
+    clave = C.INDEXNOW_CLAVE
+    assert re.fullmatch(r"[0-9a-f]{32}", clave), "INDEXNOW_CLAVE: 32 caracteres hexadecimales"
+    (OUT / f"{clave}.txt").write_text(clave, encoding="utf-8")
 
 
 LASTMOD = ROOT / "assets-banteq" / "seo" / "lastmod.json"

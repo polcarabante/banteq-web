@@ -1,0 +1,39 @@
+# Banteq
+
+> Banteq Digital ayuda a las empresas a mejorar sus procesos mediante automatización, inteligencia artificial y desarrollo web a medida.
+
+Estamos en Santa Perpètua de Mogoda (Barcelona) y trabajamos con empresas de Barcelona, el Vallès y, en remoto, del resto de España. Contacto: pol@banteq.org o el formulario de https://banteq.com/#hablemos.
+
+## Servicios
+
+- [Automatización de procesos](https://banteq.com/automatizacion-procesos): Automatizamos facturas, correos, formularios y tareas repetitivas conectando las herramientas que ya usa tu empresa. Para pymes de Barcelona y de toda España.
+- [Inteligencia artificial para empresas](https://banteq.com/inteligencia-artificial): Asistentes de IA que responden consultas, leen documentos, clasifican solicitudes y preparan borradores dentro de tus herramientas, con revisión humana.
+- [Automatización con n8n e integración de herramientas](https://banteq.com/automatizacion-n8n): Conectamos tu correo, Excel, CRM, ERP, WhatsApp y tu web con n8n, Make o integraciones por API a medida. Los datos pasan de un programa a otro sin copiar y pegar.
+- [Desarrollo web a medida](https://banteq.com/desarrollo-web): Webs corporativas a medida, rediseños y webs conectadas con tu CRM y tus automatizaciones. Sin plantillas. Para empresas de Barcelona y de toda España.
+- [Mantenimiento web para empresas](https://banteq.com/mantenimiento-web): Pasa el mantenimiento de tu web a Banteq: la remodelamos sin coste de desarrollo básico y pagas un 25 % menos, hasta 50 €/mes. Cuota mínima: 35 €/mes.
+
+## Proyectos
+
+- [Margon](https://banteq.com/proyectos/margon): Nueva web corporativa en cinco idiomas para una empresa metalúrgica de ciclo completo que trabaja para los sectores ferroviario, de defensa y de obra pública.
+- [RentUp Capital](https://banteq.com/proyectos/rentup-capital): Web para una firma de inversión inmobiliaria, con formularios conectados que guardan cada contacto y avisan al equipo automáticamente.
+
+## Català
+
+- [Automatització de processos](https://banteq.com/ca/automatitzacio-processos): Automatitzem factures, correus, formularis i tasques repetitives connectant les eines que ja fa servir la teva empresa. Per a pimes de Barcelona i d'arreu d'Espanya.
+- [Intel·ligència artificial per a empreses](https://banteq.com/ca/intelligencia-artificial): Assistents d'IA que responen consultes, llegeixen documents, classifiquen sol·licituds i preparen esborranys dins de les teves eines, amb revisió humana.
+- [Automatització amb n8n i integració d'eines](https://banteq.com/ca/automatitzacio-n8n): Connectem el teu correu, Excel, CRM, ERP, WhatsApp i el teu web amb n8n, Make o integracions per API a mida. Les dades passen d'un programa a un altre sense copiar i enganxar.
+- [Desenvolupament web a mida](https://banteq.com/ca/desenvolupament-web): Webs corporatius a mida, redissenys i webs connectats amb el teu CRM i les teves automatitzacions. Sense plantilles. Per a empreses de Barcelona i d'arreu d'Espanya.
+- [Manteniment web per a empreses](https://banteq.com/ca/manteniment-web): Passa el manteniment del teu web a Banteq: el remodelem sense cost de desenvolupament bàsic i pagues un 25 % menys, fins a 50 €/mes. Quota mínima: 35 €/mes.
+
+## English
+
+- [Process automation](https://banteq.com/en/process-automation): We automate invoices, emails, forms and repetitive tasks by connecting the tools your business already uses. For SMEs in Barcelona and across Spain.
+- [Artificial intelligence for businesses](https://banteq.com/en/artificial-intelligence): AI assistants that answer enquiries, read documents, sort requests and prepare drafts inside your tools, with human review.
+- [n8n automation and tool integration](https://banteq.com/en/n8n-automation): We connect your email, Excel, CRM, ERP, WhatsApp and website with n8n, Make or custom API integrations. Data moves from one program to another without copying and pasting.
+- [Custom web development](https://banteq.com/en/web-development): Custom corporate websites, redesigns and websites connected to your CRM and automations. No templates. For businesses in Barcelona and across Spain.
+- [Web maintenance for businesses](https://banteq.com/en/web-maintenance): Move your website maintenance to Banteq: we remodel it at no basic development cost and you pay 25% less, up to €50/month. Minimum fee: €35/month.
+
+## Optional
+
+- [Aviso legal](https://banteq.com/aviso-legal): titular, condiciones de la Fórmula Banteq y garantía de 60 días
+- [Privacidad](https://banteq.com/privacidad): tratamiento de datos personales

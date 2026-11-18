@@ -212,8 +212,19 @@ SERVICIOS_CA = [
                 ]),
                 ("p", ["A ", ("a", "automatització de processos", "/ca/automatitzacio-processos"), " expliquem quines tasques convé automatitzar primer i com ho decidim."]),
             ]),
-            ("n8n, Make o una integració a mida", [
-                ("p", "No hi ha una eina millor per a tot. Triem segons el volum d'operacions, com de sensibles són les dades, les eines que ja tens i qui mantindrà el flux després. Si ja treballes amb Make o amb una altra plataforma, partim d'aquí."),
+            ("n8n, Make o Zapier: diferències i com triem", [
+                ("p", "No hi ha una eina millor per a tot. Triem segons el volum d'operacions, com de sensibles són les dades, les eines que ja tens i qui mantindrà el flux després. Si ja treballes amb Make, amb Zapier o amb una altra plataforma, partim d'aquí."),
+                ("tabla", (
+                    ["", "n8n", "Make", "Zapier"],
+                    [
+                        ["Què es paga", "Cada execució del flux, tingui els passos que tingui", "Crèdits: la majoria de les accions en consumeix un", "Tasques: cada pas que es completa (els disparadors i els filtres no compten)"],
+                        ["Servidor propi", "Sí: l'edició Community s'instal·la gratis al teu servidor", "No, només al seu núvol", "No, només al seu núvol"],
+                        ["On queden les dades", "Al teu servidor o al núvol d'n8n", "Al seu núvol; es pot triar una zona de dades europea", "Al seu núvol"],
+                        ["On encaixa millor", "Fluxos llargs o amb molt de volum, i dades que convé tenir a casa", "Escenaris visuals de complexitat mitjana sense servidor per mantenir", "Automatitzacions senzilles entre aplicacions molt conegudes"],
+                    ],
+                )),
+                ("p", "Per això, en un flux de deu passos que s'executa mil vegades al mes, n8n compta mil execucions, mentre que a Make i a Zapier es compten les accions de cada pas. Quan cap de les tres encaixa, o el volum és molt alt, desenvolupem una integració a mida amb l'API de cada programa."),
+                ("p", "Els preus i les condicions de cada eina canvien sovint: a cada proposta els revisem amb les seves tarifes del moment."),
             ]),
             ("Fluxos que es poden mantenir", [
                 ("ul", [
@@ -227,6 +238,7 @@ SERVICIOS_CA = [
                 ("faq", [
                     ("Necessito tenir n8n contractat?", "No. Si ja el fas servir, treballem sobre la teva instal·lació. Si no, et proposem l'opció que encaixa amb el teu cas: el núvol d'n8n, un servidor propi o una altra eina."),
                     ("n8n o Make?", "Depèn del procés. Valorem el volum, les dades que es manegen i qui ho mantindrà, i t'expliquem per què en recomanem l'un o l'altre."),
+                    ("n8n és gratis?", "L'edició Community d'n8n es pot instal·lar gratis en un servidor propi per a ús intern de l'empresa: el que es paga és el servidor i el seu manteniment. El núvol d'n8n té plans de pagament segons el nombre d'execucions al mes."),
                     ("Podeu connectar un programa que no té integració?", "Si el programa ofereix una API, sí: desenvolupem la integració a mida. Si no en té, busquem una alternativa, com ara treballar amb les seves exportacions."),
                     ("Què passa si un flux falla?", "Cada flux registra el que fa i avisa quan alguna cosa no surt com cal, per corregir-ho com més aviat millor. Els passos sensibles porten revisió humana."),
                     ("Les dades surten de la nostra empresa?", "Només passen per les eines que acordem i es fan servir per a l'abast pactat. Quan convé, n8n es pot instal·lar en un servidor propi."),
