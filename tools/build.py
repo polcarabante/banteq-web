@@ -2903,6 +2903,8 @@ def main():
     integrar()
     version_assets()
     copy_root_files()
+    from shorts_subida import integrar as integrar_shorts_subida
+    integrar_shorts_subida()
     if MISSES:
         print("\nTextos originales NO encontrados:")
         for rel, old in MISSES:
