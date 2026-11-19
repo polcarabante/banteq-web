@@ -1292,6 +1292,8 @@ def static_routes():
 def js_link(text, dest, scope, contador):
     """Enlace dentro de un texto: navega con el router de Framer (sin recargar) si es una página
     de la web; en pestaña nueva si es externa."""
+    if dest.startswith("/guias/"):
+        return f'o(`a`,{{className:`bq-enlace`,href:`{dest}`,children:`{js_template(text)}`}})'
     rutas, anclas = static_routes()
     externo = dest.startswith("http")
     if externo:
@@ -2629,6 +2631,10 @@ def apply_seo():
     # /api/ no es contenido; /diagnostico (cuestionario) ya lleva noindex y debe poder rastrearse para
     # que Google lea esa etiqueta, así que no se bloquea aquí.
     (OUT / "robots.txt").write_text(f"User-agent: *\nAllow: /\nDisallow: /api/\n\nSitemap: {C.SITIO}/sitemap.xml\n", encoding="utf-8")
+    for guia in sorted((ROOT / "assets-banteq" / "guias").glob("*.html")):
+        rel = f"guias/{guia.stem}/index.html"
+        S[rel] = guia.read_text(encoding="utf-8")
+        indexables.append((page_url(rel), rel))
     fechas = page_dates({u: S[rel] for u, rel in indexables})
     urls = "".join(f"  <url><loc>{html.escape(u)}</loc><lastmod>{fechas[u]}</lastmod></url>\n"
                    for u, _ in sorted(indexables, key=lambda x: (x[0].count("/"), x[0])))
@@ -2653,6 +2659,9 @@ def write_llms_txt():
         f"{C.ZONA_FRASE} Contacto: {C.EMAIL_CONTACTO} o el formulario de {C.SITIO}/#hablemos.", "",
         "## Servicios", "",
         *(item(sv["nombre"], f"{C.SITIO}/{sv['slug']}", sv["descripcion"]) for sv in C.SERVICIOS), "",
+        "## Guías", "",
+        item("Aplicaciones para entrenadores online", f"{C.SITIO}/guias/aplicaciones-para-entrenadores-online",
+             "Compara Harbiz, ABC Trainerize y TrueCoach según las tareas de tu negocio de entrenamiento."), "",
         "## Proyectos", "",
         *(item(pr["cliente"], f"{C.SITIO}/proyectos/{pr['slug']}", pr["descripcion"]) for pr in C.PROYECTOS), "",
     ]

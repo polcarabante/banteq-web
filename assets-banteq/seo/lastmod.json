@@ -60,8 +60,8 @@
   "fecha": "2026-11-14"
  },
  "https://banteq.com/desarrollo-web": {
-  "firma": "e8ae5537d51a",
-  "fecha": "2026-11-14"
+  "firma": "7981de3733f5",
+  "fecha": "2026-11-19"
  },
  "https://banteq.com/en": {
   "firma": "2e397072e04a",
@@ -106,6 +106,10 @@
  "https://banteq.com/en/web-maintenance": {
   "firma": "3226c4e6912c",
   "fecha": "2026-11-14"
+ },
+ "https://banteq.com/guias/aplicaciones-para-entrenadores-online": {
+  "firma": "f46ebe21a679",
+  "fecha": "2026-11-19"
  },
  "https://banteq.com/inteligencia-artificial": {
   "firma": "b1ef231d8ed3",

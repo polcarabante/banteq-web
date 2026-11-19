@@ -12,6 +12,10 @@ Estamos en Santa Perpètua de Mogoda (Barcelona) y trabajamos con empresas de Ba
 - [Desarrollo web a medida](https://banteq.com/desarrollo-web): Webs corporativas a medida, rediseños y webs conectadas con tu CRM y tus automatizaciones. Sin plantillas. Para empresas de Barcelona y de toda España.
 - [Mantenimiento web para empresas](https://banteq.com/mantenimiento-web): Pasa el mantenimiento de tu web a Banteq: la remodelamos sin coste de desarrollo básico y pagas un 25 % menos, hasta 50 €/mes. Cuota mínima: 35 €/mes.
 
+## Guías
+
+- [Aplicaciones para entrenadores online](https://banteq.com/guias/aplicaciones-para-entrenadores-online): Compara Harbiz, ABC Trainerize y TrueCoach según las tareas de tu negocio de entrenamiento.
+
 ## Proyectos
 
 - [Margon](https://banteq.com/proyectos/margon): Nueva web corporativa en cinco idiomas para una empresa metalúrgica de ciclo completo que trabaja para los sectores ferroviario, de defensa y de obra pública.

@@ -1123,7 +1123,7 @@ SERVICIOS = [
                     "Aviso a tu equipo al momento",
                     "Integración con tu correo y con tus automatizaciones",
                 ]),
-                ("p", ["Es el mismo trabajo que hacemos en ", ("a", "automatización de procesos", "/automatizacion-procesos"), ", aplicado a tu web."]),
+                ("p", ["Es el mismo trabajo que hacemos en ", ("a", "automatización de procesos", "/automatizacion-procesos"), ", aplicado a tu web. Si das entrenamiento online, consulta nuestra ", ("a", "guía de aplicaciones para entrenadores", "/guias/aplicaciones-para-entrenadores-online"), " para decidir qué puedes resolver con tu plataforma y cuándo conviene conectar tu web."]),
             ]),
             ("Rápida y bien construida", [
                 ("p", "Diseño adaptado a móvil, tablet y escritorio, buen rendimiento y una base técnica preparada para crecer contigo. Cuidamos también la estructura y el SEO de cada página, para que tus clientes te encuentren."),
