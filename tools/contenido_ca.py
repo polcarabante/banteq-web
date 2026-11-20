@@ -43,14 +43,12 @@ SERVICIOS_CA = [
             "Automatitzem factures, correus, formularis i tasques repetitives connectant les eines que ja fa "
             "servir la teva empresa. Per a pimes de Barcelona i d'arreu d'Espanya."
         ),
-        "h1": "Automatització de processos per a empreses i pimes",
-        "subtitulo": "Tasques repetitives que es resolen soles, connectades amb les eines que ja fa servir el teu equip.",
+        "h1": "Automatització de processos per a pimes de Barcelona",
+        "subtitulo": "Connectem el correu, els fulls de càlcul i el CRM que ja fa servir el teu equip.",
         "intro": [
-            "Factures que es registren a mà, correus que cal reenviar, dades que es copien d'un Excel a un altre, "
-            "sol·licituds que es queden sense resposta. Són tasques petites que, sumades, s'emporten hores cada setmana i "
-            "acaben provocant errors.",
-            "A Banteq analitzem com treballa la teva empresa, decidim amb tu què val la pena automatitzar i ho "
-            "construïm sobre les teves eines, amb revisió humana on cal.",
+            "Cada cop que arriba una comanda per correu, algú n’ha de copiar les dades a l’Excel? Des de Santa Perpètua de Mogoda ajudem pimes de Barcelona i del Vallès a automatitzar feines com aquesta. L’equip continua revisant les dades que falten o que no quadren.",
+            ["A ", ("a", "RentUp Capital", "/proyectos/rentup-capital"), " vam connectar els formularis del web amb la seva llista de contactes. Quan algú hi deixa les dades, rep una confirmació i l’equip rep un avís per fer-ne el seguiment."],
+            [("a", "Vull saber si puc automatitzar una tasca", "#hablemos"), ". Explica’ns què fas a mà, amb quins programes treballes i quantes vegades al mes ho repeteixes. Si et cal una diagnosi avançada, t’explicarem què inclou i quant costa abans de contractar-la."],
         ],
         "secciones": [
             ("Quins processos automatitzem", [
@@ -97,17 +95,13 @@ SERVICIOS_CA = [
             ("Garantia de 60 dies", [
                 ("garantia", GARANTIA),
             ]),
-            ("Un cas real: RentUp Capital", [
-                ("p", "Per a RentUp Capital, una firma d'inversió immobiliària, vam automatitzar tot el que passa després d'enviar un formulari al seu web: cada contacte es desa a la seva llista, la persona rep una confirmació per correu i l'equip, un avís amb totes les dades."),
-                ("p", [("a", "Veure el projecte de RentUp Capital", "/proyectos/rentup-capital")]),
-            ]),
             ("Preguntes freqüents", [
                 ("faq", [
                     ("Quins processos es poden automatitzar?", "Els que es repeteixen i segueixen regles clares: registrar documents i factures, respondre i classificar correus, passar dades entre programes, fer seguiment de contactes o preparar informes. En el diagnòstic veiem quins compensen en el teu cas."),
                     ("Hem de canviar d'eines?", "No. Partim de les que ja fa servir la teva empresa i les connectem entre si. Només proposem una eina nova quan resol alguna cosa que les actuals no poden."),
                     ("Què passa si una automatització s'equivoca?", "Les dissenyem amb validacions, registre d'accions i revisió humana en els passos sensibles, i les provem abans de posar-les en marxa. Les decisions importants continuen passant per una persona."),
                     ("Necessitem coneixements tècnics?", "No. Ens encarreguem de l'anàlisi, el desenvolupament, les integracions i les proves. Després formem el teu equip i deixem documentació perquè faci servir el sistema amb autonomia."),
-                    ("Quant costa automatitzar un procés?", "Depèn del procés i de les eines que calgui connectar. Per això comencem pel diagnòstic: després reps una proposta amb l'abast, les fases i l'import, i decideixes amb aquesta informació."),
+                    ("Quant costa automatitzar un procés?", "Per fer el pressupost revisem quants programes hi intervenen, com accedim a les dades i quines excepcions cal comprovar. Separem la implantació de les despeses recurrents de llicències i manteniment perquè les puguis comparar amb el temps que recupera el teu equip."),
                     ("Quant de temps s'estalvia?", "Depèn de quantes vegades es repeteix la tasca i de quant triga avui. En les automatitzacions amb garantia ho deixem per escrit abans de començar: quant de temps dedica el teu equip al procés i com es mesurarà després."),
                     ("Treballeu amb empreses de fora de Barcelona?", "Sí. L'anàlisi, el desenvolupament i la formació es poden fer en remot, així que treballem amb empreses d'arreu d'Espanya. Amb les de Barcelona i el Vallès també ens podem veure en persona."),
                 ]),
@@ -262,14 +256,13 @@ SERVICIOS_CA = [
         "nombre": "Desenvolupament web a mida",
         "title": "Disseny i desenvolupament web a mida a Barcelona | Banteq",
         "descripcion": (
-            "Webs corporatius a mida, redissenys i webs connectats amb el teu CRM i les teves automatitzacions. "
-            "Sense plantilles. Per a empreses de Barcelona i d'arreu d'Espanya."
+            "Disseny web per a empreses de Barcelona i Badalona. Consulta els projectes de Margon i RentUp Capital i demana pressupost per a un web nou o un redisseny."
         ),
-        "h1": "Desenvolupament web a mida",
-        "subtitulo": "Webs corporatius dissenyats i desenvolupats des de zero, connectats amb el teu negoci.",
+        "h1": "Desenvolupament web a mida per a empreses",
+        "subtitulo": "Webs corporatius, redissenys i formularis connectats amb el teu equip.",
         "intro": [
-            "El teu web és, moltes vegades, la primera reunió amb un client. Ha d'explicar bé el que fas, transmetre confiança i convertir visites en contactes.",
-            "Dissenyem i desenvolupem cada web a mida, sense plantilles, i el connectem amb el teu correu, el teu CRM o les teves automatitzacions perquè treballi per al teu negoci.",
+            "Si busques algú que desenvolupi el web del teu negoci a Badalona, podem preparar el projecte des de Santa Perpètua de Mogoda. Explica’ns què vens, què hi hauria de poder fer un client i qui s’encarrega avui de respondre les consultes.",
+            [("a", "Demanar pressupost per al meu web", "#hablemos"), ". Si ja en tens un, indica’n l’adreça i què t’agradaria millorar. Pots veure com vam resoldre dos encàrrecs diferents al ", ("a", "web industrial de Margon", "/proyectos/margon"), " i als ", ("a", "formularis de captació de RentUp Capital", "/proyectos/rentup-capital"), "."],
         ],
         "secciones": [
             ("Quin tipus de webs fem", [

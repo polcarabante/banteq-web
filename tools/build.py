@@ -1292,13 +1292,13 @@ def static_routes():
 def js_link(text, dest, scope, contador):
     """Enlace dentro de un texto: navega con el router de Framer (sin recargar) si es una página
     de la web; en pestaña nueva si es externa."""
-    if dest.startswith("/guias/"):
+    if dest == "#hablemos" or dest.startswith("/guias/"):
         return f'o(`a`,{{className:`bq-enlace`,href:`{dest}`,children:`{js_template(text)}`}})'
     rutas, anclas = static_routes()
     externo = dest.startswith("http")
     if externo:
         href = f"`{dest}`"
-    elif dest.startswith("#"):  # ancla de la misma página (#hablemos: formulario del pie)
+    elif dest.startswith("#"):
         href = f"`{dest}`"
     elif dest.startswith("/#"):
         href = f"{{webPageId:`{HOME_ROUTE}`,hash:`{anclas[dest[2:]]}`}}"
@@ -1380,8 +1380,9 @@ def js_faq(preguntas, scope, contador):
 def js_service_main(sv):
     """Contenido de la columna de una página de servicio."""
     scope, contador = sv["id"], [0]
-    intro_m = ",".join(_el("p", "16wioa8", "MQ9x832KF", COL_TEXTO_SERVICIO, f"`{js_template(x)}`") for x in sv["intro"])
-    intro_d = ",".join(_el("p", "j5ar9w", "yzTX5vOKi", COL_TEXTO_SERVICIO, f"`{js_template(x)}`") for x in sv["intro"])
+    intro = [js_inline(texto, scope, contador) for texto in sv["intro"]]
+    intro_m = ",".join(_el("p", "16wioa8", "MQ9x832KF", COL_TEXTO_SERVICIO, hijos) for hijos in intro)
+    intro_d = ",".join(_el("p", "j5ar9w", "yzTX5vOKi", COL_TEXTO_SERVICIO, hijos) for hijos in intro)
     bloques = [
         f"o(p,{{breakpoint:S,overrides:{{xH4VXQETc:{{children:a(t,{{children:[{intro_m}]}})}}}},"
         f"children:{_rt(f'a(t,{{children:[{intro_d}]}})', 'framer-16yka5q', 'Intro')}}})"

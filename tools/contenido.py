@@ -868,14 +868,13 @@ SERVICIOS = [
             "Automatizamos facturas, correos, formularios y tareas repetitivas conectando las herramientas "
             "que ya usa tu empresa. Para pymes de Barcelona y de toda España."
         ),
-        "h1": "Automatización de procesos para empresas y pymes",
-        "subtitulo": "Tareas repetitivas que se resuelven solas, conectadas con las herramientas que ya usa tu equipo.",
+        "h1": "Automatización de procesos para pymes en Barcelona",
+        "subtitulo": "Conectamos el correo, las hojas de cálculo y el CRM que ya utiliza tu equipo.",
         "intro": [
-            "Facturas que se registran a mano, correos que hay que reenviar, datos que se copian de un Excel a otro, "
-            "solicitudes que se quedan sin respuesta. Son tareas pequeñas que, sumadas, se llevan horas cada semana y "
-            "acaban provocando errores.",
-            "En Banteq analizamos cómo trabaja tu empresa, decidimos contigo qué merece la pena automatizar y lo "
-            "construimos sobre tus herramientas, con revisión humana donde hace falta.",
+            "¿Tu equipo vuelve a teclear en Excel los pedidos que llegan por correo? Desde Santa Perpètua de Mogoda ayudamos a pymes de Barcelona y del Vallès a automatizar tareas como esta. El equipo sigue revisando los datos que faltan o no cuadran.",
+            ["En ", ("a", "RentUp Capital", "/proyectos/rentup-capital"), " conectamos los formularios de la web con su lista de contactos. Alguien deja sus datos, recibe una confirmación y el equipo recibe el aviso para hacer el seguimiento."],
+            [("a", "Consultar si puedo automatizar una tarea", "#hablemos"), ". Cuéntanos qué haces a mano, con qué programas y cuántas veces al mes. Si necesitas un diagnóstico avanzado, te explicaremos su alcance y sus honorarios antes de contratarlo."],
+            [("idioma", "Consulta el servei d’automatització en català", "/ca/automatitzacio-processos", "ca"), "."],
         ],
         "secciones": [
             ("Qué procesos automatizamos", [
@@ -922,17 +921,13 @@ SERVICIOS = [
             ("Garantía de 60 días", [
                 ("garantia", None),
             ]),
-            ("Un caso real: RentUp Capital", [
-                ("p", "Para RentUp Capital, una firma de inversión inmobiliaria, automatizamos todo lo que ocurre después de enviar un formulario en su web: cada contacto se guarda en su lista, la persona recibe una confirmación por email y el equipo, un aviso con todos los datos."),
-                ("p", [("a", "Ver el proyecto de RentUp Capital", "/proyectos/rentup-capital")]),
-            ]),
             ("Preguntas frecuentes", [
                 ("faq", [
                     ("¿Qué procesos se pueden automatizar?", "Los que se repiten y siguen reglas claras: registrar documentos y facturas, responder y clasificar correos, pasar datos entre programas, hacer seguimiento de contactos o preparar informes. En el diagnóstico vemos cuáles compensan en tu caso."),
                     ("¿Tenemos que cambiar de herramientas?", "No. Partimos de las que ya usa tu empresa y las conectamos entre sí. Solo proponemos una herramienta nueva cuando resuelve algo que las actuales no pueden."),
                     ("¿Qué pasa si una automatización se equivoca?", "Las diseñamos con validaciones, registro de acciones y revisión humana en los pasos sensibles, y las probamos antes de ponerlas en marcha. Las decisiones importantes siguen pasando por una persona."),
                     ("¿Necesitamos conocimientos técnicos?", "No. Nos encargamos del análisis, el desarrollo, las integraciones y las pruebas. Después formamos a tu equipo y dejamos documentación para que use el sistema con autonomía."),
-                    ("¿Cuánto cuesta automatizar un proceso?", "Depende del proceso y de las herramientas que haya que conectar. Por eso empezamos por el diagnóstico: después recibes una propuesta con el alcance, las fases y el importe, y decides con esa información."),
+                    ("¿Cuánto cuesta automatizar un proceso?", "Para presupuestarlo revisamos cuántos programas intervienen, cómo se accede a los datos y qué excepciones hay que comprobar. Separamos la implantación de los gastos recurrentes de licencias y mantenimiento para que puedas compararlos con el tiempo que recupera tu equipo."),
                     ("¿Cuánto tiempo se ahorra?", "Depende de cuántas veces se repite la tarea y de cuánto tarda hoy. En las automatizaciones con garantía lo dejamos por escrito antes de empezar: cuánto tiempo dedica tu equipo al proceso y cómo se medirá después."),
                     ("¿Trabajáis con empresas de fuera de Barcelona?", "Sí. El análisis, el desarrollo y la formación pueden hacerse en remoto, así que trabajamos con empresas de toda España. Con las de Barcelona y el Vallès también podemos vernos en persona."),
                 ]),
@@ -1091,14 +1086,13 @@ SERVICIOS = [
         "nombre": "Desarrollo web a medida",
         "title": "Diseño y desarrollo web a medida en Barcelona | Banteq",
         "descripcion": (
-            "Webs corporativas a medida, rediseños y webs conectadas con tu CRM y tus automatizaciones. "
-            "Sin plantillas. Para empresas de Barcelona y de toda España."
+            "Diseño web para empresas de Barcelona y Badalona. Consulta proyectos de Margon y RentUp Capital, y pide presupuesto para una web nueva o un rediseño."
         ),
-        "h1": "Desarrollo web a medida",
-        "subtitulo": "Webs corporativas diseñadas y desarrolladas desde cero, conectadas con tu negocio.",
+        "h1": "Desarrollo web a medida para empresas",
+        "subtitulo": "Webs corporativas, rediseños y formularios conectados con tu equipo.",
         "intro": [
-            "Tu web es, muchas veces, la primera reunión con un cliente. Tiene que explicar bien lo que haces, transmitir confianza y convertir visitas en contactos.",
-            "Diseñamos y desarrollamos cada web a medida, sin plantillas, y la conectamos con tu correo, tu CRM o tus automatizaciones para que trabaje para tu negocio.",
+            "Si buscas desarrollo web en Badalona, podemos preparar tu proyecto desde Santa Perpètua de Mogoda. Dinos qué vendes, qué debería poder hacer un cliente en tu web y quién recibe hoy las consultas.",
+            [("a", "Pedir presupuesto para mi web", "#hablemos"), ". Si ya tienes una, incluye la dirección y qué te gustaría mejorar. Para ver cómo resolvimos dos encargos distintos, visita ", ("a", "la web industrial de Margon", "/proyectos/margon"), " o ", ("a", "los formularios de captación de RentUp Capital", "/proyectos/rentup-capital"), "."],
         ],
         "secciones": [
             ("Qué tipo de webs hacemos", [

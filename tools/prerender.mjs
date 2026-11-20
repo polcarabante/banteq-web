@@ -10,7 +10,7 @@
 import { createRequire } from "node:module";
 import { createHash } from "node:crypto";
 import { spawn, spawnSync } from "node:child_process";
-import { mkdirSync, readFileSync, writeFileSync, rmSync, existsSync } from "node:fs";
+import { mkdirSync, readFileSync, writeFileSync, existsSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 
 const require = createRequire("/Users/polcarabante/margon-web/package.json");
@@ -22,9 +22,11 @@ const PORT = 4466;
 const BASE = `http://127.0.0.1:${PORT}`;
 const wait = (ms) => new Promise((r) => setTimeout(r, ms));
 
-// Páginas: las del sitemap menos la home (que ya viene pre-renderizada por Framer).
+// Solo las rutas de Framer: las guías HTML y la portada ya se entregan completas.
 const sitemap = readFileSync(ROOT + "public/sitemap.xml", "utf8");
-const paths = [...sitemap.matchAll(/<loc>https?:\/\/[^/]+(\/[^<]*)<\/loc>/g)].map((m) => m[1]).filter((p) => p !== "/");
+const paths = [...sitemap.matchAll(/<loc>https?:\/\/[^/]+(\/[^<]*)<\/loc>/g)]
+  .map(match => match[1])
+  .filter(path => path !== "/" && readFileSync(ROOT + "public" + path + "/index.html", "utf8").includes('<div id="main"'));
 
 const server = spawn("node", [ROOT + "tools/servidor-local.mjs"], { env: { ...process.env, PORT: String(PORT) }, stdio: "ignore" });
 await wait(900);
@@ -35,7 +37,6 @@ const browser = await puppeteer.launch({
   args: ["--hide-scrollbars", "--autoplay-policy=no-user-gesture-required"],
 });
 
-rmSync(OUT, { recursive: true, force: true });
 mkdirSync(OUT, { recursive: true });
 const firma = createHash("sha1")
   .update(Buffer.concat(["contenido.py", "contenido_ca.py", "contenido_en.py", "idiomas.py"].map((n) => readFileSync(ROOT + "tools/" + n))))
