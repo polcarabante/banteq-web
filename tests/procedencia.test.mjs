@@ -28,6 +28,8 @@ function cargar(url, referrer = "") {
 test("mantiene el canal y la guía de entrada al pasar al formulario", () => {
   for (const [url, referrer, esperado] of [
     [guia, "https://www.google.es/", "google"],
+    ["https://banteq.com/guias", "https://www.google.es/", "google"],
+    ["https://banteq.com/guias/", "https://chatgpt.com/", "ai"],
     [guia + "?utm_source=chatgpt.com", "", "ai"],
     [guia + "?utm_source=chatgpt.com&utm_medium=email", "", "email"],
     [guia + "?gclid=demo", "https://www.google.com/", "paid"],
@@ -35,7 +37,7 @@ test("mantiene el canal y la guía de entrada al pasar al formulario", () => {
   ]) {
     const origen = cargar(url, referrer);
     const destino = cargar(origen.abrirContacto(), url);
-    assert.deepEqual(destino.entrada, { sourceSignal: esperado, entryPath: new URL(guia).pathname });
+    assert.deepEqual(destino.entrada, { sourceSignal: esperado, entryPath: new URL(url).pathname });
     assert.equal(destino.location.href, formulario);
   }
 });

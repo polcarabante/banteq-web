@@ -1,6 +1,6 @@
 // Origen observado al llegar a una página, sin identificadores ni almacenamiento del navegador.
 (() => {
-  const guia = /^\/guias\/[a-z0-9-]+\/?$/;
+  const rutaGuias = /^\/guias(?:\/[a-z0-9-]+)?\/?$/;
   const canales = new Set(["paid", "email", "campaign", "ai", "google", "search", "internal", "referral", "unknown"]);
   const query = new URLSearchParams(location.search);
   let anterior;
@@ -27,7 +27,7 @@
   let entryPath = location.pathname;
   const paso = location.hash.match(/^#hablemos~bq-([a-z]+)$/);
   if (paso && canales.has(paso[1])) {
-    if (sourceSignal === "internal" && anterior?.origin === location.origin && guia.test(anterior.pathname)) {
+    if (sourceSignal === "internal" && anterior?.origin === location.origin && rutaGuias.test(anterior.pathname)) {
       sourceSignal = paso[1];
       entryPath = anterior.pathname;
     }
@@ -36,7 +36,7 @@
   window.BANTEQ_ENTRADA = { sourceSignal, entryPath };
 
   // Solo el contacto desde una guía necesita pasar el canal entre documentos.
-  if (guia.test(location.pathname)) {
+  if (rutaGuias.test(location.pathname)) {
     document.addEventListener("click", event => {
       if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.altKey || event.shiftKey) return;
       const enlace = event.target.closest?.("a[data-bq-contacto-guia]");

@@ -889,7 +889,7 @@ SERVICIOS = [
             ("Ejemplos de automatizaciones", [
                 ("p", "Así queda una tarea cuando deja de hacerse a mano. Son ejemplos habituales; en tu empresa se adaptan a tus programas y a tu forma de trabajar."),
                 ("ul", [
-                    [("b", "Facturas de proveedores. "), "La factura llega por correo, se leen el proveedor, la fecha y los importes, se anota en tu hoja de cálculo o en tu programa de gestión y el PDF se archiva en su carpeta. Una persona revisa solo las que no cuadran."],
+                    [("b", "Facturas de proveedores. "), "La factura llega por correo, se leen el proveedor, la fecha y los importes, se anota en tu hoja de cálculo o en tu programa de gestión y el PDF se archiva en su carpeta. Una persona revisa solo las que no cuadran. Consulta ", ("a", "cómo automatizar las facturas de proveedores paso a paso", "/guias/automatizar-facturas-de-proveedores"), "."],
                     [("b", "Solicitudes de la web. "), "Cada formulario crea el contacto en tu CRM, envía una confirmación a quien escribe y avisa a la persona del equipo que debe responder."],
                     [("b", "Presupuestos y consultas. "), "Los correos entrantes se clasifican por tipo, se crea la ficha con los datos y se prepara un borrador de respuesta para revisar y enviar."],
                     [("b", "Informe semanal. "), "Los datos de ventas, pedidos o incidencias se recogen de cada herramienta y llegan resumidos al correo cada lunes."],
@@ -902,7 +902,7 @@ SERVICIOS = [
                 ("p", ["Para valorar tu caso, ", ("a", "cuéntanos qué tarea repites", "#hablemos"), ", con qué programas la haces y cuántas veces al mes. Una estimación de tiempo liberado solo se convierte en ahorro de caja si reduce un coste que realmente pagas."]),
             ]),
             ("Empezamos por un diagnóstico", [
-                ("p", "Antes de automatizar nada, analizamos cómo trabaja tu empresa y dibujamos un mapa de sus procesos, herramientas y conexiones. Ese mapa muestra dónde se pierde tiempo y qué conviene automatizar primero."),
+                ("p", ["Antes de automatizar nada, analizamos cómo trabaja tu empresa y dibujamos un mapa de sus procesos, herramientas y conexiones. Ese mapa muestra dónde se pierde tiempo y ", ("a", "qué procesos conviene automatizar primero", "/guias/que-procesos-automatizar-en-una-pyme"), "."]),
                 ("p", "Preparamos dos diagnósticos separados: procesos y oportunidades de automatización. El primero organiza cómo trabajáis y ayuda a preparar el camino hacia ISO 9001. El segundo identifica tareas que podrían hacerse con menos tiempo y errores. Te contactaremos en menos de 72 horas naturales para comentar las conclusiones, los honorarios y las condiciones de entrega. Enviar el cuestionario no supone contratar ni pagar."),
                 ("p", ["Después seguimos un proceso claro: diseño, desarrollo, pruebas y formación de tu equipo. Así es ", ("a", "cómo trabajamos", "/#como-trabajamos"), "."]),
             ]),
@@ -966,7 +966,7 @@ SERVICIOS = [
                 ]),
             ]),
             ("Cuándo tiene sentido usar IA y cuándo no", [
-                ("p", "La IA aporta cuando la tarea exige entender lenguaje: leer un texto que no viene siempre igual, decidir de qué trata un mensaje o redactar una respuesta. Si la tarea sigue reglas fijas, como pasar un dato de un programa a otro, suele bastar una automatización más sencilla, que es más barata y más predecible."),
+                ("p", ["La IA aporta cuando la tarea exige entender lenguaje: leer un texto que no viene siempre igual, decidir de qué trata un mensaje o redactar una respuesta. Si la tarea sigue reglas fijas, como pasar un dato de un programa a otro, suele bastar una automatización más sencilla, que es más barata y más predecible. Nuestra guía reúne ", ("a", "ocho casos prácticos de IA en pymes", "/guias/ia-en-pymes-casos-practicos"), " y explica qué decisiones conviene dejar en manos del equipo."]),
                 ("p", ["Por eso no empezamos por la tecnología. Primero miramos el proceso y después decidimos si necesita IA, una ", ("a", "automatización de procesos", "/automatizacion-procesos"), " sin IA o las dos cosas."]),
             ]),
             ("La IA propone, tu equipo decide", [
@@ -1112,7 +1112,7 @@ SERVICIOS = [
             ]),
             ("Una web conectada, no un folleto", [
                 ("ul", [
-                    "Formularios que guardan cada solicitud en tu CRM",
+                    [("a", "Formularios que registran las solicitudes en tu CRM", "/guias/automatizar-solicitudes-formulario-web")],
                     "Confirmación automática a quien escribe",
                     "Aviso a tu equipo al momento",
                     "Integración con tu correo y con tus automatizaciones",
