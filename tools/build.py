@@ -551,7 +551,7 @@ def copy_banteq_static():
     css.write_text(t, encoding="utf-8")
     # Tabla de direcciones para el selector de idioma: [castellano, catalán, inglés] de cada página.
     js = dst / "banteq.js"
-    codigo = js.read_text(encoding="utf-8")
+    codigo = (dst / "procedencia.js").read_text(encoding="utf-8") + "\n" + js.read_text(encoding="utf-8")
     assert codigo.count("/*RUTAS_IDIOMAS*/ []") == 1
     rutas = [["/" + g[l] if g[l] else "/" for l in ID.IDIOMAS] for g in ID.tabla()]
     js.write_text(codigo.replace("/*RUTAS_IDIOMAS*/ []", json.dumps(rutas, ensure_ascii=False)), encoding="utf-8")
@@ -2801,7 +2801,7 @@ def version_assets():
         huella.update(SEGUN_EQUIPO.sub(b"imagen", f.read_bytes()))
     version = huella.hexdigest()[:10]
     propios = {n: hashlib.sha1((OUT / "banteq" / n).read_bytes()).hexdigest()[:10]
-               for n in ("banteq.css", "banteq.js", "banteq-liquid.js", "i18n-ca.js", "i18n-en.js")}
+               for n in ("banteq.css", "banteq.js", "banteq-liquid.js", "i18n-ca.js", "i18n-en.js", "procedencia.js")}
     total = 0
     for f in OUT.rglob("*.html"):
         t = f.read_text(encoding="utf-8")
