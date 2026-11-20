@@ -14,7 +14,12 @@ Estamos en Santa Perpètua de Mogoda (Barcelona) y trabajamos con empresas de Ba
 
 ## Guías
 
-- [Aplicaciones para entrenadores online](https://banteq.com/guias/aplicaciones-para-entrenadores-online): Compara Harbiz, ABC Trainerize y TrueCoach según las tareas de tu negocio de entrenamiento.
+- [Índice de guías](https://banteq.com/guias): Todos los artículos prácticos de Banteq para pymes.
+- [Qué procesos automatizar en una pyme y por cuál empezar](https://banteq.com/guias/que-procesos-automatizar-en-una-pyme): Doce tareas que las pymes automatizan con más frecuencia, ordenadas por área, y cuatro preguntas para elegir la primera sin equivocarte.
+- [Inteligencia artificial en pymes: 8 usos prácticos y cuándo no usarla](https://banteq.com/guias/ia-en-pymes-casos-practicos): Ocho usos de la IA que funcionan hoy en empresas pequeñas y medianas, cuándo basta una automatización normal y qué vigilar con tus datos.
+- [Que no se pierda ninguna solicitud de tu web](https://banteq.com/guias/automatizar-solicitudes-formulario-web): Guardar, confirmar, avisar y recordar: cómo automatizar las solicitudes del formulario de tu web, filtrar el spam y comprobar el tuyo en diez minutos.
+- [Cómo automatizar las facturas de proveedores paso a paso](https://banteq.com/guias/automatizar-facturas-de-proveedores): Recibir, leer, comprobar y registrar las facturas de proveedores sin teclearlas: los cinco pasos, qué revisar a mano y cómo probarlo sin riesgo.
+- [Aplicaciones para entrenadores online: ¿cuál encaja con tu negocio?](https://banteq.com/guias/aplicaciones-para-entrenadores-online): Compara Harbiz, ABC Trainerize y TrueCoach según cómo llevas las reservas, las rutinas y el seguimiento. Incluye una prueba práctica antes de contratar.
 
 ## Proyectos
 
