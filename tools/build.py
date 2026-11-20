@@ -2636,6 +2636,8 @@ def apply_seo():
         rel = f"guias/{guia.stem}/index.html"
         S[rel] = guia.read_text(encoding="utf-8")
         indexables.append((page_url(rel), rel))
+    S["guias/index.html"] = guias_indice()
+    indexables.append((f"{C.SITIO}/guias", "guias/index.html"))
     fechas = page_dates({u: S[rel] for u, rel in indexables})
     urls = "".join(f"  <url><loc>{html.escape(u)}</loc><lastmod>{fechas[u]}</lastmod></url>\n"
                    for u, _ in sorted(indexables, key=lambda x: (x[0].count("/"), x[0])))
@@ -2645,6 +2647,51 @@ def apply_seo():
     )
     write_llms_txt()
     write_indexnow_key()
+
+
+def guias_datos():
+    """Datos de cada guía de assets-banteq/guias/ (HTML autónomos) leídos de su propio HTML: así una
+    guía nueva aparece en el índice /guias y en llms.txt sin tocar este archivo. Más recientes primero."""
+    guias = []
+    for guia in (ROOT / "assets-banteq" / "guias").glob("*.html"):
+        t = guia.read_text(encoding="utf-8")
+        h1 = re.search(r"<h1[^>]*>(.*?)</h1>", t, re.S)
+        desc = re.search(r'<meta name="description" content="([^"]*)"', t)
+        fecha = re.search(r'<time datetime="([0-9-]+)"', t)
+        assert h1 and desc, f"{guia.name}: le falta <h1> o meta description"
+        guias.append({
+            "slug": guia.stem,
+            "titulo": html.unescape(re.sub(r"<[^>]+>", "", h1.group(1)).strip()),
+            "descripcion": html.unescape(desc.group(1)),
+            "fecha": fecha.group(1) if fecha else "",
+        })
+    return sorted(guias, key=lambda g: (g["fecha"], g["slug"]), reverse=True)
+
+
+def guias_indice():
+    """Página /guias: lista de todas las guías con su resumen, sobre la plantilla guias-indice.html."""
+    import datetime
+
+    meses = "enero febrero marzo abril mayo junio julio agosto septiembre octubre noviembre diciembre".split()
+    guias = guias_datos()
+    items = []
+    for g in guias:
+        url = f"/guias/{g['slug']}"
+        cuando = ""
+        if g["fecha"]:
+            d = datetime.date.fromisoformat(g["fecha"])
+            cuando = f'<p class="byline"><time datetime="{g["fecha"]}">{d.day} de {meses[d.month - 1]} de {d.year}</time></p>'
+        items.append(f'    <li><h2><a href="{url}">{html.escape(g["titulo"])}</a></h2>'
+                     f'<p>{html.escape(g["descripcion"])}</p>{cuando}</li>')
+    ld = _ld(
+        {"@type": "CollectionPage", "name": "Guías de Banteq", "url": f"{C.SITIO}/guias", "inLanguage": "es-ES",
+         "hasPart": [{"@type": "Article", "headline": g["titulo"], "url": f"{C.SITIO}/guias/{g['slug']}"} for g in guias]},
+        {"@type": "BreadcrumbList", "itemListElement": [
+            {"@type": "ListItem", "position": 1, "name": "Inicio", "item": f"{C.SITIO}/"},
+            {"@type": "ListItem", "position": 2, "name": "Guías"}]},
+    )
+    plantilla = (ROOT / "assets-banteq" / "guias-indice.html").read_text(encoding="utf-8")
+    return plantilla.replace("{{ld}}", ld).replace("{{lista}}", "\n".join(items))
 
 
 def write_llms_txt():
@@ -2661,8 +2708,8 @@ def write_llms_txt():
         "## Servicios", "",
         *(item(sv["nombre"], f"{C.SITIO}/{sv['slug']}", sv["descripcion"]) for sv in C.SERVICIOS), "",
         "## Guías", "",
-        item("Aplicaciones para entrenadores online", f"{C.SITIO}/guias/aplicaciones-para-entrenadores-online",
-             "Compara Harbiz, ABC Trainerize y TrueCoach según las tareas de tu negocio de entrenamiento."), "",
+        item("Índice de guías", f"{C.SITIO}/guias", "Todos los artículos prácticos de Banteq para pymes."),
+        *(item(g["titulo"], f"{C.SITIO}/guias/{g['slug']}", g["descripcion"]) for g in guias_datos()), "",
         "## Proyectos", "",
         *(item(pr["cliente"], f"{C.SITIO}/proyectos/{pr['slug']}", pr["descripcion"]) for pr in C.PROYECTOS), "",
     ]
