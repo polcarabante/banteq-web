@@ -49,6 +49,8 @@ CASES_MOD = f"{SITE}/VKDLLyTios2Zd0jk1CLqFhDLR7XtQbwEwCFou7Hgscw.CNgFRH1L.mjs"
 DETAIL_MOD = f"{SITE}/-j3X5ZE7k7IpCk1B7FCCGNnRx-KJXICCrbL_gYn8OgU.Crss1fyR.mjs"
 NOTFOUND_MOD = f"{SITE}/Z_WE6k5IO8QVH3oBmWST9YH1F1M-Rt7iUct8Njd0OwI.BXs3vXGP.mjs"
 TERMS_MOD = f"{SITE}/_0UeanCh6NgteMj9Ryg25cKN2i4509un5Yw9g64v4E8.CM69hB_P.mjs"
+LEGAL_PREGUNTAS_AVISO = "Para cualquier pregunta sobre estas condiciones, escríbenos:"
+LEGAL_PREGUNTAS_PRIVACIDAD = "Para cualquier pregunta sobre esta política, escríbenos:"
 PRIVACY_MOD = f"{SITE}/-oM1torQuEXrx-drvjgmsym6yWPzhUTlsjawAm_O87U.gUA1NVco.mjs"
 
 INDEX = "index.html"
@@ -1163,6 +1165,10 @@ def apply_project_pages():
         assert len(originales) == len(textos), (rel, len(originales), len(textos))
         for old, new in sorted(zip(originales, textos), key=lambda p: -len(p[0])):
             replace(rel, f"children:`{old}`", f"children:`{js_template(new)}`")
+    # La plantilla pone delante del dato de contacto una frase en inglés dentro del mismo párrafo (por
+    # eso no la recoge la lista anterior): en castellano. textos_legal.py la traduce a partir de aquí.
+    replace(TERMS_MOD, "children:[`For questions regarding these Terms, please contact: `", f"children:[`{LEGAL_PREGUNTAS_AVISO} `")
+    replace(PRIVACY_MOD, "children:[`For questions regarding these Policy, please contact: `", f"children:[`{LEGAL_PREGUNTAS_PRIVACIDAD} `")
     apply_formula_terms()
 
 
@@ -2408,12 +2414,20 @@ def page_url(rel):
 
 
 def _ld(*nodos):
-    data = {"@context": "https://schema.org", "@graph": [n for n in nodos if n]}
+    nodos = [n for n in nodos if n]
+    # Las páginas dicen isPartOf #website: el nodo WebSite va en cada grafo, no solo en la home.
+    if not any(n.get("@type") == "WebSite" for n in nodos):
+        nodos.append(ld_sitio())
+    data = {"@context": "https://schema.org", "@graph": nodos}
     return '<script type="application/ld+json">' + json.dumps(data, ensure_ascii=False) + "</script>"
 
 
 ORG_ID = f"{C.SITIO}/#organization"
 WEB_ID = f"{C.SITIO}/#website"
+# Quién está detrás: el titular que publica el aviso legal y que firma las guías (mismo nombre). Solo
+# nombre y relación con la empresa; sin cargo, formación ni perfiles que la web no publique.
+PERSONA_ID = f"{C.SITIO}/#pol-carabante"
+PERSONA = {"@type": "Person", "@id": PERSONA_ID, "name": "Pol Carabante", "worksFor": {"@id": ORG_ID}}
 # Zona de servicio: de la comarca a toda España (contenido.ZONAS_SERVICIO).
 AREA = [{"@type": tipo, "name": nombre} for tipo, nombre in C.ZONAS_SERVICIO]
 
@@ -2437,6 +2451,7 @@ def ld_organizacion(completa=False, idioma="es"):
                     "addressRegion": C.PROVINCIA, "addressCountry": "ES"},
         "areaServed": AREA,
         "knowsAbout": C.TEMAS,
+        "founder": PERSONA,
         "contactPoint": {"@type": "ContactPoint", "contactType": "customer service", "email": C.EMAIL_CONTACTO,
                          "availableLanguage": "es", "areaServed": "ES"},
     }
@@ -2706,17 +2721,25 @@ def write_llms_txt():
         f"# {C.NOMBRE_SITIO}", "",
         f"> {C.META_DESCRIPTION}", "",
         f"{C.ZONA_FRASE} Contacto: {C.EMAIL_CONTACTO} o el formulario de {C.SITIO}/#hablemos.", "",
+        "## Sobre Banteq", "",
+        f"- Banteq Digital es la marca con la que trabaja Pol Carabante, profesional autónomo con domicilio "
+        f"profesional en {C.LOCALIDAD} ({C.PROVINCIA}). Los datos del titular están en {C.SITIO}/aviso-legal.",
+        f"- Proyectos publicados con clientes reales: {', '.join(pr['cliente'] for pr in C.PROYECTOS)} ({C.SITIO}/proyectos).", "",
         "## Servicios", "",
         *(item(sv["nombre"], f"{C.SITIO}/{sv['slug']}", sv["descripcion"]) for sv in C.SERVICIOS), "",
         "## Guías", "",
         item("Índice de guías", f"{C.SITIO}/guias", "Todos los artículos prácticos de Banteq para pymes."),
         *(item(g["titulo"], f"{C.SITIO}/guias/{g['slug']}", g["descripcion"]) for g in guias_datos()), "",
         "## Proyectos", "",
+        item("Todos los proyectos", f"{C.SITIO}/proyectos", "Trabajos publicados para clientes reales."),
         *(item(pr["cliente"], f"{C.SITIO}/proyectos/{pr['slug']}", pr["descripcion"]) for pr in C.PROYECTOS), "",
     ]
     for idioma in ID.OTROS:
+        rutas = ID.tabla_por_es()
         lineas += [f"## {ID.NOMBRE[idioma]}", "",
-                   *(item(sv["nombre"], f"{C.SITIO}/{sv['slug']}", sv["descripcion"]) for sv in ID.servicios(idioma)), ""]
+                   f"- [{ID.NOMBRE[idioma]}]({C.SITIO}/{rutas[''][idioma]})",
+                   *(item(sv["nombre"], f"{C.SITIO}/{sv['slug']}", sv["descripcion"]) for sv in ID.servicios(idioma)),
+                   *(f"- [{pr['cliente']}]({C.SITIO}/{rutas['proyectos/' + pr['slug']][idioma]})" for pr in C.PROYECTOS), ""]
     lineas += ["## Optional", "",
                f"- [Aviso legal]({C.SITIO}/aviso-legal): titular, condiciones de la Fórmula Banteq y garantía de 60 días",
                f"- [Privacidad]({C.SITIO}/privacidad): tratamiento de datos personales", ""]
