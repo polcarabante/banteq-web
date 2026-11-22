@@ -4,6 +4,11 @@
 
 Estamos en Santa Perpètua de Mogoda (Barcelona) y trabajamos con empresas de Barcelona, el Vallès y, en remoto, del resto de España. Contacto: pol@banteq.org o el formulario de https://banteq.com/#hablemos.
 
+## Sobre Banteq
+
+- Banteq Digital es la marca con la que trabaja Pol Carabante, profesional autónomo con domicilio profesional en Santa Perpètua de Mogoda (Barcelona). Los datos del titular están en https://banteq.com/aviso-legal.
+- Proyectos publicados con clientes reales: Margon, RentUp Capital (https://banteq.com/proyectos).
+
 ## Servicios
 
 - [Automatización de procesos](https://banteq.com/automatizacion-procesos): Automatizamos facturas, correos, formularios y tareas repetitivas conectando las herramientas que ya usa tu empresa. Para pymes de Barcelona y de toda España.
@@ -25,24 +30,31 @@ Estamos en Santa Perpètua de Mogoda (Barcelona) y trabajamos con empresas de Ba
 
 ## Proyectos
 
+- [Todos los proyectos](https://banteq.com/proyectos): Trabajos publicados para clientes reales.
 - [Margon](https://banteq.com/proyectos/margon): Nueva web corporativa en cinco idiomas para una empresa metalúrgica de ciclo completo que trabaja para los sectores ferroviario, de defensa y de obra pública.
 - [RentUp Capital](https://banteq.com/proyectos/rentup-capital): Web para una firma de inversión inmobiliaria, con formularios conectados que guardan cada contacto y avisan al equipo automáticamente.
 
 ## Català
 
+- [Català](https://banteq.com/ca)
 - [Automatització de processos](https://banteq.com/ca/automatitzacio-processos): Automatitzem factures, correus, formularis i tasques repetitives connectant les eines que ja fa servir la teva empresa. Per a pimes de Barcelona i d'arreu d'Espanya.
 - [Intel·ligència artificial per a empreses](https://banteq.com/ca/intelligencia-artificial): Assistents d'IA que responen consultes, llegeixen documents, classifiquen sol·licituds i preparen esborranys dins de les teves eines, amb revisió humana.
 - [Automatització amb n8n i integració d'eines](https://banteq.com/ca/automatitzacio-n8n): Connectem el teu correu, Excel, CRM, ERP, WhatsApp i el teu web amb n8n, Make o integracions per API a mida. Les dades passen d'un programa a un altre sense copiar i enganxar.
 - [Desenvolupament web a mida](https://banteq.com/ca/desenvolupament-web): Disseny web per a empreses de Barcelona i Badalona. Consulta els projectes de Margon i RentUp Capital i demana pressupost per a un web nou o un redisseny.
 - [Manteniment web per a empreses](https://banteq.com/ca/manteniment-web): Passa el manteniment del teu web a Banteq: el remodelem sense cost de desenvolupament bàsic i pagues un 25 % menys, fins a 50 €/mes. Quota mínima: 35 €/mes.
+- [Margon](https://banteq.com/ca/projectes/margon)
+- [RentUp Capital](https://banteq.com/ca/projectes/rentup-capital)
 
 ## English
 
+- [English](https://banteq.com/en)
 - [Process automation](https://banteq.com/en/process-automation): We automate invoices, emails, forms and repetitive tasks by connecting the tools your business already uses. For SMEs in Barcelona and across Spain.
 - [Artificial intelligence for businesses](https://banteq.com/en/artificial-intelligence): AI assistants that answer enquiries, read documents, sort requests and prepare drafts inside your tools, with human review.
 - [n8n automation and tool integration](https://banteq.com/en/n8n-automation): We connect your email, Excel, CRM, ERP, WhatsApp and website with n8n, Make or custom API integrations. Data moves from one program to another without copying and pasting.
 - [Custom web development](https://banteq.com/en/web-development): Custom corporate websites, redesigns and websites connected to your CRM and automations. No templates. For businesses in Barcelona and across Spain.
 - [Web maintenance for businesses](https://banteq.com/en/web-maintenance): Move your website maintenance to Banteq: we remodel it at no basic development cost and you pay 25% less, up to €50/month. Minimum fee: €35/month.
+- [Margon](https://banteq.com/en/projects/margon)
+- [RentUp Capital](https://banteq.com/en/projects/rentup-capital)
 
 ## Optional
 
