@@ -2685,6 +2685,7 @@ def guias_indice():
                      f'<p>{html.escape(g["descripcion"])}</p>{cuando}</li>')
     ld = _ld(
         {"@type": "CollectionPage", "name": "Guías de Banteq", "url": f"{C.SITIO}/guias", "inLanguage": "es-ES",
+         "isPartOf": {"@id": WEB_ID}, "publisher": {"@id": ORG_ID},
          "hasPart": [{"@type": "Article", "headline": g["titulo"], "url": f"{C.SITIO}/guias/{g['slug']}"} for g in guias]},
         {"@type": "BreadcrumbList", "itemListElement": [
             {"@type": "ListItem", "position": 1, "name": "Inicio", "item": f"{C.SITIO}/"},
