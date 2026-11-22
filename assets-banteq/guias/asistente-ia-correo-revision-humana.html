@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Asistente de IA para el correo con revisión humana: cómo montarlo | Banteq</title>
+  <meta name="description" content="Un asistente que lee el correo, lo clasifica y deja borradores que revisa una persona: cómo funciona, el modo sombra, qué correos no debe tocar y qué cuidar con los datos.">
+  <link rel="canonical" href="https://banteq.com/guias/asistente-ia-correo-revision-humana">
+  <script src="/banteq/procedencia.js" defer></script>
+  <link rel="icon" href="/favicon.ico">
+  <meta property="og:type" content="article">
+  <meta property="og:locale" content="es_ES">
+  <meta property="og:site_name" content="Banteq">
+  <meta property="og:title" content="Asistente de IA para el correo con revisión humana">
+  <meta property="og:description" content="Borradores preparados por IA, revisados y enviados por tu equipo.">
+  <meta property="og:url" content="https://banteq.com/guias/asistente-ia-correo-revision-humana">
+  <meta property="og:image" content="https://banteq.com/framerusercontent.com/images/mesMNsTTSgV6Xg1TUfNtMnEGZY.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Article","headline":"Asistente de IA para el correo con revisión humana","description":"Un asistente que lee el correo, lo clasifica y deja borradores que revisa una persona: cómo funciona, el modo sombra, qué correos no debe tocar y qué cuidar con los datos.","inLanguage":"es-ES","datePublished":"2026-11-22","dateModified":"2026-11-22","mainEntityOfPage":"https://banteq.com/guias/asistente-ia-correo-revision-humana","image":"https://banteq.com/framerusercontent.com/images/mesMNsTTSgV6Xg1TUfNtMnEGZY.png","isPartOf":{"@id":"https://banteq.com/#website"},"author":{"@type":"Person","name":"Pol Carabante","url":"https://banteq.com/","worksFor":{"@id":"https://banteq.com/#organization"}},"publisher":{"@id":"https://banteq.com/#organization"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Inicio","item":"https://banteq.com/"},{"@type":"ListItem","position":2,"name":"Guías","item":"https://banteq.com/guias"},{"@type":"ListItem","position":3,"name":"Asistente de IA para el correo"}]}]}</script>
+  <style>
+    * { box-sizing: border-box }
+    body { margin: 0; color: #222; background: #fcfcfa; font: 1.08rem/1.65 system-ui, sans-serif }
+    a { color: inherit; text-underline-offset: .2em }
+    a:focus-visible { outline: 3px solid #4643a0; outline-offset: 4px }
+    header, main, footer { width: min(100% - 2.5rem, 58rem); margin: auto }
+    header, footer { padding: 1.3rem 0; display: flex; flex-wrap: wrap; gap: 1rem; align-items: baseline; justify-content: space-between }
+    header { border-bottom: 1px solid #ccc } header > a:first-child { text-decoration: none; font-size: 1.35rem; font-weight: 750 }
+    main { padding: clamp(2rem, 6vw, 5rem) 0 } h1, h2, h3 { line-height: 1.15; text-wrap: balance }
+    h1 { font-size: clamp(2.1rem, 6vw, 4.2rem); letter-spacing: -.045em; max-width: 18ch; margin: 0 0 1rem }
+    h2 { font-size: clamp(1.45rem, 3vw, 2rem); margin: 0 0 1rem; letter-spacing: -.025em }
+    section { border-top: 1px solid #ccc; padding-top: 1.6rem; margin-top: 2.2rem }
+    p, li { max-width: 72ch } li + li { margin-top: .65rem } h3 { margin: 1.5rem 0 .4rem } h3 + p { margin-top: 0 }
+    .byline, footer { color: #505050; font-size: .92rem } .intro { font-size: 1.24rem }
+    .migas { color: #505050; font-size: .92rem; margin: 0 0 1.4rem } .migas a { color: #505050 }
+    footer { border-top: 1px solid #ccc } ol { padding-left: 1.5rem } .action { font-weight: 650 }
+    nav { display: flex; gap: 1.2rem; flex-wrap: wrap }
+    .relacionados ul { padding-left: 1.2rem }
+    .tabla { overflow-x: auto; margin: 1rem 0 } table { border-collapse: collapse; width: 100%; font-size: .95rem }
+    th, td { text-align: left; vertical-align: top; padding: .55rem .7rem; border-bottom: 1px solid #ccc } thead th { font-weight: 650 }
+    pre { background: #f1f0ea; padding: 1rem; overflow-x: auto; border-radius: 6px; font-size: .88rem; line-height: 1.5 }
+    code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: .92em }
+  </style>
+</head>
+<body>
+<header><a href="/">Banteq</a><nav aria-label="Secciones"><a href="/automatizacion-procesos">Automatización</a><a href="/desarrollo-web">Desarrollo web</a><a href="/guias">Guías</a></nav></header>
+<main><article>
+<p class="migas"><a href="/">Inicio</a> › <a href="/guias">Guías</a></p>
+  <h1>Asistente de IA para el correo con revisión humana</h1>
+  <p class="byline">Pol Carabante · Banteq Digital · <time datetime="2026-11-22">22 de noviembre de 2026</time></p>
+  <p class="intro">Un asistente de IA para el correo lee los mensajes que llegan a un buzón, los clasifica y deja preparado un borrador de respuesta en la carpeta de borradores. Una persona lo revisa, lo corrige si hace falta y lo envía. El asistente nunca envía nada por su cuenta.</p>
+  <p>Funciona con Gmail o con Outlook de Microsoft 365, una herramienta de automatización como n8n o Make y un modelo de inteligencia artificial. Abajo tienes cómo funciona, por dónde empezar y qué cuidar con los datos.</p>
+
+  <section><h2>¿Qué hace exactamente el asistente?</h2>
+    <ol>
+      <li><strong>Filtra.</strong> Solo mira el buzón acordado, por ejemplo el de información o el de pedidos, y deja fuera boletines, avisos automáticos y correos internos.</li>
+      <li><strong>Clasifica.</strong> Decide de qué trata el mensaje (consulta, pedido, incidencia, presupuesto) y le pone una etiqueta.</li>
+      <li><strong>Busca la respuesta</strong> en tu documentación: condiciones, horarios, plazos, fichas de producto o respuestas que ya habéis dado antes.</li>
+      <li><strong>Prepara un borrador</strong> en la conversación, con tu tono y tu firma, y marca lo que no ha sabido responder.</li>
+      <li><strong>Avisa</strong> a quien tiene que revisarlo, o lo deja en una lista de pendientes.</li>
+    </ol>
+  </section>
+
+  <section><h2>¿Por qué empezar en modo sombra?</h2>
+    <p>En el modo sombra el asistente prepara borradores, pero nadie los envía: tu equipo sigue respondiendo como siempre y compara. Durante unas semanas veréis en qué tipos de correo acierta, en cuáles se equivoca y qué información le falta. Con eso decides qué etiquetas pasan a usar borradores y cuáles no, sin que ningún cliente haya recibido una respuesta a medio hacer.</p>
+  </section>
+
+  <section><h2>¿Qué correos no debería tocar?</h2>
+    <p>Hay mensajes que conviene que lleguen a una persona sin borrador previo, solo con una etiqueta que avise:</p>
+    <ul>
+      <li>Reclamaciones, quejas fuertes o amenazas de acciones legales.</li>
+      <li>Datos de salud u otros datos especialmente protegidos.</li>
+      <li>Cambios de cuenta bancaria, pagos y devoluciones.</li>
+      <li>Bajas de clientes o de empleados.</li>
+    </ul>
+  </section>
+
+  <section><h2>¿Qué datos ve la IA y cuánto tiempo se guardan?</h2>
+    <p>El modelo de IA recibe el texto del correo que tiene que entender, así que su proveedor trata datos personales por cuenta de tu empresa y necesitas un contrato de encargo con él. Comprueba además dónde trata los datos, si los usa para entrenar sus modelos y cuánto tiempo los conserva. Las versiones para empresas y las conexiones por API suelen ofrecer más control que una aplicación de chat de uso personal.</p>
+    <p>Reduce lo que envías: quita firmas, historiales largos y adjuntos que no hagan falta para responder. Y revisa cuánto guarda tu herramienta de automatización de cada ejecución; si usas n8n en tu propio servidor, lo explicamos en <a href="/guias/n8n-servidor-propio-rgpd">n8n en servidor propio y RGPD</a>.</p>
+  </section>
+
+  <section><h2>¿Cómo se revisa un borrador?</h2>
+    <ul>
+      <li><strong>Datos:</strong> nombres, referencias, fechas y cantidades coinciden con el correo y con tus sistemas.</li>
+      <li><strong>Compromisos:</strong> precios, plazos, descuentos o garantías los confirma siempre una persona.</li>
+      <li><strong>Tono:</strong> suena como tu empresa y responde a lo que preguntaron, no a algo parecido.</li>
+      <li><strong>Lo que falta:</strong> si el asistente marcó algo como «no lo sé», complétalo o pide el dato.</li>
+    </ul>
+    <p>Si algún día dejas que responda sin revisión en un canal concreto, informa a la persona de que la respuesta la ha preparado un sistema de IA: el Reglamento europeo de inteligencia artificial exige avisar a quien interactúa con uno.</p>
+  </section>
+
+  <section><h2>¿Cómo saber si funciona?</h2>
+    <p>Mide tres cosas desde el primer día: cuántos borradores se envían sin cambios, cuántos con cambios y cuántos se descartan, por cada etiqueta. Añade el tiempo que pasa desde que llega un correo hasta la primera respuesta. Si los descartes de una etiqueta no bajan, a ese tipo de correo le falta información o no le conviene un borrador.</p>
+  </section>
+
+  <section><h2>¿Lo montamos en tu buzón?</h2>
+    <p>En Banteq diseñamos asistentes de IA que leen correos y documentos y preparan respuestas dentro de tus herramientas, siempre con revisión humana. Lo explicamos en <a href="/inteligencia-artificial">inteligencia artificial para empresas</a>, y los flujos que lo conectan, en <a href="/automatizacion-n8n">automatización con n8n</a>.</p>
+    <p class="action"><a data-bq-contacto-guia href="/inteligencia-artificial#hablemos">Cuéntanos qué buzón os quita más tiempo</a>.</p>
+  </section>
+
+  <section class="relacionados"><h2>Sigue leyendo</h2>
+    <ul>
+      <li><a href="/guias/ia-en-pymes-casos-practicos">Inteligencia artificial en pymes: usos prácticos y cuándo no usarla</a></li>
+      <li><a href="/guias/n8n-servidor-propio-rgpd">n8n en servidor propio y RGPD: qué tiene que revisar una pyme</a></li>
+      <li><a href="/guias/automatizar-solicitudes-formulario-web">Que no se pierda ninguna solicitud de tu web</a></li>
+    </ul>
+  </section>
+</article></main>
+<footer><span>Banteq Digital · Barcelona</span><nav aria-label="Información legal"><a href="/aviso-legal">Aviso legal</a><a href="/privacidad">Privacidad</a></nav></footer>
+</body>
+</html>

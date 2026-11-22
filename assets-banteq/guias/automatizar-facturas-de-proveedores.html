@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Cómo automatizar las facturas de proveedores paso a paso | Banteq</title>
+  <title>Cómo automatizar las facturas de proveedores paso a paso (también con n8n) | Banteq</title>
   <meta name="description" content="Recibir, leer, comprobar y registrar las facturas de proveedores sin teclearlas: los cinco pasos, qué revisar a mano y cómo probarlo sin riesgo.">
   <link rel="canonical" href="https://banteq.com/guias/automatizar-facturas-de-proveedores">
   <script src="/banteq/procedencia.js" defer></script>
@@ -16,7 +16,7 @@
   <meta property="og:url" content="https://banteq.com/guias/automatizar-facturas-de-proveedores">
   <meta property="og:image" content="https://banteq.com/framerusercontent.com/images/mesMNsTTSgV6Xg1TUfNtMnEGZY.png">
   <meta name="twitter:card" content="summary_large_image">
-  <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Article","headline":"Cómo automatizar las facturas de proveedores paso a paso","description":"Recibir, leer, comprobar y registrar las facturas de proveedores sin teclearlas: los cinco pasos, qué revisar a mano y cómo probarlo sin riesgo.","inLanguage":"es-ES","datePublished":"2026-11-20","dateModified":"2026-11-20","mainEntityOfPage":"https://banteq.com/guias/automatizar-facturas-de-proveedores","image":"https://banteq.com/framerusercontent.com/images/mesMNsTTSgV6Xg1TUfNtMnEGZY.png","author":{"@type":"Person","name":"Pol Carabante","url":"https://banteq.com/","worksFor":{"@id":"https://banteq.com/#organization"}},"publisher":{"@id":"https://banteq.com/#organization"},"isPartOf":{"@id":"https://banteq.com/#website"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Inicio","item":"https://banteq.com/"},{"@type":"ListItem","position":2,"name":"Guías","item":"https://banteq.com/guias"},{"@type":"ListItem","position":3,"name":"Automatizar las facturas de proveedores"}]}]}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Article","headline":"Cómo automatizar las facturas de proveedores paso a paso","description":"Recibir, leer, comprobar y registrar las facturas de proveedores sin teclearlas: los cinco pasos, qué revisar a mano y cómo probarlo sin riesgo.","inLanguage":"es-ES","datePublished":"2026-11-20","dateModified":"2026-11-22","mainEntityOfPage":"https://banteq.com/guias/automatizar-facturas-de-proveedores","image":"https://banteq.com/framerusercontent.com/images/mesMNsTTSgV6Xg1TUfNtMnEGZY.png","author":{"@type":"Person","name":"Pol Carabante","url":"https://banteq.com/","worksFor":{"@id":"https://banteq.com/#organization"}},"publisher":{"@id":"https://banteq.com/#organization"},"isPartOf":{"@id":"https://banteq.com/#website"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Inicio","item":"https://banteq.com/"},{"@type":"ListItem","position":2,"name":"Guías","item":"https://banteq.com/guias"},{"@type":"ListItem","position":3,"name":"Automatizar las facturas de proveedores"}]}]}</script>
   <style>
     * { box-sizing: border-box }
     body { margin: 0; color: #222; background: #fcfcfa; font: 1.08rem/1.65 system-ui, sans-serif }
@@ -42,7 +42,7 @@
 <main><article>
 <p class="migas"><a href="/">Inicio</a> › <a href="/guias">Guías</a></p>
   <h1>Cómo automatizar las facturas de proveedores paso a paso</h1>
-  <p class="byline">Pol Carabante · Banteq Digital · <time datetime="2026-11-20">20 de noviembre de 2026</time></p>
+  <p class="byline">Pol Carabante · Banteq Digital · Publicado el <time datetime="2026-11-20">20 de noviembre de 2026</time> · Actualizado el <time datetime="2026-11-22">22 de noviembre de 2026</time></p>
   <p class="intro">Automatizar las facturas de proveedores consiste en cinco pasos: recibirlas en un único buzón, leer sus datos, comprobar que cuadran, registrarlas donde las necesitas y dejar a una persona solo las que no cuadran. Se puede hacer con las herramientas que ya usa tu empresa.</p>
   <p>Es uno de los mejores primeros proyectos porque se repite cada semana, sigue reglas claras y el error se detecta pronto: una factura que no cuadra salta a la vista antes de pagarla. Esta guía explica cada paso, qué conviene revisar a mano y cómo probarlo antes de cambiar nada.</p>
 
@@ -93,13 +93,26 @@
     <p>Las facturas contienen datos de empresas y, a veces, de personas. Usa herramientas que te permitan saber dónde se guardan los datos y quién accede a ellos, y conserva los originales igual que hasta ahora: automatizar el registro no cambia tus obligaciones de conservación. Si tienes dudas sobre un caso concreto, consúltalo con tu gestoría.</p>
   </section>
 
+  <section><h2>¿Cómo se monta con n8n?</h2>
+    <p>Con n8n, los cinco pasos son un único flujo. Un montaje habitual tiene estas piezas:</p>
+    <ol>
+      <li><strong>Entrada:</strong> un disparador de correo (Gmail Trigger, Microsoft Outlook Trigger o Email Trigger por IMAP) que se activa con cada mensaje del buzón de facturas y recoge los adjuntos en PDF.</li>
+      <li><strong>Lectura:</strong> el nodo Extract from File saca el texto del PDF y un modelo de IA, por ejemplo con el nodo Information Extractor, lo convierte en campos: proveedor, NIF, número, fecha, base, IVA y total. Si el proveedor envía factura electrónica en XML, se leen los campos directamente.</li>
+      <li><strong>Comprobación:</strong> un nodo If, o unas líneas en un nodo Code, aplica las reglas: NIF en tu lista de proveedores, base más IVA igual al total y número no repetido.</li>
+      <li><strong>Registro:</strong> el PDF se guarda renombrado en Google Drive o en OneDrive y los datos se añaden a una hoja de Google Sheets o a tu programa de gestión mediante su API con el nodo HTTP Request.</li>
+      <li><strong>Excepciones y avisos:</strong> lo que no pasa las reglas va a una hoja de revisión con el motivo, y la persona de administración recibe un aviso por correo o por el chat del equipo.</li>
+    </ol>
+    <p>Dos ajustes que conviene hacer desde el principio: que n8n no guarde más tiempo del necesario los datos de cada ejecución, porque incluyen el contenido de las facturas, y que el flujo te avise si deja de funcionar. Lo explicamos en <a href="/guias/n8n-servidor-propio-rgpd">n8n en servidor propio y RGPD</a>.</p>
+  </section>
+
   <section><h2>¿Lo montamos contigo?</h2>
-    <p>En Banteq conectamos el correo, las carpetas, tu programa de gestión y la gestoría para que las facturas de proveedores se registren solas y una persona revise solo las excepciones. Puedes ver cómo trabajamos en <a href="/automatizacion-procesos">automatización de procesos</a> y qué herramientas conectamos en <a href="/automatizacion-n8n">automatización con n8n</a>.</p>
-    <p class="action"><a data-bq-contacto-guia href="/automatizacion-procesos#hablemos">Cuéntanos cómo te llegan hoy las facturas</a>.</p>
+    <p>En Banteq montamos este flujo en tu n8n, en la nube o en un servidor propio, o en la herramienta que ya uses. Conectamos el correo, las carpetas, tu programa de gestión y la gestoría para que las facturas de proveedores se registren solas y una persona revise solo las excepciones. Puedes ver cómo trabajamos en <a href="/automatizacion-procesos">automatización de procesos</a> y qué herramientas conectamos en <a href="/automatizacion-n8n">automatización con n8n</a>.</p>
+    <p class="action"><a data-bq-contacto-guia href="/automatizacion-n8n#hablemos">Cuéntanos cómo te llegan hoy las facturas y qué programa usas</a>.</p>
   </section>
 
   <section class="relacionados"><h2>Sigue leyendo</h2>
     <ul>
+      <li><a href="/guias/n8n-servidor-propio-rgpd">n8n en servidor propio y RGPD: qué tiene que revisar una pyme</a></li>
       <li><a href="/guias/que-procesos-automatizar-en-una-pyme">Qué procesos automatizar en una pyme y por cuál empezar</a></li>
       <li><a href="/guias/ia-en-pymes-casos-practicos">Inteligencia artificial en pymes: usos prácticos y cuándo no usarla</a></li>
       <li><a href="/guias/automatizar-solicitudes-formulario-web">Que no se pierda ninguna solicitud de tu web</a></li>

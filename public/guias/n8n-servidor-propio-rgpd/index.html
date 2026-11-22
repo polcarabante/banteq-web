@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>n8n en servidor propio y RGPD: guía para pymes españolas | Banteq</title>
+  <meta name="description" content="Dónde guarda n8n los datos, cuánto tiempo conserva cada ejecución, qué contratos necesitas y qué apuntar en el registro de tratamientos si lo alojas en tu servidor.">
+  <link rel="canonical" href="https://banteq.com/guias/n8n-servidor-propio-rgpd">
+  <script src="/banteq/procedencia.js?v=6fa14cde2f" defer></script>
+  <link rel="icon" href="/favicon.ico">
+  <meta property="og:type" content="article">
+  <meta property="og:locale" content="es_ES">
+  <meta property="og:site_name" content="Banteq">
+  <meta property="og:title" content="n8n en servidor propio y RGPD">
+  <meta property="og:description" content="Alojamiento en la UE, contratos de encargo, APIs externas, conservación de ejecuciones y copias.">
+  <meta property="og:url" content="https://banteq.com/guias/n8n-servidor-propio-rgpd">
+  <meta property="og:image" content="https://banteq.com/framerusercontent.com/images/mesMNsTTSgV6Xg1TUfNtMnEGZY.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Article","headline":"n8n en servidor propio y RGPD: qué tiene que revisar una pyme","description":"Dónde guarda n8n los datos, cuánto tiempo conserva cada ejecución, qué contratos necesitas y qué apuntar en el registro de tratamientos si lo alojas en tu servidor.","inLanguage":"es-ES","datePublished":"2026-11-22","dateModified":"2026-11-22","mainEntityOfPage":"https://banteq.com/guias/n8n-servidor-propio-rgpd","image":"https://banteq.com/framerusercontent.com/images/mesMNsTTSgV6Xg1TUfNtMnEGZY.png","isPartOf":{"@id":"https://banteq.com/#website"},"author":{"@type":"Person","name":"Pol Carabante","url":"https://banteq.com/","worksFor":{"@id":"https://banteq.com/#organization"}},"publisher":{"@id":"https://banteq.com/#organization"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Inicio","item":"https://banteq.com/"},{"@type":"ListItem","position":2,"name":"Guías","item":"https://banteq.com/guias"},{"@type":"ListItem","position":3,"name":"n8n en servidor propio y RGPD"}]}]}</script>
+  <style>
+    * { box-sizing: border-box }
+    body { margin: 0; color: #222; background: #fcfcfa; font: 1.08rem/1.65 system-ui, sans-serif }
+    a { color: inherit; text-underline-offset: .2em }
+    a:focus-visible { outline: 3px solid #4643a0; outline-offset: 4px }
+    header, main, footer { width: min(100% - 2.5rem, 58rem); margin: auto }
+    header, footer { padding: 1.3rem 0; display: flex; flex-wrap: wrap; gap: 1rem; align-items: baseline; justify-content: space-between }
+    header { border-bottom: 1px solid #ccc } header > a:first-child { text-decoration: none; font-size: 1.35rem; font-weight: 750 }
+    main { padding: clamp(2rem, 6vw, 5rem) 0 } h1, h2, h3 { line-height: 1.15; text-wrap: balance }
+    h1 { font-size: clamp(2.1rem, 6vw, 4.2rem); letter-spacing: -.045em; max-width: 18ch; margin: 0 0 1rem }
+    h2 { font-size: clamp(1.45rem, 3vw, 2rem); margin: 0 0 1rem; letter-spacing: -.025em }
+    section { border-top: 1px solid #ccc; padding-top: 1.6rem; margin-top: 2.2rem }
+    p, li { max-width: 72ch } li + li { margin-top: .65rem } h3 { margin: 1.5rem 0 .4rem } h3 + p { margin-top: 0 }
+    .byline, footer { color: #505050; font-size: .92rem } .intro { font-size: 1.24rem }
+    .migas { color: #505050; font-size: .92rem; margin: 0 0 1.4rem } .migas a { color: #505050 }
+    footer { border-top: 1px solid #ccc } ol { padding-left: 1.5rem } .action { font-weight: 650 }
+    nav { display: flex; gap: 1.2rem; flex-wrap: wrap }
+    .relacionados ul { padding-left: 1.2rem }
+    .tabla { overflow-x: auto; margin: 1rem 0 } table { border-collapse: collapse; width: 100%; font-size: .95rem }
+    th, td { text-align: left; vertical-align: top; padding: .55rem .7rem; border-bottom: 1px solid #ccc } thead th { font-weight: 650 }
+    pre { background: #f1f0ea; padding: 1rem; overflow-x: auto; border-radius: 6px; font-size: .88rem; line-height: 1.5 }
+    code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: .92em }
+  </style>
+</head>
+<body>
+<header><a href="/">Banteq</a><nav aria-label="Secciones"><a href="/automatizacion-procesos">Automatización</a><a href="/desarrollo-web">Desarrollo web</a><a href="/guias">Guías</a></nav></header>
+<main><article>
+<p class="migas"><a href="/">Inicio</a> › <a href="/guias">Guías</a></p>
+  <h1>n8n en servidor propio y RGPD: qué tiene que revisar una pyme</h1>
+  <p class="byline">Pol Carabante · Banteq Digital · <time datetime="2026-11-22">22 de noviembre de 2026</time></p>
+  <p class="intro">Instalar n8n en tu propio servidor no te hace cumplir el RGPD por sí solo, pero te da el control: decides dónde se guardan los datos, cuánto tiempo y quién accede. Lo demás se cubre con cinco piezas: un alojamiento en la Unión Europea con contrato de encargo, saber qué datos envía cada flujo a servicios externos, limitar lo que n8n guarda de cada ejecución, copias de seguridad protegidas y el registro de actividades de tratamiento.</p>
+  <p>Esta guía está pensada para pymes españolas que automatizan con n8n procesos en los que hay datos personales: formularios, correos, facturas o fichas de clientes. Resume obligaciones generales del RGPD; para un caso concreto, consúltalo con tu asesor o con tu delegado de protección de datos.</p>
+
+  <section><h2>¿n8n en la nube o en servidor propio?</h2>
+    <p>Las dos opciones pueden cumplir el RGPD. La diferencia está en quién controla qué y en quién tiene que mantenerlo.</p>
+    <div class="tabla"><table>
+      <thead><tr><th></th><th>n8n en la nube</th><th>n8n en servidor propio</th></tr></thead>
+      <tbody>
+        <tr><th>Dónde están los datos</th><td>En la infraestructura que elige n8n; compruébalo en su documentación y en su contrato.</td><td>En el servidor que eliges tú, por ejemplo en un centro de datos de la UE.</td></tr>
+        <tr><th>Contrato de encargo</th><td>Con n8n.</td><td>Con tu proveedor de alojamiento.</td></tr>
+        <tr><th>Actualizaciones y seguridad</th><td>Las gestiona n8n.</td><td>Las gestionas tú o quien te lo mantenga.</td></tr>
+        <tr><th>Cuánto guarda de cada ejecución</th><td>Según las opciones de tu plan.</td><td>Lo decides tú con variables de configuración.</td></tr>
+      </tbody>
+    </table></div>
+    <p>Si tus flujos manejan datos sensibles o quieres decidir cada detalle de la conservación, el servidor propio encaja mejor. Si nadie en tu empresa va a mantener un servidor, la nube evita un riesgo real: una instalación sin actualizar.</p>
+  </section>
+
+  <section><h2>¿Qué datos guarda n8n y dónde?</h2>
+    <p>Una instalación de n8n guarda tres cosas en su base de datos:</p>
+    <ul>
+      <li><strong>Los flujos:</strong> la definición de cada automatización. Normalmente no contienen datos personales, salvo que alguien los escriba a mano dentro.</li>
+      <li><strong>Las credenciales:</strong> las claves para conectar con tu correo, tu CRM o tu ERP. n8n las guarda cifradas con una clave propia (<code>N8N_ENCRYPTION_KEY</code>), que genera al arrancar por primera vez si no le das una. Guarda esa clave fuera del servidor: si la pierdes al migrar o restaurar, las credenciales no se podrán descifrar.</li>
+      <li><strong>Los datos de cada ejecución:</strong> lo que entra y sale de cada paso. Aquí es donde suelen estar los datos personales, como el nombre y el correo de quien rellenó un formulario o el contenido de una factura.</li>
+    </ul>
+  </section>
+
+  <section><h2>¿Cuánto tiempo guarda n8n los datos de cada ejecución?</h2>
+    <p>Por defecto, n8n guarda las ejecuciones correctas y las fallidas y las borra cuando tienen más de 336 horas (14 días) o cuando hay más de 10.000. Si no necesitas ese historial, el RGPD te pide no guardarlo: es el principio de limitación del plazo de conservación. En un servidor propio se ajusta con variables de entorno:</p>
+    <pre><code># Borrar ejecuciones antiguas (activado por defecto)
+EXECUTIONS_DATA_PRUNE=true
+# Antigüedad máxima en horas (por defecto 336 = 14 días)
+EXECUTIONS_DATA_MAX_AGE=72
+# No guardar las ejecuciones que terminan bien; sí las que fallan, para poder revisarlas
+EXECUTIONS_DATA_SAVE_ON_SUCCESS=none
+EXECUTIONS_DATA_SAVE_ON_ERROR=all</code></pre>
+    <p>Los valores de ejemplo son orientativos: elige los tuyos según cuánto tiempo necesites para detectar y corregir fallos. También puedes ajustarlo flujo a flujo en la configuración de cada uno, por ejemplo para no guardar nunca las ejecuciones del flujo que procesa nóminas.</p>
+  </section>
+
+  <section><h2>¿Qué contrato necesito con el proveedor del servidor?</h2>
+    <p>Un contrato de encargo del tratamiento, como exige el artículo 28 del RGPD. El proveedor de alojamiento guarda datos personales por cuenta de tu empresa, así que es un encargado del tratamiento. La mayoría de proveedores lo ofrecen como anexo de protección de datos en sus condiciones. Al elegir, comprueba:</p>
+    <ul>
+      <li>Que el servidor está en el Espacio Económico Europeo y puedes elegir la región.</li>
+      <li>Qué subencargados usa y dónde están.</li>
+      <li>Cómo te avisa si hay una brecha de seguridad.</li>
+    </ul>
+  </section>
+
+  <section><h2>¿Qué pasa con las APIs externas que usa el flujo?</h2>
+    <p>Aunque n8n esté en tu servidor, cada flujo envía datos a otros servicios: Google, Microsoft, tu CRM o un modelo de inteligencia artificial. Cada uno de ellos es otro encargado del tratamiento, con su propio contrato y su propia ubicación. Si alguno trata los datos fuera del Espacio Económico Europeo, esa transferencia necesita una garantía del RGPD, como una decisión de adecuación (por ejemplo, el Marco de Privacidad de Datos UE-EE. UU. para empresas certificadas) o cláusulas contractuales tipo.</p>
+    <p>La forma más eficaz de reducir el riesgo es enviar menos: en cada paso, manda solo los campos que ese servicio necesita. Si una IA solo tiene que clasificar un correo, no le hace falta la firma con el teléfono ni los adjuntos.</p>
+  </section>
+
+  <section><h2>¿Qué medidas de seguridad conviene aplicar?</h2>
+    <ul>
+      <li>Acceso a n8n solo por HTTPS y con cuentas personales, nada de usuarios compartidos.</li>
+      <li>Actualizar n8n con regularidad; las notificaciones de nuevas versiones vienen activadas por defecto.</li>
+      <li>No dejar expuestos webhooks que no se usan y proteger con autenticación los que reciben datos.</li>
+      <li>Copias de seguridad de la base de datos y de la clave de cifrado, guardadas aparte y probadas: una copia que nunca se ha restaurado no es una copia.</li>
+      <li>Si no quieres enviar telemetría anónima a n8n, desactívala con <code>N8N_DIAGNOSTICS_ENABLED=false</code>. Ten en cuenta que entonces no podrás usar la función «Ask AI» del nodo Code.</li>
+    </ul>
+  </section>
+
+  <section><h2>¿Hay que apuntar las automatizaciones en el registro de actividades de tratamiento?</h2>
+    <p>Sí, cuando tratan datos personales de forma habitual. El artículo 30 del RGPD exime a las empresas de menos de 250 trabajadores solo si el tratamiento es ocasional, y una automatización que funciona todos los días no lo es. Por cada flujo con datos personales, anota la finalidad, qué datos trata, a qué servicios externos los envía, cuánto tiempo se conservan y qué medidas de seguridad aplicas. La Agencia Española de Protección de Datos ofrece guías y herramientas gratuitas, como Facilita RGPD, para empresas que tratan datos de bajo riesgo.</p>
+  </section>
+
+  <section><h2>Lista de comprobación</h2>
+    <ol>
+      <li>Servidor en el Espacio Económico Europeo y contrato de encargo firmado.</li>
+      <li>Lista de servicios externos de cada flujo, con su contrato y su ubicación.</li>
+      <li>Conservación de ejecuciones ajustada a lo que necesitas.</li>
+      <li>Clave de cifrado y copias de seguridad guardadas aparte y probadas.</li>
+      <li>Accesos personales, HTTPS y n8n actualizado.</li>
+      <li>Cada automatización con datos personales, en el registro de actividades de tratamiento.</li>
+    </ol>
+  </section>
+
+  <section><h2>¿Lo revisamos en tu instalación?</h2>
+    <p>En Banteq instalamos y mantenemos n8n en la nube o en un servidor propio y diseñamos los flujos para que guarden solo lo necesario. Lo explicamos en <a href="/automatizacion-n8n">automatización con n8n e integración de herramientas</a>.</p>
+    <p class="action"><a data-bq-contacto-guia href="/automatizacion-n8n#hablemos">Cuéntanos qué flujos tienes o quieres montar</a>.</p>
+  </section>
+
+  <section class="relacionados"><h2>Sigue leyendo</h2>
+    <ul>
+      <li><a href="/guias/automatizar-facturas-de-proveedores">Cómo automatizar las facturas de proveedores paso a paso</a></li>
+      <li><a href="/guias/asistente-ia-correo-revision-humana">Asistente de IA para el correo con revisión humana</a></li>
+      <li><a href="/guias/ia-en-pymes-casos-practicos">Inteligencia artificial en pymes: usos prácticos y cuándo no usarla</a></li>
+    </ul>
+  </section>
+</article></main>
+<footer><span>Banteq Digital · Barcelona</span><nav aria-label="Información legal"><a href="/aviso-legal">Aviso legal</a><a href="/privacidad">Privacidad</a></nav></footer>
+</body>
+</html>

@@ -108,24 +108,32 @@
   "fecha": "2026-11-14"
  },
  "https://banteq.com/guias": {
-  "firma": "6d3cde712c03",
-  "fecha": "2026-11-20"
+  "firma": "c35d853fa877",
+  "fecha": "2026-11-22"
  },
  "https://banteq.com/guias/aplicaciones-para-entrenadores-online": {
   "firma": "15b89858f7d5",
   "fecha": "2026-11-20"
  },
+ "https://banteq.com/guias/asistente-ia-correo-revision-humana": {
+  "firma": "0897f4967b2e",
+  "fecha": "2026-11-22"
+ },
  "https://banteq.com/guias/automatizar-facturas-de-proveedores": {
-  "firma": "82c8af49ba5b",
-  "fecha": "2026-11-20"
+  "firma": "a90105522b99",
+  "fecha": "2026-11-22"
  },
  "https://banteq.com/guias/automatizar-solicitudes-formulario-web": {
   "firma": "4ab12ab48429",
   "fecha": "2026-11-20"
  },
  "https://banteq.com/guias/ia-en-pymes-casos-practicos": {
-  "firma": "1738134a7f13",
-  "fecha": "2026-11-20"
+  "firma": "696e92ec1135",
+  "fecha": "2026-11-22"
+ },
+ "https://banteq.com/guias/n8n-servidor-propio-rgpd": {
+  "firma": "917f68c0077f",
+  "fecha": "2026-11-22"
  },
  "https://banteq.com/guias/que-procesos-automatizar-en-una-pyme": {
   "firma": "51db4bffb887",

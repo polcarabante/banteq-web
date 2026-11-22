@@ -15,6 +15,8 @@ Estamos en Santa Perpètua de Mogoda (Barcelona) y trabajamos con empresas de Ba
 ## Guías
 
 - [Índice de guías](https://banteq.com/guias): Todos los artículos prácticos de Banteq para pymes.
+- [n8n en servidor propio y RGPD: qué tiene que revisar una pyme](https://banteq.com/guias/n8n-servidor-propio-rgpd): Dónde guarda n8n los datos, cuánto tiempo conserva cada ejecución, qué contratos necesitas y qué apuntar en el registro de tratamientos si lo alojas en tu servidor.
+- [Asistente de IA para el correo con revisión humana](https://banteq.com/guias/asistente-ia-correo-revision-humana): Un asistente que lee el correo, lo clasifica y deja borradores que revisa una persona: cómo funciona, el modo sombra, qué correos no debe tocar y qué cuidar con los datos.
 - [Qué procesos automatizar en una pyme y por cuál empezar](https://banteq.com/guias/que-procesos-automatizar-en-una-pyme): Doce tareas que las pymes automatizan con más frecuencia, ordenadas por área, y cuatro preguntas para elegir la primera sin equivocarte.
 - [Inteligencia artificial en pymes: 8 usos prácticos y cuándo no usarla](https://banteq.com/guias/ia-en-pymes-casos-practicos): Ocho usos de la IA que funcionan hoy en empresas pequeñas y medianas, cuándo basta una automatización normal y qué vigilar con tus datos.
 - [Que no se pierda ninguna solicitud de tu web](https://banteq.com/guias/automatizar-solicitudes-formulario-web): Guardar, confirmar, avisar y recordar: cómo automatizar las solicitudes del formulario de tu web, filtrar el spam y comprobar el tuyo en diez minutos.
