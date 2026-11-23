@@ -2674,8 +2674,10 @@ def guias_datos():
         desc = re.search(r'<meta name="description" content="([^"]*)"', t)
         fecha = re.search(r'<time datetime="([0-9-]+)"', t)
         assert h1 and desc, f"{guia.name}: le falta <h1> o meta description"
+        idioma = re.search(r'<html\b[^>]* lang="([a-zA-Z-]+)"', t)
         guias.append({
             "slug": guia.stem,
+            "idioma": idioma.group(1) if idioma else "es",
             "titulo": html.unescape(re.sub(r"<[^>]+>", "", h1.group(1)).strip()),
             "descripcion": html.unescape(desc.group(1)),
             "fecha": fecha.group(1) if fecha else "",
@@ -2696,12 +2698,13 @@ def guias_indice():
         if g["fecha"]:
             d = datetime.date.fromisoformat(g["fecha"])
             cuando = f'<p class="byline"><time datetime="{g["fecha"]}">{d.day} de {meses[d.month - 1]} de {d.year}</time></p>'
-        items.append(f'    <li><h2><a href="{url}">{html.escape(g["titulo"])}</a></h2>'
-                     f'<p>{html.escape(g["descripcion"])}</p>{cuando}</li>')
+        idioma = html.escape(g["idioma"], quote=True)
+        items.append(f'    <li><h2 lang="{idioma}"><a href="{url}" hreflang="{idioma}">{html.escape(g["titulo"])}</a></h2>'
+                     f'<p lang="{idioma}">{html.escape(g["descripcion"])}</p>{cuando}</li>')
     ld = _ld(
         {"@type": "CollectionPage", "name": "Guías de Banteq", "url": f"{C.SITIO}/guias", "inLanguage": "es-ES",
          "isPartOf": {"@id": WEB_ID}, "publisher": {"@id": ORG_ID},
-         "hasPart": [{"@type": "Article", "headline": g["titulo"], "url": f"{C.SITIO}/guias/{g['slug']}"} for g in guias]},
+         "hasPart": [{"@type": "Article", "inLanguage": g["idioma"], "headline": g["titulo"], "url": f"{C.SITIO}/guias/{g['slug']}"} for g in guias]},
         {"@type": "BreadcrumbList", "itemListElement": [
             {"@type": "ListItem", "position": 1, "name": "Inicio", "item": f"{C.SITIO}/"},
             {"@type": "ListItem", "position": 2, "name": "Guías"}]},

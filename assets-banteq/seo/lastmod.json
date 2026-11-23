@@ -108,8 +108,8 @@
   "fecha": "2026-11-14"
  },
  "https://banteq.com/guias": {
-  "firma": "c35d853fa877",
-  "fecha": "2026-11-22"
+  "firma": "121b69f060e3",
+  "fecha": "2026-11-23"
  },
  "https://banteq.com/guias/aplicaciones-para-entrenadores-online": {
   "firma": "15b89858f7d5",
@@ -124,8 +124,16 @@
   "fecha": "2026-11-22"
  },
  "https://banteq.com/guias/automatizar-solicitudes-formulario-web": {
-  "firma": "4ab12ab48429",
-  "fecha": "2026-11-20"
+  "firma": "4f6487c6e2d6",
+  "fecha": "2026-11-23"
+ },
+ "https://banteq.com/guias/com-triar-empresa-automatitzacio-processos": {
+  "firma": "14a1e61dbab0",
+  "fecha": "2026-11-23"
+ },
+ "https://banteq.com/guias/como-pedir-presupuesto-web-a-medida": {
+  "firma": "73d614eaff5e",
+  "fecha": "2026-11-23"
  },
  "https://banteq.com/guias/ia-en-pymes-casos-practicos": {
   "firma": "696e92ec1135",
@@ -136,8 +144,8 @@
   "fecha": "2026-11-22"
  },
  "https://banteq.com/guias/que-procesos-automatizar-en-una-pyme": {
-  "firma": "51db4bffb887",
-  "fecha": "2026-11-20"
+  "firma": "491869ea9857",
+  "fecha": "2026-11-23"
  },
  "https://banteq.com/inteligencia-artificial": {
   "firma": "abf13ef41560",
