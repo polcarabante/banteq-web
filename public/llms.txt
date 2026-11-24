@@ -20,6 +20,8 @@ Estamos en Santa Perpètua de Mogoda (Barcelona) y trabajamos con empresas de Ba
 ## Guías
 
 - [Índice de guías](https://banteq.com/guias): Todos los artículos prácticos de Banteq para pymes.
+- [Verifactu y facturas automáticas: qué revisar si un flujo emite tus facturas](https://banteq.com/guias/verifactu-facturas-automaticas): Qué exige Verifactu si tus facturas salen de n8n, Zapier, una macro o tu tienda online, cómo montar el flujo sin riesgo y qué fechas siguen vigentes.
+- [Cómo documentar un proceso antes de automatizarlo (con plantilla)](https://banteq.com/guias/documentar-proceso-antes-de-automatizar): Método y plantilla para documentar un proceso antes de automatizarlo: disparador, pasos, datos, reglas, excepciones y volumen, explicado para pymes.
 - [Cómo pedir presupuesto para una web a medida](https://banteq.com/guias/como-pedir-presupuesto-web-a-medida): Plantilla para explicar qué necesitas, comparar ofertas de desarrollo web y comprobar que las solicitudes de tu nueva web llegan al equipo de ventas.
 - [Com triar una empresa per automatitzar processos](https://banteq.com/guias/com-triar-empresa-automatitzacio-processos): Tres comandes de prova i quatre preguntes per comparar proveïdors d’automatització, detectar costos recurrents i demanar un pressupost per al teu negoci.
 - [n8n en servidor propio y RGPD: qué tiene que revisar una pyme](https://banteq.com/guias/n8n-servidor-propio-rgpd): Dónde guarda n8n los datos, cuánto tiempo conserva cada ejecución, qué contratos necesitas y qué apuntar en el registro de tratamientos si lo alojas en tu servidor.

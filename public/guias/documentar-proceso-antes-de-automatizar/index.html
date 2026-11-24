@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Cómo documentar un proceso antes de automatizarlo | Banteq</title>
+  <meta name="description" content="Método y plantilla para documentar un proceso antes de automatizarlo: disparador, pasos, datos, reglas, excepciones y volumen, explicado para pymes.">
+  <link rel="canonical" href="https://banteq.com/guias/documentar-proceso-antes-de-automatizar">
+  <script src="/banteq/procedencia.js?v=6fa14cde2f" defer></script>
+  <link rel="icon" href="/favicon.ico">
+  <meta property="og:type" content="article">
+  <meta property="og:locale" content="es_ES">
+  <meta property="og:site_name" content="Banteq">
+  <meta property="og:title" content="Cómo documentar un proceso antes de automatizarlo">
+  <meta property="og:description" content="Una ficha de una o dos páginas con lo que necesita una automatización, y una plantilla para copiar.">
+  <meta property="og:url" content="https://banteq.com/guias/documentar-proceso-antes-de-automatizar">
+  <meta property="og:image" content="https://banteq.com/framerusercontent.com/images/mesMNsTTSgV6Xg1TUfNtMnEGZY.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Article","headline":"Cómo documentar un proceso antes de automatizarlo (con plantilla)","description":"Método y plantilla para documentar un proceso antes de automatizarlo: disparador, pasos, datos, reglas, excepciones y volumen, explicado para pymes.","inLanguage":"es-ES","datePublished":"2026-11-24","dateModified":"2026-11-24","mainEntityOfPage":"https://banteq.com/guias/documentar-proceso-antes-de-automatizar","image":"https://banteq.com/framerusercontent.com/images/mesMNsTTSgV6Xg1TUfNtMnEGZY.png","isPartOf":{"@id":"https://banteq.com/#website"},"author":{"@type":"Person","@id":"https://banteq.com/#pol-carabante","name":"Pol Carabante","url":"https://banteq.com/","worksFor":{"@id":"https://banteq.com/#organization"}},"publisher":{"@id":"https://banteq.com/#organization"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Inicio","item":"https://banteq.com/"},{"@type":"ListItem","position":2,"name":"Guías","item":"https://banteq.com/guias"},{"@type":"ListItem","position":3,"name":"Documentar un proceso antes de automatizarlo"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"¿Cuánto detalle necesita la documentación de un proceso?","acceptedAnswer":{"@type":"Answer","text":"El suficiente para que alguien de fuera entienda cada paso, cada dato y cada decisión sin tener que preguntar. En una pyme suele caber en una o dos páginas. Si necesitas más, probablemente estás mezclando varios procesos en la misma ficha."}},{"@type":"Question","name":"¿Quién debe documentar el proceso?","acceptedAnswer":{"@type":"Answer","text":"Quien lo hace cada día, con ayuda de alguien que pregunte y lo escriba, y al final lo valida el responsable del área. Si lo documenta solo quien lo supervisa, se suele escribir cómo debería hacerse y no cómo se hace."}},{"@type":"Question","name":"¿Qué herramienta uso para documentar procesos?","acceptedAnswer":{"@type":"Answer","text":"La que ya uses para tus documentos: un documento compartido o una hoja de cálculo bastan. Lo importante es la estructura, con disparador, pasos, datos, reglas, excepciones y volumen, no el programa."}},{"@type":"Question","name":"¿Se puede automatizar un proceso con muchas excepciones?","acceptedAnswer":{"@type":"Answer","text":"Sí, si las excepciones se pueden reconocer. El flujo automatiza el caso normal y aparta los demás para que los resuelva una persona. Si casi todos los casos son una excepción, conviene ordenar primero el proceso."}}]}]}</script>
+  <style>
+    * { box-sizing: border-box }
+    body { margin: 0; color: #222; background: #fcfcfa; font: 1.08rem/1.65 system-ui, sans-serif }
+    a { color: inherit; text-underline-offset: .2em }
+    a:focus-visible { outline: 3px solid #4643a0; outline-offset: 4px }
+    header, main, footer { width: min(100% - 2.5rem, 58rem); margin: auto }
+    header, footer { padding: 1.3rem 0; display: flex; flex-wrap: wrap; gap: 1rem; align-items: baseline; justify-content: space-between }
+    header { border-bottom: 1px solid #ccc } header > a:first-child { text-decoration: none; font-size: 1.35rem; font-weight: 750 }
+    main { padding: clamp(2rem, 6vw, 5rem) 0 } h1, h2, h3 { line-height: 1.15; text-wrap: balance }
+    h1 { font-size: clamp(2.1rem, 6vw, 4.2rem); letter-spacing: -.045em; max-width: 18ch; margin: 0 0 1rem }
+    h2 { font-size: clamp(1.45rem, 3vw, 2rem); margin: 0 0 1rem; letter-spacing: -.025em }
+    section { border-top: 1px solid #ccc; padding-top: 1.6rem; margin-top: 2.2rem }
+    p, li { max-width: 72ch } li + li { margin-top: .65rem } h3 { margin: 1.5rem 0 .4rem } h3 + p { margin-top: 0 }
+    .byline, footer { color: #505050; font-size: .92rem } .intro { font-size: 1.24rem }
+    .migas { color: #505050; font-size: .92rem; margin: 0 0 1.4rem } .migas a { color: #505050 }
+    footer { border-top: 1px solid #ccc } ol { padding-left: 1.5rem } .action { font-weight: 650 }
+    nav { display: flex; gap: 1.2rem; flex-wrap: wrap }
+    .relacionados ul { padding-left: 1.2rem }
+    .tabla { overflow-x: auto; margin: 1rem 0 } table { border-collapse: collapse; width: 100%; font-size: .95rem }
+    th, td { text-align: left; vertical-align: top; padding: .55rem .7rem; border-bottom: 1px solid #ccc } thead th { font-weight: 650 }
+    pre { background: #f1f0ea; padding: 1rem; overflow-x: auto; border-radius: 6px; font-size: .88rem; line-height: 1.5 }
+    code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: .92em }
+  </style>
+</head>
+<body>
+<header><a href="/">Banteq</a><nav aria-label="Secciones"><a href="/automatizacion-procesos">Automatización</a><a href="/desarrollo-web">Desarrollo web</a><a href="/guias">Guías</a></nav></header>
+<main><article>
+<p class="migas"><a href="/">Inicio</a> › <a href="/guias">Guías</a></p>
+  <h1>Cómo documentar un proceso antes de automatizarlo (con plantilla)</h1>
+  <p class="byline">Pol Carabante · Banteq Digital · <time datetime="2026-11-24">24 de noviembre de 2026</time></p>
+  <p class="intro">Para documentar un proceso antes de automatizarlo, apunta qué lo pone en marcha, cada paso con quién lo hace y en qué programa, qué datos entran y salen, las reglas de decisión, las excepciones y cuántas veces ocurre. Hazlo mirando a alguien trabajar con casos reales, no de memoria. Suele caber en una o dos páginas.</p>
+  <p>No hace falta un diagrama profesional ni un programa de gestión de procesos. Hace falta que alguien que no conoce tu empresa pueda leer la ficha y entender qué pasa, en qué orden y qué se decide en cada punto. Si eso se consigue, automatizar es mucho más sencillo; si no, la automatización copiará las dudas.</p>
+
+  <section><h2>¿Por qué documentar un proceso antes de automatizarlo?</h2>
+    <p>Porque una automatización solo hace lo que está escrito. Una persona resuelve sobre la marcha lo que no está claro; un flujo no puede. Documentar primero tiene tres ventajas:</p>
+    <ul>
+      <li>Descubres las reglas que nadie había dicho en voz alta, como «a este cliente se le manda siempre copia al comercial».</li>
+      <li>Ves pasos que sobran. A veces lo que hay que hacer es quitar un paso, no automatizarlo.</li>
+      <li>Tienes con qué comprobar el resultado: si el flujo hace lo que dice la ficha, funciona; si no, sabes dónde mirar.</li>
+    </ul>
+    <p>La misma ficha sirve después para mantener la automatización y, si el proceso trata datos personales, para apuntarlo en el registro de actividades de tratamiento que pide el <a href="https://eur-lex.europa.eu/legal-content/ES/TXT/?uri=CELEX:32016R0679">artículo 30 del RGPD</a>. Lo explicamos para n8n en <a href="/guias/n8n-servidor-propio-rgpd">n8n en servidor propio y RGPD</a>.</p>
+  </section>
+
+  <section><h2>¿Qué tiene que incluir la ficha del proceso?</h2>
+    <p>Ocho apartados. El ejemplo de la tercera columna es un pedido que llega por correo; cámbialo por el tuyo.</p>
+    <div class="tabla"><table>
+      <thead><tr><th>Apartado</th><th>Qué apuntar</th><th>Ejemplo</th></tr></thead>
+      <tbody>
+        <tr><th>Objetivo</th><td>Qué consigue el proceso, en una frase.</td><td>«Registrar los pedidos que llegan por correo y confirmarlos al cliente.»</td></tr>
+        <tr><th>Disparador</th><td>Qué lo pone en marcha y por dónde llega.</td><td>«Un correo de un cliente con el pedido en el texto o en un PDF adjunto.»</td></tr>
+        <tr><th>Final</th><td>Cuándo se da por terminado.</td><td>«El pedido está en el programa de gestión y el cliente ha recibido la confirmación.»</td></tr>
+        <tr><th>Pasos</th><td>Cada paso, quién lo hace y con qué programa.</td><td>«Administración lee el correo, busca al cliente en el programa de gestión y teclea las líneas.»</td></tr>
+        <tr><th>Datos</th><td>Qué entra, qué sale y en qué formato.</td><td>«Entran cliente, referencias, cantidades y fecha de entrega. Sale el número de pedido.»</td></tr>
+        <tr><th>Reglas</th><td>Las decisiones, escritas como «si… entonces…».</td><td>«Si la referencia no existe, se llama al cliente antes de registrar.»</td></tr>
+        <tr><th>Excepciones</th><td>Lo que se sale de lo normal y cómo se resuelve hoy.</td><td>«Pedidos urgentes por teléfono; clientes que mandan una foto en vez de un PDF.»</td></tr>
+        <tr><th>Volumen</th><td>Cuántas veces ocurre y cuánto lleva cada una.</td><td>Lo que midas en una semana normal.</td></tr>
+      </tbody>
+    </table></div>
+  </section>
+
+  <section><h2>¿Cómo se recoge la información sin parar el trabajo?</h2>
+    <p>Observando el trabajo real, no preguntando en una reunión. Estos seis pasos se hacen mientras el equipo sigue con su día:</p>
+    <ol>
+      <li><strong>Marca los límites.</strong> Escribe dónde empieza y dónde acaba. Un proceso por ficha: si a mitad aparece otro, como la facturación del pedido, anótalo aparte.</li>
+      <li><strong>Mira a quien lo hace.</strong> Siéntate con la persona que lo hace cada día y pídele que lo haga como siempre, explicando en voz alta. En remoto, una grabación de pantalla vale más que una descripción.</li>
+      <li><strong>Usa casos reales.</strong> Reúne varios ejemplos de verdad, como correos, PDF o capturas, e incluye alguno raro. Si llevan datos personales, guárdalos solo mientras dure el análisis.</li>
+      <li><strong>Apunta las decisiones.</strong> Cada vez que la persona dude, consulte otro programa o diga «depende», ahí hay una regla. Pregunta de qué depende hasta poder escribirla.</li>
+      <li><strong>Mide una semana.</strong> Cuenta cuántas veces se pone en marcha el proceso y cuánto tarda cada caso. Sin esa cifra no sabrás si compensa automatizarlo.</li>
+      <li><strong>Valida la ficha.</strong> Que la lean quien hace el trabajo y quien lo supervisa. Si discrepan en algún punto, ese es justo el que hay que aclarar antes de automatizar.</li>
+    </ol>
+  </section>
+
+  <section><h2>¿Cómo se escriben las reglas para que se puedan automatizar?</h2>
+    <p>Con condiciones que se puedan comprobar con los datos. «Si el importe supera el límite de crédito del cliente, pasa a revisión de administración» se puede automatizar. «Si el pedido parece raro, se revisa» no, hasta que digas qué es raro.</p>
+    <ul>
+      <li>Una regla por línea, con la forma «si… entonces…».</li>
+      <li>Nombra el dato exacto y dónde está: «el campo Forma de pago de la ficha del cliente», no «lo que tenga puesto».</li>
+      <li>Di qué pasa cuando no se cumple ninguna regla. Esa salida, normalmente «avisar a una persona», es la que evita errores silenciosos.</li>
+      <li>Si una decisión necesita criterio, márcala como revisión humana. Se automatiza lo que la rodea y la decide una persona, como explicamos en el <a href="/guias/asistente-ia-correo-revision-humana">asistente de IA para el correo con revisión humana</a>.</li>
+    </ul>
+  </section>
+
+  <section><h2>¿Qué excepciones hay que apuntar?</h2>
+    <p>Todas las que hayas visto, con cuántas veces pasan. No hace falta automatizarlas: basta con que el flujo sepa reconocerlas y apartarlas para una persona. Las más habituales:</p>
+    <ul>
+      <li>Datos que faltan o vienen mal, como un NIF incompleto o una referencia antigua.</li>
+      <li>Formatos distintos para lo mismo: PDF, foto o texto en el cuerpo del correo.</li>
+      <li>Duplicados, como el mismo pedido enviado dos veces.</li>
+      <li>Casos urgentes que se saltan el orden.</li>
+      <li>Clientes o proveedores con condiciones especiales.</li>
+    </ul>
+  </section>
+
+  <section><h2>¿Hace falta un diagrama o basta con texto?</h2>
+    <p>Para la mayoría de procesos de una pyme basta con una lista numerada. Un diagrama ayuda cuando hay varias ramas o varias personas que se pasan el trabajo, y puedes dibujarlo a mano o con cualquier herramienta de diagramas. Si tu equipo ya usa una notación como BPMN, sigue con ella; si no, no hace falta aprenderla para esto.</p>
+  </section>
+
+  <section><h2>Plantilla para copiar</h2>
+    <p>Cópiala en un documento compartido o en una hoja de cálculo y rellena una por proceso.</p>
+    <pre><code>PROCESO:
+Objetivo (una frase):
+Empieza cuando:
+Termina cuando:
+Responsable:
+
+PASOS
+1. Quién · qué hace · con qué programa
+2.
+
+DATOS
+Entran:
+Salen:
+
+REGLAS (si… entonces…)
+- Si
+- Si no se cumple ninguna:
+
+EXCEPCIONES (y cuántas veces pasan)
+-
+
+VOLUMEN
+Veces por semana:
+Minutos por caso:
+
+DATOS PERSONALES
+Cuáles, de quién y a qué programas o servicios van:
+
+DUDAS PENDIENTES
+-</code></pre>
+  </section>
+
+  <section><h2>Preguntas frecuentes</h2>
+    <h3>¿Cuánto detalle necesita la documentación de un proceso?</h3>
+    <p>El suficiente para que alguien de fuera entienda cada paso, cada dato y cada decisión sin tener que preguntar. En una pyme suele caber en una o dos páginas. Si necesitas más, probablemente estás mezclando varios procesos en la misma ficha.</p>
+    <h3>¿Quién debe documentar el proceso?</h3>
+    <p>Quien lo hace cada día, con ayuda de alguien que pregunte y lo escriba, y al final lo valida el responsable del área. Si lo documenta solo quien lo supervisa, se suele escribir cómo debería hacerse y no cómo se hace.</p>
+    <h3>¿Qué herramienta uso para documentar procesos?</h3>
+    <p>La que ya uses para tus documentos: un documento compartido o una hoja de cálculo bastan. Lo importante es la estructura, con disparador, pasos, datos, reglas, excepciones y volumen, no el programa.</p>
+    <h3>¿Se puede automatizar un proceso con muchas excepciones?</h3>
+    <p>Sí, si las excepciones se pueden reconocer. El flujo automatiza el caso normal y aparta los demás para que los resuelva una persona. Si casi todos los casos son una excepción, conviene ordenar primero el proceso.</p>
+  </section>
+
+  <section><h2>¿Lo documentamos contigo?</h2>
+    <p>Si prefieres hacerlo acompañado, en Banteq analizamos cómo trabaja tu empresa, documentamos el proceso contigo y te proponemos qué automatizar primero. Lo explicamos en <a href="/automatizacion-procesos">automatización de procesos para pymes</a>.</p>
+    <p class="action"><a data-bq-contacto-guia href="/automatizacion-procesos#hablemos">Cuéntanos qué proceso quieres ordenar</a>.</p>
+  </section>
+
+  <section class="relacionados"><h2>Sigue leyendo</h2>
+    <ul>
+      <li><a href="/guias/que-procesos-automatizar-en-una-pyme">Qué procesos automatizar en una pyme y por cuál empezar</a></li>
+      <li><a href="/guias/automatizar-solicitudes-formulario-web">Que no se pierda ninguna solicitud de tu web</a></li>
+      <li><a href="/guias/asistente-ia-correo-revision-humana">Asistente de IA para el correo con revisión humana</a></li>
+    </ul>
+  </section>
+</article></main>
+<footer><span>Banteq Digital · Barcelona</span><nav aria-label="Información legal"><a href="/aviso-legal">Aviso legal</a><a href="/privacidad">Privacidad</a></nav></footer>
+</body>
+</html>

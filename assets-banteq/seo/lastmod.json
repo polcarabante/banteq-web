@@ -108,8 +108,8 @@
   "fecha": "2026-11-14"
  },
  "https://banteq.com/guias": {
-  "firma": "121b69f060e3",
-  "fecha": "2026-11-23"
+  "firma": "b797b3b31104",
+  "fecha": "2026-11-24"
  },
  "https://banteq.com/guias/aplicaciones-para-entrenadores-online": {
   "firma": "15b89858f7d5",
@@ -135,6 +135,10 @@
   "firma": "88407d58fd2a",
   "fecha": "2026-11-24"
  },
+ "https://banteq.com/guias/documentar-proceso-antes-de-automatizar": {
+  "firma": "3220f1675ecc",
+  "fecha": "2026-11-24"
+ },
  "https://banteq.com/guias/ia-en-pymes-casos-practicos": {
   "firma": "696e92ec1135",
   "fecha": "2026-11-22"
@@ -146,6 +150,10 @@
  "https://banteq.com/guias/que-procesos-automatizar-en-una-pyme": {
   "firma": "491869ea9857",
   "fecha": "2026-11-23"
+ },
+ "https://banteq.com/guias/verifactu-facturas-automaticas": {
+  "firma": "57247ef96c4a",
+  "fecha": "2026-11-24"
  },
  "https://banteq.com/inteligencia-artificial": {
   "firma": "abf13ef41560",

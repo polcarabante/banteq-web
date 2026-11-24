@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Verifactu en facturas automáticas: qué revisar | Banteq</title>
+  <meta name="description" content="Qué exige Verifactu si tus facturas salen de n8n, Zapier, una macro o tu tienda online, cómo montar el flujo sin riesgo y qué fechas siguen vigentes.">
+  <link rel="canonical" href="https://banteq.com/guias/verifactu-facturas-automaticas">
+  <script src="/banteq/procedencia.js" defer></script>
+  <link rel="icon" href="/favicon.ico">
+  <meta property="og:type" content="article">
+  <meta property="og:locale" content="es_ES">
+  <meta property="og:site_name" content="Banteq">
+  <meta property="og:title" content="Verifactu y facturas automáticas">
+  <meta property="og:description" content="Qué parte puede hacer la automatización y qué parte tiene que hacer un programa de facturación adaptado.">
+  <meta property="og:url" content="https://banteq.com/guias/verifactu-facturas-automaticas">
+  <meta property="og:image" content="https://banteq.com/framerusercontent.com/images/mesMNsTTSgV6Xg1TUfNtMnEGZY.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Article","headline":"Verifactu y facturas automáticas: qué revisar si un flujo emite tus facturas","description":"Qué exige Verifactu si tus facturas salen de n8n, Zapier, una macro o tu tienda online, cómo montar el flujo sin riesgo y qué fechas siguen vigentes.","inLanguage":"es-ES","datePublished":"2026-11-24","dateModified":"2026-11-24","mainEntityOfPage":"https://banteq.com/guias/verifactu-facturas-automaticas","image":"https://banteq.com/framerusercontent.com/images/mesMNsTTSgV6Xg1TUfNtMnEGZY.png","isPartOf":{"@id":"https://banteq.com/#website"},"author":{"@type":"Person","@id":"https://banteq.com/#pol-carabante","name":"Pol Carabante","url":"https://banteq.com/","worksFor":{"@id":"https://banteq.com/#organization"}},"publisher":{"@id":"https://banteq.com/#organization"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Inicio","item":"https://banteq.com/"},{"@type":"ListItem","position":2,"name":"Guías","item":"https://banteq.com/guias"},{"@type":"ListItem","position":3,"name":"Verifactu y facturas automáticas"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"¿Puede n8n emitir facturas compatibles con Verifactu?","acceptedAnswer":{"@type":"Answer","text":"n8n no es un programa de facturación. Puede preparar los datos y pedir a tu programa de facturación adaptado que emita la factura a través de su API. Si quieres que el propio flujo expida las facturas, ese desarrollo pasa a ser un sistema de facturación y necesita cumplir el reglamento y tener su declaración responsable."}},{"@type":"Question","name":"¿Está prohibido facturar con Excel con Verifactu?","acceptedAnswer":{"@type":"Answer","text":"No. Según la Agencia Tributaria, usar una hoja de cálculo solo para escribir, imprimir y guardar facturas no la convierte en sistema de facturación. Sí lo es si procesa esos datos para obtener libros registro o contabilidad, por ejemplo mediante macros."}},{"@type":"Question","name":"Si una plataforma emite las facturas por mí, ¿quién cumple Verifactu?","acceptedAnswer":{"@type":"Answer","text":"Puedes delegar la expedición en un tercero o en el cliente si se cumplen las condiciones del Reglamento de facturación, pero la responsabilidad sigue siendo tuya. Pide a la plataforma que confirme que su sistema está adaptado y cómo envía o conserva los registros."}},{"@type":"Question","name":"¿El aplazamiento de Verifactu a 2028 ya es oficial?","acceptedAnswer":{"@type":"Answer","text":"A 24 de noviembre de 2026 es una previsión que Hacienda anunció el 5 de octubre de 2026. Las fechas publicadas en el BOE siguen siendo el 1 de enero de 2027 para las sociedades y el 1 de julio de 2027 para el resto. Comprueba la sede de la Agencia Tributaria antes de decidir."}}]}]}</script>
+  <style>
+    * { box-sizing: border-box }
+    body { margin: 0; color: #222; background: #fcfcfa; font: 1.08rem/1.65 system-ui, sans-serif }
+    a { color: inherit; text-underline-offset: .2em }
+    a:focus-visible { outline: 3px solid #4643a0; outline-offset: 4px }
+    header, main, footer { width: min(100% - 2.5rem, 58rem); margin: auto }
+    header, footer { padding: 1.3rem 0; display: flex; flex-wrap: wrap; gap: 1rem; align-items: baseline; justify-content: space-between }
+    header { border-bottom: 1px solid #ccc } header > a:first-child { text-decoration: none; font-size: 1.35rem; font-weight: 750 }
+    main { padding: clamp(2rem, 6vw, 5rem) 0 } h1, h2, h3 { line-height: 1.15; text-wrap: balance }
+    h1 { font-size: clamp(2.1rem, 6vw, 4.2rem); letter-spacing: -.045em; max-width: 18ch; margin: 0 0 1rem }
+    h2 { font-size: clamp(1.45rem, 3vw, 2rem); margin: 0 0 1rem; letter-spacing: -.025em }
+    section { border-top: 1px solid #ccc; padding-top: 1.6rem; margin-top: 2.2rem }
+    p, li { max-width: 72ch } li + li { margin-top: .65rem } h3 { margin: 1.5rem 0 .4rem } h3 + p { margin-top: 0 }
+    .byline, footer { color: #505050; font-size: .92rem } .intro { font-size: 1.24rem }
+    .migas { color: #505050; font-size: .92rem; margin: 0 0 1.4rem } .migas a { color: #505050 }
+    footer { border-top: 1px solid #ccc } ol { padding-left: 1.5rem } .action { font-weight: 650 }
+    nav { display: flex; gap: 1.2rem; flex-wrap: wrap }
+    .relacionados ul { padding-left: 1.2rem }
+    .tabla { overflow-x: auto; margin: 1rem 0 } table { border-collapse: collapse; width: 100%; font-size: .95rem }
+    th, td { text-align: left; vertical-align: top; padding: .55rem .7rem; border-bottom: 1px solid #ccc } thead th { font-weight: 650 }
+    pre { background: #f1f0ea; padding: 1rem; overflow-x: auto; border-radius: 6px; font-size: .88rem; line-height: 1.5 }
+    code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: .92em }
+  </style>
+</head>
+<body>
+<header><a href="/">Banteq</a><nav aria-label="Secciones"><a href="/automatizacion-procesos">Automatización</a><a href="/desarrollo-web">Desarrollo web</a><a href="/guias">Guías</a></nav></header>
+<main><article>
+<p class="migas"><a href="/">Inicio</a> › <a href="/guias">Guías</a></p>
+  <h1>Verifactu y facturas automáticas: qué revisar si un flujo emite tus facturas</h1>
+  <p class="byline">Pol Carabante · Banteq Digital · <time datetime="2026-11-24">24 de noviembre de 2026</time></p>
+  <p class="intro">Verifactu no prohíbe automatizar la facturación, pero exige que la factura la expida un sistema de facturación que cumpla el reglamento y tenga su declaración responsable. Lo más seguro es que n8n, Zapier o tu tienda online preparen los datos y que tu programa de facturación adaptado numere, registre y emita cada factura.</p>
+  <p>Resume la normativa publicada a 24 de noviembre de 2026 para pymes y autónomos que facturan pedidos, cuotas o partes de trabajo de forma automática. Para tu caso concreto, confírmalo con tu asesor fiscal.</p>
+
+  <section><h2>¿Qué exige Verifactu a un programa de facturación?</h2>
+    <p>Que cada factura genere un registro que no se pueda alterar sin dejar rastro. Es lo que pide el artículo 8 del <a href="https://www.boe.es/buscar/act.php?id=BOE-A-2023-24840">Real Decreto 1007/2023</a>, el reglamento de sistemas informáticos de facturación. En la práctica:</p>
+    <ul>
+      <li>Los registros van encadenados y fechados: cada uno lleva la huella del anterior.</li>
+      <li>Una factura emitida no se edita. Se corrige con un registro nuevo y el original se conserva.</li>
+    </ul>
+    <p>Hay dos formas de cumplirlo. En la modalidad VERI*FACTU, el programa envía cada registro a la Agencia Tributaria al emitir la factura, y la factura lleva un código QR y la leyenda «VERI*FACTU». En la otra, los registros se quedan en tu sistema, firmados electrónicamente y con su registro de eventos. Según las <a href="https://sede.agenciatributaria.gob.es/Sede/iva/sistemas-informaticos-facturacion-verifactu/preguntas-frecuentes/sistemas-verifactu.html">preguntas frecuentes de la AEAT</a>, VERI*FACTU es voluntario, pero si empiezas a enviar debes seguir al menos hasta el final de ese año natural.</p>
+    <p>Afecta a sociedades, autónomos y demás obligados que facturan con un programa informático. Quedan fuera quienes llevan el SII, quienes tributan con normativa foral del País Vasco y, en general, de Navarra, y quienes facturan solo a mano.</p>
+  </section>
+
+  <section><h2>¿Una automatización con n8n, Zapier o una macro cuenta como sistema de facturación?</h2>
+    <p>Depende de lo que haga. Si solo mueve datos y es tu programa de facturación el que expide la factura, la automatización no es el sistema de facturación. Si es el propio flujo el que pone el número, genera el PDF y lo envía al cliente, ese flujo está expidiendo facturas y tiene que cumplir el reglamento como cualquier programa.</p>
+    <p>La Agencia Tributaria aplica el mismo criterio a las hojas de cálculo: usar Excel o un procesador de texto solo para escribir, imprimir y guardar facturas no lo convierte en sistema de facturación, pero sí lo es si procesa esos datos para obtener libros registro o contabilidad, por ejemplo con una macro.</p>
+    <p>Hay una consecuencia que se suele pasar por alto: si el programa lo ha desarrollado tu propia empresa, tu empresa es su productor y debe certificarlo con una <a href="https://sede.agenciatributaria.gob.es/Sede/iva/sistemas-informaticos-facturacion-verifactu/preguntas-frecuentes/certificacion-sistemas-informaticos-declaracion-responsable.html">declaración responsable</a>. Si se lo encargas a un tercero, lo certifica ese tercero. Y las ampliaciones a medida de un programa certificado no quedan cubiertas por la certificación del fabricante original.</p>
+    <p>Por eso, para una pyme, programar su propio sistema de facturación rara vez compensa.</p>
+  </section>
+
+  <section><h2>¿Cómo se monta una facturación automática que cumpla Verifactu?</h2>
+    <p>Repartiendo el trabajo: la automatización prepara y reparte, y el programa de facturación adaptado expide. Son cinco pasos:</p>
+    <ol>
+      <li><strong>El disparador.</strong> Un pedido pagado en la tienda online, un parte de trabajo cerrado o la fecha de una cuota pone en marcha el flujo, hecho con n8n, Make, Zapier o una integración propia.</li>
+      <li><strong>La validación.</strong> El flujo comprueba que están todos los datos de la factura: NIF y dirección del cliente, conceptos, base y tipo de IVA. Si falta algo, avisa a una persona en vez de seguir.</li>
+      <li><strong>La emisión.</strong> El flujo llama a la API de tu programa de facturación, que asigna el número, genera el registro y, si trabajas en modalidad VERI*FACTU, lo envía a la AEAT y añade el QR.</li>
+      <li><strong>El reparto.</strong> El flujo recoge el PDF que devuelve el programa, lo envía al cliente y lo archiva donde toque, por ejemplo en la carpeta de la gestoría.</li>
+      <li><strong>Las correcciones.</strong> Si una factura sale mal, se emite una rectificativa o se anula desde el programa de facturación. El flujo nunca borra ni reescribe una factura emitida.</li>
+    </ol>
+    <div class="tabla"><table>
+      <thead><tr><th>Tarea</th><th>Automatización</th><th>Programa de facturación adaptado</th></tr></thead>
+      <tbody>
+        <tr><th>Comprobar que no falta ningún dato</th><td>Sí</td><td>También lo valida al emitir</td></tr>
+        <tr><th>Asignar número y fecha de expedición</th><td>No</td><td>Sí</td></tr>
+        <tr><th>Generar el registro, el QR y, en VERI*FACTU, enviarlo a la AEAT</th><td>No</td><td>Sí</td></tr>
+        <tr><th>Enviar el PDF al cliente y archivarlo</th><td>Sí</td><td>Según el programa</td></tr>
+        <tr><th>Corregir una factura emitida</th><td>Solo avisar</td><td>Rectificativa o anulación</td></tr>
+      </tbody>
+    </table></div>
+    <p>Antes de montarlo, pregunta a tu proveedor de facturación si tiene API o integración con tus herramientas, en qué modalidad trabaja y dónde está su declaración responsable: debe poder consultarse en el propio programa.</p>
+  </section>
+
+  <section><h2>¿Puedo seguir haciendo algunas facturas a mano?</h2>
+    <p>No, si el resto sale de un programa. La AEAT indica que no pueden convivir facturas emitidas con un sistema informático y facturas hechas a mano, salvo una excepción para las facturas electrónicas a las administraciones públicas. Si automatizas una parte de la facturación, lleva también el resto al mismo programa.</p>
+  </section>
+
+  <section><h2>¿Desde cuándo es obligatorio Verifactu?</h2>
+    <p>A 24 de noviembre de 2026, la norma publicada en el BOE fija el 1 de enero de 2027 para los contribuyentes del Impuesto sobre Sociedades y el 1 de julio de 2027 para el resto, incluidos los autónomos. Lo dice la disposición final cuarta del Real Decreto 1007/2023, en la redacción del Real Decreto-ley 15/2025.</p>
+    <p>El 5 de octubre de 2026, el Ministerio de Hacienda anunció en una <a href="https://www.hacienda.gob.es/sgt/gabsehacienda/nota-informativa-verifactu.pdf">nota informativa</a> que prevé aplazar esas obligaciones hasta octubre de 2028, para que coincidan con la factura electrónica obligatoria de quienes facturan hasta 8 millones de euros al año. La nota añade que los requisitos de integridad, conservación, trazabilidad e inalterabilidad se mantendrán en términos sustancialmente equivalentes. Hasta que el aplazamiento se publique en el BOE, comprueba la fecha vigente en la <a href="https://sede.agenciatributaria.gob.es/Sede/iva/sistemas-informaticos-facturacion-verifactu.html">sede de la Agencia Tributaria</a>.</p>
+    <p>El aplazamiento cambia el calendario, no lo que hay que montar.</p>
+  </section>
+
+  <section><h2>¿Qué relación tiene con la factura electrónica obligatoria?</h2>
+    <p>Son dos obligaciones distintas que van a coincidir. Verifactu regula el programa con el que emites y cómo guarda los registros. La factura electrónica obligatoria entre empresas y profesionales, desarrollada por el <a href="https://sede.agenciatributaria.gob.es/Sede/iva/novedades-iva/novedades-normativa-2026/real-decreto-238-2026-25-marzo.html">Real Decreto 238/2026</a>, regula el formato de la factura y cómo se intercambia con el cliente. Se aplicará 12 meses después de la entrada en vigor de la orden ministerial de la solución pública a quien supere 8 millones de euros de volumen de operaciones, y 24 meses después al resto.</p>
+  </section>
+
+  <section><h2>Lista de comprobación</h2>
+    <ol>
+      <li>Sabes qué programa expide cada tipo de factura y ningún flujo numera facturas por su cuenta.</li>
+      <li>Tu programa de facturación tiene declaración responsable y API o integración con tus herramientas.</li>
+      <li>Has decidido si trabajas en modalidad VERI*FACTU o no.</li>
+      <li>Las correcciones se hacen con rectificativas o anulaciones, nunca editando la factura.</li>
+      <li>Si un desarrollo propio o a medida expide facturas, tiene su declaración responsable.</li>
+      <li>No conviven facturas hechas a mano con facturas emitidas por programa.</li>
+    </ol>
+  </section>
+
+  <section><h2>Preguntas frecuentes</h2>
+    <h3>¿Puede n8n emitir facturas compatibles con Verifactu?</h3>
+    <p>n8n no es un programa de facturación. Puede preparar los datos y pedir a tu programa de facturación adaptado que emita la factura a través de su API. Si quieres que el propio flujo expida las facturas, ese desarrollo pasa a ser un sistema de facturación y necesita cumplir el reglamento y tener su declaración responsable.</p>
+    <h3>¿Está prohibido facturar con Excel con Verifactu?</h3>
+    <p>No. Según la Agencia Tributaria, usar una hoja de cálculo solo para escribir, imprimir y guardar facturas no la convierte en sistema de facturación. Sí lo es si procesa esos datos para obtener libros registro o contabilidad, por ejemplo mediante macros.</p>
+    <h3>Si una plataforma emite las facturas por mí, ¿quién cumple Verifactu?</h3>
+    <p>Puedes delegar la expedición en un tercero o en el cliente si se cumplen las condiciones del Reglamento de facturación, pero la responsabilidad sigue siendo tuya. Pide a la plataforma que confirme que su sistema está adaptado y cómo envía o conserva los registros.</p>
+    <h3>¿El aplazamiento de Verifactu a 2028 ya es oficial?</h3>
+    <p>A 24 de noviembre de 2026 es una previsión que Hacienda anunció el 5 de octubre de 2026. Las fechas publicadas en el BOE siguen siendo el 1 de enero de 2027 para las sociedades y el 1 de julio de 2027 para el resto. Comprueba la sede de la Agencia Tributaria antes de decidir.</p>
+  </section>
+
+  <section><h2>¿Revisamos tu facturación automática?</h2>
+    <p>En Banteq conectamos tiendas online, CRM y hojas de cálculo con el programa de facturación de cada empresa, para que los datos lleguen solos y la factura la emita el programa que corresponde. Más en <a href="/automatizacion-n8n">automatización con n8n e integración de herramientas</a>.</p>
+    <p class="action"><a data-bq-contacto-guia href="/automatizacion-n8n#hablemos">Cuéntanos cómo facturas hoy y con qué programas</a>.</p>
+  </section>
+
+  <section class="relacionados"><h2>Fuentes y lecturas</h2>
+    <ul>
+      <li><a href="https://sede.agenciatributaria.gob.es/Sede/iva/sistemas-informaticos-facturacion-verifactu/preguntas-frecuentes.html">Agencia Tributaria: preguntas frecuentes sobre sistemas informáticos de facturación y VERI*FACTU</a></li>
+      <li><a href="https://www.hacienda.gob.es/sgt/gabsehacienda/nota-informativa-verifactu.pdf">Ministerio de Hacienda: nota informativa del 5 de octubre de 2026</a></li>
+      <li><a href="/guias/automatizar-facturas-de-proveedores">Cómo automatizar las facturas de proveedores paso a paso</a></li>
+      <li><a href="/guias/n8n-servidor-propio-rgpd">n8n en servidor propio y RGPD: qué tiene que revisar una pyme</a></li>
+    </ul>
+  </section>
+</article></main>
+<footer><span>Banteq Digital · Barcelona</span><nav aria-label="Información legal"><a href="/aviso-legal">Aviso legal</a><a href="/privacidad">Privacidad</a></nav></footer>
+</body>
+</html>
