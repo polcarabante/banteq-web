@@ -79,6 +79,17 @@ const handler = async (req, res) => {
     return;
   }
 
+  // Calculadora de ahorro: el endpoint real. Sin BREVO_API_KEY en el entorno no llama a Brevo y
+  // guarda los dos correos como HTML en AHORRO_SIMULAR_DIR (por defecto /tmp/banteq-ahorro).
+  if (url.pathname === "/api/ahorro") {
+    let raw = "";
+    for await (const chunk of req) { raw += chunk; if (raw.length > 20000) { res.writeHead(413); res.end(); return; } }
+    req.body = raw;
+    if (!process.env.BREVO_API_KEY) process.env.AHORRO_SIMULAR = "1";
+    const { default: ahorroHandler } = await import("../api/ahorro.js");
+    return ahorroHandler(req, res);
+  }
+
   if (url.pathname === "/api/diagnosticos") {
     let raw = "";
     for await (const chunk of req) { raw += chunk; if (raw.length > 350000) { res.writeHead(413); res.end(); return; } }

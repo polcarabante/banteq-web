@@ -3037,6 +3037,8 @@ def main():
     copy_root_files()
     from shorts_subida import integrar as integrar_shorts_subida
     integrar_shorts_subida()
+    from calculadora_ahorro import integrar as integrar_calculadora_ahorro
+    integrar_calculadora_ahorro()
     if not ST.informar(*ST.comprobar(ROOT, OUT)[:2]):
         sys.exit(1)
     if MISSES:
