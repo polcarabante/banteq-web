@@ -932,6 +932,138 @@ Pedir presupuesto para mi web
 
 Si antes prefieres informarte, consulta el servicio de desarrollo web en Barcelona o Badalona y el de mantenimiento web .
 
+### Cómo documentar un proceso antes de automatizarlo (con plantilla)
+
+URL: https://banteq.com/guias/documentar-proceso-antes-de-automatizar
+Actualizado: 2026-11-24
+Idioma: es
+
+Pol Carabante · Banteq Digital · 24 de noviembre de 2026
+
+Para documentar un proceso antes de automatizarlo, apunta qué lo pone en marcha, cada paso con quién lo hace y en qué programa, qué datos entran y salen, las reglas de decisión, las excepciones y cuántas veces ocurre. Hazlo mirando a alguien trabajar con casos reales, no de memoria. Suele caber en una o dos páginas.
+
+No hace falta un diagrama profesional ni un programa de gestión de procesos. Hace falta que alguien que no conoce tu empresa pueda leer la ficha y entender qué pasa, en qué orden y qué se decide en cada punto. Si eso se consigue, automatizar es mucho más sencillo; si no, la automatización copiará las dudas.
+
+#### ¿Por qué documentar un proceso antes de automatizarlo?
+
+Porque una automatización solo hace lo que está escrito. Una persona resuelve sobre la marcha lo que no está claro; un flujo no puede. Documentar primero tiene tres ventajas:
+
+- Descubres las reglas que nadie había dicho en voz alta, como «a este cliente se le manda siempre copia al comercial».
+- Ves pasos que sobran. A veces lo que hay que hacer es quitar un paso, no automatizarlo.
+- Tienes con qué comprobar el resultado: si el flujo hace lo que dice la ficha, funciona; si no, sabes dónde mirar.
+
+La misma ficha sirve después para mantener la automatización y, si el proceso trata datos personales, para apuntarlo en el registro de actividades de tratamiento que pide el artículo 30 del RGPD . Lo explicamos para n8n en n8n en servidor propio y RGPD .
+
+#### ¿Qué tiene que incluir la ficha del proceso?
+
+Ocho apartados. El ejemplo de la tercera columna es un pedido que llega por correo; cámbialo por el tuyo.
+
+| Apartado | Qué apuntar | Ejemplo |
+| --- | --- | --- |
+| Objetivo | Qué consigue el proceso, en una frase. | «Registrar los pedidos que llegan por correo y confirmarlos al cliente.» |
+| Disparador | Qué lo pone en marcha y por dónde llega. | «Un correo de un cliente con el pedido en el texto o en un PDF adjunto.» |
+| Final | Cuándo se da por terminado. | «El pedido está en el programa de gestión y el cliente ha recibido la confirmación.» |
+| Pasos | Cada paso, quién lo hace y con qué programa. | «Administración lee el correo, busca al cliente en el programa de gestión y teclea las líneas.» |
+| Datos | Qué entra, qué sale y en qué formato. | «Entran cliente, referencias, cantidades y fecha de entrega. Sale el número de pedido.» |
+| Reglas | Las decisiones, escritas como «si… entonces…». | «Si la referencia no existe, se llama al cliente antes de registrar.» |
+| Excepciones | Lo que se sale de lo normal y cómo se resuelve hoy. | «Pedidos urgentes por teléfono; clientes que mandan una foto en vez de un PDF.» |
+| Volumen | Cuántas veces ocurre y cuánto lleva cada una. | Lo que midas en una semana normal. |
+
+#### ¿Cómo se recoge la información sin parar el trabajo?
+
+Observando el trabajo real, no preguntando en una reunión. Estos seis pasos se hacen mientras el equipo sigue con su día:
+
+- Marca los límites. Escribe dónde empieza y dónde acaba. Un proceso por ficha: si a mitad aparece otro, como la facturación del pedido, anótalo aparte.
+- Mira a quien lo hace. Siéntate con la persona que lo hace cada día y pídele que lo haga como siempre, explicando en voz alta. En remoto, una grabación de pantalla vale más que una descripción.
+- Usa casos reales. Reúne varios ejemplos de verdad, como correos, PDF o capturas, e incluye alguno raro. Si llevan datos personales, guárdalos solo mientras dure el análisis.
+- Apunta las decisiones. Cada vez que la persona dude, consulte otro programa o diga «depende», ahí hay una regla. Pregunta de qué depende hasta poder escribirla.
+- Mide una semana. Cuenta cuántas veces se pone en marcha el proceso y cuánto tarda cada caso. Sin esa cifra no sabrás si compensa automatizarlo.
+- Valida la ficha. Que la lean quien hace el trabajo y quien lo supervisa. Si discrepan en algún punto, ese es justo el que hay que aclarar antes de automatizar.
+
+#### ¿Cómo se escriben las reglas para que se puedan automatizar?
+
+Con condiciones que se puedan comprobar con los datos. «Si el importe supera el límite de crédito del cliente, pasa a revisión de administración» se puede automatizar. «Si el pedido parece raro, se revisa» no, hasta que digas qué es raro.
+
+- Una regla por línea, con la forma «si… entonces…».
+- Nombra el dato exacto y dónde está: «el campo Forma de pago de la ficha del cliente», no «lo que tenga puesto».
+- Di qué pasa cuando no se cumple ninguna regla. Esa salida, normalmente «avisar a una persona», es la que evita errores silenciosos.
+- Si una decisión necesita criterio, márcala como revisión humana. Se automatiza lo que la rodea y la decide una persona, como explicamos en el asistente de IA para el correo con revisión humana .
+
+#### ¿Qué excepciones hay que apuntar?
+
+Todas las que hayas visto, con cuántas veces pasan. No hace falta automatizarlas: basta con que el flujo sepa reconocerlas y apartarlas para una persona. Las más habituales:
+
+- Datos que faltan o vienen mal, como un NIF incompleto o una referencia antigua.
+- Formatos distintos para lo mismo: PDF, foto o texto en el cuerpo del correo.
+- Duplicados, como el mismo pedido enviado dos veces.
+- Casos urgentes que se saltan el orden.
+- Clientes o proveedores con condiciones especiales.
+
+#### ¿Hace falta un diagrama o basta con texto?
+
+Para la mayoría de procesos de una pyme basta con una lista numerada. Un diagrama ayuda cuando hay varias ramas o varias personas que se pasan el trabajo, y puedes dibujarlo a mano o con cualquier herramienta de diagramas. Si tu equipo ya usa una notación como BPMN, sigue con ella; si no, no hace falta aprenderla para esto.
+
+#### Plantilla para copiar
+
+Cópiala en un documento compartido o en una hoja de cálculo y rellena una por proceso.
+
+```
+PROCESO:
+Objetivo (una frase):
+Empieza cuando:
+Termina cuando:
+Responsable:
+
+PASOS
+1. Quién · qué hace · con qué programa
+2.
+
+DATOS
+Entran:
+Salen:
+
+REGLAS (si… entonces…)
+- Si
+- Si no se cumple ninguna:
+
+EXCEPCIONES (y cuántas veces pasan)
+-
+
+VOLUMEN
+Veces por semana:
+Minutos por caso:
+
+DATOS PERSONALES
+Cuáles, de quién y a qué programas o servicios van:
+
+DUDAS PENDIENTES
+-
+```
+
+#### Preguntas frecuentes
+
+##### ¿Cuánto detalle necesita la documentación de un proceso?
+
+El suficiente para que alguien de fuera entienda cada paso, cada dato y cada decisión sin tener que preguntar. En una pyme suele caber en una o dos páginas. Si necesitas más, probablemente estás mezclando varios procesos en la misma ficha.
+
+##### ¿Quién debe documentar el proceso?
+
+Quien lo hace cada día, con ayuda de alguien que pregunte y lo escriba, y al final lo valida el responsable del área. Si lo documenta solo quien lo supervisa, se suele escribir cómo debería hacerse y no cómo se hace.
+
+##### ¿Qué herramienta uso para documentar procesos?
+
+La que ya uses para tus documentos: un documento compartido o una hoja de cálculo bastan. Lo importante es la estructura, con disparador, pasos, datos, reglas, excepciones y volumen, no el programa.
+
+##### ¿Se puede automatizar un proceso con muchas excepciones?
+
+Sí, si las excepciones se pueden reconocer. El flujo automatiza el caso normal y aparta los demás para que los resuelva una persona. Si casi todos los casos son una excepción, conviene ordenar primero el proceso.
+
+#### ¿Lo documentamos contigo?
+
+Si prefieres hacerlo acompañado, en Banteq analizamos cómo trabaja tu empresa, documentamos el proceso contigo y te proponemos qué automatizar primero. Lo explicamos en automatización de procesos para pymes .
+
+Cuéntanos qué proceso quieres ordenar .
+
 ### Inteligencia artificial en pymes: 8 usos prácticos y cuándo no usarla
 
 URL: https://banteq.com/guias/ia-en-pymes-casos-practicos
@@ -1257,3 +1389,105 @@ Los que nadie sabe explicar porque cada persona los hace a su manera, los que ca
 ##### ¿Automatizar un proceso es lo mismo que usar inteligencia artificial?
 
 No. Una automatización mueve datos y avisa siguiendo reglas fijas. La IA solo entra cuando hay que entender un texto que no viene siempre igual, como un correo libre o un documento escaneado.
+
+### Verifactu y facturas automáticas: qué revisar si un flujo emite tus facturas
+
+URL: https://banteq.com/guias/verifactu-facturas-automaticas
+Actualizado: 2026-11-24
+Idioma: es
+
+Pol Carabante · Banteq Digital · 24 de noviembre de 2026
+
+Verifactu no prohíbe automatizar la facturación, pero exige que la factura la expida un sistema de facturación que cumpla el reglamento y tenga su declaración responsable. Lo más seguro es que n8n, Zapier o tu tienda online preparen los datos y que tu programa de facturación adaptado numere, registre y emita cada factura.
+
+Resume la normativa publicada a 24 de noviembre de 2026 para pymes y autónomos que facturan pedidos, cuotas o partes de trabajo de forma automática. Para tu caso concreto, confírmalo con tu asesor fiscal.
+
+#### ¿Qué exige Verifactu a un programa de facturación?
+
+Que cada factura genere un registro que no se pueda alterar sin dejar rastro. Es lo que pide el artículo 8 del Real Decreto 1007/2023 , el reglamento de sistemas informáticos de facturación. En la práctica:
+
+- Los registros van encadenados y fechados: cada uno lleva la huella del anterior.
+- Una factura emitida no se edita. Se corrige con un registro nuevo y el original se conserva.
+
+Hay dos formas de cumplirlo. En la modalidad VERI*FACTU, el programa envía cada registro a la Agencia Tributaria al emitir la factura, y la factura lleva un código QR y la leyenda «VERI*FACTU». En la otra, los registros se quedan en tu sistema, firmados electrónicamente y con su registro de eventos. Según las preguntas frecuentes de la AEAT , VERI*FACTU es voluntario, pero si empiezas a enviar debes seguir al menos hasta el final de ese año natural.
+
+Afecta a sociedades, autónomos y demás obligados que facturan con un programa informático. Quedan fuera quienes llevan el SII, quienes tributan con normativa foral del País Vasco y, en general, de Navarra, y quienes facturan solo a mano.
+
+#### ¿Una automatización con n8n, Zapier o una macro cuenta como sistema de facturación?
+
+Depende de lo que haga. Si solo mueve datos y es tu programa de facturación el que expide la factura, la automatización no es el sistema de facturación. Si es el propio flujo el que pone el número, genera el PDF y lo envía al cliente, ese flujo está expidiendo facturas y tiene que cumplir el reglamento como cualquier programa.
+
+La Agencia Tributaria aplica el mismo criterio a las hojas de cálculo: usar Excel o un procesador de texto solo para escribir, imprimir y guardar facturas no lo convierte en sistema de facturación, pero sí lo es si procesa esos datos para obtener libros registro o contabilidad, por ejemplo con una macro.
+
+Hay una consecuencia que se suele pasar por alto: si el programa lo ha desarrollado tu propia empresa, tu empresa es su productor y debe certificarlo con una declaración responsable . Si se lo encargas a un tercero, lo certifica ese tercero. Y las ampliaciones a medida de un programa certificado no quedan cubiertas por la certificación del fabricante original.
+
+Por eso, para una pyme, programar su propio sistema de facturación rara vez compensa.
+
+#### ¿Cómo se monta una facturación automática que cumpla Verifactu?
+
+Repartiendo el trabajo: la automatización prepara y reparte, y el programa de facturación adaptado expide. Son cinco pasos:
+
+- El disparador. Un pedido pagado en la tienda online, un parte de trabajo cerrado o la fecha de una cuota pone en marcha el flujo, hecho con n8n, Make, Zapier o una integración propia.
+- La validación. El flujo comprueba que están todos los datos de la factura: NIF y dirección del cliente, conceptos, base y tipo de IVA. Si falta algo, avisa a una persona en vez de seguir.
+- La emisión. El flujo llama a la API de tu programa de facturación, que asigna el número, genera el registro y, si trabajas en modalidad VERI*FACTU, lo envía a la AEAT y añade el QR.
+- El reparto. El flujo recoge el PDF que devuelve el programa, lo envía al cliente y lo archiva donde toque, por ejemplo en la carpeta de la gestoría.
+- Las correcciones. Si una factura sale mal, se emite una rectificativa o se anula desde el programa de facturación. El flujo nunca borra ni reescribe una factura emitida.
+
+| Tarea | Automatización | Programa de facturación adaptado |
+| --- | --- | --- |
+| Comprobar que no falta ningún dato | Sí | También lo valida al emitir |
+| Asignar número y fecha de expedición | No | Sí |
+| Generar el registro, el QR y, en VERI*FACTU, enviarlo a la AEAT | No | Sí |
+| Enviar el PDF al cliente y archivarlo | Sí | Según el programa |
+| Corregir una factura emitida | Solo avisar | Rectificativa o anulación |
+
+Antes de montarlo, pregunta a tu proveedor de facturación si tiene API o integración con tus herramientas, en qué modalidad trabaja y dónde está su declaración responsable: debe poder consultarse en el propio programa.
+
+#### ¿Puedo seguir haciendo algunas facturas a mano?
+
+No, si el resto sale de un programa. La AEAT indica que no pueden convivir facturas emitidas con un sistema informático y facturas hechas a mano, salvo una excepción para las facturas electrónicas a las administraciones públicas. Si automatizas una parte de la facturación, lleva también el resto al mismo programa.
+
+#### ¿Desde cuándo es obligatorio Verifactu?
+
+A 24 de noviembre de 2026, la norma publicada en el BOE fija el 1 de enero de 2027 para los contribuyentes del Impuesto sobre Sociedades y el 1 de julio de 2027 para el resto, incluidos los autónomos. Lo dice la disposición final cuarta del Real Decreto 1007/2023, en la redacción del Real Decreto-ley 15/2025.
+
+El 5 de octubre de 2026, el Ministerio de Hacienda anunció en una nota informativa que prevé aplazar esas obligaciones hasta octubre de 2028, para que coincidan con la factura electrónica obligatoria de quienes facturan hasta 8 millones de euros al año. La nota añade que los requisitos de integridad, conservación, trazabilidad e inalterabilidad se mantendrán en términos sustancialmente equivalentes. Hasta que el aplazamiento se publique en el BOE, comprueba la fecha vigente en la sede de la Agencia Tributaria .
+
+El aplazamiento cambia el calendario, no lo que hay que montar.
+
+#### ¿Qué relación tiene con la factura electrónica obligatoria?
+
+Son dos obligaciones distintas que van a coincidir. Verifactu regula el programa con el que emites y cómo guarda los registros. La factura electrónica obligatoria entre empresas y profesionales, desarrollada por el Real Decreto 238/2026 , regula el formato de la factura y cómo se intercambia con el cliente. Se aplicará 12 meses después de la entrada en vigor de la orden ministerial de la solución pública a quien supere 8 millones de euros de volumen de operaciones, y 24 meses después al resto.
+
+#### Lista de comprobación
+
+- Sabes qué programa expide cada tipo de factura y ningún flujo numera facturas por su cuenta.
+- Tu programa de facturación tiene declaración responsable y API o integración con tus herramientas.
+- Has decidido si trabajas en modalidad VERI*FACTU o no.
+- Las correcciones se hacen con rectificativas o anulaciones, nunca editando la factura.
+- Si un desarrollo propio o a medida expide facturas, tiene su declaración responsable.
+- No conviven facturas hechas a mano con facturas emitidas por programa.
+
+#### Preguntas frecuentes
+
+##### ¿Puede n8n emitir facturas compatibles con Verifactu?
+
+n8n no es un programa de facturación. Puede preparar los datos y pedir a tu programa de facturación adaptado que emita la factura a través de su API. Si quieres que el propio flujo expida las facturas, ese desarrollo pasa a ser un sistema de facturación y necesita cumplir el reglamento y tener su declaración responsable.
+
+##### ¿Está prohibido facturar con Excel con Verifactu?
+
+No. Según la Agencia Tributaria, usar una hoja de cálculo solo para escribir, imprimir y guardar facturas no la convierte en sistema de facturación. Sí lo es si procesa esos datos para obtener libros registro o contabilidad, por ejemplo mediante macros.
+
+##### Si una plataforma emite las facturas por mí, ¿quién cumple Verifactu?
+
+Puedes delegar la expedición en un tercero o en el cliente si se cumplen las condiciones del Reglamento de facturación, pero la responsabilidad sigue siendo tuya. Pide a la plataforma que confirme que su sistema está adaptado y cómo envía o conserva los registros.
+
+##### ¿El aplazamiento de Verifactu a 2028 ya es oficial?
+
+A 24 de noviembre de 2026 es una previsión que Hacienda anunció el 5 de octubre de 2026. Las fechas publicadas en el BOE siguen siendo el 1 de enero de 2027 para las sociedades y el 1 de julio de 2027 para el resto. Comprueba la sede de la Agencia Tributaria antes de decidir.
+
+#### ¿Revisamos tu facturación automática?
+
+En Banteq conectamos tiendas online, CRM y hojas de cálculo con el programa de facturación de cada empresa, para que los datos lleguen solos y la factura la emita el programa que corresponde. Más en automatización con n8n e integración de herramientas .
+
+Cuéntanos cómo facturas hoy y con qué programas .
