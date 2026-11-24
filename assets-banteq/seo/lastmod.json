@@ -1,6 +1,6 @@
 {
  "https://banteq.com/": {
-  "firma": "af1e4249ac75",
+  "firma": "b0f6b83e80bf",
   "fecha": "2026-11-24"
  },
  "https://banteq.com/automatizacion-n8n": {
@@ -12,11 +12,11 @@
   "fecha": "2026-11-20"
  },
  "https://banteq.com/aviso-legal": {
-  "firma": "53cfc6c9a9be",
-  "fecha": "2026-11-22"
+  "firma": "7af2c989dddf",
+  "fecha": "2026-11-24"
  },
  "https://banteq.com/ca": {
-  "firma": "1b1790398e61",
+  "firma": "701a0d7fe497",
   "fecha": "2026-11-24"
  },
  "https://banteq.com/ca/automatitzacio-n8n": {
@@ -28,8 +28,8 @@
   "fecha": "2026-11-24"
  },
  "https://banteq.com/ca/avis-legal": {
-  "firma": "47a74825a0d9",
-  "fecha": "2026-11-14"
+  "firma": "bb94159c49dc",
+  "fecha": "2026-11-24"
  },
  "https://banteq.com/ca/desenvolupament-web": {
   "firma": "5bd4468b3a73",
@@ -64,7 +64,7 @@
   "fecha": "2026-11-24"
  },
  "https://banteq.com/en": {
-  "firma": "59751d5a3532",
+  "firma": "6072dc4f6612",
   "fecha": "2026-11-24"
  },
  "https://banteq.com/en/artificial-intelligence": {
@@ -72,8 +72,8 @@
   "fecha": "2026-11-24"
  },
  "https://banteq.com/en/legal-notice": {
-  "firma": "1b8e94fa396e",
-  "fecha": "2026-11-14"
+  "firma": "1b2a479b9258",
+  "fecha": "2026-11-24"
  },
  "https://banteq.com/en/n8n-automation": {
   "firma": "3146aa72ed50",

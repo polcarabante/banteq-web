@@ -3150,6 +3150,42 @@ dialog.bq-fx.bq-fx-cerrando::backdrop {
   left: calc(50% - 10px);
 }
 
+/* E2 · Área de seguimiento de retrasos (tools/demos.py, demo_seguimiento) y su botón
+   «¿Cuánto me ahorro?» (bajo la cuadrícula, encima de la nota), con el estilo del botón de la
+   Fórmula Banteq sin el sello. */
+.bq-estado-retraso {
+  background: #fdefd9;
+  color: #8a5300;
+  font-weight: 600;
+}
+.bq-nota-sello {
+  display: flex;
+  margin-top: 8px;
+}
+.bq-mensaje-cuerpo {
+  margin: 4px 0 2px;
+  color: var(--dm-tinta);
+  font-size: 11px;
+  line-height: 1.45;
+}
+.bq-nota-espera {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin: 0 0 6px;
+  color: #8a5300;
+  font-size: 10.5px;
+  font-weight: 600;
+}
+.bq-demos-boton {
+  display: flex;
+  justify-content: center;
+  margin: 6px 0 -4px;
+}
+.bq-formula-boton-solo {
+  padding-left: 18px;
+}
+
 /* F · Reservas */
 .bq-input-sel span::after {
   content: " ▾";

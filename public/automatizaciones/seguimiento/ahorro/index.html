@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>¿Cuánto me ahorro? Calculadora del área de seguimiento de retrasos | Banteq</title>
+  <meta name="description" content="Calcula cuántas horas y euros liberas al automatizar los avisos de retraso a tus clientes y el seguimiento de quién no responde.">
+  <link rel="canonical" href="https://banteq.com/automatizaciones/seguimiento/ahorro">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="es_ES">
+  <meta property="og:site_name" content="Banteq">
+  <meta property="og:title" content="¿Cuánto me ahorro? · Área de seguimiento de retrasos">
+  <meta property="og:description" content="Calcula las horas y los euros que liberas al automatizar los avisos de retraso y su seguimiento.">
+  <meta property="og:url" content="https://banteq.com/automatizaciones/seguimiento/ahorro">
+  <meta property="og:image" content="https://banteq.com/framerusercontent.com/images/mesMNsTTSgV6Xg1TUfNtMnEGZY.png">
+  <link rel="icon" href="/favicon.ico?v=fec63b77" sizes="48x48"><link rel="icon" type="image/png" sizes="48x48" href="/favicon-48x48.png?v=fec63b77"><link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png?v=fec63b77"><link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png?v=fec63b77"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=fec63b77"><link rel="manifest" href="/site.webmanifest?v=fec63b77">
+  <link rel="preload" href="/fonts.gstatic.com/s/geist/v5/gyByhwUxId8gMEwcGFU.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/automatizaciones/seguimiento/ahorro/ahorro.css?v=4ec82c15d9">
+  <script src="/banteq/procedencia.js" defer></script>
+  <script type="module" src="/automatizaciones/seguimiento/ahorro/ahorro.js?v=21e6f62c04"></script>
+</head>
+<body>
+<a class="saltar" href="#calculadora">Saltar a la calculadora</a>
+<header class="cab">
+  <nav class="cab-pildora" aria-label="Banteq">
+    <a class="cab-logo" href="/" aria-label="Banteq, página principal"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" aria-hidden="true"><path d="M15.5,9 H32.5 A10.5,10.5 0 0 1 43,19.5 V19.5 A10.5,10.5 0 0 1 32.5,30 H15.5 A2.5,2.5 0 0 1 13,27.5 V11.5 A2.5,2.5 0 0 1 15.5,9 Z M15.5,34 H40.5 A10.5,10.5 0 0 1 51,44.5 V44.5 A10.5,10.5 0 0 1 40.5,55 H15.5 A2.5,2.5 0 0 1 13,52.5 V36.5 A2.5,2.5 0 0 1 15.5,34 Z" fill="#fff"></path></svg></a>
+    <a class="cab-enlace" href="/#servicios">Automatizaciones</a>
+    <a class="cab-hablemos" href="/#hablemos">Hablemos</a>
+  </nav>
+</header>
+
+<main id="calculadora">
+  <section class="intro" aria-labelledby="titulo">
+    <p class="migas"><a href="/#servicios">Automatización e IA</a> <span aria-hidden="true">›</span> Área de seguimiento de retrasos</p>
+    <h1 id="titulo">¿Cuánto me ahorro?</h1>
+    <p class="sub">Cuando hay un retraso, el sistema avisa por correo al cliente automáticamente. Si en 48 horas no responde, lo añade a un Excel de llamadas pendientes para que tu equipo llame directamente. Mueve los controles con los datos de tu empresa.</p>
+  </section>
+
+  <div class="calc">
+    <section class="panel controles" aria-labelledby="titulo-datos">
+      <h2 id="titulo-datos">Tus datos</h2>
+      <div class="control">
+        <div class="control-fila"><label for="correosDia">Correos de retraso al día</label><output id="v-correosDia" for="correosDia">40</output></div>
+        <input type="range" id="correosDia" name="correosDia" min="5" max="300" step="5" value="40">
+      </div>
+      <div class="control">
+        <div class="control-fila"><label for="minCorreo">Minutos por correo</label><output id="v-minCorreo" for="minCorreo">6 min</output></div>
+        <p class="ayuda" id="ayuda-minCorreo">Buscar el pedido, redactar y enviar.</p>
+        <input type="range" id="minCorreo" name="minCorreo" min="1" max="15" step="1" value="6" aria-describedby="ayuda-minCorreo">
+      </div>
+      <div class="control">
+        <div class="control-fila"><label for="minSeguimiento">Minutos por correo en seguimiento</label><output id="v-minSeguimiento" for="minSeguimiento">2 min</output></div>
+        <p class="ayuda" id="ayuda-minSeguimiento">Revisar respuestas y apuntar a quién llamar.</p>
+        <input type="range" id="minSeguimiento" name="minSeguimiento" min="0" max="10" step="1" value="2" aria-describedby="ayuda-minSeguimiento">
+      </div>
+      <div class="control">
+        <div class="control-fila"><label for="automatizable">Parte que se automatiza</label><output id="v-automatizable" for="automatizable">85 %</output></div>
+        <p class="ayuda" id="ayuda-automatizable">El resto son excepciones que sigue llevando tu equipo.</p>
+        <input type="range" id="automatizable" name="automatizable" min="50" max="100" step="5" value="85" aria-describedby="ayuda-automatizable">
+      </div>
+      <div class="control">
+        <div class="control-fila"><label for="dias">Días laborables al año</label><output id="v-dias" for="dias">220 días</output></div>
+        <input type="range" id="dias" name="dias" min="200" max="260" step="5" value="220">
+      </div>
+      <div class="control">
+        <div class="control-fila"><label for="costeHora">Coste por hora del empleado para la empresa</label><output id="v-costeHora" for="costeHora">16 €/h</output></div>
+        <p class="ayuda" id="ayuda-costeHora">Incluye sueldo, Seguridad Social y costes del puesto. Con el convenio de oficinas, un auxiliar administrativo suele salir por 13–17 €/h.</p>
+        <input type="range" id="costeHora" name="costeHora" min="10" max="40" step="1" value="16" aria-describedby="ayuda-costeHora">
+      </div>
+    </section>
+
+    <section class="resultados" aria-labelledby="titulo-resultados">
+      <h2 id="titulo-resultados" class="oculto">Resultados</h2>
+      <p class="no-compensa" id="no-compensa" hidden>Con este volumen la automatización no compensa todavía: el tiempo que liberas no cubre el coste de las herramientas. Prueba con más correos al día o más minutos por correo.</p>
+      <ul class="tarjetas">
+        <li class="tarjeta">
+          <h3>Horas liberadas al año</h3>
+          <p class="cifra"><span id="r-horasAño">997</span> h</p>
+          <p class="nota">Equivale a <span id="r-empleados">0,57</span> empleados a jornada completa (1.760 h al año).</p>
+        </li>
+        <li class="tarjeta">
+          <h3>Ahorro mensual</h3>
+          <p class="cifra" id="r-ahorroMes">1.300 €</p>
+          <p class="nota">Tiempo liberado (<span id="r-ahorroBrutoMes">1.330 €</span>) menos herramientas.</p>
+        </li>
+        <li class="tarjeta">
+          <h3>Herramientas al mes</h3>
+          <p class="cifra" id="r-herramientasMes">30 €</p>
+          <p class="nota">Incluidas, se ajustan a tu volumen.</p>
+        </li>
+        <li class="tarjeta">
+          <h3>Implantación <span class="etiqueta">pago único</span></h3>
+          <p class="cifra" id="r-implantacion">1.300 €</p>
+          <p class="nota">Se amortiza en 1 mes: cuesta lo mismo que lo que ahorras en un mes.</p>
+        </li>
+        <li class="tarjeta">
+          <h3>Mantenimiento mensual</h3>
+          <p class="cifra" id="r-mantenimientoMes">325 €</p>
+          <p class="nota">El 25 % de lo que ahorras. Tú te quedas con el 75 %.</p>
+        </li>
+        <li class="tarjeta tarjeta-destacada">
+          <h3>Lo que ganas tú cada mes</h3>
+          <p class="cifra" id="r-gananciaClienteMes">975 €</p>
+          <p class="nota">Tu ahorro mensual menos el mantenimiento.</p>
+        </li>
+      </ul>
+      <p class="oculto" id="anuncio" aria-live="polite"></p>
+    </section>
+  </div>
+
+  <section class="cierre" aria-labelledby="titulo-cierre">
+    <h2 id="titulo-cierre" class="oculto">Solicitar la automatización</h2>
+    <button type="button" class="boton boton-grande" id="quiero" aria-expanded="false" aria-controls="solicitud">
+      <span id="quiero-texto">Quiero ahorrar 11.698 € al año</span><span class="boton-flecha" aria-hidden="true"></span>
+    </button>
+    <p class="primer-año" id="primer-año">El primer año ahorras 10.398 € porque incluye la implantación</p>
+
+    <form class="panel solicitud" id="solicitud" novalidate hidden aria-labelledby="titulo-solicitud">
+      <h3 id="titulo-solicitud">Te preparamos la propuesta con estas cifras</h3>
+      <p class="nota">Te escribimos en menos de 48 horas para confirmar tus datos en una reunión inicial.</p>
+      <div class="campo">
+        <label for="empresa">Nombre de la empresa</label>
+        <input type="text" id="empresa" name="empresa" autocomplete="organization" required maxlength="160" aria-describedby="error-empresa">
+        <p class="error" id="error-empresa" hidden></p>
+      </div>
+      <div class="campo">
+        <label for="correo">Correo</label>
+        <input type="email" id="correo" name="correo" autocomplete="email" inputmode="email" required maxlength="254" aria-describedby="error-correo">
+        <p class="error" id="error-correo" hidden></p>
+      </div>
+      <div class="trampa" aria-hidden="true">
+        <label for="web">Deja este campo vacío</label>
+        <input type="text" id="web" name="web" tabindex="-1" autocomplete="off">
+      </div>
+      <div class="campo campo-casilla">
+        <input type="checkbox" id="acepto" name="acepto" required aria-describedby="error-acepto">
+        <label for="acepto">He leído y acepto la <a href="/privacidad" target="_blank" rel="noopener">política de privacidad</a> y los <a href="/aviso-legal" target="_blank" rel="noopener">términos y condiciones</a>, incluido el apartado <a href="/aviso-legal#calculo-precio" target="_blank" rel="noopener">Cálculo del precio y veracidad de los datos</a>.</label>
+        <p class="error" id="error-acepto" hidden></p>
+      </div>
+      <button type="submit" class="boton" id="enviar"><span>Enviar solicitud</span><span class="boton-flecha" aria-hidden="true"></span></button>
+      <p class="estado" id="estado" role="status"></p>
+    </form>
+
+    <div class="panel recibida" id="recibida" hidden tabindex="-1">
+      <p><strong>Solicitud recibida.</strong> Te hemos enviado un correo de confirmación y te responderemos en menos de 48 horas.</p>
+    </div>
+    <p class="aviso-calculo">Cálculo orientativo con los datos que introduces. El precio final se confirma en la reunión inicial (apartado 8 del <a href="/aviso-legal#calculo-precio">aviso legal</a>).</p>
+  </section>
+</main>
+
+<footer class="pie">
+  <span>© Banteq 2026</span>
+  <nav aria-label="Información legal"><a href="/aviso-legal">Aviso legal</a><a href="/privacidad">Privacidad</a><a href="/#hablemos">Contacto</a></nav>
+</footer>
+</body>
+</html>
