@@ -22,6 +22,7 @@ OK = ('<svg class="bq-i-ok" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8
 CLIP = ('<svg class="bq-i" viewBox="0 0 16 16" aria-hidden="true"><path d="M10.5 4.5 5.8 9.2a1.4 1.4 0 0 0 2 2l5-5a2.8 2.8 0 0 0-4-4l-5 5a4.2 4.2 0 0 0 6 6l4.2-4.2" fill="none"/></svg>')
 CHISPA = ('<svg class="bq-i bq-i-relleno" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.5 9.4 6.6 14.5 8 9.4 9.4 8 14.5 6.6 9.4 1.5 8l5.1-1.4z"/></svg>')
 DOC = ('<svg class="bq-i" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 1.5h5.5L13 5v9.5H4z M9.5 1.5V5H13" fill="none"/></svg>')
+RELOJ = ('<svg class="bq-i" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6.2" fill="none"/><path d="M8 4.8V8l2.2 1.4" fill="none"/></svg>')
 CURSOR = ('<svg class="bq-cursor" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 2.5v13.2l3.4-3.1 2.2 5 2.3-1-2.2-4.9 4.6-.3z"/></svg>')
 WA = ('<svg class="bq-i bq-i-relleno" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.2a9.8 9.8 0 0 0-8.4 14.9L2.3 21.8l4.8-1.3A9.8 9.8 0 1 0 12 2.2zm5.6 13.7c-.2.7-1.4 1.3-1.9 1.4-.5.1-1.1.1-1.8-.1-.4-.1-1-.3-1.7-.6-3-1.3-4.9-4.3-5.1-4.5-.1-.2-1.2-1.6-1.2-3.1s.8-2.2 1.1-2.5c.3-.3.6-.4.8-.4h.6c.2 0 .4 0 .7.5l.9 2.2c.1.2.1.4 0 .6l-.3.5-.4.5c-.1.1-.3.3-.1.6.2.3.7 1.2 1.6 2 1.1 1 2 1.3 2.3 1.4.3.1.5.1.6-.1l.9-1c.2-.3.4-.2.7-.1l2.1 1c.3.1.5.2.6.3.1.2.1.8-.1 1.5z"/></svg>')
 
@@ -30,7 +31,7 @@ ICONOS = {
     "ia": '<path d="M4 5.5h16v10H9l-4.5 3.5V15.5H4z"/><path d="M9 10.5h.01M12 10.5h.01M15 10.5h.01"/>',
     "crm": '<path d="M5 20v-5M10 20V9M15 20v-7M20 20V5"/>',
     "informes": '<path d="M4 4v16h16"/><path d="m7.5 14 3.5-4 3 2.5L19 7"/>',
-    "conexion": '<path d="M9.5 14.5 14.5 9.5"/><path d="M11 6.5 13 4.5a4 4 0 0 1 5.7 5.7l-2 2M13 17.5 11 19.5a4 4 0 0 1-5.7-5.7l2-2"/>',
+    "seguimiento": '<circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/>',
     "reservas": '<rect x="3.5" y="5" width="17" height="15" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/><path d="m9 14.5 2 2 4-4"/>',
 }
 
@@ -184,28 +185,38 @@ def demo_informes():
     }
 
 
-def demo_conexion():
-    def caja(paso, app, cls, titulo, cuerpo, estado):
-        return (f'<div class="bq-ui bq-nodo"{en(paso)}><div class="bq-nodo-cab"><i class="bq-app {cls}">{app[0]}</i><b>{app}</b></div>'
-                f'<p>{titulo}</p><small>{cuerpo}</small><span class="bq-nodo-estado">{OK}{estado}</span></div>')
-    rejilla = (
-        '<div class="bq-red">'
-        + caja(1, "Tienda online", "bq-app-lila", "Pedido #3271", "2 × Silla · 189,80 €", "Pagado")
-        + caja(2, "ERP", "bq-app-azul", "Pedido registrado", "Cliente y factura", "Sincronizado")
-        + caja(4, "Logística", "bq-app-naranja", "Preparar envío", "Almacén A · hoy 17:00", "Solicitado")
-        + caja(3, "Inventario", "bq-app-verde", 'Silla Nord: <s>14</s> 12', "Stock actualizado", "Al día")
-        + f'<span class="bq-flecha bq-flecha-1"{en(2)}>→</span><span class="bq-flecha bq-flecha-2"{en(3)}>↓</span>'
-        + f'<span class="bq-flecha bq-flecha-3"{en(4)}>←</span>'
-        + '</div>'
-    )
-    aviso = f'<div class="bq-aviso"{en(5)}>{OK}<span><b>Al cliente: «Tu pedido #3271 está en preparación»</b><small>Sin copiar ni pegar datos entre programas</small></span></div>'
+def demo_seguimiento():
+    """Área de seguimiento de retrasos (pedida por Pol el 2026-11-24, sustituye a «Conexión entre
+    herramientas»): aviso por correo al cliente y, sin respuesta en 48 h, Excel de llamadas. Lleva el
+    botón «¿Cuánto me ahorro?», que abre la calculadora (tools/calculadora_ahorro.py)."""
+    erp = ventana("ERP · Pedidos en curso", (
+        '<div class="bq-tabla"><div class="bq-tr bq-th"><span>Pedido</span><span>Cliente</span><span>Entrega</span><span>Estado</span></div>'
+        f'<div class="bq-tr bq-tr-nueva"{en(1)}><span>PV-2208</span><span>Ferretería Puig</span><span>12/11 → 15/11</span><span class="bq-estado bq-estado-retraso">Retraso</span></div>'
+        '<div class="bq-tr"><span>PV-2207</span><span>Talleres Gómez</span><span>13/11</span><span class="bq-estado">En plazo</span></div>'
+        '<div class="bq-tr"><span>PV-2205</span><span>Aceros Vallès</span><span>11/11</span><span class="bq-estado">Entregado</span></div></div>'
+        f'<div class="bq-nota-sello"{en(2)}><span class="bq-ia-sello">{CHISPA}Retraso detectado: aviso al cliente</span></div>'
+    ), "bq-ui-llena")
+    correo = ventana("Nuevo mensaje", (
+        '<div class="bq-mensaje"><small>Para</small><span>compras@ferreteriapuig.es</span></div>'
+        '<div class="bq-mensaje"><small>Asunto</small><span>Tu pedido PV-2208 llega con retraso</span></div>'
+        f'<p class="bq-mensaje-cuerpo"{en(3)} data-escribe>Hola, Núria: tu pedido llegará el 15/11 en lugar del 12/11. ¿Nos confirmas que te va bien?</p>'
+        f'<div class="bq-enviado"{en(4)}>{OK}Enviado automáticamente · 09:02</div>'
+    ), "bq-ui-llena bq-ui-form")
+    excel = ventana("Llamadas pendientes.xlsx", (
+        f'<p class="bq-nota-espera"{en(5)}>{RELOJ}48 h sin respuesta de Ferretería Puig</p>'
+        '<div class="bq-tabla"><div class="bq-tr bq-th"><span>Pedido</span><span>Cliente</span><span>Motivo</span><span>Estado</span></div>'
+        f'<div class="bq-tr bq-tr-nueva"{en(6)}><span>PV-2208</span><span>Ferretería Puig</span><span>Sin respuesta</span><span class="bq-estado bq-estado-ok">Llamar</span></div>'
+        '<div class="bq-tr"><span>PV-2199</span><span>Muebles Serra</span><span>Sin respuesta</span><span class="bq-estado">Llamado</span></div></div>'
+    ), "bq-ui-llena")
+    aviso = f'<div class="bq-aviso"{en(7)}>{OK}<span><b>Tu equipo solo llama a quien no ha respondido</b><small>Nadie revisa la bandeja a mano</small></span></div>'
     return {
-        "id": "conexion", "icono": "conexion", "titulo": "Conexión entre herramientas",
-        "ejemplo": "tienda online, ERP, inventario y logística sincronizados en cada pedido.",
-        "fases": [("Pedido", 1), ("ERP", 2), ("Inventario", 3), ("Logística", 4), ("Cliente", 5)],
-        "pasos": [2500, 2300, 2300, 2400, 5600],
-        "escenas": escena(1, None, rejilla + aviso),
-        "etiquetas": ["Sin copiar y pegar", "Inventario al día", "Sin duplicar datos"],
+        "id": "seguimiento", "icono": "seguimiento", "titulo": "Área de seguimiento de retrasos",
+        "ejemplo": "cada retraso se avisa por correo; sin respuesta en 48 h, pasa al Excel de llamadas.",
+        "fases": [("Retraso", 1), ("Correo", 3), ("48 h", 5), ("Llamadas", 6)],
+        "pasos": [2400, 1800, 3400, 1800, 2400, 2400, 5400],
+        "escenas": escena(1, 3, erp) + escena(3, 5, correo) + escena(5, None, excel + aviso, "bq-esc-arriba"),
+        "etiquetas": ["Aviso automático", "Control a las 48 h", "Llamadas pendientes"],
+        "boton": ("¿Cuánto me ahorro?", "/automatizaciones/seguimiento/ahorro"),
     }
 
 
@@ -245,7 +256,7 @@ def demo_reservas():
     }
 
 
-DEMOS = [demo_facturas, demo_asistente, demo_crm, demo_informes, demo_conexion, demo_reservas]
+DEMOS = [demo_facturas, demo_asistente, demo_crm, demo_informes, demo_seguimiento, demo_reservas]
 
 SUBTITULO = "No son ideas genéricas: así se ve una automatización trabajando en una empresa como la tuya."
 NOTA = "Demostraciones con datos de ejemplo."
@@ -262,8 +273,18 @@ def tarjeta(d):
         f'<p><b>Ejemplo:</b> {esc(d["ejemplo"])}</p></div></div>'
         f'<div class="bq-dm-video" data-pasos="{pasos}" role="group" aria-label="Demostración: {esc(d["titulo"])}">'
         f'<ol class="bq-dm-fases">{fases}</ol><div class="bq-dm-escena">{d["escenas"]}</div></div>'
-        f'<ul class="bq-dm-etiquetas">{etiquetas}</ul></article>'
+        f'<ul class="bq-dm-etiquetas">{etiquetas}{boton_ahorro(d)}</ul></article>'
     )
+
+
+def boton_ahorro(d):
+    """Botón opcional al final de las etiquetas, en su misma fila para no alargar la tarjeta (mismo
+    estilo que el de la Fórmula Banteq: banteq.css)."""
+    if not d.get("boton"):
+        return ""
+    texto, destino = d["boton"]
+    return (f'<li class="bq-dm-boton"><a class="bq-formula-boton bq-formula-boton-solo" href="{destino}">'
+            f'<span class="bq-formula-texto">{esc(texto)}</span><span class="bq-formula-flecha" aria-hidden="true"></span></a></li>')
 
 
 # Escudo con marca de verificación (garantía de 60 días: home y /automatizacion-procesos).
