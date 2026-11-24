@@ -30,6 +30,7 @@ import contenido_ca as CA  # noqa: E402
 import contenido_en as EN  # noqa: E402
 import idiomas as ID  # noqa: E402
 import jsx  # noqa: E402
+import seo_tecnico as ST  # noqa: E402
 
 ROOT = TOOLS.parent
 SRC = ROOT / "plantilla-original"
@@ -2495,16 +2496,23 @@ def structured_data_alias(idioma, es, url, titulo, descripcion):
         return _ld(ld_organizacion(idioma=idioma), pagina, ld_faq([(tr(idioma, q), tr(idioma, r)) for q, r in faq_home()]))
     nombre = titulo.split(" | ")[0]
     pasos = ((tr(idioma, "Proyectos"), f"{C.SITIO}/{ID.tabla_por_es()['proyectos'][idioma]}"),) if es.startswith("proyectos/") else ()
-    return _ld(ld_organizacion(idioma=idioma), pagina, ld_migas(*pasos, (nombre, url), inicio=inicio))
+    return _ld(ld_organizacion(idioma=idioma), pagina, ld_migas(*pasos, (nombre, url), inicio=inicio, inicio_url=_inicio_migas(idioma).get("inicio_url")))
 
 
-def ld_migas(*pasos, inicio="Inicio"):
-    """Migas de pan: (nombre, url) desde la home hasta la página."""
-    pasos = ((inicio, f"{C.SITIO}/"),) + pasos
+def ld_migas(*pasos, inicio="Inicio", inicio_url=None):
+    """Migas de pan: (nombre, url) desde la home (la de su idioma) hasta la página."""
+    pasos = ((inicio, inicio_url or f"{C.SITIO}/"),) + pasos
     return {
         "@type": "BreadcrumbList",
         "itemListElement": [{"@type": "ListItem", "position": k, "name": n, "item": u} for k, (n, u) in enumerate(pasos, 1)],
     }
+
+
+def _inicio_migas(idioma):
+    """Primera miga de cada idioma: el nombre de «Inicio» y la portada de ese idioma (/ca, /en)."""
+    if idioma == "es":
+        return {"inicio": "Inicio"}
+    return {"inicio": ID.MODULO[idioma].INICIO, "inicio_url": f"{C.SITIO}/{ID.tabla_por_es()[''][idioma]}"}
 
 
 def ld_faq(preguntas):
@@ -2551,7 +2559,7 @@ def structured_data(rel, titulo="", descripcion=""):
             servicio["audience"]["audienceType"] = ID.MODULO[idioma].AUDIENCIA
         return _ld(ld_organizacion(idioma=idioma), ld_pagina(url, titulo, descripcion, mainEntity={"@id": f"{url}#servicio"}, inLanguage=idioma),
                    servicio, ld_faq(preguntas),
-                   ld_migas((sv["nombre"], url), inicio=ID.MODULO[idioma].INICIO if idioma != "es" else "Inicio"))
+                   ld_migas((sv["nombre"], url), **_inicio_migas(idioma)))
     if ruta == "proyectos":
         lista = {
             "@type": "ItemList",
@@ -2646,22 +2654,36 @@ def apply_seo():
     )
     # /api/ no es contenido; /diagnostico (cuestionario) ya lleva noindex y debe poder rastrearse para
     # que Google lea esa etiqueta, así que no se bloquea aquí.
-    (OUT / "robots.txt").write_text(f"User-agent: *\nAllow: /\nDisallow: /api/\n\nSitemap: {C.SITIO}/sitemap.xml\n", encoding="utf-8")
+    (OUT / "robots.txt").write_text(ST.robots_txt(), encoding="utf-8")
     for guia in sorted((ROOT / "assets-banteq" / "guias").glob("*.html")):
         rel = f"guias/{guia.stem}/index.html"
-        S[rel] = guia.read_text(encoding="utf-8")
+        S[rel] = ST.guia_con_faq(guia.read_text(encoding="utf-8"), ld_faq)
         indexables.append((page_url(rel), rel))
     S["guias/index.html"] = guias_indice()
     indexables.append((f"{C.SITIO}/guias", "guias/index.html"))
     fechas = page_dates({u: S[rel] for u, rel in indexables})
-    urls = "".join(f"  <url><loc>{html.escape(u)}</loc><lastmod>{fechas[u]}</lastmod></url>\n"
-                   for u, _ in sorted(indexables, key=lambda x: (x[0].count("/"), x[0])))
-    (OUT / "sitemap.xml").write_text(
-        '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + urls + "</urlset>\n",
-        encoding="utf-8",
-    )
+    (OUT / "sitemap.xml").write_text(sitemap_xml(indexables, fechas), encoding="utf-8")
+    (OUT / "llms-full.txt").write_text(ST.llms_full(
+        [(g.stem, g.read_text(encoding="utf-8"), re.search(r'<html\b[^>]* lang="([a-zA-Z-]+)"', g.read_text(encoding="utf-8")).group(1))
+         for g in sorted((ROOT / "assets-banteq" / "guias").glob("*.html"))], fechas), encoding="utf-8")
     write_llms_txt()
     write_indexnow_key()
+
+
+def sitemap_xml(indexables, fechas):
+    """sitemap.xml con lastmod y, en las páginas con versión en varios idiomas, los xhtml:link
+    hreflang (los mismos que lleva cada página en su <head>, incluido x-default)."""
+    def alternas(rel):
+        grupo = ID.grupo_de(rel[: -len("index.html")].strip("/"))
+        if not grupo:
+            return ""
+        enlaces = [(l, f"{C.SITIO}/{grupo[l]}") for l in ID.IDIOMAS] + [("x-default", f"{C.SITIO}/{grupo['es']}")]
+        return "".join(f'<xhtml:link rel="alternate" hreflang="{l}" href="{html.escape(u)}"/>' for l, u in enlaces)
+
+    urls = "".join(f"  <url><loc>{html.escape(u)}</loc><lastmod>{fechas[u]}</lastmod>{alternas(rel)}</url>\n"
+                   for u, rel in sorted(indexables, key=lambda x: (x[0].count("/"), x[0])))
+    return ('<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" '
+            'xmlns:xhtml="http://www.w3.org/1999/xhtml">\n' + urls + "</urlset>\n")
 
 
 def guias_datos():
@@ -2707,7 +2729,7 @@ def guias_indice():
          "hasPart": [{"@type": "Article", "inLanguage": g["idioma"], "headline": g["titulo"], "url": f"{C.SITIO}/guias/{g['slug']}"} for g in guias]},
         {"@type": "BreadcrumbList", "itemListElement": [
             {"@type": "ListItem", "position": 1, "name": "Inicio", "item": f"{C.SITIO}/"},
-            {"@type": "ListItem", "position": 2, "name": "Guías"}]},
+            {"@type": "ListItem", "position": 2, "name": "Guías", "item": f"{C.SITIO}/guias"}]},
     )
     plantilla = (ROOT / "assets-banteq" / "guias-indice.html").read_text(encoding="utf-8")
     return plantilla.replace("{{ld}}", ld).replace("{{lista}}", "\n".join(items))
@@ -2724,6 +2746,7 @@ def write_llms_txt():
         f"# {C.NOMBRE_SITIO}", "",
         f"> {C.META_DESCRIPTION}", "",
         f"{C.ZONA_FRASE} Contacto: {C.EMAIL_CONTACTO} o el formulario de {C.SITIO}/#hablemos.", "",
+        f"Texto completo de servicios, proyectos y guías, sin menús ni pie: {C.SITIO}/llms-full.txt", "",
         "## Sobre Banteq", "",
         f"- Banteq Digital es la marca con la que trabaja Pol Carabante, profesional autónomo con domicilio "
         f"profesional en {C.LOCALIDAD} ({C.PROVINCIA}). Los datos del titular están en {C.SITIO}/aviso-legal.",
@@ -2742,7 +2765,9 @@ def write_llms_txt():
         lineas += [f"## {ID.NOMBRE[idioma]}", "",
                    f"- [{ID.NOMBRE[idioma]}]({C.SITIO}/{rutas[''][idioma]})",
                    *(item(sv["nombre"], f"{C.SITIO}/{sv['slug']}", sv["descripcion"]) for sv in ID.servicios(idioma)),
-                   *(f"- [{pr['cliente']}]({C.SITIO}/{rutas['proyectos/' + pr['slug']][idioma]})" for pr in C.PROYECTOS), ""]
+                   f"- [{tr(idioma, 'Proyectos')}]({C.SITIO}/{rutas['proyectos'][idioma]})",
+                   *(f"- [{pr['cliente']}]({C.SITIO}/{rutas['proyectos/' + pr['slug']][idioma]})" for pr in C.PROYECTOS),
+                   *(f"- [{tr(idioma, nombre)}]({C.SITIO}/{rutas[ruta][idioma]})" for ruta, nombre in (("aviso-legal", "Aviso legal"), ("privacidad", "Privacidad"))), ""]
     lineas += ["## Optional", "",
                f"- [Aviso legal]({C.SITIO}/aviso-legal): titular, condiciones de la Fórmula Banteq y garantía de 60 días",
                f"- [Privacidad]({C.SITIO}/privacidad): tratamiento de datos personales", ""]
@@ -2989,6 +3014,8 @@ def main():
     copy_root_files()
     from shorts_subida import integrar as integrar_shorts_subida
     integrar_shorts_subida()
+    if not ST.informar(*ST.comprobar(ROOT, OUT)[:2]):
+        sys.exit(1)
     if MISSES:
         print("\nTextos originales NO encontrados:")
         for rel, old in MISSES:

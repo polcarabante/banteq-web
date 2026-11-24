@@ -4,6 +4,8 @@
 
 Estamos en Santa Perpètua de Mogoda (Barcelona) y trabajamos con empresas de Barcelona, el Vallès y, en remoto, del resto de España. Contacto: pol@banteq.org o el formulario de https://banteq.com/#hablemos.
 
+Texto completo de servicios, proyectos y guías, sin menús ni pie: https://banteq.com/llms-full.txt
+
 ## Sobre Banteq
 
 - Banteq Digital es la marca con la que trabaja Pol Carabante, profesional autónomo con domicilio profesional en Santa Perpètua de Mogoda (Barcelona). Los datos del titular están en https://banteq.com/aviso-legal.
@@ -44,8 +46,11 @@ Estamos en Santa Perpètua de Mogoda (Barcelona) y trabajamos con empresas de Ba
 - [Automatització amb n8n i integració d'eines](https://banteq.com/ca/automatitzacio-n8n): Connectem el teu correu, Excel, CRM, ERP, WhatsApp i el teu web amb n8n, Make o integracions per API a mida. Les dades passen d'un programa a un altre sense copiar i enganxar.
 - [Desenvolupament web a mida](https://banteq.com/ca/desenvolupament-web): Disseny web per a empreses de Barcelona i Badalona. Consulta els projectes de Margon i RentUp Capital i demana pressupost per a un web nou o un redisseny.
 - [Manteniment web per a empreses](https://banteq.com/ca/manteniment-web): Passa el manteniment del teu web a Banteq: el remodelem sense cost de desenvolupament bàsic i pagues un 25 % menys, fins a 50 €/mes. Quota mínima: 35 €/mes.
+- [Projectes](https://banteq.com/ca/projectes)
 - [Margon](https://banteq.com/ca/projectes/margon)
 - [RentUp Capital](https://banteq.com/ca/projectes/rentup-capital)
+- [Avís legal](https://banteq.com/ca/avis-legal)
+- [Privacitat](https://banteq.com/ca/privacitat)
 
 ## English
 
@@ -55,8 +60,11 @@ Estamos en Santa Perpètua de Mogoda (Barcelona) y trabajamos con empresas de Ba
 - [n8n automation and tool integration](https://banteq.com/en/n8n-automation): We connect your email, Excel, CRM, ERP, WhatsApp and website with n8n, Make or custom API integrations. Data moves from one program to another without copying and pasting.
 - [Custom web development](https://banteq.com/en/web-development): Custom corporate websites, redesigns and websites connected to your CRM and automations. No templates. For businesses in Barcelona and across Spain.
 - [Web maintenance for businesses](https://banteq.com/en/web-maintenance): Move your website maintenance to Banteq: we remodel it at no basic development cost and you pay 25% less, up to €50/month. Minimum fee: €35/month.
+- [Projects](https://banteq.com/en/projects)
 - [Margon](https://banteq.com/en/projects/margon)
 - [RentUp Capital](https://banteq.com/en/projects/rentup-capital)
+- [Legal notice](https://banteq.com/en/legal-notice)
+- [Privacy](https://banteq.com/en/privacy)
 
 ## Optional
 
