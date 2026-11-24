@@ -38,12 +38,12 @@ SERVICIOS_CA = [
         "es": "automatizacion-procesos",
         "id": "bqCaAuto1",
         "nombre": "Automatització de processos",
-        "title": "Automatització de processos per a pimes a Barcelona | Banteq",
+        "title": "Empresa per automatitzar processos a Barcelona | Banteq",
         "descripcion": (
-            "Automatitzem factures, correus, formularis i tasques repetitives connectant les eines que ja fa "
-            "servir la teva empresa. Per a pimes de Barcelona i d'arreu d'Espanya."
+            "Automatitzem tasques de pimes, com passar comandes del correu a l’Excel. Treballem des de "
+            "Santa Perpètua de Mogoda. Explica’ns quina tasca repeteixes."
         ),
-        "h1": "Automatització de processos per a pimes de Barcelona",
+        "h1": "Automatització de processos per a pimes",
         "subtitulo": "Connectem el correu, els fulls de càlcul i el CRM que ja fa servir el teu equip.",
         "intro": [
             "Cada cop que arriba una comanda per correu, algú n’ha de copiar les dades a l’Excel? Des de Santa Perpètua de Mogoda ajudem pimes de Barcelona i del Vallès a automatitzar feines com aquesta. L’equip continua revisant les dades que falten o que no quadren.",
@@ -74,6 +74,7 @@ SERVICIOS_CA = [
                 ("p", "Tria una tasca d’una setmana habitual, com ara passar comandes del correu a l’Excel. Compta les comandes i mesura quants minuts hi dediques cada vegada. Quan provis el nou procés, compta també el temps de revisar les excepcions i corregir els errors."),
                 ("p", "Exemple orientatiu: si tramites 100 comandes al mes i passes de 6 a 2 minuts per comanda, alliberes 6 hores i 40 minuts al mes. Si valores l’hora en 24 €, recuperes temps per valor de 160 € mensuals. Resta-hi les llicències i el manteniment i divideix la inversió inicial pel benefici mensual per saber en quants mesos l’amortitzaries. Si el benefici és zero o negatiu, aquest estalvi no permet recuperar la inversió."),
                 ("p", ["Per valorar el teu cas, ", ("a", "explica’ns quina tasca repeteixes", "#hablemos"), ", amb quins programes la fas i quantes vegades al mes. El temps alliberat només és un estalvi de diners si redueix una despesa real."]),
+                ("p", ["Si estàs comparant pressupostos de diversos proveïdors, la guia ", ("a", "com triar una empresa per automatitzar processos", "/guias/com-triar-empresa-automatitzacio-processos"), " proposa una prova amb tres comandes i quatre preguntes per comparar-los amb la mateixa tasca."]),
             ]),
             ("Comencem per un diagnòstic", [
                 ("p", "Abans d'automatitzar res, analitzem com treballa la teva empresa i dibuixem un mapa dels seus processos, eines i connexions. Aquest mapa mostra on es perd temps i què convé automatitzar primer."),

@@ -39,7 +39,7 @@ Estamos en Santa Perpètua de Mogoda (Barcelona) y trabajamos con empresas de Ba
 ## Català
 
 - [Català](https://banteq.com/ca)
-- [Automatització de processos](https://banteq.com/ca/automatitzacio-processos): Automatitzem factures, correus, formularis i tasques repetitives connectant les eines que ja fa servir la teva empresa. Per a pimes de Barcelona i d'arreu d'Espanya.
+- [Automatització de processos](https://banteq.com/ca/automatitzacio-processos): Automatitzem tasques de pimes, com passar comandes del correu a l’Excel. Treballem des de Santa Perpètua de Mogoda. Explica’ns quina tasca repeteixes.
 - [Intel·ligència artificial per a empreses](https://banteq.com/ca/intelligencia-artificial): Assistents d'IA que responen consultes, llegeixen documents, classifiquen sol·licituds i preparen esborranys dins de les teves eines, amb revisió humana.
 - [Automatització amb n8n i integració d'eines](https://banteq.com/ca/automatitzacio-n8n): Connectem el teu correu, Excel, CRM, ERP, WhatsApp i el teu web amb n8n, Make o integracions per API a mida. Les dades passen d'un programa a un altre sense copiar i enganxar.
 - [Desenvolupament web a mida](https://banteq.com/ca/desenvolupament-web): Disseny web per a empreses de Barcelona i Badalona. Consulta els projectes de Margon i RentUp Capital i demana pressupost per a un web nou o un redisseny.

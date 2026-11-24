@@ -1084,7 +1084,7 @@ SERVICIOS = [
         "menu": "Desarrollo web",
         "principal": True,
         "nombre": "Desarrollo web a medida",
-        "title": "Diseño y desarrollo web a medida en Barcelona | Banteq",
+        "title": "Desarrollo web a medida en Barcelona y Badalona | Banteq",
         "descripcion": (
             "Diseño web para empresas de Barcelona y Badalona. Consulta proyectos de Margon y RentUp Capital, y pide presupuesto para una web nueva o un rediseño."
         ),
@@ -1103,6 +1103,7 @@ SERVICIOS = [
                     [("b", "Webs en varios idiomas. "), "Con la terminología correcta en cada uno."],
                     [("b", "Funcionalidades propias. "), "Newsletter, áreas específicas o lo que tu negocio necesite."],
                 ]),
+                ("p", ["Antes de pedir presupuesto, puedes usar nuestra ", ("a", "guía para pedir presupuesto de una web a medida", "/guias/como-pedir-presupuesto-web-a-medida"), ": incluye una plantilla para explicar qué necesitas y las preguntas que conviene hacer para comparar dos ofertas."]),
             ]),
             ("Fórmula Banteq: tu web, renovada al contratar el mantenimiento", [
                 ("p", FORMULA_FRASE),
