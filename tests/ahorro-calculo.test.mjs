@@ -15,7 +15,7 @@ test("valores por defecto: las cifras de comprobación de la calculadora", () =>
   assert.equal(r.redondeado.gananciaClienteAño, 11698);
   assert.equal(r.redondeado.gananciaPrimerAño, 10398);
   assert.equal(r.compensa, true);
-  assert.equal(formatoEuros(r.gananciaClienteAño), "11.698 €");
+  assert.equal(formatoEuros(r.gananciaClienteAño), "11.698\u00a0€");
   assert.equal(formatoNumero(r.empleados, 2), "0,57");
 });
 

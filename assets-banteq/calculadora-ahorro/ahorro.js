@@ -7,11 +7,11 @@ const cargadaEn = Date.now();
 
 const UNIDAD = {
   correosDia: (v) => [`${formatoNumero(v)}`, `${formatoNumero(v)} correos al día`],
-  minCorreo: (v) => [`${v} min`, `${v} minutos`],
-  minSeguimiento: (v) => [`${v} min`, `${v} minutos`],
-  automatizable: (v) => [`${v} %`, `${v} por ciento`],
-  dias: (v) => [`${v} días`, `${v} días`],
-  costeHora: (v) => [`${v} €/h`, `${v} euros por hora`],
+  minCorreo: (v) => [`${v} min`, `${v} minutos`],
+  minSeguimiento: (v) => [`${v} min`, `${v} minutos`],
+  automatizable: (v) => [`${v} %`, `${v} por ciento`],
+  dias: (v) => [`${v} días`, `${v} días`],
+  costeHora: (v) => [`${v} €/h`, `${v} euros por hora`],
 };
 
 const entradas = CONTROLES.map((c) => $(c.clave));
