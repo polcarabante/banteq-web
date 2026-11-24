@@ -12,10 +12,10 @@ Estamos en Santa Perpètua de Mogoda (Barcelona) y trabajamos con empresas de Ba
 ## Servicios
 
 - [Automatización de procesos](https://banteq.com/automatizacion-procesos): Automatizamos facturas, correos, formularios y tareas repetitivas conectando las herramientas que ya usa tu empresa. Para pymes de Barcelona y de toda España.
-- [Inteligencia artificial para empresas](https://banteq.com/inteligencia-artificial): Asistentes de IA que responden consultas, leen documentos, clasifican solicitudes y preparan borradores dentro de tus herramientas, con revisión humana.
+- [Inteligencia artificial para empresas](https://banteq.com/inteligencia-artificial): Asistentes de IA para pymes de Barcelona y el Vallès: leen documentos, clasifican correos y preparan borradores. Tu equipo revisa y decide.
 - [Automatización con n8n e integración de herramientas](https://banteq.com/automatizacion-n8n): Conectamos tu correo, Excel, CRM, ERP, WhatsApp y tu web con n8n, Make o integraciones por API a medida. Los datos pasan de un programa a otro sin copiar y pegar.
 - [Desarrollo web a medida](https://banteq.com/desarrollo-web): Diseño web para empresas de Barcelona y Badalona. Consulta proyectos de Margon y RentUp Capital, y pide presupuesto para una web nueva o un rediseño.
-- [Mantenimiento web para empresas](https://banteq.com/mantenimiento-web): Pasa el mantenimiento de tu web a Banteq: la remodelamos sin coste de desarrollo básico y pagas un 25 % menos, hasta 50 €/mes. Cuota mínima: 35 €/mes.
+- [Mantenimiento web para empresas](https://banteq.com/mantenimiento-web): Si ya pagas el mantenimiento de tu web, con Banteq pagas un 25 % menos (hasta 50 €/mes) y la remodelamos sin coste de desarrollo básico. Mínimo: 35 €/mes.
 
 ## Guías
 
@@ -33,17 +33,17 @@ Estamos en Santa Perpètua de Mogoda (Barcelona) y trabajamos con empresas de Ba
 ## Proyectos
 
 - [Todos los proyectos](https://banteq.com/proyectos): Trabajos publicados para clientes reales.
-- [Margon](https://banteq.com/proyectos/margon): Nueva web corporativa en cinco idiomas para una empresa metalúrgica de ciclo completo que trabaja para los sectores ferroviario, de defensa y de obra pública.
-- [RentUp Capital](https://banteq.com/proyectos/rentup-capital): Web para una firma de inversión inmobiliaria, con formularios conectados que guardan cada contacto y avisan al equipo automáticamente.
+- [Margon](https://banteq.com/proyectos/margon): Nueva web corporativa en cinco idiomas para una metalúrgica del sector ferroviario, con newsletter automatizado que ahorra más de 2.500 € al año en tiempo.
+- [RentUp Capital](https://banteq.com/proyectos/rentup-capital): Web de once páginas en producción para una firma de inversión inmobiliaria, con formularios que guardan cada contacto y avisan al equipo.
 
 ## Català
 
 - [Català](https://banteq.com/ca)
 - [Automatització de processos](https://banteq.com/ca/automatitzacio-processos): Automatitzem tasques de pimes, com passar comandes del correu a l’Excel. Treballem des de Santa Perpètua de Mogoda. Explica’ns quina tasca repeteixes.
-- [Intel·ligència artificial per a empreses](https://banteq.com/ca/intelligencia-artificial): Assistents d'IA que responen consultes, llegeixen documents, classifiquen sol·licituds i preparen esborranys dins de les teves eines, amb revisió humana.
+- [Intel·ligència artificial per a empreses](https://banteq.com/ca/intelligencia-artificial): Assistents d'IA per a pimes de Barcelona i el Vallès: llegeixen documents, classifiquen correus i preparen esborranys. El teu equip revisa i decideix.
 - [Automatització amb n8n i integració d'eines](https://banteq.com/ca/automatitzacio-n8n): Connectem el teu correu, Excel, CRM, ERP, WhatsApp i el teu web amb n8n, Make o integracions per API a mida. Les dades passen d'un programa a un altre sense copiar i enganxar.
 - [Desenvolupament web a mida](https://banteq.com/ca/desenvolupament-web): Disseny web per a empreses de Barcelona i Badalona. Consulta els projectes de Margon i RentUp Capital i demana pressupost per a un web nou o un redisseny.
-- [Manteniment web per a empreses](https://banteq.com/ca/manteniment-web): Passa el manteniment del teu web a Banteq: el remodelem sense cost de desenvolupament bàsic i pagues un 25 % menys, fins a 50 €/mes. Quota mínima: 35 €/mes.
+- [Manteniment web per a empreses](https://banteq.com/ca/manteniment-web): Si ja pagues manteniment web, amb Banteq pagues un 25 % menys (fins a 50 €/mes) i el remodelem sense cost de desenvolupament bàsic. Mínim: 35 €/mes.
 - [Margon](https://banteq.com/ca/projectes/margon)
 - [RentUp Capital](https://banteq.com/ca/projectes/rentup-capital)
 
@@ -51,10 +51,10 @@ Estamos en Santa Perpètua de Mogoda (Barcelona) y trabajamos con empresas de Ba
 
 - [English](https://banteq.com/en)
 - [Process automation](https://banteq.com/en/process-automation): We automate invoices, emails, forms and repetitive tasks by connecting the tools your business already uses. For SMEs in Barcelona and across Spain.
-- [Artificial intelligence for businesses](https://banteq.com/en/artificial-intelligence): AI assistants that answer enquiries, read documents, sort requests and prepare drafts inside your tools, with human review.
+- [Artificial intelligence for businesses](https://banteq.com/en/artificial-intelligence): AI assistants for businesses in Barcelona and the Vallès: they read documents, sort emails and draft replies. Your team reviews and decides.
 - [n8n automation and tool integration](https://banteq.com/en/n8n-automation): We connect your email, Excel, CRM, ERP, WhatsApp and website with n8n, Make or custom API integrations. Data moves from one program to another without copying and pasting.
 - [Custom web development](https://banteq.com/en/web-development): Custom corporate websites, redesigns and websites connected to your CRM and automations. No templates. For businesses in Barcelona and across Spain.
-- [Web maintenance for businesses](https://banteq.com/en/web-maintenance): Move your website maintenance to Banteq: we remodel it at no basic development cost and you pay 25% less, up to €50/month. Minimum fee: €35/month.
+- [Web maintenance for businesses](https://banteq.com/en/web-maintenance): Already paying for web maintenance? With Banteq you pay 25% less (up to €50/month) and we remodel your site at no basic development cost. Min. €35/month.
 - [Margon](https://banteq.com/en/projects/margon)
 - [RentUp Capital](https://banteq.com/en/projects/rentup-capital)
 

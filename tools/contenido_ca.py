@@ -118,20 +118,22 @@ SERVICIOS_CA = [
         "es": "inteligencia-artificial",
         "id": "bqCaIntA1",
         "nombre": "Intel·ligència artificial per a empreses",
-        "title": "Intel·ligència artificial per a pimes a Barcelona | Banteq",
+        "title": "IA per a empreses a Barcelona, amb revisió humana | Banteq",
         "descripcion": (
-            "Assistents d'IA que responen consultes, llegeixen documents, classifiquen sol·licituds i preparen "
-            "esborranys dins de les teves eines, amb revisió humana."
+            "Assistents d'IA per a pimes de Barcelona i el Vallès: llegeixen documents, classifiquen correus i preparen "
+            "esborranys. El teu equip revisa i decideix."
         ),
         "h1": "Intel·ligència artificial per a empreses",
         "subtitulo": "Assistents que atenen, classifiquen i redacten dins de les teves eines, amb el teu equip al comandament.",
         "intro": [
+            "A Banteq creem assistents d'intel·ligència artificial per a pimes de Barcelona i el Vallès: llegeixen documents, classifiquen correus i sol·licituds, "
+            "responen les consultes habituals i preparen esborranys dins de les eines que ja fas servir. Sempre amb revisió humana: la IA proposa i el teu equip decideix.",
             "La intel·ligència artificial ja és útil en el dia a dia d'una pime: respon consultes, troba informació "
             "als teus documents, classifica el que entra i prepara esborranys. El difícil no és fer-la servir, sinó aplicar-la on de debò aporta.",
             "A Banteq la integrem en els teus processos i en les eines que ja utilitzes, i deixem clar què fa la IA i què continua decidint una persona.",
         ],
         "secciones": [
-            ("Què fem amb intel·ligència artificial", [
+            ("Què pot fer la IA en una pime?", [
                 ("ul", [
                     [("b", "Atenció al client. "), "Assistents que responen les consultes habituals i passen al teu equip les que necessiten una persona."],
                     [("b", "Consultes sobre la teva documentació interna. "), "El teu equip pregunta amb les seves paraules i l'assistent respon a partir dels documents de l'empresa."],
@@ -140,14 +142,15 @@ SERVICIOS_CA = [
                     [("b", "Esborranys de resposta. "), "La IA prepara el text; una persona el revisa i l'envia."],
                 ]),
             ]),
-            ("Quan té sentit fer servir IA i quan no", [
-                ("p", "La IA aporta quan la tasca exigeix entendre llenguatge: llegir un text que no arriba sempre igual, decidir de què tracta un missatge o redactar una resposta. Si la tasca segueix regles fixes, com ara passar una dada d'un programa a un altre, sol ser suficient una automatització més senzilla, que és més barata i més previsible."),
+            ("Quan té sentit fer servir IA i quan no?", [
+                ("p", ["La IA aporta quan la tasca exigeix entendre llenguatge: llegir un text que no arriba sempre igual, decidir de què tracta un missatge o redactar una resposta. Si la tasca segueix regles fixes, com ara passar una dada d'un programa a un altre, sol ser suficient una automatització més senzilla, que és més barata i més previsible. La guia ", ("a", "vuit casos pràctics d'IA en pimes", "/guias/ia-en-pymes-casos-practicos"), " (en castellà) explica quines decisions convé deixar a l'equip."]),
                 ("p", ["Per això no comencem per la tecnologia. Primer mirem el procés i després decidim si necessita IA, una ", ("a", "automatització de processos", "/ca/automatitzacio-processos"), " sense IA o totes dues coses."]),
             ]),
-            ("La IA proposa, el teu equip decideix", [
+            ("Qui decideix: la IA o el teu equip?", [
                 ("p", "No deixem processos sensibles sense supervisió. Dissenyem cada solució amb revisió humana, registre d'accions i validacions: la IA prepara, classifica i executa tasques, i les decisions importants continuen passant per una persona."),
+                ("p", ["Un exemple concret és el correu: a la guia sobre un ", ("a", "assistent d'IA per al correu amb revisió humana", "/guias/asistente-ia-correo-revision-humana"), " (en castellà) expliquem què prepara la IA i què revisa sempre una persona abans d'enviar."]),
             ]),
-            ("Les teves dades, sota control", [
+            ("Com es protegeixen les dades?", [
                 ("ul", [
                     "Fem servir les dades que aportes només per a l'abast acordat",
                     "Les protegim amb mesures de seguretat adequades",
@@ -155,7 +158,7 @@ SERVICIOS_CA = [
                 ]),
                 ("p", ["Ho expliquem amb detall a la nostra ", ("a", "política de privacitat", "/privacidad"), "."]),
             ]),
-            ("Integrada en el que ja fas servir", [
+            ("Amb quines eines es connecta?", [
                 ("p", ["Treballem amb models d'OpenAI i els connectem amb el teu correu, els teus documents, el teu CRM o WhatsApp mitjançant ", ("a", "n8n, Make o integracions a mida", "/ca/automatitzacio-n8n"), ". Després formem el teu equip i deixem documentació perquè faci servir el sistema amb autonomia."]),
             ]),
             ("Preguntes freqüents", [
@@ -316,10 +319,10 @@ SERVICIOS_CA = [
         "es": "mantenimiento-web",
         "id": "bqCaMant1",
         "nombre": "Manteniment web per a empreses",
-        "title": "Manteniment web per a empreses | Fórmula Banteq",
+        "title": "Manteniment web per a empreses, un 25 % menys | Banteq",
         "descripcion": (
-            "Passa el manteniment del teu web a Banteq: el remodelem sense cost de desenvolupament bàsic i pagues "
-            "un 25 % menys, fins a 50 €/mes. Quota mínima: 35 €/mes."
+            "Si ja pagues manteniment web, amb Banteq pagues un 25 % menys (fins a 50 €/mes) i el remodelem "
+            "sense cost de desenvolupament bàsic. Mínim: 35 €/mes."
         ),
         "h1": "Manteniment web per a empreses",
         "subtitulo": "Amb la Fórmula Banteq, el teu web es renova en contractar el manteniment i la quota baixa respecte a la que pagues avui.",
