@@ -273,18 +273,20 @@ def tarjeta(d):
         f'<p><b>Ejemplo:</b> {esc(d["ejemplo"])}</p></div></div>'
         f'<div class="bq-dm-video" data-pasos="{pasos}" role="group" aria-label="Demostración: {esc(d["titulo"])}">'
         f'<ol class="bq-dm-fases">{fases}</ol><div class="bq-dm-escena">{d["escenas"]}</div></div>'
-        f'<ul class="bq-dm-etiquetas">{etiquetas}{boton_ahorro(d)}</ul></article>'
+        f'<ul class="bq-dm-etiquetas">{etiquetas}</ul></article>'
     )
 
 
-def boton_ahorro(d):
-    """Botón opcional al final de las etiquetas, en su misma fila para no alargar la tarjeta (mismo
-    estilo que el de la Fórmula Banteq: banteq.css)."""
-    if not d.get("boton"):
+def boton_ahorro(datos):
+    """Botón «¿Cuánto me ahorro?» de la demostración que lo lleve: fuera de las tarjetas, centrado bajo
+    la cuadrícula y encima de la nota (Pol lo pidió así el 2026-11-24, para que se vea más). Mismo
+    estilo que el botón de la Fórmula Banteq (banteq.css)."""
+    d = next((d for d in datos if d.get("boton")), None)
+    if not d:
         return ""
     texto, destino = d["boton"]
-    return (f'<li class="bq-dm-boton"><a class="bq-formula-boton bq-formula-boton-solo" href="{destino}">'
-            f'<span class="bq-formula-texto">{esc(texto)}</span><span class="bq-formula-flecha" aria-hidden="true"></span></a></li>')
+    return (f'<p class="bq-demos-boton"><a class="bq-formula-boton bq-formula-boton-solo" href="{destino}">'
+            f'<span class="bq-formula-texto">{esc(texto)}</span><span class="bq-formula-flecha" aria-hidden="true"></span></a></p>')
 
 
 # Escudo con marca de verificación (garantía de 60 días: home y /automatizacion-procesos).
@@ -314,9 +316,10 @@ def garantia_html():
 
 def seccion_html():
     """Contenido que sustituye a las tarjetas de la sección (dentro de un div.bq-demos)."""
-    tarjetas = "".join(tarjeta(f()) for f in DEMOS)
+    datos = [f() for f in DEMOS]
+    tarjetas = "".join(tarjeta(d) for d in datos)
     h = (f'<p class="bq-demos-sub">{esc(SUBTITULO)}</p><div class="bq-demos-rejilla">{tarjetas}</div>'
-         f'<p class="bq-demos-nota">{esc(NOTA)}</p>{garantia_html()}')
+         f'{boton_ahorro(datos)}<p class="bq-demos-nota">{esc(NOTA)}</p>{garantia_html()}')
     assert "`" not in h and "${" not in h and "\\" not in h, "el HTML de las demostraciones no puede ir en un template de JS"
     return h
 
