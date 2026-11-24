@@ -581,9 +581,9 @@ PAGINA_404 = [
 # ---------------------------------------------------------------------------
 
 LEGAL_ACTUALIZACION = "Última actualización: 1 de noviembre de 2026"
-# El aviso legal cambió el 8 de noviembre de 2026 (condiciones de la Fórmula Banteq) y el 9 (garantía
-# de 60 días); la privacidad, no.
-AVISO_ACTUALIZACION = "Última actualización: 9 de noviembre de 2026"
+# El aviso legal cambió el 8 de noviembre de 2026 (condiciones de la Fórmula Banteq), el 9 (garantía
+# de 60 días) y el 24 (cálculo del precio de la calculadora de ahorro); la privacidad, no.
+AVISO_ACTUALIZACION = "Última actualización: 24 de noviembre de 2026"
 LEGAL_TITULAR = "Titular: Pol Carabante Martin, profesional autónomo que opera bajo la marca Banteq. NIF: 54166747E. Domicilio profesional: C/Casal dels Mogoda, 08130 Santa Perpètua de Mogoda. Contacto: pol@banteq.org."
 LEGAL_CONTACTO = LEGAL_TITULAR
 
@@ -826,6 +826,37 @@ CONDICIONES_GARANTIA = ("6. Garantía de satisfacción de 60 días", [
         "Banteq revisa los resultados con el cliente aplicando la forma de medir acordada y responde por escrito en un plazo máximo de 15 días naturales.",
         "Si no hay ahorro de tiempo verificable, Banteq devuelve el importe de implementación cubierto en un plazo máximo de 30 días naturales desde esa respuesta, por el mismo medio con el que se pagó.",
         "Banteq solo puede denegar la devolución si la solicitud llega fuera de plazo, si la automatización no está cubierta por la garantía, si no se ha utilizado para su finalidad o si el cliente no ha facilitado la información acordada. La respuesta indicará el motivo.",
+    ]),
+])
+
+# ---------------------------------------------------------------------------
+# Calculadora «¿Cuánto me ahorro?» (/automatizaciones/seguimiento/ahorro, pedida por Pol el
+# 2026-11-24): la implantación cuesta un mes de ahorro estimado y el mantenimiento, el 25 % del
+# ahorro mensual estimado (fórmulas en lib/ahorro-calculo.mjs). Apartado 8 del aviso legal, al
+# final, después de «7. Datos de contacto» (Pol pidió añadirlo al final sin tocar el resto); el
+# formulario de la calculadora enlaza a su ancla (#calculo-precio).
+# ---------------------------------------------------------------------------
+CALCULO_ANCLA = "calculo-precio"
+CONDICIONES_CALCULO = ("8. Cálculo del precio y veracidad de los datos", [
+    ("p", "El precio de implantación de una automatización (un mes de ahorro estimado) y su mantenimiento mensual "
+          "(el 25 % del ahorro mensual estimado) se calculan con los datos que el cliente introduce en la calculadora "
+          "de ahorro de la web y confirma en la reunión inicial."),
+    ("h", "Medición del volumen real"),
+    ("p", "Durante los primeros 60 días de funcionamiento, Banteq mide el volumen real de trabajo de la automatización: "
+          "los correos que envía."),
+    ("h", "Declaración falsa de datos"),
+    ("p", "Se considera declaración falsa de datos:"),
+    ("ul", [
+        "Que el volumen real medio de esos 60 días supere en más de un 50 % al declarado.",
+        "Que cualquier otra cifra declarada, como los minutos por correo o el coste por hora, resulte falsa en más de un 50 %.",
+    ]),
+    ("p", "Ejemplo: declarar 100 correos al día y que el sistema envíe de media más de 150."),
+    ("p", "En ese caso, Banteq recalculará la implantación y el mantenimiento con los datos reales, facturará la "
+          "diferencia de implantación y podrá suspender el servicio si esa diferencia no se abona en 15 días."),
+    ("h", "Margen razonable y crecimiento del negocio"),
+    ("ul", [
+        "Las variaciones de hasta un 50 % sobre lo declarado se aceptan como margen razonable (picos, estacionalidad, estimaciones aproximadas).",
+        "El crecimiento legítimo del negocio después de esos 60 días no se considera falsedad: el mantenimiento se revisa cada trimestre con el volumen real, al alza o a la baja.",
     ]),
 ])
 

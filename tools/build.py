@@ -1239,6 +1239,11 @@ def apply_formula_terms():
     assert contacto.startswith("7.") and C.CONDICIONES_GARANTIA[0].startswith("6.") and C.CONDICIONES_FORMULA[0].startswith("5.")
     assert t.count(marca) == 1 and contacto in t[t.find(marca):], "no se encuentra el apartado de contacto"
     t = t.replace(marca, secciones + marca)
+    # «8. Cálculo del precio y veracidad de los datos» (contenido.CONDICIONES_CALCULO, ancla
+    # #calculo-precio): al final, detrás de «7. Datos de contacto».
+    assert C.CONDICIONES_CALCULO[0].startswith("8.")
+    _, fin = jsx.call_containing(t, t.find(marca) + 3)
+    t = t[:fin] + "," + js_seccion_legal(*C.CONDICIONES_CALCULO, "bq-legal-calculo", C.CALCULO_ANCLA, contador=contador).rstrip(",") + t[fin:]
     # Con el apartado nuevo la página es más larga y su final queda sobre la parte gris del fondo:
     # el texto de la columna pasa al mismo gris que las páginas de servicio (COL_TEXTO_SERVICIO).
     i = t.find('className:`framer-inyegz`,"data-framer-name":`Main`,children:[')
