@@ -2489,18 +2489,56 @@ def structured_data_alias(idioma, es, url, titulo, descripcion):
     """JSON-LD de las páginas /ca… y /en… que son la misma página de Framer que otra en castellano
     (home, proyectos, avisos legales): organización, página, migas y, en la portada, las preguntas
     frecuentes traducidas."""
-    inicio = ID.MODULO[idioma].INICIO
+    if es == "proyectos" or es.startswith("proyectos/"):
+        return structured_data_proyectos(es, idioma, url, titulo, descripcion)
     pagina = ld_pagina(url, titulo, descripcion, inLanguage=idioma, **({"about": {"@id": ORG_ID}} if not es else {}))
     if not es:
         return _ld(ld_organizacion(idioma=idioma), pagina, ld_faq([(tr(idioma, q), tr(idioma, r)) for q, r in faq_home()]))
-    nombre = titulo.split(" | ")[0]
-    pasos = ((tr(idioma, "Proyectos"), f"{C.SITIO}/{ID.tabla_por_es()['proyectos'][idioma]}"),) if es.startswith("proyectos/") else ()
-    return _ld(ld_organizacion(idioma=idioma), pagina, ld_migas(*pasos, (nombre, url), inicio=inicio))
+    return _ld(ld_organizacion(idioma=idioma), pagina, ld_migas((titulo.split(" | ")[0], url), idioma=idioma))
 
 
-def ld_migas(*pasos, inicio="Inicio"):
-    """Migas de pan: (nombre, url) desde la home hasta la página."""
-    pasos = ((inicio, f"{C.SITIO}/"),) + pasos
+def structured_data_proyectos(ruta_es, idioma, url, titulo, descripcion):
+    rutas = ID.tabla_por_es()
+    indice = rutas["proyectos"][idioma]
+    nombre_indice = "Proyectos" if idioma == "es" else tr(idioma, "Proyectos")
+    miga_indice = (nombre_indice, f"{C.SITIO}/{indice}")
+    if ruta_es == "proyectos":
+        lista = {
+            "@type": "ItemList",
+            "itemListElement": [
+                {"@type": "ListItem", "position": k,
+                 "name": pr["titulo"] if idioma == "es" else tr(idioma, pr["titulo"]),
+                 "url": f"{C.SITIO}/{indice}/{pr['slug']}"}
+                for k, pr in enumerate(C.PROYECTOS, 1)
+            ],
+        }
+        pagina = ld_pagina(url, titulo, descripcion, tipo="CollectionPage", mainEntity=lista, inLanguage=idioma)
+        return _ld(ld_organizacion(idioma=idioma), pagina, ld_migas(miga_indice, idioma=idioma))
+
+    slug = ruta_es.split("/")[1]
+    pr = next(p for p in C.PROYECTOS if p["slug"] == slug)
+    nombre = pr["titulo"] if idioma == "es" else tr(idioma, pr["titulo"])
+    obra = {
+        "@type": "CreativeWork", "@id": f"{url}#proyecto", "name": nombre,
+        "description": pr["descripcion"] if idioma == "es" else descripcion, "url": url,
+        "image": f"{C.SITIO}/framerusercontent.com/images/{pr['tarjeta']}",
+        "dateCreated": pr["ano"], "about": pr["sector"] if idioma == "es" else tr(idioma, pr["sector"]),
+        "creator": {"@id": ORG_ID}, "inLanguage": idioma,
+        "keywords": pr["servicios"] if idioma == "es" else tr(idioma, pr["servicios"]),
+        "mentions": [{"@type": "Service", "@id": f"{C.SITIO}/{rutas[servicio][idioma]}#servicio"}
+                     for servicio in C.PROYECTO_SERVICIOS[slug]],
+    }
+    if idioma != "es":
+        obra["translationOfWork"] = {"@id": f"{C.SITIO}/{ruta_es}#proyecto"}
+    pagina = ld_pagina(url, titulo, descripcion, mainEntity={"@id": obra["@id"]}, inLanguage=idioma)
+    return _ld(ld_organizacion(idioma=idioma), pagina, obra, ld_migas(miga_indice, (nombre, url), idioma=idioma))
+
+
+def ld_migas(*pasos, idioma="es"):
+    """Migas de pan: (nombre, url) desde la portada del idioma hasta la página."""
+    inicio = "Inicio" if idioma == "es" else ID.MODULO[idioma].INICIO
+    portada = ID.tabla_por_es()[""][idioma]
+    pasos = ((inicio, f"{C.SITIO}/{portada}"),) + pasos
     return {
         "@type": "BreadcrumbList",
         "itemListElement": [{"@type": "ListItem", "position": k, "name": n, "item": u} for k, (n, u) in enumerate(pasos, 1)],
@@ -2530,7 +2568,6 @@ def structured_data(rel, titulo="", descripcion=""):
     """JSON-LD de cada página. Todo sale de contenido.py: lo mismo que se lee en la página."""
     url = page_url(rel)
     servicios = {sv["slug"]: sv for sv in todos_los_servicios()}
-    proyectos = {pr["slug"]: pr for pr in C.PROYECTOS}
     ruta = rel[: -len("index.html")].strip("/")
     alias = ID.es_de_alias(ruta)
     if alias is not None:
@@ -2551,25 +2588,9 @@ def structured_data(rel, titulo="", descripcion=""):
             servicio["audience"]["audienceType"] = ID.MODULO[idioma].AUDIENCIA
         return _ld(ld_organizacion(idioma=idioma), ld_pagina(url, titulo, descripcion, mainEntity={"@id": f"{url}#servicio"}, inLanguage=idioma),
                    servicio, ld_faq(preguntas),
-                   ld_migas((sv["nombre"], url), inicio=ID.MODULO[idioma].INICIO if idioma != "es" else "Inicio"))
-    if ruta == "proyectos":
-        lista = {
-            "@type": "ItemList",
-            "itemListElement": [{"@type": "ListItem", "position": k, "name": pr["titulo"], "url": f"{C.SITIO}/proyectos/{pr['slug']}"}
-                                for k, pr in enumerate(C.PROYECTOS, 1)],
-        }
-        return _ld(ld_organizacion(), ld_pagina(url, titulo, descripcion, tipo="CollectionPage", mainEntity=lista),
-                   ld_migas(("Proyectos", url)))
-    if ruta.startswith("proyectos/"):
-        pr = proyectos[ruta.split("/")[1]]
-        obra = {
-            "@type": "CreativeWork", "@id": f"{url}#proyecto", "name": pr["titulo"], "description": pr["descripcion"], "url": url,
-            "image": f"{C.SITIO}/framerusercontent.com/images/{pr['tarjeta']}", "dateCreated": pr["ano"], "about": pr["sector"],
-            "creator": {"@id": ORG_ID}, "inLanguage": "es", "keywords": pr["servicios"],
-            "mentions": [{"@type": "Service", "@id": f"{C.SITIO}/{s_}#servicio"} for s_ in C.PROYECTO_SERVICIOS[pr["slug"]]],
-        }
-        return _ld(ld_organizacion(), ld_pagina(url, titulo, descripcion, mainEntity={"@id": f"{url}#proyecto"}),
-                   obra, ld_migas(("Proyectos", f"{C.SITIO}/proyectos"), (pr["cliente"], url)))
+                   ld_migas((sv["nombre"], url), idioma=idioma))
+    if ruta == "proyectos" or ruta.startswith("proyectos/"):
+        return structured_data_proyectos(ruta, "es", url, titulo, descripcion)
     # Páginas legales: quién es el titular y de qué sitio forman parte.
     return _ld(ld_organizacion(), ld_pagina(url, titulo, descripcion), ld_migas((titulo.split(" | ")[0], url)))
 
@@ -2603,16 +2624,20 @@ def apply_seo():
         for attr in ('property="og:description"', 'name="twitter:description"'):
             head = meta(attr, desc, head)
         # Las páginas de proyecto se comparten con su propia imagen (la tarjeta del proyecto).
-        m_pr = re.match(r"proyectos/([^/]+)/index\.html$", rel)
+        ruta_pagina = rel[: -len("index.html")].strip("/")
+        idioma = ID.idioma_de(ruta_pagina)
+        ruta_es = ID.es_de_alias(ruta_pagina) or ruta_pagina
+        m_pr = re.fullmatch(r"proyectos/([^/]+)", ruta_es)
         pr = next((x for x in C.PROYECTOS if m_pr and x["slug"] == m_pr.group(1)), None)
         imagen = f"{C.SITIO}/framerusercontent.com/images/{pr['tarjeta']}" if pr else og_image
-        imagen_alt = f"Web de {pr['cliente']}, proyecto de Banteq" if pr else f"{C.NOMBRE_ALTERNATIVO}: automatización, inteligencia artificial y desarrollo web"
+        imagen_alt = f"{C.NOMBRE_ALTERNATIVO}: automatización, inteligencia artificial y desarrollo web"
+        if pr:
+            imagen_alt = f"Web de {pr['cliente']}, proyecto de Banteq" if idioma == "es" else tr(idioma, pr["titulo"])
         for attr in ('property="og:image"', 'name="twitter:image"'):
             head = meta(attr, imagen, head)
-        ruta_pagina = rel[: -len("index.html")].strip("/")
         extra = (f'<meta property="og:image:alt" content="{html.escape(imagen_alt)}">'
                  f'<meta property="og:site_name" content="{C.NOMBRE_SITIO}">'
-                 f'<meta property="og:locale" content="{ID.LOCALE[ID.idioma_de(ruta_pagina)]}">')
+                 f'<meta property="og:locale" content="{ID.LOCALE[idioma]}">')
         # Páginas con versión en los dos idiomas: cada una declara las dos (y la de castellano como
         # opción por defecto), para que Google enseñe a cada persona la de su idioma.
         grupo = ID.grupo_de(ruta_pagina)
