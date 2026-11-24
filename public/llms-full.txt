@@ -116,16 +116,18 @@ También te puede interesar: [inteligencia artificial para empresas](https://ban
 ### Inteligencia artificial para empresas
 
 URL: https://banteq.com/inteligencia-artificial
-Actualizado: 2026-11-20
+Actualizado: 2026-11-24
 Idioma: es
 
 Asistentes que atienden, clasifican y redactan dentro de tus herramientas, con tu equipo al mando.
+
+En Banteq creamos asistentes de inteligencia artificial para pymes de Barcelona y el Vallès: leen documentos, clasifican correos y solicitudes, responden las consultas habituales y preparan borradores dentro de las herramientas que ya usas. Siempre con revisión humana: la IA propone y tu equipo decide.
 
 La inteligencia artificial ya es útil en el día a día de una pyme: responde consultas, encuentra información en tus documentos, clasifica lo que entra y prepara borradores. Lo difícil no es usarla, sino aplicarla donde de verdad aporta.
 
 En Banteq la integramos en tus procesos y en las herramientas que ya utilizas, y dejamos claro qué hace la IA y qué sigue decidiendo una persona.
 
-#### Qué hacemos con inteligencia artificial
+#### ¿Qué puede hacer la IA en una pyme?
 
 - **Atención al cliente.** Asistentes que responden las consultas habituales y pasan a tu equipo las que necesitan a una persona.
 - **Consultas sobre tu documentación interna.** Tu equipo pregunta con sus palabras y el asistente responde a partir de los documentos de la empresa.
@@ -133,17 +135,19 @@ En Banteq la integramos en tus procesos y en las herramientas que ya utilizas, y
 - **Clasificación de solicitudes.** Cada correo o formulario llega etiquetado y a quien corresponde.
 - **Borradores de respuesta.** La IA prepara el texto; una persona lo revisa y lo envía.
 
-#### Cuándo tiene sentido usar IA y cuándo no
+#### ¿Cuándo tiene sentido usar IA y cuándo no?
 
 La IA aporta cuando la tarea exige entender lenguaje: leer un texto que no viene siempre igual, decidir de qué trata un mensaje o redactar una respuesta. Si la tarea sigue reglas fijas, como pasar un dato de un programa a otro, suele bastar una automatización más sencilla, que es más barata y más predecible. Nuestra guía reúne [ocho casos prácticos de IA en pymes](https://banteq.com/guias/ia-en-pymes-casos-practicos) y explica qué decisiones conviene dejar en manos del equipo.
 
 Por eso no empezamos por la tecnología. Primero miramos el proceso y después decidimos si necesita IA, una [automatización de procesos](https://banteq.com/automatizacion-procesos) sin IA o las dos cosas.
 
-#### La IA propone, tu equipo decide
+#### ¿Quién decide, la IA o tu equipo?
 
 No dejamos procesos sensibles sin supervisión. Diseñamos cada solución con revisión humana, registro de acciones y validaciones: la IA prepara, clasifica y ejecuta tareas, y las decisiones importantes siguen pasando por una persona.
 
-#### Tus datos, bajo control
+Un ejemplo concreto es el correo: en la guía sobre un [asistente de IA para el correo con revisión humana](https://banteq.com/guias/asistente-ia-correo-revision-humana) explicamos qué prepara la IA y qué revisa siempre una persona antes de enviar.
+
+#### ¿Cómo se protegen los datos?
 
 - Usamos los datos que aportas solo para el alcance acordado
 - Los protegemos con medidas de seguridad adecuadas
@@ -151,7 +155,7 @@ No dejamos procesos sensibles sin supervisión. Diseñamos cada solución con re
 
 Lo explicamos con detalle en nuestra [política de privacidad](https://banteq.com/privacidad).
 
-#### Integrada en lo que ya usas
+#### ¿Con qué herramientas se conecta?
 
 Trabajamos con modelos de OpenAI y los conectamos con tu correo, tus documentos, tu CRM o WhatsApp mediante [n8n, Make o integraciones a medida](https://banteq.com/automatizacion-n8n). Después formamos a tu equipo y dejamos documentación para que use el sistema con autonomía.
 
@@ -432,7 +436,7 @@ Estamos en Santa Perpètua de Mogoda (Barcelona) y trabajamos con empresas de Ba
 ### Margon: web corporativa para una empresa industrial
 
 URL: https://banteq.com/proyectos/margon
-Actualizado: 2026-11-13
+Actualizado: 2026-11-24
 Idioma: es
 
 Cliente: Margon. Sector: Industria: ferroviario, defensa y obra pública. Año: 2026. Servicios: Diseño y desarrollo web, experiencia interactiva, multiidioma y newsletter.
@@ -473,7 +477,7 @@ Cliente: Margon. Sector: Industria: ferroviario, defensa y obra pública. Año: 
 ### RentUp Capital: web y formularios automatizados
 
 URL: https://banteq.com/proyectos/rentup-capital
-Actualizado: 2026-11-13
+Actualizado: 2026-11-24
 Idioma: es
 
 Cliente: RentUp Capital. Sector: Inversión inmobiliaria. Año: 2026. Servicios: Diseño y desarrollo web, automatización de formularios e integración con Brevo y Resend.

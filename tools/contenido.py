@@ -476,7 +476,7 @@ PROYECTOS = [
     {
         "slug": "margon",
         "titulo": "Margon: web corporativa para una empresa industrial",
-        "descripcion": "Nueva web corporativa en cinco idiomas para una empresa metalúrgica de ciclo completo que trabaja para los sectores ferroviario, de defensa y de obra pública.",
+        "descripcion": "Nueva web corporativa en cinco idiomas para una metalúrgica del sector ferroviario, con newsletter automatizado que ahorra más de 2.500 € al año en tiempo.",
         "logo": "banteq-margon-logo.png",
         "tarjeta": "banteq-margon-card.jpg",
         "cabecera": "banteq-margon-hero.jpg",
@@ -513,7 +513,7 @@ PROYECTOS = [
     {
         "slug": "rentup-capital",
         "titulo": "RentUp Capital: web y formularios automatizados",
-        "descripcion": "Web para una firma de inversión inmobiliaria, con formularios conectados que guardan cada contacto y avisan al equipo automáticamente.",
+        "descripcion": "Web de once páginas en producción para una firma de inversión inmobiliaria, con formularios que guardan cada contacto y avisan al equipo.",
         "logo": "banteq-rentup-logo.png",
         "tarjeta": "banteq-rentup-card.jpg",
         "cabecera": "banteq-rentup-hero.jpg",
@@ -557,7 +557,7 @@ PAGINA_PROYECTOS = [
     ("`Case Studies`", "`Proyectos`"),
     (
         "`All graphical assets in this template are licensed for personal and commercial use. If you'd like to use a specific asset, please check the license below`",
-        "`Empresas que ya confían en Banteq y el trabajo que hemos hecho con ellas.`",
+        "`Proyectos reales de desarrollo web y automatización de procesos: una web corporativa en cinco idiomas y una web con formularios que registran cada contacto.`",
     ),
 ]
 
@@ -943,20 +943,22 @@ SERVICIOS = [
         "id": "bqSvIntA1",
         "menu": "Inteligencia artificial",
         "nombre": "Inteligencia artificial para empresas",
-        "title": "Inteligencia artificial para pymes en Barcelona | Banteq",
+        "title": "Inteligencia artificial para empresas en Barcelona | Banteq",
         "descripcion": (
-            "Asistentes de IA que responden consultas, leen documentos, clasifican solicitudes y preparan "
-            "borradores dentro de tus herramientas, con revisión humana."
+            "Asistentes de IA para pymes de Barcelona y el Vallès: leen documentos, clasifican correos y preparan "
+            "borradores. Tu equipo revisa y decide."
         ),
         "h1": "Inteligencia artificial para empresas",
         "subtitulo": "Asistentes que atienden, clasifican y redactan dentro de tus herramientas, con tu equipo al mando.",
         "intro": [
+            "En Banteq creamos asistentes de inteligencia artificial para pymes de Barcelona y el Vallès: leen documentos, clasifican correos y solicitudes, "
+            "responden las consultas habituales y preparan borradores dentro de las herramientas que ya usas. Siempre con revisión humana: la IA propone y tu equipo decide.",
             "La inteligencia artificial ya es útil en el día a día de una pyme: responde consultas, encuentra información "
             "en tus documentos, clasifica lo que entra y prepara borradores. Lo difícil no es usarla, sino aplicarla donde de verdad aporta.",
             "En Banteq la integramos en tus procesos y en las herramientas que ya utilizas, y dejamos claro qué hace la IA y qué sigue decidiendo una persona.",
         ],
         "secciones": [
-            ("Qué hacemos con inteligencia artificial", [
+            ("¿Qué puede hacer la IA en una pyme?", [
                 ("ul", [
                     [("b", "Atención al cliente. "), "Asistentes que responden las consultas habituales y pasan a tu equipo las que necesitan a una persona."],
                     [("b", "Consultas sobre tu documentación interna. "), "Tu equipo pregunta con sus palabras y el asistente responde a partir de los documentos de la empresa."],
@@ -965,14 +967,15 @@ SERVICIOS = [
                     [("b", "Borradores de respuesta. "), "La IA prepara el texto; una persona lo revisa y lo envía."],
                 ]),
             ]),
-            ("Cuándo tiene sentido usar IA y cuándo no", [
+            ("¿Cuándo tiene sentido usar IA y cuándo no?", [
                 ("p", ["La IA aporta cuando la tarea exige entender lenguaje: leer un texto que no viene siempre igual, decidir de qué trata un mensaje o redactar una respuesta. Si la tarea sigue reglas fijas, como pasar un dato de un programa a otro, suele bastar una automatización más sencilla, que es más barata y más predecible. Nuestra guía reúne ", ("a", "ocho casos prácticos de IA en pymes", "/guias/ia-en-pymes-casos-practicos"), " y explica qué decisiones conviene dejar en manos del equipo."]),
                 ("p", ["Por eso no empezamos por la tecnología. Primero miramos el proceso y después decidimos si necesita IA, una ", ("a", "automatización de procesos", "/automatizacion-procesos"), " sin IA o las dos cosas."]),
             ]),
-            ("La IA propone, tu equipo decide", [
+            ("¿Quién decide, la IA o tu equipo?", [
                 ("p", "No dejamos procesos sensibles sin supervisión. Diseñamos cada solución con revisión humana, registro de acciones y validaciones: la IA prepara, clasifica y ejecuta tareas, y las decisiones importantes siguen pasando por una persona."),
+                ("p", ["Un ejemplo concreto es el correo: en la guía sobre un ", ("a", "asistente de IA para el correo con revisión humana", "/guias/asistente-ia-correo-revision-humana"), " explicamos qué prepara la IA y qué revisa siempre una persona antes de enviar."]),
             ]),
-            ("Tus datos, bajo control", [
+            ("¿Cómo se protegen los datos?", [
                 ("ul", [
                     "Usamos los datos que aportas solo para el alcance acordado",
                     "Los protegemos con medidas de seguridad adecuadas",
@@ -980,7 +983,7 @@ SERVICIOS = [
                 ]),
                 ("p", ["Lo explicamos con detalle en nuestra ", ("a", "política de privacidad", "/privacidad"), "."]),
             ]),
-            ("Integrada en lo que ya usas", [
+            ("¿Con qué herramientas se conecta?", [
                 ("p", ["Trabajamos con modelos de OpenAI y los conectamos con tu correo, tus documentos, tu CRM o WhatsApp mediante ", ("a", "n8n, Make o integraciones a medida", "/automatizacion-n8n"), ". Después formamos a tu equipo y dejamos documentación para que use el sistema con autonomía."]),
             ]),
             ("Preguntas frecuentes", [
@@ -1146,10 +1149,10 @@ SERVICIOS = [
         "id": "bqSvMant1",
         "menu": "Mantenimiento web",
         "nombre": "Mantenimiento web para empresas",
-        "title": "Mantenimiento web para empresas | Fórmula Banteq",
+        "title": "Mantenimiento web para empresas, un 25 % menos | Banteq",
         "descripcion": (
-            "Pasa el mantenimiento de tu web a Banteq: la remodelamos sin coste de desarrollo básico y pagas "
-            "un 25 % menos, hasta 50 €/mes. Cuota mínima: 35 €/mes."
+            "Si ya pagas el mantenimiento de tu web, con Banteq pagas un 25 % menos (hasta 50 €/mes) y la remodelamos "
+            "sin coste de desarrollo básico. Mínimo: 35 €/mes."
         ),
         "h1": "Mantenimiento web para empresas",
         "subtitulo": "Con la Fórmula Banteq, tu web se renueva al contratar el mantenimiento y la cuota baja respecto a la que pagas hoy.",

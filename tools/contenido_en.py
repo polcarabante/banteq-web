@@ -220,20 +220,22 @@ SERVICIOS_EN = [
         "es": "inteligencia-artificial",
         "id": "bqEnIntA1",
         "nombre": "Artificial intelligence for businesses",
-        "title": "Artificial intelligence for SMEs in Barcelona | Banteq",
+        "title": "Artificial intelligence for businesses in Barcelona | Banteq",
         "descripcion": (
-            "AI assistants that answer enquiries, read documents, sort requests and prepare drafts inside your tools, "
-            "with human review."
+            "AI assistants for businesses in Barcelona and the Vallès: they read documents, sort emails and draft "
+            "replies. Your team reviews and decides."
         ),
         "h1": "Artificial intelligence for businesses",
         "subtitulo": "Assistants that respond, sort and draft inside your tools, with your team in charge.",
         "intro": [
+            "At Banteq we build artificial intelligence assistants for SMEs in Barcelona and the Vallès area: they read documents, sort emails and requests, "
+            "answer routine enquiries and prepare drafts inside the tools you already use. Always with human review: the AI proposes and your team decides.",
             "Artificial intelligence is already useful in the day-to-day of an SME: it answers enquiries, finds information "
             "in your documents, sorts what comes in and prepares drafts. The hard part is not using it, but applying it where it really adds value.",
             "At Banteq we build it into your processes and the tools you already use, and we make clear what the AI does and what a person still decides.",
         ],
         "secciones": [
-            ("What we do with artificial intelligence", [
+            ("What can AI do in a small business?", [
                 ("ul", [
                     [("b", "Customer service. "), "Assistants that answer the usual questions and pass to your team the ones that need a person."],
                     [("b", "Questions about your internal documentation. "), "Your team asks in their own words and the assistant replies from the company's documents."],
@@ -242,14 +244,15 @@ SERVICIOS_EN = [
                     [("b", "Draft replies. "), "The AI prepares the text; a person reviews and sends it."],
                 ]),
             ]),
-            ("When it makes sense to use AI and when it doesn't", [
-                ("p", "AI adds value when the task requires understanding language: reading text that doesn't always arrive in the same form, deciding what a message is about or drafting a reply. If the task follows fixed rules, such as moving a piece of data from one program to another, a simpler automation is usually enough, and it is cheaper and more predictable."),
+            ("When does it make sense to use AI, and when not?", [
+                ("p", ["AI adds value when the task requires understanding language: reading text that doesn't always arrive in the same form, deciding what a message is about or drafting a reply. If the task follows fixed rules, such as moving a piece of data from one program to another, a simpler automation is usually enough, and it is cheaper and more predictable. Our guide to ", ("a", "eight practical AI use cases in SMEs", "/guias/ia-en-pymes-casos-practicos"), " (in Spanish) explains which decisions are best left to the team."]),
                 ("p", ["That is why we don't start with the technology. We look at the process first and then decide whether it needs AI, a ", ("a", "process automation", "/en/process-automation"), " without AI, or both."]),
             ]),
-            ("The AI proposes, your team decides", [
+            ("Who decides: the AI or your team?", [
                 ("p", "We don't leave sensitive processes unsupervised. We design every solution with human review, action logs and validations: the AI prepares, classifies and carries out tasks, and important decisions still go through a person."),
+                ("p", ["Email is a good example: in our guide to an ", ("a", "AI email assistant with human review", "/guias/asistente-ia-correo-revision-humana"), " (in Spanish) we explain what the AI prepares and what a person always checks before sending."]),
             ]),
-            ("Your data, under control", [
+            ("How is your data protected?", [
                 ("ul", [
                     "We use the data you provide only for the agreed scope",
                     "We protect it with appropriate security measures",
@@ -257,7 +260,7 @@ SERVICIOS_EN = [
                 ]),
                 ("p", ["We explain this in detail in our ", ("a", "privacy policy", "/privacidad"), "."]),
             ]),
-            ("Built into what you already use", [
+            ("Which tools does it connect to?", [
                 ("p", ["We work with OpenAI models and connect them to your email, your documents, your CRM or WhatsApp using ", ("a", "n8n, Make or custom integrations", "/en/n8n-automation"), ". Afterwards we train your team and leave documentation so they can use the system independently."]),
             ]),
             ("Frequently asked questions", [
@@ -419,10 +422,10 @@ SERVICIOS_EN = [
         "es": "mantenimiento-web",
         "id": "bqEnMant1",
         "nombre": "Web maintenance for businesses",
-        "title": "Web maintenance for businesses | Banteq Formula",
+        "title": "Web maintenance for businesses, 25% less | Banteq",
         "descripcion": (
-            "Move your website maintenance to Banteq: we remodel it at no basic development cost and you pay "
-            "25% less, up to €50/month. Minimum fee: €35/month."
+            "Already paying for web maintenance? With Banteq you pay 25% less (up to €50/month) and we remodel "
+            "your site at no basic development cost. Min. €35/month."
         ),
         "h1": "Web maintenance for businesses",
         "subtitulo": "With the Banteq Formula, your website is renewed when you hire maintenance and the fee drops compared with what you pay today.",
