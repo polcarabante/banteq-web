@@ -1,0 +1,1087 @@
+# Banteq: contenido completo
+
+> Texto de las páginas principales de https://banteq.com (servicios, proyectos y guías), sin menús ni pie, para asistentes de IA. Versión resumida con enlaces: https://banteq.com/llms.txt. Generado desde el mismo contenido que la web.
+
+Estamos en Santa Perpètua de Mogoda (Barcelona) y trabajamos con empresas de Barcelona, el Vallès y, en remoto, del resto de España. Contacto: pol@banteq.org.
+
+## Servicios
+
+### Automatización de procesos para pymes en Barcelona
+
+URL: https://banteq.com/automatizacion-procesos
+Actualizado: 2026-11-20
+Idioma: es
+
+Conectamos el correo, las hojas de cálculo y el CRM que ya utiliza tu equipo.
+
+¿Tu equipo vuelve a teclear en Excel los pedidos que llegan por correo? Desde Santa Perpètua de Mogoda ayudamos a pymes de Barcelona y del Vallès a automatizar tareas como esta. El equipo sigue revisando los datos que faltan o no cuadran.
+
+En [RentUp Capital](https://banteq.com/proyectos/rentup-capital) conectamos los formularios de la web con su lista de contactos. Alguien deja sus datos, recibe una confirmación y el equipo recibe el aviso para hacer el seguimiento.
+
+[Consultar si puedo automatizar una tarea](https://banteq.com/#hablemos). Cuéntanos qué haces a mano, con qué programas y cuántas veces al mes. Si necesitas un diagnóstico avanzado, te explicaremos su alcance y sus honorarios antes de contratarlo.
+
+[Consulta el servei d’automatització en català](https://banteq.com/ca/automatitzacio-processos).
+
+#### Qué procesos automatizamos
+
+- **Documentos y facturas.** Se reciben, se clasifican y se registran sin teclearlos de nuevo, con una persona que valida lo que lo necesita.
+- **Correos y formularios.** Cada solicitud llega a quien debe, queda registrada y recibe respuesta.
+- **Ventas y CRM.** Contactos clasificados, respuestas personalizadas, seguimiento automático y un CRM siempre al día.
+- **Informes y datos.** Informes automáticos, métricas semanales y alertas para decidir con información al día.
+- **Conexión entre herramientas.** Correo, Drive, Excel, CRM, ERP o WhatsApp conectados entre sí, para que la información pase de una a otra sin copiar y pegar.
+
+#### Ejemplos de automatizaciones
+
+Así queda una tarea cuando deja de hacerse a mano. Son ejemplos habituales; en tu empresa se adaptan a tus programas y a tu forma de trabajar.
+
+- **Facturas de proveedores.** La factura llega por correo, se leen el proveedor, la fecha y los importes, se anota en tu hoja de cálculo o en tu programa de gestión y el PDF se archiva en su carpeta. Una persona revisa solo las que no cuadran. Consulta [cómo automatizar las facturas de proveedores paso a paso](https://banteq.com/guias/automatizar-facturas-de-proveedores).
+- **Solicitudes de la web.** Cada formulario crea el contacto en tu CRM, envía una confirmación a quien escribe y avisa a la persona del equipo que debe responder.
+- **Presupuestos y consultas.** Los correos entrantes se clasifican por tipo, se crea la ficha con los datos y se prepara un borrador de respuesta para revisar y enviar.
+- **Informe semanal.** Los datos de ventas, pedidos o incidencias se recogen de cada herramienta y llegan resumidos al correo cada lunes.
+- **Reservas y citas.** La cita queda en el calendario, el cliente recibe la confirmación y un recordatorio, y los cambios se actualizan solos.
+
+#### Cómo calcular si te compensa automatizar una tarea
+
+Elige una tarea de una semana normal, por ejemplo copiar pedidos del correo a Excel. Cuenta los pedidos y mide los minutos que lleva procesar cada uno. En una prueba del nuevo flujo, incluye también el tiempo de revisar excepciones y corregir errores.
+
+Ejemplo orientativo: con 100 pedidos al mes, pasar de 6 a 2 minutos por pedido libera 6 horas y 40 minutos al mes. Si valoras la hora en 24 €, son 160 € mensuales de tiempo recuperado. Resta licencias y mantenimiento para estimar el beneficio mensual y divide el coste inicial entre ese beneficio para calcular los meses de recuperación. Si el beneficio es cero o negativo, la inversión no se recupera con ese ahorro.
+
+Para valorar tu caso, [cuéntanos qué tarea repites](https://banteq.com/#hablemos), con qué programas la haces y cuántas veces al mes. Una estimación de tiempo liberado solo se convierte en ahorro de caja si reduce un coste que realmente pagas.
+
+#### Empezamos por un diagnóstico
+
+Antes de automatizar nada, analizamos cómo trabaja tu empresa y dibujamos un mapa de sus procesos, herramientas y conexiones. Ese mapa muestra dónde se pierde tiempo y [qué procesos conviene automatizar primero](https://banteq.com/guias/que-procesos-automatizar-en-una-pyme).
+
+Preparamos dos diagnósticos separados: procesos y oportunidades de automatización. El primero organiza cómo trabajáis y ayuda a preparar el camino hacia ISO 9001. El segundo identifica tareas que podrían hacerse con menos tiempo y errores. Te contactaremos en menos de 72 horas naturales para comentar las conclusiones, los honorarios y las condiciones de entrega. Enviar el cuestionario no supone contratar ni pagar.
+
+Después seguimos un proceso claro: diseño, desarrollo, pruebas y formación de tu equipo. Así es [cómo trabajamos](https://banteq.com/#como-trabajamos).
+
+#### Sobre las herramientas que ya usas
+
+No hace falta cambiar de programas. Trabajamos con Microsoft 365, Google Drive, WhatsApp, Notion, Airtable u Odoo, y las conectamos con n8n, Make o integraciones a medida cuando el proceso lo requiere. Lo explicamos en [automatización con n8n e integración de herramientas](https://banteq.com/automatizacion-n8n).
+
+Cuando la tarea exige entender un texto, como leer un documento, clasificar un correo o redactar una respuesta, añadimos [inteligencia artificial](https://banteq.com/inteligencia-artificial) al proceso.
+
+#### Con control y supervisión
+
+- Revisión humana en los pasos sensibles
+- Registro de cada acción
+- Integraciones seguras y protección de datos
+- Pruebas con datos reales o de prueba antes de ponerlo en marcha
+
+#### Garantía de 60 días
+
+60 días de garantía. Si no ahorras tiempo, te devolvemos el coste de implementación.
+
+Confiamos en el valor de nuestras automatizaciones. Si durante los primeros 60 días desde su puesta en funcionamiento no consigues ahorrar tiempo con la solución que hemos implantado, te devolvemos el importe de la implementación conforme a las condiciones de la garantía.
+
+Cubre la implementación de las automatizaciones incluidas en la garantía. No incluye mantenimiento, herramientas externas ni costes de terceros.
+
+#### Preguntas frecuentes
+
+**¿Qué procesos se pueden automatizar?**
+
+Los que se repiten y siguen reglas claras: registrar documentos y facturas, responder y clasificar correos, pasar datos entre programas, hacer seguimiento de contactos o preparar informes. En el diagnóstico vemos cuáles compensan en tu caso.
+
+**¿Tenemos que cambiar de herramientas?**
+
+No. Partimos de las que ya usa tu empresa y las conectamos entre sí. Solo proponemos una herramienta nueva cuando resuelve algo que las actuales no pueden.
+
+**¿Qué pasa si una automatización se equivoca?**
+
+Las diseñamos con validaciones, registro de acciones y revisión humana en los pasos sensibles, y las probamos antes de ponerlas en marcha. Las decisiones importantes siguen pasando por una persona.
+
+**¿Necesitamos conocimientos técnicos?**
+
+No. Nos encargamos del análisis, el desarrollo, las integraciones y las pruebas. Después formamos a tu equipo y dejamos documentación para que use el sistema con autonomía.
+
+**¿Cuánto cuesta automatizar un proceso?**
+
+Para presupuestarlo revisamos cuántos programas intervienen, cómo se accede a los datos y qué excepciones hay que comprobar. Separamos la implantación de los gastos recurrentes de licencias y mantenimiento para que puedas compararlos con el tiempo que recupera tu equipo.
+
+**¿Cuánto tiempo se ahorra?**
+
+Depende de cuántas veces se repite la tarea y de cuánto tarda hoy. En las automatizaciones con garantía lo dejamos por escrito antes de empezar: cuánto tiempo dedica tu equipo al proceso y cómo se medirá después.
+
+**¿Trabajáis con empresas de fuera de Barcelona?**
+
+Sí. El análisis, el desarrollo y la formación pueden hacerse en remoto, así que trabajamos con empresas de toda España. Con las de Barcelona y el Vallès también podemos vernos en persona.
+
+#### ¿Hablamos de tus procesos?
+
+Estamos en Santa Perpètua de Mogoda (Barcelona) y trabajamos con empresas de Barcelona, el Vallès y, en remoto, del resto de España. [Cuéntanos tu caso](https://banteq.com/#hablemos) y te proponemos un primer paso razonable.
+
+También te puede interesar: [inteligencia artificial para empresas](https://banteq.com/inteligencia-artificial), [automatización con n8n](https://banteq.com/automatizacion-n8n) y [desarrollo web a medida](https://banteq.com/desarrollo-web).
+
+### Inteligencia artificial para empresas
+
+URL: https://banteq.com/inteligencia-artificial
+Actualizado: 2026-11-20
+Idioma: es
+
+Asistentes que atienden, clasifican y redactan dentro de tus herramientas, con tu equipo al mando.
+
+La inteligencia artificial ya es útil en el día a día de una pyme: responde consultas, encuentra información en tus documentos, clasifica lo que entra y prepara borradores. Lo difícil no es usarla, sino aplicarla donde de verdad aporta.
+
+En Banteq la integramos en tus procesos y en las herramientas que ya utilizas, y dejamos claro qué hace la IA y qué sigue decidiendo una persona.
+
+#### Qué hacemos con inteligencia artificial
+
+- **Atención al cliente.** Asistentes que responden las consultas habituales y pasan a tu equipo las que necesitan a una persona.
+- **Consultas sobre tu documentación interna.** Tu equipo pregunta con sus palabras y el asistente responde a partir de los documentos de la empresa.
+- **Lectura de documentos.** Facturas, pedidos o formularios de los que se extraen los datos para registrarlos sin teclearlos.
+- **Clasificación de solicitudes.** Cada correo o formulario llega etiquetado y a quien corresponde.
+- **Borradores de respuesta.** La IA prepara el texto; una persona lo revisa y lo envía.
+
+#### Cuándo tiene sentido usar IA y cuándo no
+
+La IA aporta cuando la tarea exige entender lenguaje: leer un texto que no viene siempre igual, decidir de qué trata un mensaje o redactar una respuesta. Si la tarea sigue reglas fijas, como pasar un dato de un programa a otro, suele bastar una automatización más sencilla, que es más barata y más predecible. Nuestra guía reúne [ocho casos prácticos de IA en pymes](https://banteq.com/guias/ia-en-pymes-casos-practicos) y explica qué decisiones conviene dejar en manos del equipo.
+
+Por eso no empezamos por la tecnología. Primero miramos el proceso y después decidimos si necesita IA, una [automatización de procesos](https://banteq.com/automatizacion-procesos) sin IA o las dos cosas.
+
+#### La IA propone, tu equipo decide
+
+No dejamos procesos sensibles sin supervisión. Diseñamos cada solución con revisión humana, registro de acciones y validaciones: la IA prepara, clasifica y ejecuta tareas, y las decisiones importantes siguen pasando por una persona.
+
+#### Tus datos, bajo control
+
+- Usamos los datos que aportas solo para el alcance acordado
+- Los protegemos con medidas de seguridad adecuadas
+- No los usamos para entrenar modelos de IA públicos sin tu permiso expreso
+
+Lo explicamos con detalle en nuestra [política de privacidad](https://banteq.com/privacidad).
+
+#### Integrada en lo que ya usas
+
+Trabajamos con modelos de OpenAI y los conectamos con tu correo, tus documentos, tu CRM o WhatsApp mediante [n8n, Make o integraciones a medida](https://banteq.com/automatizacion-n8n). Después formamos a tu equipo y dejamos documentación para que use el sistema con autonomía.
+
+#### Preguntas frecuentes
+
+**¿Qué diferencia hay entre automatización e inteligencia artificial?**
+
+Una automatización sigue reglas fijas: si pasa esto, haz aquello. La inteligencia artificial interpreta textos, documentos o mensajes que no siguen un formato. Lo habitual es combinarlas: la IA entiende lo que entra y la automatización hace el resto.
+
+**¿La IA sustituye a las personas del equipo?**
+
+No. Se ocupa de tareas repetitivas, como clasificar, buscar información o redactar un primer borrador, para que tu equipo dedique su tiempo a lo que requiere criterio. Las decisiones importantes siguen pasando por una persona.
+
+**¿Qué pasa con los datos de nuestra empresa?**
+
+Se usan solo para el alcance acordado, se protegen con medidas de seguridad adecuadas y no se emplean para entrenar modelos de IA públicos sin tu permiso expreso.
+
+**¿Sirve para un negocio pequeño?**
+
+Sí, si hay una tarea concreta que se repite: responder siempre las mismas preguntas, leer documentos o clasificar correos. Lo importante no es el tamaño de la empresa, sino elegir bien el primer caso de uso.
+
+**¿Por dónde empezamos?**
+
+Por un diagnóstico de procesos: analizamos cómo trabaja tu empresa y elegimos contigo el primer caso de uso, el que más tiempo ahorra con menos riesgo.
+
+#### ¿Hablamos de tu caso?
+
+Estamos en Santa Perpètua de Mogoda (Barcelona) y trabajamos con empresas de Barcelona, el Vallès y, en remoto, del resto de España. [Cuéntanos tu caso](https://banteq.com/#hablemos) y te proponemos un primer paso razonable.
+
+También te puede interesar: [automatización de procesos](https://banteq.com/automatizacion-procesos) y [automatización con n8n](https://banteq.com/automatizacion-n8n).
+
+### Automatización con n8n e integración de herramientas
+
+URL: https://banteq.com/automatizacion-n8n
+Actualizado: 2026-11-18
+Idioma: es
+
+Tus programas, conectados entre sí: la información pasa de uno a otro sin copiar y pegar.
+
+La mayoría de las empresas ya tiene buenas herramientas. El problema es que no se hablan: el pedido está en un programa, el cliente en otro y la factura en un tercero, y alguien dedica parte del día a pasar datos de un sitio a otro.
+
+En Banteq conectamos esas herramientas con n8n, con Make o con integraciones a medida mediante sus API, según lo que convenga a cada caso.
+
+#### Qué es n8n y para qué lo usamos
+
+n8n es una herramienta de automatización que conecta aplicaciones mediante flujos: cuando ocurre algo en un programa, se ejecutan una serie de pasos en otros. Puede usarse en la nube de n8n o instalarse en un servidor propio, y permite añadir lógica a medida e inteligencia artificial cuando el flujo lo necesita.
+
+La usamos para los procesos que cruzan varias herramientas: recoger un dato, transformarlo, comprobarlo y dejarlo donde debe estar, con avisos si algo falla.
+
+#### Qué herramientas conectamos
+
+- **Correo y documentos.** Microsoft 365 y Google Drive.
+- **Datos y gestión.** Excel, Airtable, Notion y Odoo.
+- **Clientes.** Tu CRM, WhatsApp y los formularios de tu web.
+- **Inteligencia artificial.** Modelos de OpenAI para leer, clasificar o redactar dentro del flujo.
+- **Programas sin conector.** Si la herramienta tiene API, la integramos a medida.
+
+#### Ejemplos de flujos
+
+- **De Excel al CRM.** Cada fila nueva crea o actualiza el contacto, sin duplicados.
+- **Del correo a la carpeta.** Los adjuntos de un tipo de correo se guardan con su nombre y en su sitio, y se anota quién los envió.
+- **Del formulario al equipo.** La solicitud queda registrada, se confirma a quien escribe y se avisa a la persona responsable.
+- **De varias herramientas a un informe.** Los datos se reúnen cada semana y llegan resumidos por correo.
+
+En [automatización de procesos](https://banteq.com/automatizacion-procesos) explicamos qué tareas conviene automatizar primero y cómo lo decidimos.
+
+#### n8n, Make o Zapier: diferencias y cómo elegimos
+
+No hay una herramienta mejor para todo. Elegimos según el volumen de operaciones, lo sensibles que sean los datos, las herramientas que ya tienes y quién va a mantener el flujo después. Si ya trabajas con Make, con Zapier o con otra plataforma, partimos de ahí.
+
+|  | n8n | Make | Zapier |
+| --- | --- | --- | --- |
+| Qué se paga | Cada ejecución del flujo, tenga los pasos que tenga | Créditos: la mayoría de las acciones consume uno | Tareas: cada paso que se completa (los disparadores y filtros no cuentan) |
+| Servidor propio | Sí: la edición Community se instala gratis en tu servidor | No, solo en su nube | No, solo en su nube |
+| Dónde quedan los datos | En tu servidor o en la nube de n8n | En su nube; se puede elegir una zona de datos europea | En su nube |
+| Dónde encaja mejor | Flujos largos o con mucho volumen, y datos que conviene tener en casa | Escenarios visuales de complejidad media sin servidor que mantener | Automatizaciones sencillas entre aplicaciones muy conocidas |
+
+Por eso, en un flujo de diez pasos que se ejecuta mil veces al mes, n8n cuenta mil ejecuciones, mientras que en Make y Zapier se cuentan las acciones de cada paso. Cuando ninguna de las tres encaja, o el volumen es muy alto, desarrollamos una integración a medida con la API de cada programa.
+
+Los precios y las condiciones de cada herramienta cambian a menudo: en cada propuesta los revisamos con sus tarifas del momento.
+
+#### Flujos que se pueden mantener
+
+- Registro de cada ejecución y avisos cuando algo falla
+- Revisión humana en los pasos sensibles
+- Pruebas con datos reales o de prueba antes de ponerlo en marcha
+- Documentación y formación para que tu equipo entienda qué hace cada flujo
+
+#### Preguntas frecuentes
+
+**¿Necesito tener n8n contratado?**
+
+No. Si ya lo usas, trabajamos sobre tu instalación. Si no, te proponemos la opción que encaja con tu caso: la nube de n8n, un servidor propio u otra herramienta.
+
+**¿n8n o Make?**
+
+Depende del proceso. Valoramos el volumen, los datos que se manejan y quién lo mantendrá, y te explicamos por qué recomendamos una u otra.
+
+**¿n8n es gratis?**
+
+La edición Community de n8n se puede instalar gratis en un servidor propio para uso interno de la empresa: lo que se paga es el servidor y su mantenimiento. La nube de n8n tiene planes de pago según el número de ejecuciones al mes.
+
+**¿Podéis conectar un programa que no tiene integración?**
+
+Si el programa ofrece una API, sí: desarrollamos la integración a medida. Si no la tiene, buscamos una alternativa, como trabajar con sus exportaciones.
+
+**¿Qué pasa si un flujo falla?**
+
+Cada flujo registra lo que hace y avisa cuando algo no sale como debe, para corregirlo cuanto antes. Los pasos sensibles llevan revisión humana.
+
+**¿Los datos salen de nuestra empresa?**
+
+Solo pasan por las herramientas que acordemos y se usan para el alcance pactado. Cuando conviene, n8n puede instalarse en un servidor propio.
+
+#### ¿Hablamos de tus herramientas?
+
+Estamos en Santa Perpètua de Mogoda (Barcelona) y trabajamos con empresas de Barcelona, el Vallès y, en remoto, del resto de España. [Cuéntanos tu caso](https://banteq.com/#hablemos) y te proponemos un primer paso razonable.
+
+También te puede interesar: [automatización de procesos](https://banteq.com/automatizacion-procesos) e [inteligencia artificial para empresas](https://banteq.com/inteligencia-artificial).
+
+### Desarrollo web a medida para empresas
+
+URL: https://banteq.com/desarrollo-web
+Actualizado: 2026-11-24
+Idioma: es
+
+Webs corporativas, rediseños y formularios conectados con tu equipo.
+
+Si buscas desarrollo web en Badalona, podemos preparar tu proyecto desde Santa Perpètua de Mogoda. Dinos qué vendes, qué debería poder hacer un cliente en tu web y quién recibe hoy las consultas.
+
+[Pedir presupuesto para mi web](https://banteq.com/#hablemos). Si ya tienes una, incluye la dirección y qué te gustaría mejorar. Para ver cómo resolvimos dos encargos distintos, visita [la web industrial de Margon](https://banteq.com/proyectos/margon) o [los formularios de captación de RentUp Capital](https://banteq.com/proyectos/rentup-capital).
+
+#### Qué tipo de webs hacemos
+
+- **Webs corporativas.** Modernas y cuidadas al detalle, pensadas para explicar bien lo que haces.
+- **Rediseño de webs.** Nueva imagen, mejor estructura y una experiencia pensada primero para el móvil.
+- **Experiencias interactivas.** Animaciones, 3D y recorridos que hacen que un producto se entienda de un vistazo.
+- **Webs en varios idiomas.** Con la terminología correcta en cada uno.
+- **Funcionalidades propias.** Newsletter, áreas específicas o lo que tu negocio necesite.
+
+Antes de pedir presupuesto, puedes usar nuestra [guía para pedir presupuesto de una web a medida](https://banteq.com/guias/como-pedir-presupuesto-web-a-medida): incluye una plantilla para explicar qué necesitas y las preguntas que conviene hacer para comparar dos ofertas.
+
+#### Fórmula Banteq: tu web, renovada al contratar el mantenimiento
+
+Remodelamos tu web sin coste de desarrollo básico al contratar nuestro mantenimiento. Ahorra un 25 % de tu cuota actual, hasta 50 €/mes, con una cuota mínima de 35 €/mes.
+
+La remodelación gratuita incluye una web informativa básica con formulario de contacto; las funcionalidades adicionales se presupuestan aparte. Importes sin IVA. [Condiciones completas](https://banteq.com/aviso-legal).
+
+Los ejemplos de cuota y lo que incluye están en [mantenimiento web para empresas](https://banteq.com/mantenimiento-web).
+
+#### Una web conectada, no un folleto
+
+- [Formularios que registran las solicitudes en tu CRM](https://banteq.com/guias/automatizar-solicitudes-formulario-web)
+- Confirmación automática a quien escribe
+- Aviso a tu equipo al momento
+- Integración con tu correo y con tus automatizaciones
+
+Es el mismo trabajo que hacemos en [automatización de procesos](https://banteq.com/automatizacion-procesos), aplicado a tu web. Si das entrenamiento online, consulta nuestra [guía de aplicaciones para entrenadores](https://banteq.com/guias/aplicaciones-para-entrenadores-online) para decidir qué puedes resolver con tu plataforma y cuándo conviene conectar tu web.
+
+#### Rápida y bien construida
+
+Diseño adaptado a móvil, tablet y escritorio, buen rendimiento y una base técnica preparada para crecer contigo. Cuidamos también la estructura y el SEO de cada página, para que tus clientes te encuentren.
+
+#### Proyectos reales
+
+**Margon.** Web corporativa en cinco idiomas para una empresa metalúrgica, con una página por sector, un recorrido interactivo por el interior de un tren y una sección de noticias con newsletter. [Ver el proyecto de Margon](https://banteq.com/proyectos/margon)
+
+**RentUp Capital.** Web de once páginas para una firma de inversión inmobiliaria, con formularios conectados que registran cada contacto y avisan al equipo. [Ver el proyecto de RentUp Capital](https://banteq.com/proyectos/rentup-capital)
+
+#### Preguntas frecuentes
+
+**¿Trabajáis con plantillas?**
+
+No. Cada web se diseña y se desarrolla para la empresa que la encarga: su contenido, su imagen y las funciones que necesita.
+
+**¿Podéis rediseñar la web que ya tenemos?**
+
+Sí. Renovamos webs que se han quedado atrás: nueva imagen, mejor estructura y una experiencia pensada primero para el móvil.
+
+**¿La web puede conectarse con nuestro CRM o nuestro correo?**
+
+Sí. Los formularios pueden guardar cada solicitud en tu CRM, enviar la confirmación a quien escribe y avisar a tu equipo al momento, sin trabajo manual.
+
+**¿Hacéis webs en varios idiomas?**
+
+Sí. La web que hemos desarrollado para Margon, por ejemplo, está disponible en cinco idiomas, con la terminología técnica correcta en cada uno.
+
+#### ¿Hablamos de tu web?
+
+Estamos en Santa Perpètua de Mogoda (Barcelona) y trabajamos con empresas de Barcelona, el Vallès y, en remoto, del resto de España. [Cuéntanos tu caso](https://banteq.com/#hablemos) y te proponemos un primer paso razonable.
+
+También te puede interesar: [mantenimiento web para empresas](https://banteq.com/mantenimiento-web) y [automatización de procesos](https://banteq.com/automatizacion-procesos).
+
+### Mantenimiento web para empresas
+
+URL: https://banteq.com/mantenimiento-web
+Actualizado: 2026-11-14
+Idioma: es
+
+Con la Fórmula Banteq, tu web se renueva al contratar el mantenimiento y la cuota baja respecto a la que pagas hoy.
+
+Muchas empresas pagan cada mes el mantenimiento de una web que lleva años sin cambiar. La cuota sigue; la web se queda atrás.
+
+La Fórmula Banteq junta las dos cosas: al contratar con nosotros el mantenimiento, rediseñamos tu web sin coste de desarrollo básico y la cuota se calcula a partir de la que pagas actualmente, con descuento.
+
+#### Cómo funciona la Fórmula Banteq
+
+Remodelamos tu web sin coste de desarrollo básico al contratar nuestro mantenimiento. Ahorra un 25 % de tu cuota actual, hasta 50 €/mes, con una cuota mínima de 35 €/mes.
+
+- Nos indicas cuánto pagas hoy por el mantenimiento de tu web
+- Revisamos tu web actual y sus necesidades técnicas
+- Recibes una propuesta con la cuota y, por escrito, lo que incluye la remodelación
+- Si la aceptas, remodelamos la web y pasamos a encargarnos del mantenimiento
+
+#### Cuánto pagarías
+
+El descuento es el menor de estos tres importes: el 25 % de tu cuota actual, 50 € al mes o la diferencia entre tu cuota y 35 €. La cuota con Banteq nunca baja de 35 € al mes. Algunos ejemplos, sin IVA:
+
+- Si pagas 40 €/mes, pasarías a pagar 35 €/mes: 5 € menos cada mes.
+- Si pagas 60 €/mes, pasarías a pagar 45 €/mes: 15 € menos cada mes.
+- Si pagas 100 €/mes, pasarías a pagar 75 €/mes: 25 € menos cada mes.
+- Si pagas 150 €/mes, pasarías a pagar 112,50 €/mes: 37,50 € menos cada mes.
+- Si pagas 200 €/mes, pasarías a pagar 150 €/mes: 50 € menos cada mes.
+- Si pagas 300 €/mes, pasarías a pagar 250 €/mes: 50 € menos cada mes.
+
+#### Qué incluye la remodelación gratuita
+
+Una web sencilla, de carácter informativo, con:
+
+- Diseño moderno, profesional y adaptable a móviles
+- Contenido básico de la empresa, sus servicios y datos de contacto
+- Un formulario de contacto funcional
+- Estructura y navegación básicas
+
+Las tiendas online, los sistemas de reservas, las integraciones complejas, las animaciones personalizadas y otros desarrollos avanzados no forman parte de la remodelación gratuita: se presupuestan aparte y solo se hacen si los aceptas.
+
+#### Condiciones claras
+
+- La cuota actual debe poder acreditarse con una factura o un documento equivalente
+- La remodelación gratuita está condicionada a contratar el mantenimiento con Banteq
+- Antes de empezar se especifica por escrito qué está incluido y qué tendría un coste adicional
+- No se realizan cargos adicionales sin tu autorización previa
+
+Las condiciones completas están en el [aviso legal](https://banteq.com/aviso-legal).
+
+#### Webs que hemos hecho
+
+Si quieres ver cómo trabajamos, estos son dos proyectos reales: [la web de Margon](https://banteq.com/proyectos/margon), en cinco idiomas, y [la web de RentUp Capital](https://banteq.com/proyectos/rentup-capital), con formularios automatizados. Y si necesitas algo más que una web informativa, mira [desarrollo web a medida](https://banteq.com/desarrollo-web).
+
+#### Preguntas frecuentes
+
+**¿Cuánto cuesta el mantenimiento web con Banteq?**
+
+Se calcula a partir de lo que pagas hoy: un 25 % menos, con un ahorro máximo de 50 € al mes y una cuota mínima de 35 € al mes. Los importes son sin IVA.
+
+**¿Y si ya pago 35 € al mes o menos?**
+
+En ese caso no hay descuento: la cuota mínima con Banteq es de 35 € al mes.
+
+**¿El rediseño de la web es gratis de verdad?**
+
+Sí, para una web informativa sencilla con diseño adaptado a móviles, el contenido básico de la empresa y un formulario de contacto. Lo que exceda de eso se presupuesta aparte y solo se hace con tu aceptación.
+
+**¿Qué necesito para pedir la propuesta?**
+
+Saber cuánto pagas ahora por el mantenimiento y poder acreditarlo con una factura. Con eso y una revisión de tu web actual preparamos la propuesta.
+
+**¿Qué incluye el mantenimiento?**
+
+El alcance se concreta en la propuesta, después de revisar tu web actual y sus necesidades técnicas, y queda por escrito antes de empezar.
+
+#### ¿Hablamos de tu web?
+
+Estamos en Santa Perpètua de Mogoda (Barcelona) y trabajamos con empresas de Barcelona, el Vallès y, en remoto, del resto de España. [Cuéntanos tu caso](https://banteq.com/#hablemos) y te proponemos un primer paso razonable.
+
+## Proyectos
+
+### Margon: web corporativa para una empresa industrial
+
+URL: https://banteq.com/proyectos/margon
+Actualizado: 2026-11-13
+Idioma: es
+
+Cliente: Margon. Sector: Industria: ferroviario, defensa y obra pública. Año: 2026. Servicios: Diseño y desarrollo web, experiencia interactiva, multiidioma y newsletter.
+
+**El reto.** Margon es una empresa metalúrgica de ciclo completo: diseño, ingeniería, fabricación, montaje y postventa para fabricantes ferroviarios y grandes cuentas industriales. Necesitaba una web a la altura de ese nivel.Compradores técnicos: quien visita la web evalúa si Margon puede ser su proveedor, y tiene que encontrar sin rodeos capacidades, homologaciones y obra ejecutada.Clientes en varios países: la web tenía que funcionar en varios idiomas, con la terminología técnica correcta en cada uno.Tres sectores: ferroviario, defensa y obra pública, cada uno con su propio contenido.Nada genérico: el objetivo era una experiencia moderna y tecnológica, lejos de la típica web industrial.
+
+**La solución.** Diseñamos y desarrollamos la web desde cero, con una experiencia visual inmersiva y todo el contenido pensado para el comprador técnico.
+
+#### 1. Cinco idiomas
+
+- Español, català, English, Deutsch y français
+- Cada página y cada noticia disponible en los cinco idiomas
+- Normas y certificaciones con su nombre oficial en cada idioma
+
+#### 2. Una página por sector
+
+- Ferroviario, defensa y obra pública con páginas propias
+- Obra ejecutada con los proyectos reales de la empresa
+- Homologaciones, capacidad productiva y proceso integral
+
+#### 3. Experiencia interactiva
+
+- Entrada animada al interior de un tren desde la portada
+- Recorrido por el salón de pasajeros: ocho conjuntos para ver de cerca
+- Segunda animación para entrar en el módulo de aseo
+
+#### 4. Noticias y newsletter
+
+- Sección de noticias con una página para cada artículo
+- Newsletter con confirmación de suscripción y página de baja
+- Envío de correos gestionado con Resend
+
+**El resultado.** Una web corporativa preparada para acompañar procesos comerciales largos: clara para el comprador técnico, disponible en cinco idiomas y lista para crecer con nuevos contenidos.
+
+- 2: Animaciones
+- +2.500 €/año: ahorrados en tiempo con el newsletter automatizado
+
+### RentUp Capital: web y formularios automatizados
+
+URL: https://banteq.com/proyectos/rentup-capital
+Actualizado: 2026-11-13
+Idioma: es
+
+Cliente: RentUp Capital. Sector: Inversión inmobiliaria. Año: 2026. Servicios: Diseño y desarrollo web, automatización de formularios e integración con Brevo y Resend.
+
+**El reto.** RentUp Capital ofrece inversión inmobiliaria con gestión integral: búsqueda, compra, reforma, alquiler y administración. Necesitaba una web que explicara bien cada línea de inversión y que no dejara escapar ningún contacto.Muchas líneas de servicio: inversión convencional, turística y por habitaciones, flipping, personal shopper, RentUp Income y club de inversión.Captación de contactos: cada solicitud tenía que llegar al equipo y quedar registrada.Comunicación con inversores: newsletter y un club de inversión con acceso por solicitud.
+
+**La solución.** Diseñamos y desarrollamos la web completa y automatizamos todo lo que pasa después de enviar un formulario.
+
+#### 1. Una página para cada servicio
+
+- Once páginas: una para cada línea de inversión, el club y el equipo
+- Estructura clara y SEO en cada página
+- Diseño adaptado a móvil
+
+#### 2. Formularios automatizados
+
+- Solicitud de asesoramiento, club de inversión y newsletter
+- Confirmación automática por email a cada persona
+- Aviso interno al equipo con todos los datos
+
+#### 3. Contactos organizados
+
+- Cada contacto se guarda en su lista de Brevo
+- Sin duplicados en la newsletter
+- Alta manual protegida para el equipo
+
+#### 4. Seguridad y fiabilidad
+
+- Los envíos se hacen en el servidor, nunca desde el navegador
+- Protección antispam y límite de peticiones
+- Publicada en Vercel, con analítica
+
+**El resultado.** Una web en producción en rentupcapital.com que presenta todas las líneas de inversión y convierte cada formulario en un contacto registrado, confirmado y notificado al equipo.
+
+- 11: Páginas
+- 3: Formularios conectados
+- 2: Herramientas integradas
+
+## Guías
+
+### Aplicaciones para entrenadores online: ¿cuál encaja con tu negocio?
+
+URL: https://banteq.com/guias/aplicaciones-para-entrenadores-online
+Actualizado: 2026-11-20
+Idioma: es
+
+Banteq Digital · Publicado el 19 de noviembre de 2026 · Actualizado el 20 de noviembre de 2026
+
+Si lo que te quita tiempo es reorganizar sesiones, empieza por las reservas de Harbiz. Si haces seguimiento de hábitos entre entrenamientos, mira ABC Trainerize. Si dedicas el domingo a programar rutinas y explicar ejercicios por vídeo, prueba primero TrueCoach.
+
+Estas tres opciones resuelven tareas que se solapan. Hemos comparado las funciones que documenta cada proveedor. La prueba de abajo te ayuda a comprobar cuál encaja con tu forma de trabajar.
+
+#### Tres plataformas para dar entrenamiento en línea
+
+##### Harbiz para gestionar citas y bonos
+
+El cliente puede reservar una sesión individual o de grupo, cambiarla y usar un bono. Si combinas clases presenciales y online, prueba qué ocurre con la plaza y el saldo del bono cuando alguien cancela. Ver las reservas en Harbiz .
+
+##### ABC Trainerize para acompañar al cliente entre sesiones
+
+Reúne programas de ejercicio, hábitos, seguimiento del progreso y mensajería. Crea una semana de prueba con dos sesiones y un hábito diario. Entra como cliente desde el móvil y comprueba cuánto tardas en registrar ambos. Ver las funciones de ABC Trainerize .
+
+##### TrueCoach para programar rutinas con vídeo
+
+Permite crear y guardar entrenamientos, programarlos y acompañarlos con demostraciones de su biblioteca o vídeos propios. Duplica una sesión para dos clientes y cambia un ejercicio a uno de ellos. Comprueba qué versión recibe cada uno. Ver el editor de TrueCoach .
+
+#### Cómo elegir antes de trasladar a tus clientes
+
+- Reproduce una semana real. Con un perfil ficticio, da de alta a una persona, envíale su primera rutina, cambia una cita y contesta su primera duda. Cronometra el trabajo del entrenador y cuenta los pasos que debe completar el cliente.
+- Calcula el coste para tu cartera. Pide el importe mensual para los clientes activos que tienes hoy y para los que esperas tener. Suma los complementos que necesitas y las posibles comisiones de cobro. Confirma moneda, impuestos y compromiso de permanencia.
+- Ensaya una salida. Comprueba qué rutinas, vídeos e historiales puedes exportar, en qué formato y quién puede hacerlo. Hazlo con ese perfil de prueba antes de cargar datos reales.
+
+#### Si ya tienes una app y las solicitudes se pierden antes del alta
+
+Una persona descubre tu trabajo, rellena el formulario de tu web y espera que le propongas una primera sesión. Recorre ese camino desde el móvil. ¿Queda su solicitud en tu lista de contactos? ¿Quién recibe el aviso? ¿Puedes ver al día siguiente quién sigue esperando respuesta?
+
+Banteq desarrolla webs a medida y conecta formularios, correo y herramientas de gestión. Podemos revisar contigo qué pasos admite automatizar tu plataforma y cuáles requieren intervención manual. En el proyecto de RentUp Capital puedes ver un ejemplo de web con formularios conectados, aplicado a otro sector.
+
+Si pierdes el contacto entre la primera pregunta y la reserva, la guía sobre cómo registrar y seguir las solicitudes de tu web incluye una prueba de diez minutos.
+
+Cuéntanos qué app utilizas y dónde se atasca el alta de tus clientes .
+
+### Asistente de IA para el correo con revisión humana
+
+URL: https://banteq.com/guias/asistente-ia-correo-revision-humana
+Actualizado: 2026-11-22
+Idioma: es
+
+Pol Carabante · Banteq Digital · 22 de noviembre de 2026
+
+Un asistente de IA para el correo lee los mensajes que llegan a un buzón, los clasifica y deja preparado un borrador de respuesta en la carpeta de borradores. Una persona lo revisa, lo corrige si hace falta y lo envía. El asistente nunca envía nada por su cuenta.
+
+Funciona con Gmail o con Outlook de Microsoft 365, una herramienta de automatización como n8n o Make y un modelo de inteligencia artificial. Abajo tienes cómo funciona, por dónde empezar y qué cuidar con los datos.
+
+#### ¿Qué hace exactamente el asistente?
+
+- Filtra. Solo mira el buzón acordado, por ejemplo el de información o el de pedidos, y deja fuera boletines, avisos automáticos y correos internos.
+- Clasifica. Decide de qué trata el mensaje (consulta, pedido, incidencia, presupuesto) y le pone una etiqueta.
+- Busca la respuesta en tu documentación: condiciones, horarios, plazos, fichas de producto o respuestas que ya habéis dado antes.
+- Prepara un borrador en la conversación, con tu tono y tu firma, y marca lo que no ha sabido responder.
+- Avisa a quien tiene que revisarlo, o lo deja en una lista de pendientes.
+
+#### ¿Por qué empezar en modo sombra?
+
+En el modo sombra el asistente prepara borradores, pero nadie los envía: tu equipo sigue respondiendo como siempre y compara. Durante unas semanas veréis en qué tipos de correo acierta, en cuáles se equivoca y qué información le falta. Con eso decides qué etiquetas pasan a usar borradores y cuáles no, sin que ningún cliente haya recibido una respuesta a medio hacer.
+
+#### ¿Qué correos no debería tocar?
+
+Hay mensajes que conviene que lleguen a una persona sin borrador previo, solo con una etiqueta que avise:
+
+- Reclamaciones, quejas fuertes o amenazas de acciones legales.
+- Datos de salud u otros datos especialmente protegidos.
+- Cambios de cuenta bancaria, pagos y devoluciones.
+- Bajas de clientes o de empleados.
+
+#### ¿Qué datos ve la IA y cuánto tiempo se guardan?
+
+El modelo de IA recibe el texto del correo que tiene que entender, así que su proveedor trata datos personales por cuenta de tu empresa y necesitas un contrato de encargo con él. Comprueba además dónde trata los datos, si los usa para entrenar sus modelos y cuánto tiempo los conserva. Las versiones para empresas y las conexiones por API suelen ofrecer más control que una aplicación de chat de uso personal.
+
+Reduce lo que envías: quita firmas, historiales largos y adjuntos que no hagan falta para responder. Y revisa cuánto guarda tu herramienta de automatización de cada ejecución; si usas n8n en tu propio servidor, lo explicamos en n8n en servidor propio y RGPD .
+
+#### ¿Cómo se revisa un borrador?
+
+- Datos: nombres, referencias, fechas y cantidades coinciden con el correo y con tus sistemas.
+- Compromisos: precios, plazos, descuentos o garantías los confirma siempre una persona.
+- Tono: suena como tu empresa y responde a lo que preguntaron, no a algo parecido.
+- Lo que falta: si el asistente marcó algo como «no lo sé», complétalo o pide el dato.
+
+Si algún día dejas que responda sin revisión en un canal concreto, informa a la persona de que la respuesta la ha preparado un sistema de IA: el Reglamento europeo de inteligencia artificial exige avisar a quien interactúa con uno.
+
+#### ¿Cómo saber si funciona?
+
+Mide tres cosas desde el primer día: cuántos borradores se envían sin cambios, cuántos con cambios y cuántos se descartan, por cada etiqueta. Añade el tiempo que pasa desde que llega un correo hasta la primera respuesta. Si los descartes de una etiqueta no bajan, a ese tipo de correo le falta información o no le conviene un borrador.
+
+#### ¿Lo montamos en tu buzón?
+
+En Banteq diseñamos asistentes de IA que leen correos y documentos y preparan respuestas dentro de tus herramientas, siempre con revisión humana. Lo explicamos en inteligencia artificial para empresas , y los flujos que lo conectan, en automatización con n8n .
+
+Cuéntanos qué buzón os quita más tiempo .
+
+### Cómo automatizar las facturas de proveedores paso a paso
+
+URL: https://banteq.com/guias/automatizar-facturas-de-proveedores
+Actualizado: 2026-11-22
+Idioma: es
+
+Pol Carabante · Banteq Digital · Publicado el 20 de noviembre de 2026 · Actualizado el 22 de noviembre de 2026
+
+Automatizar las facturas de proveedores consiste en cinco pasos: recibirlas en un único buzón, leer sus datos, comprobar que cuadran, registrarlas donde las necesitas y dejar a una persona solo las que no cuadran. Se puede hacer con las herramientas que ya usa tu empresa.
+
+Es uno de los mejores primeros proyectos porque se repite cada semana, sigue reglas claras y el error se detecta pronto: una factura que no cuadra salta a la vista antes de pagarla. Esta guía explica cada paso, qué conviene revisar a mano y cómo probarlo antes de cambiar nada.
+
+#### Antes de empezar: mira qué hace ya tu programa
+
+Muchos programas de contabilidad y de gestión ya importan facturas desde un correo o leen PDF. Si el tuyo lo hace, quizá solo haga falta activarlo y ordenar cómo llegan las facturas. La automatización a medida tiene sentido cuando las facturas tienen que pasar por varias herramientas, por ejemplo el correo, una carpeta compartida, una hoja de control y el programa de la gestoría.
+
+#### Los cinco pasos
+
+##### 1. Un único sitio por donde entran
+
+Pide a tus proveedores que envíen las facturas a una dirección dedicada, del estilo de facturas@tuempresa.com. Las que llegan en papel se escanean y se envían a la misma dirección. Mientras haya facturas en cuatro buzones distintos, ninguna automatización será fiable.
+
+##### 2. Leer los datos de cada factura
+
+De cada documento se extraen proveedor, NIF, número de factura, fecha, base imponible, tipo y cuota de IVA, total y vencimiento. Si la factura llega en un formato electrónico estructurado, como un XML de factura electrónica, los datos ya vienen separados y se leen sin error. Si llega en PDF o escaneada, se usa reconocimiento de texto o un modelo de inteligencia artificial que entiende documentos aunque cada proveedor los maquete a su manera.
+
+##### 3. Comprobar que cuadra
+
+Aquí está la diferencia entre una automatización útil y una peligrosa. Antes de registrar nada, el flujo comprueba reglas sencillas:
+
+- El NIF corresponde a un proveedor que ya conoces.
+- La base más el IVA da el total.
+- No existe ya una factura de ese proveedor con el mismo número, para evitar duplicados.
+- El importe está dentro de lo habitual para ese proveedor, o coincide con el pedido o el albarán si los tienes.
+
+Las facturas que pasan todas las reglas siguen solas. Las que fallan una van a una lista de revisión con el motivo: así la persona de administración solo mira las excepciones.
+
+##### 4. Registrar y archivar
+
+Cada factura se guarda con un nombre ordenado, por ejemplo 2026-11 · Proveedor · número.pdf , en la carpeta del mes, y sus datos se anotan en tu hoja de control, tu programa de gestión o el de la gestoría. Si trabajas con una gestoría externa, al cerrar el mes reciben una carpeta completa y un resumen, en lugar de un goteo de reenvíos.
+
+##### 5. Avisar a quien tiene que actuar
+
+Quien aprueba los pagos recibe un aviso con las facturas listas y sus vencimientos. El pago en sí conviene que siga siendo una decisión de una persona: la automatización prepara la información, no mueve dinero.
+
+#### Qué conviene seguir revisando a mano
+
+- Facturas de proveedores nuevos, hasta que el flujo los conozca.
+- Rectificativas y abonos, que restan en vez de sumar.
+- Facturas con varios tipos de IVA o con retenciones.
+- Cualquier importe fuera de lo habitual.
+
+Con el tiempo, la lista de revisión se reduce a lo que de verdad necesita criterio.
+
+#### Cómo probarlo sin riesgo
+
+- Reúne veinte facturas reales de los últimos meses, de al menos cinco proveedores distintos, e incluye alguna rectificativa.
+- Pásalas por el flujo sin registrar nada: solo lectura y comprobación.
+- Compara lo que ha leído con lo que tienes contabilizado. Anota cada diferencia y su causa.
+- Cuando las diferencias sean solo las que esperas mandar a revisión, ponlo en marcha con las facturas nuevas y mantén unas semanas el control manual en paralelo.
+
+#### Protección de datos y conservación
+
+Las facturas contienen datos de empresas y, a veces, de personas. Usa herramientas que te permitan saber dónde se guardan los datos y quién accede a ellos, y conserva los originales igual que hasta ahora: automatizar el registro no cambia tus obligaciones de conservación. Si tienes dudas sobre un caso concreto, consúltalo con tu gestoría.
+
+#### ¿Cómo se monta con n8n?
+
+Con n8n, los cinco pasos son un único flujo. Un montaje habitual tiene estas piezas:
+
+- Entrada: un disparador de correo (Gmail Trigger, Microsoft Outlook Trigger o Email Trigger por IMAP) que se activa con cada mensaje del buzón de facturas y recoge los adjuntos en PDF.
+- Lectura: el nodo Extract from File saca el texto del PDF y un modelo de IA, por ejemplo con el nodo Information Extractor, lo convierte en campos: proveedor, NIF, número, fecha, base, IVA y total. Si el proveedor envía factura electrónica en XML, se leen los campos directamente.
+- Comprobación: un nodo If, o unas líneas en un nodo Code, aplica las reglas: NIF en tu lista de proveedores, base más IVA igual al total y número no repetido.
+- Registro: el PDF se guarda renombrado en Google Drive o en OneDrive y los datos se añaden a una hoja de Google Sheets o a tu programa de gestión mediante su API con el nodo HTTP Request.
+- Excepciones y avisos: lo que no pasa las reglas va a una hoja de revisión con el motivo, y la persona de administración recibe un aviso por correo o por el chat del equipo.
+
+Dos ajustes que conviene hacer desde el principio: que n8n no guarde más tiempo del necesario los datos de cada ejecución, porque incluyen el contenido de las facturas, y que el flujo te avise si deja de funcionar. Lo explicamos en n8n en servidor propio y RGPD .
+
+#### ¿Lo montamos contigo?
+
+En Banteq montamos este flujo en tu n8n, en la nube o en un servidor propio, o en la herramienta que ya uses. Conectamos el correo, las carpetas, tu programa de gestión y la gestoría para que las facturas de proveedores se registren solas y una persona revise solo las excepciones. Puedes ver cómo trabajamos en automatización de procesos y qué herramientas conectamos en automatización con n8n .
+
+Cuéntanos cómo te llegan hoy las facturas y qué programa usas .
+
+### Que no se pierda ninguna solicitud de tu web
+
+URL: https://banteq.com/guias/automatizar-solicitudes-formulario-web
+Actualizado: 2026-11-23
+Idioma: es
+
+Pol Carabante · Banteq Digital · 20 de noviembre de 2026
+
+Para no perder solicitudes, cada envío del formulario de tu web debe hacer cuatro cosas a la vez: guardarse en una lista, confirmar a la persona que la has recibido, avisar a quien tiene que responder y recordárselo si nadie lo hace. Las cuatro se pueden automatizar.
+
+En muchas empresas el formulario solo envía un correo a un buzón genérico. Si ese día nadie lo mira, o el mensaje cae en spam, el cliente se queda esperando y suele pedir presupuesto a otro. Esta guía explica cómo montar el recorrido completo y cómo comprobar el tuyo en diez minutos.
+
+#### Comprueba tu formulario en diez minutos
+
+- Desde el móvil, rellena el formulario de tu web como si fueras un cliente, con un correo tuyo.
+- ¿Has recibido una confirmación? ¿Dice cuándo vas a tener respuesta?
+- ¿Quién de tu equipo ha recibido el aviso? ¿Le ha llegado a la bandeja de entrada o al spam?
+- ¿Dónde ha quedado guardada la solicitud? Si mañana alguien pregunta «¿le contestamos?», ¿hay un sitio donde mirarlo?
+
+Si alguna respuesta es «no lo sé», merece la pena automatizarlo.
+
+#### El recorrido completo, paso a paso
+
+##### 1. Guardar cada solicitud
+
+El envío se registra en tu CRM, en tu lista de contactos o, como mínimo, en una hoja compartida, con fecha, origen y estado («nuevo», «contestado», «presupuesto enviado»). Así nada depende de un correo que alguien puede borrar.
+
+##### 2. Confirmar a la persona
+
+Un correo inmediato que confirma que la solicitud ha llegado, resume lo que ha pedido y dice cuándo puede esperar respuesta. Reduce los envíos repetidos y transmite que hay alguien al otro lado.
+
+##### 3. Avisar a quien responde
+
+El aviso debe llegar a una persona concreta, no a «info@», con todos los datos a la vista para poder contestar sin abrir otro programa. Si hay varios servicios, la solicitud puede ir a un responsable u otro según lo que se haya marcado en el formulario.
+
+##### 4. Recordar lo que sigue sin respuesta
+
+Si pasado el plazo que hayas decidido la solicitud sigue en «nuevo», el sistema lo recuerda al responsable o a quien le cubre. Es el paso que más solicitudes rescata y el que casi nadie tiene.
+
+##### 5. Saber de dónde vienen
+
+Registrar si la persona llegó desde Google, desde una campaña o desde otra web te dice qué canales traen clientes y cuáles solo visitas. Basta con guardar ese dato junto a la solicitud.
+
+#### Filtrar el spam sin perder clientes
+
+Los formularios públicos reciben envíos automáticos. Antes de poner un captcha que moleste a todo el mundo, prueba con medidas invisibles: un campo oculto que solo rellenan los robots, comprobar que el correo tiene un formato válido y limitar los envíos repetidos desde el mismo origen. Si una solicitud parece spam, mejor marcarla para revisión que borrarla.
+
+#### Protección de datos
+
+Un formulario recoge datos personales, así que necesita informar de quién los trata y para qué, con un enlace a tu política de privacidad, y pedir solo los datos que vas a usar. Si además quieres enviar comunicaciones comerciales, el consentimiento para ello debe pedirse aparte y no venir marcado de serie.
+
+#### Un caso real: RentUp Capital
+
+Para RentUp Capital , una firma de inversión inmobiliaria, automatizamos lo que ocurre después de enviar un formulario en su web: cada contacto se guarda en su lista, la persona recibe una confirmación por correo y el equipo, un aviso con todos los datos.
+
+#### ¿Revisamos el tuyo?
+
+En Banteq hacemos webs a medida y conectamos sus formularios con el correo, el CRM y las herramientas que ya usas, como explicamos en automatización de procesos .
+
+Si vas a encargar una web nueva, concreta desde el principio dónde debe acabar cada solicitud. Esta plantilla para pedir presupuesto de una web a medida te ayuda a incluirlo en las ofertas que compares.
+
+Cuéntanos qué pasa hoy cuando alguien rellena tu formulario .
+
+### Com triar una empresa per automatitzar processos
+
+URL: https://banteq.com/guias/com-triar-empresa-automatitzacio-processos
+Actualizado: 2026-11-23
+Idioma: ca
+
+Banteq Digital · 23 de novembre de 2026
+
+Per triar una empresa que t’ajudi a automatitzar processos, demana a cada proveïdor una proposta per a la mateixa tasca. Compara què passarà quan faltin dades, qui resoldrà les incidències i quantes hores haureu de dedicar a revisar la feina un cop el sistema estigui en marxa.
+
+#### Una prova amb tres comandes
+
+Imagina un distribuïdor del Vallès que rep comandes per correu i les passa a un full de càlcul. Per veure si la solució serveix, prepara tres correus ficticis amb el format habitual. Decideix què hauria de passar en cada cas abans de demanar la demostració.
+
+| Correu de prova | Què hauries de poder comprovar |
+| --- | --- |
+| Comanda completa | El full té una sola fila amb la referència, la quantitat i el número de comanda correctes. Una persona pot recuperar el correu d’origen. |
+| Falta la referència | La comanda queda pendent. La persona responsable rep un avís que indica què hi falta i pot completar-la. |
+| El client reenvia el mateix correu | El sistema identifica la possible còpia o la deixa pendent de revisió. El magatzem rep una sola ordre de preparació. |
+
+Aquest exemple és una prova que pots adaptar. Si vens serveis, substitueix la comanda per una petició de pressupost i comprova qui en rep l’avís.
+
+#### Quatre preguntes per comparar pressupostos
+
+- On comença i on acaba la feina? Passar els articles a un full i donar d’alta una comanda a l’ERP són encàrrecs diferents. Demana que s’indiquin el punt de partida, el resultat i qui el valida.
+- Què pagarem quan ja funcioni? Demana per separat la implantació, les llicències i el manteniment. Pregunta què canviaria si es doblés el volum de comandes.
+- Qui ho podrà reprendre si falla? Concreta qui rep l’avís, si el teu equip pot recuperar el treball pendent i com evitarà registrar-lo dues vegades.
+- Com sabrem si ens surt a compte? Mesura el temps que trigueu a tramitar una mostra habitual. A la prova, compta també les comprovacions i les excepcions. Fes servir el volum del teu negoci per comparar els dos resultats.
+
+#### Què pots enviar per rebre una proposta útil?
+
+Rebem [tipus de petició] per [canal] unes [quantitat] vegades al mes. Ara ho passem a [programa]. Quan falta [dada], se n’encarrega [funció de la persona]. Voldríem automatitzar [pas concret] i continuar revisant [decisió].
+
+Banteq treballa des de Santa Perpètua de Mogoda amb empreses de Barcelona i del Vallès. Al projecte de RentUp Capital pots veure un cas d’entrada de dades: els formularis del web registren el contacte i avisen l’equip. Si vols fer una cosa semblant, explica’ns on s’encalla avui el teu procés.
+
+Consultar la meva tasca a Banteq
+
+Al servei d’automatització de processos per a pimes hi trobaràs exemples i com valorem si cal fer una diagnosi avançada.
+
+### Cómo pedir presupuesto para una web a medida
+
+URL: https://banteq.com/guias/como-pedir-presupuesto-web-a-medida
+Actualizado: 2026-11-24
+Idioma: es
+
+Banteq Digital · 23 de noviembre de 2026
+
+Para pedir presupuesto de una web a medida, explica qué debe poder hacer el cliente, qué pasa después en tu empresa y cómo comprobarás que funciona. Dos propuestas se pueden comparar cuando ambas incluyen el mismo recorrido, desde la primera visita hasta que tu equipo recibe la solicitud.
+
+#### Una plantilla que puedes copiar
+
+Somos [tipo de negocio] y vendemos [servicio o producto]. Nuestra web actual es [dirección, si la hay]. Queremos que una persona pueda [acción concreta] desde el móvil. Cuando lo haga, [persona o equipo] debe recibir [datos] en [correo, hoja o CRM]. Tenemos [fotos, textos, idiomas] y necesitamos ayuda con [lo que falta]. Queremos publicar en [fecha o margen].
+
+Por ejemplo, un taller que fabrica piezas bajo plano puede pedir que el comprador elija un material y adjunte un PDF. Comercial debe recibir ambos junto al mensaje. Si falta el plano, el cliente tiene que saberlo antes de enviar. Esas tres frases permiten presupuestar y probar una función que la etiqueta «formulario avanzado» dejaría abierta.
+
+Pedir a Banteq un presupuesto para mi web
+
+#### Qué comparar cuando recibas dos ofertas
+
+| Partida | Pregunta que aclara el alcance |
+| --- | --- |
+| Contenido | ¿Quién redacta las páginas, prepara las imágenes y revisa cada idioma? ¿Cuántas páginas se entregan cargadas? |
+| Formularios | ¿El envío solo llega por correo o también crea una ficha en el CRM? ¿Cómo sabremos que se ha recibido? |
+| Cambio de web | ¿Quién relaciona las direcciones antiguas con las nuevas y comprueba los enlaces que ya reciben visitas? |
+| Coste y entrega | ¿Qué se paga una sola vez y qué se paga después? ¿Quién tendrá acceso al dominio, los contenidos y el alojamiento? |
+
+Para comparar el primer año, suma la implantación, doce cuotas mensuales si las hay y las licencias anuales que te correspondan. Comprueba que las dos ofertas usan la misma base de impuestos. Si una incluye redacción y otra presupone que la aportarás tú, anota ese trabajo por separado.
+
+#### Cómo comprobar que la web entregada sirve para vender
+
+Pide una prueba que reproduzca una consulta real. Desde un móvil, abre una página de servicio, envía datos de prueba y comprueba con la persona de ventas qué recibió y dónde quedó registrado. Si hay varios idiomas, repite el envío en cada uno. Así también descubres una traducción pendiente o un aviso que siempre llega al mismo buzón.
+
+En el proyecto de RentUp Capital puedes ver un ejemplo de formularios conectados. En el de Margon , el comprador necesita entender un producto industrial. Elegir un proyecto parecido al tuyo te ayudará a explicar qué necesitas que haga tu propia web.
+
+#### ¿Qué pasa si ya tengo web y pago mantenimiento?
+
+Incluye la dirección actual, el importe de la cuota y qué cubre. Para un rediseño informativo básico puedes consultar el alcance y las condiciones de la Fórmula Banteq . Si necesitas conectar un catálogo, gestionar reservas o enviar datos a otro programa, describe esa función por separado para que figure en el presupuesto.
+
+#### Pide tu presupuesto con la plantilla
+
+Envíanos la plantilla con lo que ya sepas. Basta con explicar una acción que hoy le cuesta hacer a tu cliente y quién debe recibir la solicitud en tu empresa.
+
+Pedir presupuesto para mi web
+
+Si antes prefieres informarte, consulta el servicio de desarrollo web en Barcelona o Badalona y el de mantenimiento web .
+
+### Inteligencia artificial en pymes: 8 usos prácticos y cuándo no usarla
+
+URL: https://banteq.com/guias/ia-en-pymes-casos-practicos
+Actualizado: 2026-11-22
+Idioma: es
+
+Pol Carabante · Banteq Digital · 20 de noviembre de 2026
+
+En una pyme, la inteligencia artificial rinde sobre todo en tareas que exigen entender texto que no viene siempre igual: leer correos y documentos, clasificarlos, resumirlos y preparar borradores de respuesta. Funciona mejor cuando prepara el trabajo y una persona lo revisa antes de que salga.
+
+Estos son ocho usos que hoy resuelven problemas reales en empresas pequeñas y medianas, con lo que conviene vigilar en cada uno, y los casos en los que una automatización sencilla basta.
+
+#### 8 usos que funcionan
+
+##### 1. Borradores de respuesta a consultas frecuentes
+
+La IA lee la consulta, busca la respuesta en tu documentación (horarios, condiciones, plazos) y prepara un borrador. Tu equipo lo revisa y lo envía. Ahorra la redacción, no el criterio.
+
+##### 2. Clasificar los correos que entran
+
+Distingue un pedido, una incidencia, una factura o una solicitud de presupuesto, y lo manda a quien corresponde con una etiqueta. Útil cuando todo llega al mismo buzón.
+
+##### 3. Sacar datos de documentos
+
+Facturas, albaranes, pedidos o contratos en PDF o escaneados: extrae los campos que necesitas aunque cada proveedor use un formato distinto. Lo explicamos aplicado a las facturas de proveedores .
+
+##### 4. Preguntar a la documentación interna
+
+Manuales, procedimientos o fichas técnicas: tu equipo pregunta con sus palabras y recibe la respuesta con el documento del que sale, para comprobarla.
+
+##### 5. Resúmenes de reuniones y llamadas
+
+A partir de la transcripción, un resumen con acuerdos, tareas y responsables, listo para pegar en el CRM o en el gestor de proyectos. Avisa siempre a los participantes de que se graba.
+
+##### 6. Primeras versiones de presupuestos y propuestas
+
+Con tu plantilla y los datos de la solicitud, la IA prepara un primer texto. Precios, plazos y condiciones los fija una persona.
+
+##### 7. Traducir y adaptar textos
+
+Fichas de producto, correos o avisos en catalán, inglés u otros idiomas, manteniendo tu forma de escribir. Conviene que alguien que conozca el idioma revise lo que se publica.
+
+##### 8. Leer reseñas y comentarios
+
+Agrupa lo que dicen tus clientes en reseñas, encuestas o incidencias y te muestra los temas que más se repiten.
+
+#### Cuándo no hace falta IA
+
+Si la tarea sigue reglas fijas, como pasar una fila de Excel al CRM o enviar un recordatorio el día antes de una cita, una automatización normal es más barata, más rápida y no se equivoca de forma imprevisible. Lo habitual es combinarlas: la IA interpreta lo que llega y la automatización hace el resto. Puedes ver ejemplos de esto último en qué procesos automatizar en una pyme .
+
+#### Cuándo no conviene usarla sin revisión
+
+- Decisiones con consecuencias: pagos, despidos, admisiones, precios o respuestas con valor legal.
+- Datos que no deben salir de tu empresa si no sabes dónde los procesa la herramienta.
+- Respuestas que se publican solas en nombre de tu empresa sin que nadie las lea antes.
+
+#### Tus datos y las normas
+
+- No pegues datos personales ni confidenciales en un chat de IA de uso personal. Las versiones para empresas y las integraciones por API permiten controlar mejor qué se guarda y para qué se usa.
+- Revisa las condiciones del proveedor: dónde se procesan los datos y si se usan para entrenar sus modelos.
+- Si un asistente habla con tus clientes, díselo. El Reglamento europeo de inteligencia artificial exige informar a las personas de que están interactuando con un sistema de IA, salvo que sea evidente.
+
+#### Cómo empezar
+
+- Elige un único uso de la lista, el que más tiempo os quite.
+- Reúne ejemplos reales: veinte correos, diez documentos o las preguntas que más se repiten.
+- Prueba con esos ejemplos y anota en cuántos acierta y en cuáles falla. Decide a partir de qué nivel de acierto te compensa.
+- Ponlo en marcha con revisión humana y deja que la revisión se relaje solo cuando los fallos sean raros y fáciles de detectar.
+
+#### ¿Lo vemos en tu caso?
+
+En Banteq diseñamos asistentes de IA que responden consultas, leen documentos y clasifican solicitudes dentro de tus herramientas, siempre con revisión humana. Lo explicamos en inteligencia artificial para empresas .
+
+Cuéntanos qué tarea querrías que preparara la IA .
+
+### n8n en servidor propio y RGPD: qué tiene que revisar una pyme
+
+URL: https://banteq.com/guias/n8n-servidor-propio-rgpd
+Actualizado: 2026-11-22
+Idioma: es
+
+Pol Carabante · Banteq Digital · 22 de noviembre de 2026
+
+Instalar n8n en tu propio servidor no te hace cumplir el RGPD por sí solo, pero te da el control: decides dónde se guardan los datos, cuánto tiempo y quién accede. Lo demás se cubre con cinco piezas: un alojamiento en la Unión Europea con contrato de encargo, saber qué datos envía cada flujo a servicios externos, limitar lo que n8n guarda de cada ejecución, copias de seguridad protegidas y el registro de actividades de tratamiento.
+
+Esta guía está pensada para pymes españolas que automatizan con n8n procesos en los que hay datos personales: formularios, correos, facturas o fichas de clientes. Resume obligaciones generales del RGPD; para un caso concreto, consúltalo con tu asesor o con tu delegado de protección de datos.
+
+#### ¿n8n en la nube o en servidor propio?
+
+Las dos opciones pueden cumplir el RGPD. La diferencia está en quién controla qué y en quién tiene que mantenerlo.
+
+|  | n8n en la nube | n8n en servidor propio |
+| --- | --- | --- |
+| Dónde están los datos | En la infraestructura que elige n8n; compruébalo en su documentación y en su contrato. | En el servidor que eliges tú, por ejemplo en un centro de datos de la UE. |
+| Contrato de encargo | Con n8n. | Con tu proveedor de alojamiento. |
+| Actualizaciones y seguridad | Las gestiona n8n. | Las gestionas tú o quien te lo mantenga. |
+| Cuánto guarda de cada ejecución | Según las opciones de tu plan. | Lo decides tú con variables de configuración. |
+
+Si tus flujos manejan datos sensibles o quieres decidir cada detalle de la conservación, el servidor propio encaja mejor. Si nadie en tu empresa va a mantener un servidor, la nube evita un riesgo real: una instalación sin actualizar.
+
+#### ¿Qué datos guarda n8n y dónde?
+
+Una instalación de n8n guarda tres cosas en su base de datos:
+
+- Los flujos: la definición de cada automatización. Normalmente no contienen datos personales, salvo que alguien los escriba a mano dentro.
+- Las credenciales: las claves para conectar con tu correo, tu CRM o tu ERP. n8n las guarda cifradas con una clave propia ( N8N_ENCRYPTION_KEY ), que genera al arrancar por primera vez si no le das una. Guarda esa clave fuera del servidor: si la pierdes al migrar o restaurar, las credenciales no se podrán descifrar.
+- Los datos de cada ejecución: lo que entra y sale de cada paso. Aquí es donde suelen estar los datos personales, como el nombre y el correo de quien rellenó un formulario o el contenido de una factura.
+
+#### ¿Cuánto tiempo guarda n8n los datos de cada ejecución?
+
+Por defecto, n8n guarda las ejecuciones correctas y las fallidas y las borra cuando tienen más de 336 horas (14 días) o cuando hay más de 10.000. Si no necesitas ese historial, el RGPD te pide no guardarlo: es el principio de limitación del plazo de conservación. En un servidor propio se ajusta con variables de entorno:
+
+```
+# Borrar ejecuciones antiguas (activado por defecto)
+EXECUTIONS_DATA_PRUNE=true
+# Antigüedad máxima en horas (por defecto 336 = 14 días)
+EXECUTIONS_DATA_MAX_AGE=72
+# No guardar las ejecuciones que terminan bien; sí las que fallan, para poder revisarlas
+EXECUTIONS_DATA_SAVE_ON_SUCCESS=none
+EXECUTIONS_DATA_SAVE_ON_ERROR=all
+```
+
+Los valores de ejemplo son orientativos: elige los tuyos según cuánto tiempo necesites para detectar y corregir fallos. También puedes ajustarlo flujo a flujo en la configuración de cada uno, por ejemplo para no guardar nunca las ejecuciones del flujo que procesa nóminas.
+
+#### ¿Qué contrato necesito con el proveedor del servidor?
+
+Un contrato de encargo del tratamiento, como exige el artículo 28 del RGPD. El proveedor de alojamiento guarda datos personales por cuenta de tu empresa, así que es un encargado del tratamiento. La mayoría de proveedores lo ofrecen como anexo de protección de datos en sus condiciones. Al elegir, comprueba:
+
+- Que el servidor está en el Espacio Económico Europeo y puedes elegir la región.
+- Qué subencargados usa y dónde están.
+- Cómo te avisa si hay una brecha de seguridad.
+
+#### ¿Qué pasa con las APIs externas que usa el flujo?
+
+Aunque n8n esté en tu servidor, cada flujo envía datos a otros servicios: Google, Microsoft, tu CRM o un modelo de inteligencia artificial. Cada uno de ellos es otro encargado del tratamiento, con su propio contrato y su propia ubicación. Si alguno trata los datos fuera del Espacio Económico Europeo, esa transferencia necesita una garantía del RGPD, como una decisión de adecuación (por ejemplo, el Marco de Privacidad de Datos UE-EE. UU. para empresas certificadas) o cláusulas contractuales tipo.
+
+La forma más eficaz de reducir el riesgo es enviar menos: en cada paso, manda solo los campos que ese servicio necesita. Si una IA solo tiene que clasificar un correo, no le hace falta la firma con el teléfono ni los adjuntos.
+
+#### ¿Qué medidas de seguridad conviene aplicar?
+
+- Acceso a n8n solo por HTTPS y con cuentas personales, nada de usuarios compartidos.
+- Actualizar n8n con regularidad; las notificaciones de nuevas versiones vienen activadas por defecto.
+- No dejar expuestos webhooks que no se usan y proteger con autenticación los que reciben datos.
+- Copias de seguridad de la base de datos y de la clave de cifrado, guardadas aparte y probadas: una copia que nunca se ha restaurado no es una copia.
+- Si no quieres enviar telemetría anónima a n8n, desactívala con N8N_DIAGNOSTICS_ENABLED=false . Ten en cuenta que entonces no podrás usar la función «Ask AI» del nodo Code.
+
+#### ¿Hay que apuntar las automatizaciones en el registro de actividades de tratamiento?
+
+Sí, cuando tratan datos personales de forma habitual. El artículo 30 del RGPD exime a las empresas de menos de 250 trabajadores solo si el tratamiento es ocasional, y una automatización que funciona todos los días no lo es. Por cada flujo con datos personales, anota la finalidad, qué datos trata, a qué servicios externos los envía, cuánto tiempo se conservan y qué medidas de seguridad aplicas. La Agencia Española de Protección de Datos ofrece guías y herramientas gratuitas, como Facilita RGPD, para empresas que tratan datos de bajo riesgo.
+
+#### Lista de comprobación
+
+- Servidor en el Espacio Económico Europeo y contrato de encargo firmado.
+- Lista de servicios externos de cada flujo, con su contrato y su ubicación.
+- Conservación de ejecuciones ajustada a lo que necesitas.
+- Clave de cifrado y copias de seguridad guardadas aparte y probadas.
+- Accesos personales, HTTPS y n8n actualizado.
+- Cada automatización con datos personales, en el registro de actividades de tratamiento.
+
+#### ¿Lo revisamos en tu instalación?
+
+En Banteq instalamos y mantenemos n8n en la nube o en un servidor propio y diseñamos los flujos para que guarden solo lo necesario. Lo explicamos en automatización con n8n e integración de herramientas .
+
+Cuéntanos qué flujos tienes o quieres montar .
+
+### Qué procesos automatizar en una pyme y por cuál empezar
+
+URL: https://banteq.com/guias/que-procesos-automatizar-en-una-pyme
+Actualizado: 2026-11-23
+Idioma: es
+
+Pol Carabante · Banteq Digital · 20 de noviembre de 2026
+
+Empieza por una tarea que se repita cada semana, siga reglas claras, trabaje con datos que ya están en formato digital y cuyo error se detecte fácilmente. En la mayoría de pymes esa tarea es una de estas tres: las solicitudes que llegan por la web, las facturas de proveedores o los recordatorios a clientes.
+
+Automatizar no es comprar un programa nuevo. Es conseguir que los datos pasen de una herramienta a otra sin que nadie los copie, y que cada paso le llegue a quien tiene que hacerlo. Abajo tienes los doce procesos que más se automatizan en empresas pequeñas y medianas, y un método para decidir cuál va primero en la tuya.
+
+#### Cuatro preguntas para elegir el primer proceso
+
+- ¿Se repite a menudo? Una tarea de diez minutos que se hace treinta veces a la semana pesa más que una de dos horas que se hace una vez al trimestre.
+- ¿Sigue reglas que sabrías escribir? «Si el correo trae una factura, guárdala en la carpeta del proveedor y avisa a administración» se puede automatizar. «Decide si este cliente merece un descuento» todavía necesita a una persona.
+- ¿Los datos ya están en digital? Correos, formularios, hojas de cálculo, PDF o un programa de gestión. Si todo vive en papel, el primer paso es digitalizar la entrada.
+- ¿Qué pasa si falla? Para el primer proyecto elige algo en lo que un error se vea y se corrija pronto. Deja para después lo que mueve dinero sin que nadie lo revise.
+
+Si una tarea responde «sí» a las tres primeras y su error es barato, es buena candidata. Si dudas entre dos, elige la que más molesta a tu equipo: será la que antes adopten.
+
+#### 12 procesos que las pymes automatizan con más frecuencia
+
+##### Ventas y clientes
+
+- Solicitudes de la web. Cada formulario se guarda en tu lista de contactos, la persona recibe una confirmación y el comercial un aviso con los datos. Lo explicamos en cómo automatizar el formulario de tu web .
+- Seguimiento de presupuestos. Cuando un presupuesto lleva unos días sin respuesta, el sistema recuerda al comercial que llame o envía un correo de seguimiento que él ha aprobado.
+- Recordatorios de citas. Un mensaje el día antes con la hora y la dirección, y la opción de cambiarla. Reduce las ausencias sin que nadie tenga que llamar.
+- Alta de clientes nuevos. Al cerrar una venta se crea la ficha en el programa de gestión, la carpeta del cliente y la tarea de bienvenida, con los datos que ya se recogieron.
+
+##### Administración
+
+- Facturas de proveedores. Llegan por correo, se leen proveedor, fecha e importes, se archivan y se registran; una persona valida solo las que no cuadran. Paso a paso en cómo automatizar las facturas de proveedores .
+- Recordatorios de cobro. Las facturas emitidas que vencen sin pagar generan un aviso al cliente y otro a quien lleva los cobros.
+- Documentación para la gestoría. Cada mes se reúnen en una carpeta las facturas, tiques y extractos del periodo, con nombres ordenados, y se avisa a la gestoría.
+
+##### Operaciones
+
+- Pedidos que llegan por correo. Se pasan a la hoja o al programa de pedidos sin teclearlos, y el cliente recibe la confirmación.
+- Avisos de existencias. Cuando un artículo baja de un mínimo, el responsable de compras recibe un aviso o un borrador de pedido.
+- Partes de trabajo. El técnico rellena un formulario en el móvil y el parte llega firmado a la oficina, listo para facturar.
+
+##### Equipo e informes
+
+- Informe semanal. Ventas, solicitudes o incidencias de la semana se reúnen solas en un resumen que llega el lunes por correo.
+- Incorporación de personas. Al dar de alta a alguien se crean sus accesos, se le envían los documentos que debe leer y se programan las tareas de su primera semana.
+
+#### Qué no conviene automatizar todavía
+
+- Un proceso que nadie sabe explicar. Si cada persona lo hace a su manera, automatizarlo fija el desorden. Primero se acuerda cómo se hace; después se automatiza.
+- Lo que cambia cada semana. Mantener el flujo costará más que hacerlo a mano.
+- Decisiones con consecuencias sin revisión. Pagos, devoluciones o respuestas legales pueden prepararse solos, pero conviene que una persona las confirme.
+
+#### Cómo saber si compensa
+
+Elige una semana normal. Cuenta cuántas veces se hace la tarea y cuántos minutos lleva cada una. Multiplica y tendrás las horas al mes que hoy dedica tu equipo. Cuando pruebes la automatización, suma el tiempo que sigue haciendo falta para revisar excepciones y corregir errores: lo que ahorras es la diferencia, no el total.
+
+En nuestra página de automatización de procesos tienes un ejemplo de este cálculo y casos habituales.
+
+#### Con qué herramientas se hace
+
+Antes de nada, mira si tus programas ya lo hacen: muchos programas de facturación, CRM y agendas traen recordatorios e integraciones que nadie ha activado. Cuando hay que conectar varias herramientas entre sí, se usan plataformas de automatización como n8n, Make o Zapier, o una integración por API hecha a medida. Explicamos las diferencias en automatización con n8n e integración de herramientas .
+
+Si en algún paso hay que entender un texto que no viene siempre igual, como un correo libre o un documento escaneado, entra la inteligencia artificial. Tienes ejemplos en usos prácticos de la IA en pymes .
+
+#### El primer paso
+
+Apunta durante una semana las tareas que tu equipo repite y cuánto tiempo les lleva cada una. Con esa lista, las cuatro preguntas de arriba suelen dejar clara la primera candidata.
+
+Si prefieres hacerlo con alguien, en Banteq analizamos cómo trabaja tu empresa y te proponemos por dónde empezar. Estamos en Santa Perpètua de Mogoda (Barcelona) y trabajamos con empresas de Barcelona, el Vallès y, en remoto, del resto de España.
+
+¿Ya has elegido la primera tarea? También puedes consultar en catalán una prueba práctica para comparar proveedores. Com triar una empresa per automatitzar processos .
+
+Cuéntanos qué tarea te quita más tiempo .
