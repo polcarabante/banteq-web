@@ -3,20 +3,20 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Automatizar facturas de proveedores (con n8n) | Banteq</title>
-  <meta name="description" content="Recibir, leer, comprobar y registrar las facturas de proveedores sin teclearlas: los cinco pasos, qué revisar a mano y cómo probarlo sin riesgo.">
+  <title>Automatizar facturas de proveedores paso a paso | Banteq</title>
+  <meta name="description" content="Cinco pasos para recibir, leer, comprobar y registrar las facturas de proveedores sin teclearlas, qué revisar a mano y cómo probarlo con facturas reales.">
   <link rel="canonical" href="https://banteq.com/guias/automatizar-facturas-de-proveedores">
   <script src="/banteq/procedencia.js" defer></script>
   <link rel="icon" href="/favicon.ico">
   <meta property="og:type" content="article">
   <meta property="og:locale" content="es_ES">
   <meta property="og:site_name" content="Banteq">
-  <meta property="og:title" content="Cómo automatizar las facturas de proveedores">
-  <meta property="og:description" content="Cinco pasos, las comprobaciones que evitan errores y una prueba con facturas reales.">
+  <meta property="og:title" content="Automatizar facturas de proveedores paso a paso">
+  <meta property="og:description" content="Cinco pasos para recibir, leer, comprobar y registrar las facturas de proveedores sin teclearlas, qué revisar a mano y cómo probarlo con facturas reales.">
   <meta property="og:url" content="https://banteq.com/guias/automatizar-facturas-de-proveedores">
   <meta property="og:image" content="https://banteq.com/framerusercontent.com/images/mesMNsTTSgV6Xg1TUfNtMnEGZY.png">
   <meta name="twitter:card" content="summary_large_image">
-  <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Article","headline":"Cómo automatizar las facturas de proveedores paso a paso","description":"Recibir, leer, comprobar y registrar las facturas de proveedores sin teclearlas: los cinco pasos, qué revisar a mano y cómo probarlo sin riesgo.","inLanguage":"es-ES","datePublished":"2026-11-20","dateModified":"2026-11-22","mainEntityOfPage":"https://banteq.com/guias/automatizar-facturas-de-proveedores","image":"https://banteq.com/framerusercontent.com/images/mesMNsTTSgV6Xg1TUfNtMnEGZY.png","author":{"@type":"Person","@id":"https://banteq.com/#pol-carabante","name":"Pol Carabante","url":"https://banteq.com/","worksFor":{"@id":"https://banteq.com/#organization"}},"publisher":{"@id":"https://banteq.com/#organization"},"isPartOf":{"@id":"https://banteq.com/#website"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Inicio","item":"https://banteq.com/"},{"@type":"ListItem","position":2,"name":"Guías","item":"https://banteq.com/guias"},{"@type":"ListItem","position":3,"name":"Automatizar las facturas de proveedores"}]}]}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Article","headline":"Automatizar facturas de proveedores paso a paso","description":"Cinco pasos para recibir, leer, comprobar y registrar las facturas de proveedores sin teclearlas, qué revisar a mano y cómo probarlo con facturas reales.","inLanguage":"es-ES","datePublished":"2026-11-20","dateModified":"2026-11-24","mainEntityOfPage":"https://banteq.com/guias/automatizar-facturas-de-proveedores","image":"https://banteq.com/framerusercontent.com/images/mesMNsTTSgV6Xg1TUfNtMnEGZY.png","author":{"@type":"Person","@id":"https://banteq.com/#pol-carabante","name":"Pol Carabante","url":"https://banteq.com/","worksFor":{"@id":"https://banteq.com/#organization"}},"publisher":{"@id":"https://banteq.com/#organization"},"isPartOf":{"@id":"https://banteq.com/#website"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Inicio","item":"https://banteq.com/"},{"@type":"ListItem","position":2,"name":"Guías","item":"https://banteq.com/guias"},{"@type":"ListItem","position":3,"name":"Automatizar las facturas de proveedores"}]},{"@type":"FAQPage","inLanguage":"es-ES","mainEntity":[{"@type":"Question","name":"¿Se pueden automatizar las facturas de proveedores sin cambiar de programa?","acceptedAnswer":{"@type":"Answer","text":"Sí. Muchos programas de contabilidad ya importan facturas desde un correo o leen PDF, y con una herramienta como n8n se pueden conectar el correo, las carpetas, una hoja de control y el programa de la gestoría sin sustituir nada."}},{"@type":"Question","name":"¿Cómo se leen los datos de una factura en PDF?","acceptedAnswer":{"@type":"Answer","text":"Con reconocimiento de texto o con un modelo de inteligencia artificial que entiende documentos aunque cada proveedor los maquete distinto. Si llega en formato electrónico estructurado, como un XML, los datos ya vienen separados y se leen sin errores."}},{"@type":"Question","name":"¿Qué comprobaciones evitan errores o facturas duplicadas?","acceptedAnswer":{"@type":"Answer","text":"Que el NIF corresponda a un proveedor conocido, que la base más el IVA dé el total, que no exista ya una factura de ese proveedor con el mismo número y que el importe sea el habitual o coincida con el pedido o el albarán."}},{"@type":"Question","name":"¿Qué facturas hay que seguir revisando a mano?","acceptedAnswer":{"@type":"Answer","text":"Las de proveedores nuevos, las rectificativas y abonos, las que tienen varios tipos de IVA o retenciones y cualquier importe fuera de lo habitual."}},{"@type":"Question","name":"¿La automatización paga las facturas?","acceptedAnswer":{"@type":"Answer","text":"No debería. Prepara la información y avisa a quien aprueba los pagos, pero el pago sigue siendo una decisión de una persona."}}]}]}</script>
   <style>
     * { box-sizing: border-box }
     body { margin: 0; color: #222; background: #fcfcfa; font: 1.08rem/1.65 system-ui, sans-serif }
@@ -42,15 +42,17 @@
 <main><article>
 <p class="migas"><a href="/">Inicio</a> › <a href="/guias">Guías</a></p>
   <h1>Cómo automatizar las facturas de proveedores paso a paso</h1>
-  <p class="byline">Pol Carabante · Banteq Digital · Publicado el <time datetime="2026-11-20">20 de noviembre de 2026</time> · Actualizado el <time datetime="2026-11-22">22 de noviembre de 2026</time></p>
+  <p class="byline"><a href="/#pol-carabante">Pol Carabante</a> · Banteq Digital · Publicado el <time datetime="2026-11-20">20 de noviembre de 2026</time> · Actualizado el <time datetime="2026-11-24">24 de noviembre de 2026</time></p>
   <p class="intro">Automatizar las facturas de proveedores consiste en cinco pasos: recibirlas en un único buzón, leer sus datos, comprobar que cuadran, registrarlas donde las necesitas y dejar a una persona solo las que no cuadran. Se puede hacer con las herramientas que ya usa tu empresa.</p>
   <p>Es uno de los mejores primeros proyectos porque se repite cada semana, sigue reglas claras y el error se detecta pronto: una factura que no cuadra salta a la vista antes de pagarla. Esta guía explica cada paso, qué conviene revisar a mano y cómo probarlo antes de cambiar nada.</p>
 
-  <section><h2>Antes de empezar: mira qué hace ya tu programa</h2>
+  <section><h2>¿Hace falta algo más que tu programa de contabilidad?</h2>
+    <p>A veces no: muchos programas ya importan facturas desde un correo o leen PDF, y solo hay que activarlo. Una automatización a medida compensa cuando las facturas pasan por varias herramientas.</p>
     <p>Muchos programas de contabilidad y de gestión ya importan facturas desde un correo o leen PDF. Si el tuyo lo hace, quizá solo haga falta activarlo y ordenar cómo llegan las facturas. La automatización a medida tiene sentido cuando las facturas tienen que pasar por varias herramientas, por ejemplo el correo, una carpeta compartida, una hoja de control y el programa de la gestoría.</p>
   </section>
 
-  <section><h2>Los cinco pasos</h2>
+  <section><h2>¿Cuáles son los cinco pasos para automatizar las facturas de proveedores?</h2>
+    <p>Recibirlas en un único buzón, leer sus datos, comprobar que cuadran, registrarlas y archivarlas, y avisar a quien tiene que actuar.</p>
     <h3>1. Un único sitio por donde entran</h3>
     <p>Pide a tus proveedores que envíen las facturas a una dirección dedicada, del estilo de facturas@tuempresa.com. Las que llegan en papel se escanean y se envían a la misma dirección. Mientras haya facturas en cuatro buzones distintos, ninguna automatización será fiable.</p>
     <h3>2. Leer los datos de cada factura</h3>
@@ -70,7 +72,8 @@
     <p>Quien aprueba los pagos recibe un aviso con las facturas listas y sus vencimientos. El pago en sí conviene que siga siendo una decisión de una persona: la automatización prepara la información, no mueve dinero.</p>
   </section>
 
-  <section><h2>Qué conviene seguir revisando a mano</h2>
+  <section><h2>¿Qué facturas conviene seguir revisando a mano?</h2>
+    <p>Las que el flujo aún no puede juzgar con seguridad: proveedores nuevos, rectificativas, varios tipos de IVA o retenciones, e importes inusuales.</p>
     <ul>
       <li>Facturas de proveedores nuevos, hasta que el flujo los conozca.</li>
       <li>Rectificativas y abonos, que restan en vez de sumar.</li>
@@ -80,7 +83,8 @@
     <p>Con el tiempo, la lista de revisión se reduce a lo que de verdad necesita criterio.</p>
   </section>
 
-  <section><h2>Cómo probarlo sin riesgo</h2>
+  <section><h2>¿Cómo probarlo sin riesgo?</h2>
+    <p>Pasando facturas reales de meses anteriores por el flujo sin registrar nada, y comparando lo que lee con lo que ya tienes contabilizado.</p>
     <ol>
       <li>Reúne veinte facturas reales de los últimos meses, de al menos cinco proveedores distintos, e incluye alguna rectificativa.</li>
       <li>Pásalas por el flujo sin registrar nada: solo lectura y comprobación.</li>
@@ -89,8 +93,8 @@
     </ol>
   </section>
 
-  <section><h2>Protección de datos y conservación</h2>
-    <p>Las facturas contienen datos de empresas y, a veces, de personas. Usa herramientas que te permitan saber dónde se guardan los datos y quién accede a ellos, y conserva los originales igual que hasta ahora: automatizar el registro no cambia tus obligaciones de conservación. Si tienes dudas sobre un caso concreto, consúltalo con tu gestoría.</p>
+  <section><h2>¿Qué hay que cuidar con los datos y la conservación?</h2>
+    <p>Saber dónde se guardan los datos y quién accede, y conservar los originales como hasta ahora. Las facturas contienen datos de empresas y, a veces, de personas. Usa herramientas que te permitan saber dónde se guardan los datos y quién accede a ellos, y conserva los originales igual que hasta ahora: automatizar el registro no cambia tus obligaciones de conservación. Si tienes dudas sobre un caso concreto, consúltalo con tu gestoría. Si tratas datos personales, el <a href="https://eur-lex.europa.eu/legal-content/ES/TXT/?uri=CELEX:32016R0679">Reglamento General de Protección de Datos</a> también te afecta.</p>
   </section>
 
   <section><h2>¿Cómo se monta con n8n?</h2>
@@ -108,6 +112,19 @@
   <section><h2>¿Lo montamos contigo?</h2>
     <p>En Banteq montamos este flujo en tu n8n, en la nube o en un servidor propio, o en la herramienta que ya uses. Conectamos el correo, las carpetas, tu programa de gestión y la gestoría para que las facturas de proveedores se registren solas y una persona revise solo las excepciones. Puedes ver cómo trabajamos en <a href="/automatizacion-procesos">automatización de procesos</a> y qué herramientas conectamos en <a href="/automatizacion-n8n">automatización con n8n</a>.</p>
     <p class="action"><a data-bq-contacto-guia href="/automatizacion-n8n#hablemos">Cuéntanos cómo te llegan hoy las facturas y qué programa usas</a>.</p>
+  </section>
+
+  <section><h2>Preguntas frecuentes</h2>
+    <h3>¿Se pueden automatizar las facturas de proveedores sin cambiar de programa?</h3>
+    <p>Sí. Muchos programas de contabilidad ya importan facturas desde un correo o leen PDF, y con una herramienta como n8n se pueden conectar el correo, las carpetas, una hoja de control y el programa de la gestoría sin sustituir nada.</p>
+    <h3>¿Cómo se leen los datos de una factura en PDF?</h3>
+    <p>Con reconocimiento de texto o con un modelo de inteligencia artificial que entiende documentos aunque cada proveedor los maquete distinto. Si llega en formato electrónico estructurado, como un XML, los datos ya vienen separados y se leen sin errores.</p>
+    <h3>¿Qué comprobaciones evitan errores o facturas duplicadas?</h3>
+    <p>Que el NIF corresponda a un proveedor conocido, que la base más el IVA dé el total, que no exista ya una factura de ese proveedor con el mismo número y que el importe sea el habitual o coincida con el pedido o el albarán.</p>
+    <h3>¿Qué facturas hay que seguir revisando a mano?</h3>
+    <p>Las de proveedores nuevos, las rectificativas y abonos, las que tienen varios tipos de IVA o retenciones y cualquier importe fuera de lo habitual.</p>
+    <h3>¿La automatización paga las facturas?</h3>
+    <p>No debería. Prepara la información y avisa a quien aprueba los pagos, pero el pago sigue siendo una decisión de una persona.</p>
   </section>
 
   <section class="relacionados"><h2>Sigue leyendo</h2>

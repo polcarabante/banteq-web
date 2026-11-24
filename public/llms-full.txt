@@ -559,16 +559,18 @@ Cuéntanos qué app utilizas y dónde se atasca el alta de tus clientes .
 ### Asistente de IA para el correo con revisión humana
 
 URL: https://banteq.com/guias/asistente-ia-correo-revision-humana
-Actualizado: 2026-11-22
+Actualizado: 2026-11-24
 Idioma: es
 
-Pol Carabante · Banteq Digital · 22 de noviembre de 2026
+Pol Carabante · Banteq Digital · Publicado el 22 de noviembre de 2026 · Actualizado el 24 de noviembre de 2026
 
 Un asistente de IA para el correo lee los mensajes que llegan a un buzón, los clasifica y deja preparado un borrador de respuesta en la carpeta de borradores. Una persona lo revisa, lo corrige si hace falta y lo envía. El asistente nunca envía nada por su cuenta.
 
 Funciona con Gmail o con Outlook de Microsoft 365, una herramienta de automatización como n8n o Make y un modelo de inteligencia artificial. Abajo tienes cómo funciona, por dónde empezar y qué cuidar con los datos.
 
 #### ¿Qué hace exactamente el asistente?
+
+Lee los correos del buzón acordado, los clasifica y deja un borrador de respuesta para que una persona lo revise. Son cinco pasos.
 
 - Filtra. Solo mira el buzón acordado, por ejemplo el de información o el de pedidos, y deja fuera boletines, avisos automáticos y correos internos.
 - Clasifica. Decide de qué trata el mensaje (consulta, pedido, incidencia, presupuesto) y le pone una etiqueta.
@@ -577,6 +579,8 @@ Funciona con Gmail o con Outlook de Microsoft 365, una herramienta de automatiza
 - Avisa a quien tiene que revisarlo, o lo deja en una lista de pendientes.
 
 #### ¿Por qué empezar en modo sombra?
+
+Porque permite comprobar los borradores durante unas semanas sin que ningún cliente reciba nada.
 
 En el modo sombra el asistente prepara borradores, pero nadie los envía: tu equipo sigue respondiendo como siempre y compara. Durante unas semanas veréis en qué tipos de correo acierta, en cuáles se equivoca y qué información le falta. Con eso decides qué etiquetas pasan a usar borradores y cuáles no, sin que ningún cliente haya recibido una respuesta a medio hacer.
 
@@ -614,23 +618,49 @@ En Banteq diseñamos asistentes de IA que leen correos y documentos y preparan r
 
 Cuéntanos qué buzón os quita más tiempo .
 
+#### Preguntas frecuentes
+
+##### ¿Puede una IA responder los correos de mi empresa sin que yo los vea?
+
+Técnicamente sí, pero lo recomendable es que deje borradores en la carpeta de borradores y que una persona los revise y los envíe. Los asistentes de esta guía nunca envían nada por su cuenta.
+
+##### ¿Qué es el modo sombra de un asistente de correo?
+
+Una fase inicial en la que el asistente prepara borradores pero nadie los envía y tu equipo responde como siempre. Durante unas semanas se compara en qué tipos de correo acierta y en cuáles falla, sin que ningún cliente reciba una respuesta a medio hacer.
+
+##### ¿Qué correos no debería tocar un asistente de IA?
+
+Reclamaciones y quejas fuertes, datos de salud u otros especialmente protegidos, cambios de cuenta bancaria, pagos y devoluciones, y bajas de clientes o empleados: mejor que lleguen a una persona solo con una etiqueta.
+
+##### ¿Qué hay que tener en cuenta con los datos personales?
+
+El proveedor del modelo de IA trata datos personales por cuenta de tu empresa, así que necesitas un contrato de encargo (artículo 28 del RGPD ), y conviene comprobar dónde trata los datos, si los usa para entrenar y cuánto tiempo los conserva.
+
+##### ¿Hay que avisar de que la respuesta la ha preparado una IA?
+
+Si una respuesta sale sin revisión humana, sí: el Reglamento europeo de inteligencia artificial exige informar a quien interactúa con un sistema de IA.
+
 ### Cómo automatizar las facturas de proveedores paso a paso
 
 URL: https://banteq.com/guias/automatizar-facturas-de-proveedores
-Actualizado: 2026-11-22
+Actualizado: 2026-11-24
 Idioma: es
 
-Pol Carabante · Banteq Digital · Publicado el 20 de noviembre de 2026 · Actualizado el 22 de noviembre de 2026
+Pol Carabante · Banteq Digital · Publicado el 20 de noviembre de 2026 · Actualizado el 24 de noviembre de 2026
 
 Automatizar las facturas de proveedores consiste en cinco pasos: recibirlas en un único buzón, leer sus datos, comprobar que cuadran, registrarlas donde las necesitas y dejar a una persona solo las que no cuadran. Se puede hacer con las herramientas que ya usa tu empresa.
 
 Es uno de los mejores primeros proyectos porque se repite cada semana, sigue reglas claras y el error se detecta pronto: una factura que no cuadra salta a la vista antes de pagarla. Esta guía explica cada paso, qué conviene revisar a mano y cómo probarlo antes de cambiar nada.
 
-#### Antes de empezar: mira qué hace ya tu programa
+#### ¿Hace falta algo más que tu programa de contabilidad?
+
+A veces no: muchos programas ya importan facturas desde un correo o leen PDF, y solo hay que activarlo. Una automatización a medida compensa cuando las facturas pasan por varias herramientas.
 
 Muchos programas de contabilidad y de gestión ya importan facturas desde un correo o leen PDF. Si el tuyo lo hace, quizá solo haga falta activarlo y ordenar cómo llegan las facturas. La automatización a medida tiene sentido cuando las facturas tienen que pasar por varias herramientas, por ejemplo el correo, una carpeta compartida, una hoja de control y el programa de la gestoría.
 
-#### Los cinco pasos
+#### ¿Cuáles son los cinco pasos para automatizar las facturas de proveedores?
+
+Recibirlas en un único buzón, leer sus datos, comprobar que cuadran, registrarlas y archivarlas, y avisar a quien tiene que actuar.
 
 ##### 1. Un único sitio por donde entran
 
@@ -659,7 +689,9 @@ Cada factura se guarda con un nombre ordenado, por ejemplo 2026-11 · Proveedor 
 
 Quien aprueba los pagos recibe un aviso con las facturas listas y sus vencimientos. El pago en sí conviene que siga siendo una decisión de una persona: la automatización prepara la información, no mueve dinero.
 
-#### Qué conviene seguir revisando a mano
+#### ¿Qué facturas conviene seguir revisando a mano?
+
+Las que el flujo aún no puede juzgar con seguridad: proveedores nuevos, rectificativas, varios tipos de IVA o retenciones, e importes inusuales.
 
 - Facturas de proveedores nuevos, hasta que el flujo los conozca.
 - Rectificativas y abonos, que restan en vez de sumar.
@@ -668,16 +700,18 @@ Quien aprueba los pagos recibe un aviso con las facturas listas y sus vencimient
 
 Con el tiempo, la lista de revisión se reduce a lo que de verdad necesita criterio.
 
-#### Cómo probarlo sin riesgo
+#### ¿Cómo probarlo sin riesgo?
+
+Pasando facturas reales de meses anteriores por el flujo sin registrar nada, y comparando lo que lee con lo que ya tienes contabilizado.
 
 - Reúne veinte facturas reales de los últimos meses, de al menos cinco proveedores distintos, e incluye alguna rectificativa.
 - Pásalas por el flujo sin registrar nada: solo lectura y comprobación.
 - Compara lo que ha leído con lo que tienes contabilizado. Anota cada diferencia y su causa.
 - Cuando las diferencias sean solo las que esperas mandar a revisión, ponlo en marcha con las facturas nuevas y mantén unas semanas el control manual en paralelo.
 
-#### Protección de datos y conservación
+#### ¿Qué hay que cuidar con los datos y la conservación?
 
-Las facturas contienen datos de empresas y, a veces, de personas. Usa herramientas que te permitan saber dónde se guardan los datos y quién accede a ellos, y conserva los originales igual que hasta ahora: automatizar el registro no cambia tus obligaciones de conservación. Si tienes dudas sobre un caso concreto, consúltalo con tu gestoría.
+Saber dónde se guardan los datos y quién accede, y conservar los originales como hasta ahora. Las facturas contienen datos de empresas y, a veces, de personas. Usa herramientas que te permitan saber dónde se guardan los datos y quién accede a ellos, y conserva los originales igual que hasta ahora: automatizar el registro no cambia tus obligaciones de conservación. Si tienes dudas sobre un caso concreto, consúltalo con tu gestoría. Si tratas datos personales, el Reglamento General de Protección de Datos también te afecta.
 
 #### ¿Cómo se monta con n8n?
 
@@ -697,19 +731,43 @@ En Banteq montamos este flujo en tu n8n, en la nube o en un servidor propio, o e
 
 Cuéntanos cómo te llegan hoy las facturas y qué programa usas .
 
-### Que no se pierda ninguna solicitud de tu web
+#### Preguntas frecuentes
+
+##### ¿Se pueden automatizar las facturas de proveedores sin cambiar de programa?
+
+Sí. Muchos programas de contabilidad ya importan facturas desde un correo o leen PDF, y con una herramienta como n8n se pueden conectar el correo, las carpetas, una hoja de control y el programa de la gestoría sin sustituir nada.
+
+##### ¿Cómo se leen los datos de una factura en PDF?
+
+Con reconocimiento de texto o con un modelo de inteligencia artificial que entiende documentos aunque cada proveedor los maquete distinto. Si llega en formato electrónico estructurado, como un XML, los datos ya vienen separados y se leen sin errores.
+
+##### ¿Qué comprobaciones evitan errores o facturas duplicadas?
+
+Que el NIF corresponda a un proveedor conocido, que la base más el IVA dé el total, que no exista ya una factura de ese proveedor con el mismo número y que el importe sea el habitual o coincida con el pedido o el albarán.
+
+##### ¿Qué facturas hay que seguir revisando a mano?
+
+Las de proveedores nuevos, las rectificativas y abonos, las que tienen varios tipos de IVA o retenciones y cualquier importe fuera de lo habitual.
+
+##### ¿La automatización paga las facturas?
+
+No debería. Prepara la información y avisa a quien aprueba los pagos, pero el pago sigue siendo una decisión de una persona.
+
+### Automatizar el formulario de tu web para no perder ninguna solicitud
 
 URL: https://banteq.com/guias/automatizar-solicitudes-formulario-web
-Actualizado: 2026-11-23
+Actualizado: 2026-11-24
 Idioma: es
 
-Pol Carabante · Banteq Digital · 20 de noviembre de 2026
+Pol Carabante · Banteq Digital · Publicado el 20 de noviembre de 2026 · Actualizado el 24 de noviembre de 2026
 
 Para no perder solicitudes, cada envío del formulario de tu web debe hacer cuatro cosas a la vez: guardarse en una lista, confirmar a la persona que la has recibido, avisar a quien tiene que responder y recordárselo si nadie lo hace. Las cuatro se pueden automatizar.
 
 En muchas empresas el formulario solo envía un correo a un buzón genérico. Si ese día nadie lo mira, o el mensaje cae en spam, el cliente se queda esperando y suele pedir presupuesto a otro. Esta guía explica cómo montar el recorrido completo y cómo comprobar el tuyo en diez minutos.
 
-#### Comprueba tu formulario en diez minutos
+#### ¿Cómo comprobar tu formulario en diez minutos?
+
+Rellénalo tú mismo desde el móvil como lo haría un cliente y responde a estas cuatro preguntas.
 
 - Desde el móvil, rellena el formulario de tu web como si fueras un cliente, con un correo tuyo.
 - ¿Has recibido una confirmación? ¿Dice cuándo vas a tener respuesta?
@@ -718,7 +776,9 @@ En muchas empresas el formulario solo envía un correo a un buzón genérico. Si
 
 Si alguna respuesta es «no lo sé», merece la pena automatizarlo.
 
-#### El recorrido completo, paso a paso
+#### ¿Qué recorrido debe seguir cada solicitud?
+
+Se guarda, se confirma a la persona, se avisa a quien responde, se recuerda si nadie contesta y se anota de dónde venía.
 
 ##### 1. Guardar cada solicitud
 
@@ -740,11 +800,15 @@ Si pasado el plazo que hayas decidido la solicitud sigue en «nuevo», el sistem
 
 Registrar si la persona llegó desde Google, desde una campaña o desde otra web te dice qué canales traen clientes y cuáles solo visitas. Basta con guardar ese dato junto a la solicitud.
 
-#### Filtrar el spam sin perder clientes
+#### ¿Cómo filtrar el spam sin perder clientes?
+
+Con medidas invisibles antes que con un captcha, y marcando lo dudoso para revisión en lugar de borrarlo.
 
 Los formularios públicos reciben envíos automáticos. Antes de poner un captcha que moleste a todo el mundo, prueba con medidas invisibles: un campo oculto que solo rellenan los robots, comprobar que el correo tiene un formato válido y limitar los envíos repetidos desde el mismo origen. Si una solicitud parece spam, mejor marcarla para revisión que borrarla.
 
-#### Protección de datos
+#### ¿Qué exige la protección de datos en un formulario?
+
+Informar de quién trata los datos y para qué, y pedir solo lo necesario.
 
 Un formulario recoge datos personales, así que necesita informar de quién los trata y para qué, con un enlace a tu política de privacidad, y pedir solo los datos que vas a usar. Si además quieres enviar comunicaciones comerciales, el consentimiento para ello debe pedirse aparte y no venir marcado de serie.
 
@@ -759,6 +823,28 @@ En Banteq hacemos webs a medida y conectamos sus formularios con el correo, el C
 Si vas a encargar una web nueva, concreta desde el principio dónde debe acabar cada solicitud. Esta plantilla para pedir presupuesto de una web a medida te ayuda a incluirlo en las ofertas que compares.
 
 Cuéntanos qué pasa hoy cuando alguien rellena tu formulario .
+
+#### Preguntas frecuentes
+
+##### ¿Cómo evito perder solicitudes del formulario de mi web?
+
+Haciendo que cada envío guarde la solicitud en una lista, confirme a la persona que se ha recibido, avise a una persona concreta y recuerde a su responsable las que siguen sin respuesta pasado el plazo que hayas decidido.
+
+##### ¿Por qué no basta con que el formulario envíe un correo?
+
+Porque depende de que alguien lo vea. Si va a un buzón genérico que nadie mira ese día o cae en spam, el cliente se queda esperando y suele pedir presupuesto a otro.
+
+##### ¿Cómo filtro el spam del formulario sin poner un captcha?
+
+Con medidas invisibles: un campo oculto que solo rellenan los robots, comprobar que el correo tiene un formato válido y limitar los envíos repetidos desde el mismo origen. Lo dudoso, mejor marcarlo para revisión que borrarlo.
+
+##### ¿Qué dice el RGPD sobre los formularios web?
+
+Que debes informar de quién trata los datos y para qué, con enlace a tu política de privacidad, y pedir solo los que vayas a usar. El consentimiento para comunicaciones comerciales se pide aparte y no puede venir marcado de serie. Texto oficial: Reglamento (UE) 2016/679 .
+
+##### ¿Cómo compruebo mi formulario en diez minutos?
+
+Rellénalo desde el móvil como un cliente y mira si llega la confirmación, quién recibe el aviso y si le llega a la bandeja de entrada o al spam, y dónde queda guardada la solicitud.
 
 ### Com triar una empresa per automatitzar processos
 
@@ -849,16 +935,18 @@ Si antes prefieres informarte, consulta el servicio de desarrollo web en Barcelo
 ### Inteligencia artificial en pymes: 8 usos prácticos y cuándo no usarla
 
 URL: https://banteq.com/guias/ia-en-pymes-casos-practicos
-Actualizado: 2026-11-22
+Actualizado: 2026-11-24
 Idioma: es
 
-Pol Carabante · Banteq Digital · 20 de noviembre de 2026
+Pol Carabante · Banteq Digital · Publicado el 20 de noviembre de 2026 · Actualizado el 24 de noviembre de 2026
 
 En una pyme, la inteligencia artificial rinde sobre todo en tareas que exigen entender texto que no viene siempre igual: leer correos y documentos, clasificarlos, resumirlos y preparar borradores de respuesta. Funciona mejor cuando prepara el trabajo y una persona lo revisa antes de que salga.
 
 Estos son ocho usos que hoy resuelven problemas reales en empresas pequeñas y medianas, con lo que conviene vigilar en cada uno, y los casos en los que una automatización sencilla basta.
 
-#### 8 usos que funcionan
+#### ¿Qué usos de la IA funcionan hoy en una pyme?
+
+Ocho: respuestas a consultas frecuentes, clasificar correos, sacar datos de documentos, consultar la documentación interna, resumir reuniones, preparar presupuestos, traducir textos y analizar reseñas.
 
 ##### 1. Borradores de respuesta a consultas frecuentes
 
@@ -892,23 +980,31 @@ Fichas de producto, correos o avisos en catalán, inglés u otros idiomas, mante
 
 Agrupa lo que dicen tus clientes en reseñas, encuestas o incidencias y te muestra los temas que más se repiten.
 
-#### Cuándo no hace falta IA
+#### ¿Cuándo no hace falta IA?
+
+Cuando la tarea sigue reglas fijas: ahí una automatización normal es más barata y más fiable.
 
 Si la tarea sigue reglas fijas, como pasar una fila de Excel al CRM o enviar un recordatorio el día antes de una cita, una automatización normal es más barata, más rápida y no se equivoca de forma imprevisible. Lo habitual es combinarlas: la IA interpreta lo que llega y la automatización hace el resto. Puedes ver ejemplos de esto último en qué procesos automatizar en una pyme .
 
-#### Cuándo no conviene usarla sin revisión
+#### ¿Cuándo no conviene usar IA sin revisión humana?
+
+En decisiones con consecuencias, con datos cuyo tratamiento no controlas y en respuestas que se publican solas.
 
 - Decisiones con consecuencias: pagos, despidos, admisiones, precios o respuestas con valor legal.
 - Datos que no deben salir de tu empresa si no sabes dónde los procesa la herramienta.
 - Respuestas que se publican solas en nombre de tu empresa sin que nadie las lea antes.
 
-#### Tus datos y las normas
+#### ¿Qué hay que cuidar con los datos y la normativa?
+
+No pegar datos personales en chats de uso personal, revisar las condiciones del proveedor e informar a quien hable con un asistente.
 
 - No pegues datos personales ni confidenciales en un chat de IA de uso personal. Las versiones para empresas y las integraciones por API permiten controlar mejor qué se guarda y para qué se usa.
 - Revisa las condiciones del proveedor: dónde se procesan los datos y si se usan para entrenar sus modelos.
 - Si un asistente habla con tus clientes, díselo. El Reglamento europeo de inteligencia artificial exige informar a las personas de que están interactuando con un sistema de IA, salvo que sea evidente.
 
-#### Cómo empezar
+#### ¿Cómo empezar con la IA en tu empresa?
+
+Con un solo uso, probado con ejemplos reales y puesto en marcha con revisión humana.
 
 - Elige un único uso de la lista, el que más tiempo os quite.
 - Reúne ejemplos reales: veinte correos, diez documentos o las preguntas que más se repiten.
@@ -921,15 +1017,37 @@ En Banteq diseñamos asistentes de IA que responden consultas, leen documentos y
 
 Cuéntanos qué tarea querrías que preparara la IA .
 
+#### Preguntas frecuentes
+
+##### ¿Para qué sirve la inteligencia artificial en una pyme?
+
+Sobre todo para tareas que exigen entender texto que no viene siempre igual: leer correos y documentos, clasificarlos, resumirlos y preparar borradores de respuesta que una persona revisa antes de enviar.
+
+##### ¿Cuándo no hace falta IA y basta una automatización?
+
+Cuando la tarea sigue reglas fijas, como pasar una fila de Excel al CRM o enviar un recordatorio el día antes de una cita. Una automatización normal es más barata, más rápida y no se equivoca de forma imprevisible.
+
+##### ¿Es seguro pegar datos de clientes en un chat de IA?
+
+No conviene en un chat de uso personal. Las versiones para empresas y las integraciones por API permiten controlar mejor qué se guarda y si se usa para entrenar modelos; revisa las condiciones del proveedor.
+
+##### ¿Hay que avisar a los clientes de que hablan con una IA?
+
+Sí, salvo que sea evidente. El Reglamento europeo de inteligencia artificial (artículo 50) obliga a informar a las personas de que interactúan con un sistema de IA.
+
+##### ¿Cómo empiezo con la IA en mi empresa?
+
+Elige un único uso, reúne ejemplos reales (veinte correos o diez documentos), prueba en cuántos acierta y ponlo en marcha con revisión humana, relajándola solo cuando los fallos sean raros y fáciles de detectar.
+
 ### n8n en servidor propio y RGPD: qué tiene que revisar una pyme
 
 URL: https://banteq.com/guias/n8n-servidor-propio-rgpd
-Actualizado: 2026-11-22
+Actualizado: 2026-11-24
 Idioma: es
 
-Pol Carabante · Banteq Digital · 22 de noviembre de 2026
+Pol Carabante · Banteq Digital · Publicado el 22 de noviembre de 2026 · Actualizado el 24 de noviembre de 2026
 
-Instalar n8n en tu propio servidor no te hace cumplir el RGPD por sí solo, pero te da el control: decides dónde se guardan los datos, cuánto tiempo y quién accede. Lo demás se cubre con cinco piezas: un alojamiento en la Unión Europea con contrato de encargo, saber qué datos envía cada flujo a servicios externos, limitar lo que n8n guarda de cada ejecución, copias de seguridad protegidas y el registro de actividades de tratamiento.
+Instalar n8n en tu propio servidor no cumple el RGPD por sí solo, pero te da el control de dónde se guardan los datos, cuánto tiempo y quién accede. El resto son cinco piezas: alojamiento en la UE con contrato de encargo, control de lo que envía cada flujo, ejecuciones limitadas, copias protegidas y registro de actividades.
 
 Esta guía está pensada para pymes españolas que automatizan con n8n procesos en los que hay datos personales: formularios, correos, facturas o fichas de clientes. Resume obligaciones generales del RGPD; para un caso concreto, consúltalo con tu asesor o con tu delegado de protección de datos.
 
@@ -956,7 +1074,7 @@ Una instalación de n8n guarda tres cosas en su base de datos:
 
 #### ¿Cuánto tiempo guarda n8n los datos de cada ejecución?
 
-Por defecto, n8n guarda las ejecuciones correctas y las fallidas y las borra cuando tienen más de 336 horas (14 días) o cuando hay más de 10.000. Si no necesitas ese historial, el RGPD te pide no guardarlo: es el principio de limitación del plazo de conservación. En un servidor propio se ajusta con variables de entorno:
+Por defecto, n8n guarda las ejecuciones correctas y las fallidas y las borra cuando tienen más de 336 horas (14 días) o cuando hay más de 10.000. Si no necesitas ese historial, el RGPD te pide no guardarlo: es el principio de limitación del plazo de conservación. En un servidor propio se ajusta con variables de entorno, según la documentación de n8n :
 
 ```
 # Borrar ejecuciones antiguas (activado por defecto)
@@ -972,7 +1090,7 @@ Los valores de ejemplo son orientativos: elige los tuyos según cuánto tiempo n
 
 #### ¿Qué contrato necesito con el proveedor del servidor?
 
-Un contrato de encargo del tratamiento, como exige el artículo 28 del RGPD. El proveedor de alojamiento guarda datos personales por cuenta de tu empresa, así que es un encargado del tratamiento. La mayoría de proveedores lo ofrecen como anexo de protección de datos en sus condiciones. Al elegir, comprueba:
+Un contrato de encargo del tratamiento, como exige el artículo 28 del RGPD . El proveedor de alojamiento guarda datos personales por cuenta de tu empresa, así que es un encargado del tratamiento. La mayoría de proveedores lo ofrecen como anexo de protección de datos en sus condiciones. Al elegir, comprueba:
 
 - Que el servidor está en el Espacio Económico Europeo y puedes elegir la región.
 - Qué subencargados usa y dónde están.
@@ -1011,19 +1129,43 @@ En Banteq instalamos y mantenemos n8n en la nube o en un servidor propio y dise�
 
 Cuéntanos qué flujos tienes o quieres montar .
 
+#### Preguntas frecuentes
+
+##### ¿Es n8n compatible con el RGPD?
+
+Sí, tanto en la nube como en servidor propio, pero instalarlo no basta por sí solo. Hay que elegir un alojamiento en la UE con contrato de encargo, controlar qué datos envía cada flujo a servicios externos, limitar lo que guarda de cada ejecución y documentarlo en el registro de actividades.
+
+##### ¿Cuánto tiempo guarda n8n los datos de las ejecuciones?
+
+Por defecto borra las ejecuciones con más de 336 horas (14 días) o cuando hay más de 10.000, y guarda las correctas y las fallidas. Se ajusta con variables como EXECUTIONS_DATA_MAX_AGE. Fuente: documentación de n8n .
+
+##### ¿Necesito un contrato con mi proveedor de servidor?
+
+Sí: un contrato de encargo del tratamiento según el artículo 28 del RGPD , porque el proveedor guarda datos personales por cuenta de tu empresa.
+
+##### ¿Hay que incluir las automatizaciones en el registro de actividades de tratamiento?
+
+Sí, si tratan datos personales de forma habitual. El artículo 30 del RGPD solo exime a empresas de menos de 250 trabajadores cuando el tratamiento es ocasional, y una automatización diaria no lo es.
+
+##### ¿Es mejor n8n en la nube o en servidor propio para cumplir el RGPD?
+
+Las dos pueden cumplir. El servidor propio da más control sobre dónde están los datos y cuánto se conservan; la nube evita el riesgo de tener una instalación sin actualizar si nadie en tu empresa va a mantenerla.
+
 ### Qué procesos automatizar en una pyme y por cuál empezar
 
 URL: https://banteq.com/guias/que-procesos-automatizar-en-una-pyme
-Actualizado: 2026-11-23
+Actualizado: 2026-11-24
 Idioma: es
 
-Pol Carabante · Banteq Digital · 20 de noviembre de 2026
+Pol Carabante · Banteq Digital · Publicado el 20 de noviembre de 2026 · Actualizado el 24 de noviembre de 2026
 
 Empieza por una tarea que se repita cada semana, siga reglas claras, trabaje con datos que ya están en formato digital y cuyo error se detecte fácilmente. En la mayoría de pymes esa tarea es una de estas tres: las solicitudes que llegan por la web, las facturas de proveedores o los recordatorios a clientes.
 
 Automatizar no es comprar un programa nuevo. Es conseguir que los datos pasen de una herramienta a otra sin que nadie los copie, y que cada paso le llegue a quien tiene que hacerlo. Abajo tienes los doce procesos que más se automatizan en empresas pequeñas y medianas, y un método para decidir cuál va primero en la tuya.
 
-#### Cuatro preguntas para elegir el primer proceso
+#### ¿Cómo elegir el primer proceso que automatizar?
+
+Elige el que cumpla cuatro condiciones: se repite a menudo, sigue reglas claras, tiene los datos en digital y su error se corrige pronto. Estas son las cuatro preguntas para comprobarlo.
 
 - ¿Se repite a menudo? Una tarea de diez minutos que se hace treinta veces a la semana pesa más que una de dos horas que se hace una vez al trimestre.
 - ¿Sigue reglas que sabrías escribir? «Si el correo trae una factura, guárdala en la carpeta del proveedor y avisa a administración» se puede automatizar. «Decide si este cliente merece un descuento» todavía necesita a una persona.
@@ -1032,7 +1174,9 @@ Automatizar no es comprar un programa nuevo. Es conseguir que los datos pasen de
 
 Si una tarea responde «sí» a las tres primeras y su error es barato, es buena candidata. Si dudas entre dos, elige la que más molesta a tu equipo: será la que antes adopten.
 
-#### 12 procesos que las pymes automatizan con más frecuencia
+#### ¿Qué procesos automatizan con más frecuencia las pymes?
+
+Doce, repartidos en cuatro áreas: ventas y clientes, administración, operaciones y equipo e informes. Los más habituales son las solicitudes de la web y las facturas de proveedores.
 
 ##### Ventas y clientes
 
@@ -1058,19 +1202,25 @@ Si una tarea responde «sí» a las tres primeras y su error es barato, es buena
 - Informe semanal. Ventas, solicitudes o incidencias de la semana se reúnen solas en un resumen que llega el lunes por correo.
 - Incorporación de personas. Al dar de alta a alguien se crean sus accesos, se le envían los documentos que debe leer y se programan las tareas de su primera semana.
 
-#### Qué no conviene automatizar todavía
+#### ¿Qué no conviene automatizar todavía?
+
+Lo que nadie sabe explicar, lo que cambia cada semana y las decisiones con consecuencias que nadie revisa.
 
 - Un proceso que nadie sabe explicar. Si cada persona lo hace a su manera, automatizarlo fija el desorden. Primero se acuerda cómo se hace; después se automatiza.
 - Lo que cambia cada semana. Mantener el flujo costará más que hacerlo a mano.
 - Decisiones con consecuencias sin revisión. Pagos, devoluciones o respuestas legales pueden prepararse solos, pero conviene que una persona las confirme.
 
-#### Cómo saber si compensa
+#### ¿Cómo saber si compensa?
+
+Compara las horas al mes que hoy dedica tu equipo con el tiempo que seguirá haciendo falta tras automatizar. Se calcula así.
 
 Elige una semana normal. Cuenta cuántas veces se hace la tarea y cuántos minutos lleva cada una. Multiplica y tendrás las horas al mes que hoy dedica tu equipo. Cuando pruebes la automatización, suma el tiempo que sigue haciendo falta para revisar excepciones y corregir errores: lo que ahorras es la diferencia, no el total.
 
 En nuestra página de automatización de procesos tienes un ejemplo de este cálculo y casos habituales.
 
-#### Con qué herramientas se hace
+#### ¿Con qué herramientas se hace?
+
+Primero con las que ya tienes; si hay que conectar varias, con plataformas como n8n, Make o Zapier o una integración por API.
 
 Antes de nada, mira si tus programas ya lo hacen: muchos programas de facturación, CRM y agendas traen recordatorios e integraciones que nadie ha activado. Cuando hay que conectar varias herramientas entre sí, se usan plataformas de automatización como n8n, Make o Zapier, o una integración por API hecha a medida. Explicamos las diferencias en automatización con n8n e integración de herramientas .
 
@@ -1085,3 +1235,25 @@ Si prefieres hacerlo con alguien, en Banteq analizamos cómo trabaja tu empresa 
 ¿Ya has elegido la primera tarea? También puedes consultar en catalán una prueba práctica para comparar proveedores. Com triar una empresa per automatitzar processos .
 
 Cuéntanos qué tarea te quita más tiempo .
+
+#### Preguntas frecuentes
+
+##### ¿Qué proceso conviene automatizar primero en una pyme?
+
+El que se repite cada semana, sigue reglas que sabrías escribir, usa datos ya digitales y cuyo error se detecta pronto. En la mayoría de pymes es una de tres: las solicitudes que llegan por la web, las facturas de proveedores o los recordatorios a clientes.
+
+##### ¿Cómo sé si automatizar una tarea compensa?
+
+Cuenta cuántas veces se hace en una semana normal y cuántos minutos lleva cada una, y multiplica. Después resta el tiempo que seguirá haciendo falta para revisar excepciones: el ahorro real es la diferencia, no el total.
+
+##### ¿Hace falta programar para automatizar un proceso?
+
+No siempre. Muchos programas de facturación, CRM y agenda ya traen recordatorios e integraciones sin activar. Para conectar varias herramientas se usan plataformas como n8n, Make o Zapier, o una integración por API a medida.
+
+##### ¿Qué procesos no conviene automatizar todavía?
+
+Los que nadie sabe explicar porque cada persona los hace a su manera, los que cambian cada semana y las decisiones con consecuencias (pagos, devoluciones, respuestas legales) que no pasan por una revisión humana.
+
+##### ¿Automatizar un proceso es lo mismo que usar inteligencia artificial?
+
+No. Una automatización mueve datos y avisa siguiendo reglas fijas. La IA solo entra cuando hay que entender un texto que no viene siempre igual, como un correo libre o un documento escaneado.

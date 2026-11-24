@@ -3,20 +3,20 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>n8n en servidor propio y RGPD: guía para pymes | Banteq</title>
-  <meta name="description" content="Dónde guarda n8n los datos, cuánto tiempo conserva cada ejecución, qué contratos necesitas y qué apuntar en el registro de tratamientos si lo alojas en tu servidor.">
+  <title>n8n y RGPD en servidor propio: qué revisar | Banteq</title>
+  <meta name="description" content="Dónde guarda n8n los datos, cuánto conserva cada ejecución, qué contrato necesitas y qué apuntar en el registro de tratamientos si lo alojas tú.">
   <link rel="canonical" href="https://banteq.com/guias/n8n-servidor-propio-rgpd">
   <script src="/banteq/procedencia.js" defer></script>
   <link rel="icon" href="/favicon.ico">
   <meta property="og:type" content="article">
   <meta property="og:locale" content="es_ES">
   <meta property="og:site_name" content="Banteq">
-  <meta property="og:title" content="n8n en servidor propio y RGPD">
-  <meta property="og:description" content="Alojamiento en la UE, contratos de encargo, APIs externas, conservación de ejecuciones y copias.">
+  <meta property="og:title" content="n8n y RGPD en servidor propio: qué revisar">
+  <meta property="og:description" content="Dónde guarda n8n los datos, cuánto conserva cada ejecución, qué contrato necesitas y qué apuntar en el registro de tratamientos si lo alojas tú.">
   <meta property="og:url" content="https://banteq.com/guias/n8n-servidor-propio-rgpd">
   <meta property="og:image" content="https://banteq.com/framerusercontent.com/images/mesMNsTTSgV6Xg1TUfNtMnEGZY.png">
   <meta name="twitter:card" content="summary_large_image">
-  <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Article","headline":"n8n en servidor propio y RGPD: qué tiene que revisar una pyme","description":"Dónde guarda n8n los datos, cuánto tiempo conserva cada ejecución, qué contratos necesitas y qué apuntar en el registro de tratamientos si lo alojas en tu servidor.","inLanguage":"es-ES","datePublished":"2026-11-22","dateModified":"2026-11-22","mainEntityOfPage":"https://banteq.com/guias/n8n-servidor-propio-rgpd","image":"https://banteq.com/framerusercontent.com/images/mesMNsTTSgV6Xg1TUfNtMnEGZY.png","isPartOf":{"@id":"https://banteq.com/#website"},"author":{"@type":"Person","@id":"https://banteq.com/#pol-carabante","name":"Pol Carabante","url":"https://banteq.com/","worksFor":{"@id":"https://banteq.com/#organization"}},"publisher":{"@id":"https://banteq.com/#organization"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Inicio","item":"https://banteq.com/"},{"@type":"ListItem","position":2,"name":"Guías","item":"https://banteq.com/guias"},{"@type":"ListItem","position":3,"name":"n8n en servidor propio y RGPD"}]}]}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Article","headline":"n8n y RGPD en servidor propio: qué revisar","description":"Dónde guarda n8n los datos, cuánto conserva cada ejecución, qué contrato necesitas y qué apuntar en el registro de tratamientos si lo alojas tú.","inLanguage":"es-ES","datePublished":"2026-11-22","dateModified":"2026-11-24","mainEntityOfPage":"https://banteq.com/guias/n8n-servidor-propio-rgpd","image":"https://banteq.com/framerusercontent.com/images/mesMNsTTSgV6Xg1TUfNtMnEGZY.png","isPartOf":{"@id":"https://banteq.com/#website"},"author":{"@type":"Person","@id":"https://banteq.com/#pol-carabante","name":"Pol Carabante","url":"https://banteq.com/","worksFor":{"@id":"https://banteq.com/#organization"}},"publisher":{"@id":"https://banteq.com/#organization"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Inicio","item":"https://banteq.com/"},{"@type":"ListItem","position":2,"name":"Guías","item":"https://banteq.com/guias"},{"@type":"ListItem","position":3,"name":"n8n en servidor propio y RGPD"}]},{"@type":"FAQPage","inLanguage":"es-ES","mainEntity":[{"@type":"Question","name":"¿Es n8n compatible con el RGPD?","acceptedAnswer":{"@type":"Answer","text":"Sí, tanto en la nube como en servidor propio, pero instalarlo no basta por sí solo. Hay que elegir un alojamiento en la UE con contrato de encargo, controlar qué datos envía cada flujo a servicios externos, limitar lo que guarda de cada ejecución y documentarlo en el registro de actividades."}},{"@type":"Question","name":"¿Cuánto tiempo guarda n8n los datos de las ejecuciones?","acceptedAnswer":{"@type":"Answer","text":"Por defecto borra las ejecuciones con más de 336 horas (14 días) o cuando hay más de 10.000, y guarda las correctas y las fallidas. Se ajusta con variables como EXECUTIONS_DATA_MAX_AGE. Fuente: documentación de n8n."}},{"@type":"Question","name":"¿Necesito un contrato con mi proveedor de servidor?","acceptedAnswer":{"@type":"Answer","text":"Sí: un contrato de encargo del tratamiento según el artículo 28 del RGPD, porque el proveedor guarda datos personales por cuenta de tu empresa."}},{"@type":"Question","name":"¿Hay que incluir las automatizaciones en el registro de actividades de tratamiento?","acceptedAnswer":{"@type":"Answer","text":"Sí, si tratan datos personales de forma habitual. El artículo 30 del RGPD solo exime a empresas de menos de 250 trabajadores cuando el tratamiento es ocasional, y una automatización diaria no lo es."}},{"@type":"Question","name":"¿Es mejor n8n en la nube o en servidor propio para cumplir el RGPD?","acceptedAnswer":{"@type":"Answer","text":"Las dos pueden cumplir. El servidor propio da más control sobre dónde están los datos y cuánto se conservan; la nube evita el riesgo de tener una instalación sin actualizar si nadie en tu empresa va a mantenerla."}}]}]}</script>
   <style>
     * { box-sizing: border-box }
     body { margin: 0; color: #222; background: #fcfcfa; font: 1.08rem/1.65 system-ui, sans-serif }
@@ -46,8 +46,8 @@
 <main><article>
 <p class="migas"><a href="/">Inicio</a> › <a href="/guias">Guías</a></p>
   <h1>n8n en servidor propio y RGPD: qué tiene que revisar una pyme</h1>
-  <p class="byline">Pol Carabante · Banteq Digital · <time datetime="2026-11-22">22 de noviembre de 2026</time></p>
-  <p class="intro">Instalar n8n en tu propio servidor no te hace cumplir el RGPD por sí solo, pero te da el control: decides dónde se guardan los datos, cuánto tiempo y quién accede. Lo demás se cubre con cinco piezas: un alojamiento en la Unión Europea con contrato de encargo, saber qué datos envía cada flujo a servicios externos, limitar lo que n8n guarda de cada ejecución, copias de seguridad protegidas y el registro de actividades de tratamiento.</p>
+  <p class="byline"><a href="/#pol-carabante">Pol Carabante</a> · Banteq Digital · Publicado el <time datetime="2026-11-22">22 de noviembre de 2026</time> · Actualizado el <time datetime="2026-11-24">24 de noviembre de 2026</time></p>
+  <p class="intro">Instalar n8n en tu propio servidor no cumple el RGPD por sí solo, pero te da el control de dónde se guardan los datos, cuánto tiempo y quién accede. El resto son cinco piezas: alojamiento en la UE con contrato de encargo, control de lo que envía cada flujo, ejecuciones limitadas, copias protegidas y registro de actividades.</p>
   <p>Esta guía está pensada para pymes españolas que automatizan con n8n procesos en los que hay datos personales: formularios, correos, facturas o fichas de clientes. Resume obligaciones generales del RGPD; para un caso concreto, consúltalo con tu asesor o con tu delegado de protección de datos.</p>
 
   <section><h2>¿n8n en la nube o en servidor propio?</h2>
@@ -74,7 +74,7 @@
   </section>
 
   <section><h2>¿Cuánto tiempo guarda n8n los datos de cada ejecución?</h2>
-    <p>Por defecto, n8n guarda las ejecuciones correctas y las fallidas y las borra cuando tienen más de 336 horas (14 días) o cuando hay más de 10.000. Si no necesitas ese historial, el RGPD te pide no guardarlo: es el principio de limitación del plazo de conservación. En un servidor propio se ajusta con variables de entorno:</p>
+    <p>Por defecto, n8n guarda las ejecuciones correctas y las fallidas y las borra cuando tienen más de 336 horas (14 días) o cuando hay más de 10.000. Si no necesitas ese historial, el RGPD te pide no guardarlo: es el principio de limitación del plazo de conservación. En un servidor propio se ajusta con variables de entorno, según la <a href="https://docs.n8n.io/hosting/configuration/environment-variables/executions/">documentación de n8n</a>:</p>
     <pre><code># Borrar ejecuciones antiguas (activado por defecto)
 EXECUTIONS_DATA_PRUNE=true
 # Antigüedad máxima en horas (por defecto 336 = 14 días)
@@ -86,7 +86,7 @@ EXECUTIONS_DATA_SAVE_ON_ERROR=all</code></pre>
   </section>
 
   <section><h2>¿Qué contrato necesito con el proveedor del servidor?</h2>
-    <p>Un contrato de encargo del tratamiento, como exige el artículo 28 del RGPD. El proveedor de alojamiento guarda datos personales por cuenta de tu empresa, así que es un encargado del tratamiento. La mayoría de proveedores lo ofrecen como anexo de protección de datos en sus condiciones. Al elegir, comprueba:</p>
+    <p>Un contrato de encargo del tratamiento, como exige el artículo 28 del <a href="https://eur-lex.europa.eu/legal-content/ES/TXT/?uri=CELEX:32016R0679">RGPD</a>. El proveedor de alojamiento guarda datos personales por cuenta de tu empresa, así que es un encargado del tratamiento. La mayoría de proveedores lo ofrecen como anexo de protección de datos en sus condiciones. Al elegir, comprueba:</p>
     <ul>
       <li>Que el servidor está en el Espacio Económico Europeo y puedes elegir la región.</li>
       <li>Qué subencargados usa y dónde están.</li>
@@ -127,6 +127,19 @@ EXECUTIONS_DATA_SAVE_ON_ERROR=all</code></pre>
   <section><h2>¿Lo revisamos en tu instalación?</h2>
     <p>En Banteq instalamos y mantenemos n8n en la nube o en un servidor propio y diseñamos los flujos para que guarden solo lo necesario. Lo explicamos en <a href="/automatizacion-n8n">automatización con n8n e integración de herramientas</a>.</p>
     <p class="action"><a data-bq-contacto-guia href="/automatizacion-n8n#hablemos">Cuéntanos qué flujos tienes o quieres montar</a>.</p>
+  </section>
+
+  <section><h2>Preguntas frecuentes</h2>
+    <h3>¿Es n8n compatible con el RGPD?</h3>
+    <p>Sí, tanto en la nube como en servidor propio, pero instalarlo no basta por sí solo. Hay que elegir un alojamiento en la UE con contrato de encargo, controlar qué datos envía cada flujo a servicios externos, limitar lo que guarda de cada ejecución y documentarlo en el registro de actividades.</p>
+    <h3>¿Cuánto tiempo guarda n8n los datos de las ejecuciones?</h3>
+    <p>Por defecto borra las ejecuciones con más de 336 horas (14 días) o cuando hay más de 10.000, y guarda las correctas y las fallidas. Se ajusta con variables como EXECUTIONS_DATA_MAX_AGE. Fuente: <a href="https://docs.n8n.io/hosting/configuration/environment-variables/executions/">documentación de n8n</a>.</p>
+    <h3>¿Necesito un contrato con mi proveedor de servidor?</h3>
+    <p>Sí: un contrato de encargo del tratamiento según el artículo 28 del <a href="https://eur-lex.europa.eu/legal-content/ES/TXT/?uri=CELEX:32016R0679">RGPD</a>, porque el proveedor guarda datos personales por cuenta de tu empresa.</p>
+    <h3>¿Hay que incluir las automatizaciones en el registro de actividades de tratamiento?</h3>
+    <p>Sí, si tratan datos personales de forma habitual. El artículo 30 del RGPD solo exime a empresas de menos de 250 trabajadores cuando el tratamiento es ocasional, y una automatización diaria no lo es.</p>
+    <h3>¿Es mejor n8n en la nube o en servidor propio para cumplir el RGPD?</h3>
+    <p>Las dos pueden cumplir. El servidor propio da más control sobre dónde están los datos y cuánto se conservan; la nube evita el riesgo de tener una instalación sin actualizar si nadie en tu empresa va a mantenerla.</p>
   </section>
 
   <section class="relacionados"><h2>Sigue leyendo</h2>
