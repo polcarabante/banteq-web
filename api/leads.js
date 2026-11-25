@@ -89,7 +89,11 @@ const isFormulaType = (type) => normalizeText(type) === FORMULA;
 // WhatsApp o correo. Va a la lista de contacto de Brevo, marcada con TIPO_SOLICITUD = «Idea de
 // mejora» (los diagnósticos avanzados van aparte, por /api/diagnosticos).
 const IDEA = "Idea de mejora";
-const isIdeaType = (type) => normalizeText(type) === IDEA;
+// Desde 2026-11-25 la ventana envía «Diagnóstico inicial gratuito» (negocios de menos de 1 M€): se
+// trata igual que una idea (misma lista, mismos campos), con sus propios asuntos.
+const GRATIS = "Diagnóstico inicial gratuito";
+const isGratisType = (type) => normalizeText(type) === GRATIS;
+const isIdeaType = (type) => normalizeText(type) === IDEA || isGratisType(type);
 
 // «120», «120,50», «1.200» o un número → número con dos decimales como mucho (o NaN).
 const parseEuros = (value) => {
@@ -306,7 +310,7 @@ const sendConfirmationEmail = async ({ name, email, formType, company }) => {
     body: JSON.stringify({
       sender: { name: senderName, email: senderEmail },
       to: [{ email, name: name || company || email }],
-      subject: formula ? "Hemos recibido tu solicitud de la Fórmula Banteq" : isIdeaType(formType) ? "Hemos recibido tu idea" : "Hemos recibido tu solicitud",
+      subject: formula ? "Hemos recibido tu solicitud de la Fórmula Banteq" : isGratisType(formType) ? "Hemos recibido tu solicitud de diagnóstico gratuito" : isIdeaType(formType) ? "Hemos recibido tu idea" : "Hemos recibido tu solicitud",
       htmlContent,
     }),
   });
@@ -369,13 +373,15 @@ const sendAdminNotification = async (lead) => {
   }
 
   const idea = isIdeaType(lead.formType);
+  const gratis = isGratisType(lead.formType);
   const htmlContent = `
-    <h2>${idea ? "Nueva idea de mejora (botón «Quiero mejorar»)" : "Nueva solicitud desde la web de Banteq"}</h2>
+    <h2>${gratis ? "Diagnóstico inicial gratuito (botón «Quiero mejorar», menos de 1 M€)" : idea ? "Nueva idea de mejora (botón «Quiero mejorar»)" : "Nueva solicitud desde la web de Banteq"}</h2>
+    ${gratis ? "<p>En la ventana se le ofrece reservar una videollamada contigo o recibir el diagnóstico por escrito: si elige, te llega otro aviso.</p>" : ""}
     <p><strong>Prefiere que le contactemos por:</strong> ${text(lead.contactPreference)}</p>
     ${contactLine}
     <p><strong>Nombre:</strong> ${text(lead.name)}</p>
     <p><strong>Empresa:</strong> ${text(lead.company)}</p>
-    <p><strong>${idea ? "Su idea" : "Qué quiere mejorar"}:</strong><br>${text(lead.message).replace(/\n/g, "<br>")}</p>
+    <p><strong>${gratis ? "Qué quiere mejorar o a qué se dedica" : idea ? "Su idea" : "Qué quiere mejorar"}:</strong><br>${text(lead.message).replace(/\n/g, "<br>")}</p>
     ${pageLine}
     ${sourceLine}
     <p><strong>Fecha y hora:</strong> ${text(lead.submittedAtLocal)}</p>
@@ -387,7 +393,7 @@ const sendAdminNotification = async (lead) => {
       sender: { name: senderName, email: senderEmail },
       to: [{ email: adminEmail, name: "Banteq" }],
       replyTo: lead.email ? { email: lead.email, name: lead.name || "Contacto web" } : undefined,
-      subject: `${idea ? "Idea de mejora" : "Nueva solicitud web"} (${isWhatsappLead ? "WhatsApp" : "correo"}): ${lead.name}${lead.company ? ` · ${lead.company}` : ""}`,
+      subject: `${gratis ? "Diagnóstico gratuito" : idea ? "Idea de mejora" : "Nueva solicitud web"} (${isWhatsappLead ? "WhatsApp" : "correo"}): ${lead.name}${lead.company ? ` · ${lead.company}` : ""}`,
       htmlContent,
     }),
   });

@@ -90,6 +90,7 @@ def demo_facturas():
         "pasos": [2600, 2600, 1400, 1100, 1000, 1000, 1300, 2600, 2800, 5200],
         "escenas": escena(1, 3, correo) + escena(3, 9, extraccion) + escena(9, None, erp + aviso, "bq-esc-arriba"),
         "etiquetas": ["Sin teclear datos", "Validación antes de registrar", "Conectado a tu ERP"],
+        "prueba": ("Pruébalo", "/automatizaciones/facturas"),
     }
 
 
@@ -118,6 +119,7 @@ def demo_asistente():
         "pasos": [2900, 1200, 2200, 1600, 1300, 950, 950, 950, 1200, 2400, 5200],
         "escenas": escena(1, None, ventana("Asistente interno · Banteq", cuerpo, "bq-ui-llena")),
         "etiquetas": ["Responde con tus documentos", "Cita la fuente", "Uso interno o para clientes"],
+        "prueba": ("Pruébalo", "/automatizaciones/asistente"),
     }
 
 
@@ -145,6 +147,7 @@ def demo_crm():
         "pasos": [1500, 1300, 1700, 1300, 2600, 2700, 2600, 5200],
         "escenas": escena(1, 5, formulario) + escena(5, None, f'<div class="bq-pila">{crm}</div>' + aviso, "bq-esc-arriba"),
         "etiquetas": ["Seguimiento automático", "CRM siempre al día", "Respuesta al momento"],
+        "prueba": ("Pruébalo", "/automatizaciones/crm"),
     }
 
 
@@ -182,6 +185,7 @@ def demo_informes():
         "pasos": [900, 900, 1300, 2400, 1700, 2300, 2300, 2500, 5200],
         "escenas": escena(1, 5, fuentes, "bq-esc-fila") + escena(5, 7, panel) + escena(7, None, envio + aviso, "bq-esc-arriba"),
         "etiquetas": ["Datos de varias fuentes", "Informe sin intervención", "Decisiones con datos al día"],
+        "prueba": ("Pruébalo", "/automatizaciones/informes"),
     }
 
 
@@ -253,6 +257,7 @@ def demo_reservas():
         "pasos": [2400, 1300, 2500, 1900, 2800, 5400],
         "escenas": escena(1, 3, widget) + escena(3, 5, sala) + escena(5, None, f'<div class="bq-dos bq-dos-reserva">{whatsapp}{calendario}</div>'),
         "etiquetas": ["Reservas 24/7", "Confirmación automática", "Calendario al día"],
+        "prueba": ("Pruébalo", "/automatizaciones/reservas"),
     }
 
 
@@ -268,13 +273,24 @@ def tarjeta(d):
     icono = f'<svg viewBox="0 0 24 24" aria-hidden="true">{ICONOS[d["icono"]]}</svg>'
     pasos = ",".join(str(p) for p in d["pasos"])
     return (
-        f'<article class="bq-dm" data-demo="{d["id"]}">'
+        f'<div class="bq-dm-celda"><article class="bq-dm" data-demo="{d["id"]}">'
         f'<div class="bq-dm-cab"><span class="bq-dm-icono">{icono}</span><div><h3>{esc(d["titulo"])}</h3>'
         f'<p><b>Ejemplo:</b> {esc(d["ejemplo"])}</p></div></div>'
         f'<div class="bq-dm-video" data-pasos="{pasos}" role="group" aria-label="Demostración: {esc(d["titulo"])}">'
         f'<ol class="bq-dm-fases">{fases}</ol><div class="bq-dm-escena">{d["escenas"]}</div></div>'
-        f'<ul class="bq-dm-etiquetas">{etiquetas}</ul></article>'
+        f'<ul class="bq-dm-etiquetas">{etiquetas}</ul></article>{boton_prueba(d)}</div>'
     )
+
+
+def boton_prueba(d):
+    """Botón «Pruébalo» bajo la tarjeta, fuera de ella, como «¿Cuánto me ahorro?» (Pol lo pidió así
+    el 2026-11-25, para que se vea más): abre la demostración interactiva de esa tarjeta
+    (tools/demos_interactivas.py). Mismo estilo y el mismo destello del contorno."""
+    if not d.get("prueba"):
+        return ""
+    texto, destino = d["prueba"]
+    return (f'<p class="bq-dm-fuera"><a class="bq-formula-boton bq-formula-boton-solo bq-boton-destello" href="{destino}">'
+            f'<span class="bq-formula-texto">{esc(texto)}</span><span class="bq-formula-flecha" aria-hidden="true"></span></a></p>')
 
 
 def boton_ahorro(datos):
@@ -285,7 +301,7 @@ def boton_ahorro(datos):
     if not d:
         return ""
     texto, destino = d["boton"]
-    return (f'<p class="bq-demos-boton"><a class="bq-formula-boton bq-formula-boton-solo" href="{destino}">'
+    return (f'<p class="bq-demos-boton"><a class="bq-formula-boton bq-formula-boton-solo bq-boton-destello" href="{destino}">'
             f'<span class="bq-formula-texto">{esc(texto)}</span><span class="bq-formula-flecha" aria-hidden="true"></span></a></p>')
 
 

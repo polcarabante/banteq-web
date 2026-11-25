@@ -29,6 +29,7 @@ import contenido as C  # noqa: E402
 import contenido_ca as CA  # noqa: E402
 import contenido_en as EN  # noqa: E402
 import idiomas as ID  # noqa: E402
+import demos_interactivas as DI  # noqa: E402
 import jsx  # noqa: E402
 import seo_tecnico as ST  # noqa: E402
 
@@ -556,7 +557,7 @@ def copy_banteq_static():
     js = dst / "banteq.js"
     codigo = (dst / "procedencia.js").read_text(encoding="utf-8") + "\n" + js.read_text(encoding="utf-8")
     assert codigo.count("/*RUTAS_IDIOMAS*/ []") == 1
-    rutas = [["/" + g[l] if g[l] else "/" for l in ID.IDIOMAS] for g in ID.tabla()]
+    rutas = [["/" + g[l] if g[l] else "/" for l in ID.IDIOMAS] for g in ID.tabla() + DI.grupos()]
     js.write_text(codigo.replace("/*RUTAS_IDIOMAS*/ []", json.dumps(rutas, ensure_ascii=False)), encoding="utf-8")
 
 
@@ -1753,7 +1754,8 @@ def build_i18n_layers():
         faltan = [es for es in textos if es not in fuentes and es not in fuentes_js and es not in demos_textos()
                   and not es_texto_compuesto(es, fuentes)]
         assert not faltan, f"contenido_{idioma}.TEXTOS: textos que ya no existen en castellano: {faltan[:12]} (+{max(0, len(faltan) - 12)})"
-        datos = {"idioma": idioma, "textos": textos, "reglas": [list(r) for r in ID.reglas(idioma)], "enlaces": ID.pares_ruta(idioma)}
+        enlaces = {**ID.pares_ruta(idioma), **DI.pares_ruta(idioma)}  # + demostraciones interactivas
+        datos = {"idioma": idioma, "textos": textos, "reglas": [list(r) for r in ID.reglas(idioma)], "enlaces": enlaces}
         assert plantilla.count("/*DATOS*/ {}") == 1
         (OUT / "banteq" / f"i18n-{idioma}.js").write_text(
             plantilla.replace("/*DATOS*/ {}", json.dumps(datos, ensure_ascii=False, separators=(",", ":"))), encoding="utf-8")
@@ -2690,6 +2692,13 @@ def apply_seo():
     paginas = {u: S[rel] for u, rel in indexables}
     indexables.append((f"{C.SITIO}/{RUTA_CALCULADORA}", f"{RUTA_CALCULADORA}/index.html"))
     paginas[indexables[-1][0]] = pagina_fuente()
+    # Demostraciones interactivas (demos_interactivas.py): también se copian al final del build.
+    from demos_interactivas import RUTAS as RUTAS_DEMOS, paginas_fuente as demos_fuente
+    fuentes_demos = demos_fuente()
+    for rutas in RUTAS_DEMOS.values():
+        for ruta in rutas.values():
+            indexables.append((f"{C.SITIO}/{ruta}", f"{ruta}/index.html"))
+            paginas[indexables[-1][0]] = fuentes_demos[indexables[-1][0]]
     fechas = page_dates(paginas)
     (OUT / "sitemap.xml").write_text(sitemap_xml(indexables, fechas), encoding="utf-8")
     (OUT / "llms-full.txt").write_text(ST.llms_full(
@@ -2703,7 +2712,7 @@ def sitemap_xml(indexables, fechas):
     """sitemap.xml con lastmod y, en las páginas con versión en varios idiomas, los xhtml:link
     hreflang (los mismos que lleva cada página en su <head>, incluido x-default)."""
     def alternas(rel):
-        grupo = ID.grupo_de(rel[: -len("index.html")].strip("/"))
+        grupo = ID.grupo_de(rel[: -len("index.html")].strip("/")) or DI.grupo_de(rel[: -len("index.html")].strip("/"))
         if not grupo:
             return ""
         enlaces = [(l, f"{C.SITIO}/{grupo[l]}") for l in ID.IDIOMAS] + [("x-default", f"{C.SITIO}/{grupo['es']}")]
@@ -2764,6 +2773,11 @@ def guias_indice():
     return plantilla.replace("{{ld}}", ld).replace("{{lista}}", "\n".join(items))
 
 
+def demos_llms(idioma="es"):
+    from demos_interactivas import llms_items, llms_items_idioma
+    return llms_items() if idioma == "es" else llms_items_idioma(idioma)
+
+
 def write_llms_txt():
     """/llms.txt (propuesta de llmstxt.org): resumen en Markdown de la web para asistentes de IA, con
     los enlaces a cada servicio y proyecto. Se genera desde el mismo contenido que las páginas, así
@@ -2783,7 +2797,8 @@ def write_llms_txt():
         "## Servicios", "",
         *(item(sv["nombre"], f"{C.SITIO}/{sv['slug']}", sv["descripcion"]) for sv in C.SERVICIOS),
         item("Calculadora de ahorro: seguimiento de retrasos", f"{C.SITIO}/automatizaciones/seguimiento/ahorro",
-             "Calcula las horas y los euros que libera automatizar los avisos de retraso a clientes y el seguimiento de quién no responde."), "",
+             "Calcula las horas y los euros que libera automatizar los avisos de retraso a clientes y el seguimiento de quién no responde."),
+        *(item(n, u, d) for n, u, d in demos_llms()), "",
         "## Guías", "",
         item("Índice de guías", f"{C.SITIO}/guias", "Todos los artículos prácticos de Banteq para pymes."),
         *(item(g["titulo"], f"{C.SITIO}/guias/{g['slug']}", g["descripcion"]) for g in guias_datos()), "",
@@ -2796,6 +2811,7 @@ def write_llms_txt():
         lineas += [f"## {ID.NOMBRE[idioma]}", "",
                    f"- [{ID.NOMBRE[idioma]}]({C.SITIO}/{rutas[''][idioma]})",
                    *(item(sv["nombre"], f"{C.SITIO}/{sv['slug']}", sv["descripcion"]) for sv in ID.servicios(idioma)),
+                   *(item(n, u, d) for n, u, d in demos_llms(idioma)),
                    f"- [{tr(idioma, 'Proyectos')}]({C.SITIO}/{rutas['proyectos'][idioma]})",
                    *(f"- [{pr['cliente']}]({C.SITIO}/{rutas['proyectos/' + pr['slug']][idioma]})" for pr in C.PROYECTOS),
                    *(f"- [{tr(idioma, nombre)}]({C.SITIO}/{rutas[ruta][idioma]})" for ruta, nombre in (("aviso-legal", "Aviso legal"), ("privacidad", "Privacidad"))), ""]
@@ -3047,6 +3063,8 @@ def main():
     integrar_shorts_subida()
     from calculadora_ahorro import integrar as integrar_calculadora_ahorro
     integrar_calculadora_ahorro()
+    from demos_interactivas import integrar as integrar_demos_interactivas
+    integrar_demos_interactivas()
     if not ST.informar(*ST.comprobar(ROOT, OUT)[:2]):
         sys.exit(1)
     if MISSES:

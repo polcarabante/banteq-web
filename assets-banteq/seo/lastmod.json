@@ -1,7 +1,7 @@
 {
  "https://banteq.com/": {
-  "firma": "b0f6b83e80bf",
-  "fecha": "2026-11-24"
+  "firma": "313f29de232a",
+  "fecha": "2026-11-25"
  },
  "https://banteq.com/automatizacion-n8n": {
   "firma": "1e9b2ddac5a8",
@@ -10,6 +10,26 @@
  "https://banteq.com/automatizacion-procesos": {
   "firma": "7e51fc6bf979",
   "fecha": "2026-11-20"
+ },
+ "https://banteq.com/automatizaciones/asistente": {
+  "firma": "965ad3931449",
+  "fecha": "2026-11-25"
+ },
+ "https://banteq.com/automatizaciones/crm": {
+  "firma": "424454cd996e",
+  "fecha": "2026-11-25"
+ },
+ "https://banteq.com/automatizaciones/facturas": {
+  "firma": "a4edf8067955",
+  "fecha": "2026-11-25"
+ },
+ "https://banteq.com/automatizaciones/informes": {
+  "firma": "4ff054fb336c",
+  "fecha": "2026-11-25"
+ },
+ "https://banteq.com/automatizaciones/reservas": {
+  "firma": "8fa70e7cfffe",
+  "fecha": "2026-11-25"
  },
  "https://banteq.com/automatizaciones/seguimiento/ahorro": {
   "firma": "3ad670b3002a",
@@ -30,6 +50,26 @@
  "https://banteq.com/ca/automatitzacio-processos": {
   "firma": "e3356475f7f6",
   "fecha": "2026-11-24"
+ },
+ "https://banteq.com/ca/automatitzacions/assistent": {
+  "firma": "b2cfb6627fcf",
+  "fecha": "2026-11-25"
+ },
+ "https://banteq.com/ca/automatitzacions/crm": {
+  "firma": "5cda6e00187d",
+  "fecha": "2026-11-25"
+ },
+ "https://banteq.com/ca/automatitzacions/factures": {
+  "firma": "6c1d906096e3",
+  "fecha": "2026-11-25"
+ },
+ "https://banteq.com/ca/automatitzacions/informes": {
+  "firma": "ca8f10ec4678",
+  "fecha": "2026-11-25"
+ },
+ "https://banteq.com/ca/automatitzacions/reserves": {
+  "firma": "953a824e829b",
+  "fecha": "2026-11-25"
  },
  "https://banteq.com/ca/avis-legal": {
   "firma": "bb94159c49dc",
@@ -74,6 +114,26 @@
  "https://banteq.com/en/artificial-intelligence": {
   "firma": "f571b5870adf",
   "fecha": "2026-11-24"
+ },
+ "https://banteq.com/en/automations/assistant": {
+  "firma": "4767b794f036",
+  "fecha": "2026-11-25"
+ },
+ "https://banteq.com/en/automations/bookings": {
+  "firma": "d9af72558934",
+  "fecha": "2026-11-25"
+ },
+ "https://banteq.com/en/automations/crm": {
+  "firma": "fa4334b55677",
+  "fecha": "2026-11-25"
+ },
+ "https://banteq.com/en/automations/invoices": {
+  "firma": "ba3c80df87a2",
+  "fecha": "2026-11-25"
+ },
+ "https://banteq.com/en/automations/reports": {
+  "firma": "cbade659570c",
+  "fecha": "2026-11-25"
  },
  "https://banteq.com/en/legal-notice": {
   "firma": "1b2a479b9258",

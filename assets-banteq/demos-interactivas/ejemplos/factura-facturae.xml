@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Documento de ejemplo para la demostración de Banteq. Empresa y datos ficticios; sin firma electrónica. -->
+<fe:Facturae xmlns:fe="http://www.facturae.gob.es/formato/Versiones/Facturaev3_2_2.xml" xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+  <FileHeader>
+    <SchemaVersion>3.2.2</SchemaVersion>
+    <Modality>I</Modality>
+    <InvoiceIssuerType>EM</InvoiceIssuerType>
+    <Batch><BatchIdentifier>ESB67329151RT-2026-0388</BatchIdentifier><InvoicesCount>1</InvoicesCount>
+      <TotalInvoicesAmount><TotalAmount>435.60</TotalAmount></TotalInvoicesAmount>
+      <TotalOutstandingAmount><TotalAmount>435.60</TotalAmount></TotalOutstandingAmount>
+      <TotalExecutableAmount><TotalAmount>435.60</TotalAmount></TotalExecutableAmount>
+      <InvoiceCurrencyCode>EUR</InvoiceCurrencyCode></Batch>
+  </FileHeader>
+  <Parties>
+    <SellerParty>
+      <TaxIdentification><PersonTypeCode>J</PersonTypeCode><ResidenceTypeCode>R</ResidenceTypeCode><TaxIdentificationNumber>ESB67329151</TaxIdentificationNumber></TaxIdentification>
+      <LegalEntity>
+        <CorporateName>Recambios Terrassa S.L.</CorporateName>
+        <AddressInSpain><Address>Carrer de la Mecànica, 15</Address><PostCode>08223</PostCode><Town>Terrassa</Town><Province>Barcelona</Province><CountryCode>ESP</CountryCode></AddressInSpain>
+      </LegalEntity>
+    </SellerParty>
+    <BuyerParty>
+      <TaxIdentification><PersonTypeCode>J</PersonTypeCode><ResidenceTypeCode>R</ResidenceTypeCode><TaxIdentificationNumber>ESB08765430</TaxIdentificationNumber></TaxIdentification>
+      <LegalEntity>
+        <CorporateName>Talleres Riera S.L.</CorporateName>
+        <AddressInSpain><Address>C/ del Vallès, 118</Address><PostCode>08130</PostCode><Town>Santa Perpètua de Mogoda</Town><Province>Barcelona</Province><CountryCode>ESP</CountryCode></AddressInSpain>
+      </LegalEntity>
+    </BuyerParty>
+  </Parties>
+  <Invoices>
+    <Invoice>
+      <InvoiceHeader><InvoiceNumber>0388</InvoiceNumber><InvoiceSeriesCode>RT-2026</InvoiceSeriesCode><InvoiceDocumentType>FC</InvoiceDocumentType><InvoiceClass>OO</InvoiceClass></InvoiceHeader>
+      <InvoiceIssueData><IssueDate>2026-11-19</IssueDate><InvoiceCurrencyCode>EUR</InvoiceCurrencyCode><TaxCurrencyCode>EUR</TaxCurrencyCode><LanguageName>es</LanguageName></InvoiceIssueData>
+      <TaxesOutputs><Tax><TaxTypeCode>01</TaxTypeCode><TaxRate>21.00</TaxRate><TaxableBase><TotalAmount>360.00</TotalAmount></TaxableBase><TaxAmount><TotalAmount>75.60</TotalAmount></TaxAmount></Tax></TaxesOutputs>
+      <InvoiceTotals>
+        <TotalGrossAmount>360.00</TotalGrossAmount>
+        <TotalGrossAmountBeforeTaxes>360.00</TotalGrossAmountBeforeTaxes>
+        <TotalTaxOutputs>75.60</TotalTaxOutputs>
+        <TotalTaxesWithheld>0.00</TotalTaxesWithheld>
+        <InvoiceTotal>435.60</InvoiceTotal>
+        <TotalOutstandingAmount>435.60</TotalOutstandingAmount>
+        <TotalExecutableAmount>435.60</TotalExecutableAmount>
+      </InvoiceTotals>
+      <Items>
+      <InvoiceLine>
+        <ReceiverTransactionReference>PC-126</ReceiverTransactionReference>
+        <ItemDescription>Filtro de aceite hidráulico HF-35</ItemDescription>
+        <Quantity>6</Quantity>
+        <UnitOfMeasure>01</UnitOfMeasure>
+        <UnitPriceWithoutTax>24.500000</UnitPriceWithoutTax>
+        <TotalCost>147.00</TotalCost>
+        <GrossAmount>147.00</GrossAmount>
+        <TaxesOutputs><Tax><TaxTypeCode>01</TaxTypeCode><TaxRate>21.00</TaxRate><TaxableBase><TotalAmount>147.00</TotalAmount></TaxableBase><TaxAmount><TotalAmount>30.87</TotalAmount></TaxAmount></Tax></TaxesOutputs>
+      </InvoiceLine>
+      <InvoiceLine>
+        <ReceiverTransactionReference>PC-126</ReceiverTransactionReference>
+        <ItemDescription>Juego de juntas tóricas NBR (caja 225 u.)</ItemDescription>
+        <Quantity>3</Quantity>
+        <UnitOfMeasure>01</UnitOfMeasure>
+        <UnitPriceWithoutTax>71.000000</UnitPriceWithoutTax>
+        <TotalCost>213.00</TotalCost>
+        <GrossAmount>213.00</GrossAmount>
+        <TaxesOutputs><Tax><TaxTypeCode>01</TaxTypeCode><TaxRate>21.00</TaxRate><TaxableBase><TotalAmount>213.00</TotalAmount></TaxableBase><TaxAmount><TotalAmount>44.73</TotalAmount></TaxAmount></Tax></TaxesOutputs>
+      </InvoiceLine>
+      </Items>
+      <PaymentDetails><Installment><InstallmentDueDate>2026-12-19</InstallmentDueDate><InstallmentAmount>435.60</InstallmentAmount><PaymentMeans>04</PaymentMeans></Installment></PaymentDetails>
+    </Invoice>
+  </Invoices>
+</fe:Facturae>

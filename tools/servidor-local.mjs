@@ -35,6 +35,10 @@ const TYPES = {
   ".mp4": "video/mp4",
   ".webmanifest": "application/manifest+json",
   ".txt": "text/plain; charset=utf-8",
+  ".pdf": "application/pdf",
+  ".xml": "application/xml; charset=utf-8",
+  ".wasm": "application/wasm",
+  ".traineddata": "application/octet-stream",
 };
 
 // Las páginas piden los módulos de Framer en una carpeta con sufijo de versión
@@ -88,6 +92,17 @@ const handler = async (req, res) => {
     if (!process.env.BREVO_API_KEY) process.env.AHORRO_SIMULAR = "1";
     const { default: ahorroHandler } = await import("../api/ahorro.js");
     return ahorroHandler(req, res);
+  }
+
+  // Reservas de videollamada: el endpoint real. Sin BREVO_API_KEY no llama a Brevo: guarda las
+  // reservas en un JSON y los correos como HTML en RESERVAS_SIMULAR_DIR (por defecto /tmp/banteq-reservas).
+  if (url.pathname === "/api/reservas") {
+    let raw = "";
+    for await (const chunk of req) { raw += chunk; if (raw.length > 20000) { res.writeHead(413); res.end(); return; } }
+    req.body = raw;
+    if (!process.env.BREVO_API_KEY) process.env.RESERVAS_SIMULAR = "1";
+    const { default: reservasHandler } = await import("../api/reservas.js");
+    return reservasHandler(req, res);
   }
 
   if (url.pathname === "/api/diagnosticos") {

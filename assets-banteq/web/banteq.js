@@ -790,9 +790,40 @@
     if (caja && !caja.id) caja.id = "hablemos";
     return caja;
   }
+  // Mensaje ya escrito por «Calcular mi caso completo» de las demostraciones interactivas
+  // (assets-banteq/demos-interactivas/comun/ahorro.js). Se lee una sola vez y se vuelve a poner
+  // durante unos segundos: Framer monta el formulario de nuevo al hidratar y lo dejaría vacío. Si
+  // el visitante ya ha escrito algo, no se toca.
+  let mensajePendiente;
+  const rellenarMensaje = () => {
+    if (mensajePendiente === undefined) {
+      try {
+        mensajePendiente = sessionStorage.getItem("bq-hablemos-mensaje");
+        sessionStorage.removeItem("bq-hablemos-mensaje");
+      } catch (e) {
+        mensajePendiente = null;
+      }
+    }
+    const texto = mensajePendiente;
+    if (!texto) return;
+    mensajePendiente = null;
+    let vueltas = 0;
+    const poner = () => {
+      const caja = anclaPie();
+      const area = caja && caja.querySelector('textarea[name="Message"], textarea');
+      if (area && area.value.trim() && area.value !== texto) return; // ya ha escrito algo
+      if (area && area.value !== texto) {
+        Object.getOwnPropertyDescriptor(HTMLTextAreaElement.prototype, "value").set.call(area, texto);
+        area.dispatchEvent(new Event("input", { bubbles: true }));
+      }
+      if (++vueltas < 32) setTimeout(poner, 250);
+    };
+    poner();
+  };
   const irAlFormulario = (suave) => {
     const caja = anclaPie();
     if (!caja) return false;
+    rellenarMensaje();
     caja.scrollIntoView({ behavior: suave && !reduceMotion.matches ? "smooth" : "auto", block: "start" });
     if (conRaton.matches) {
       const primero = caja.querySelector("input:not([type=hidden]):not([type=radio]):not(:disabled), textarea");
@@ -1144,11 +1175,15 @@
   };
 
   // ---------------------------------------------------------------------------------------------
-  // «Quiero mejorar»: ventana con dos opciones. Arriba, la rápida: contar la idea con texto libre y
-  // dejar nombre, empresa y WhatsApp o correo (se envía a /api/leads como «Idea de mejora», aparte
-  // de los diagnósticos). Debajo, destacada, la de más valor: el diagnóstico avanzado (de pago), que
-  // lleva al cuestionario de /diagnostico sin cambiarlo. Se abre desde los botones «Quiero mejorar»
-  // (home) o con la dirección …#quiero-mejorar. Mismo armazón y estilos que la de la Fórmula.
+  // «Quiero mejorar» (rehecha a petición de Pol el 2026-11-25): ventana con dos opciones según el
+  // tamaño del negocio. Arriba, negocios que facturan menos de 1 M€: diagnóstico inicial totalmente
+  // gratuito; cuentan qué quieren mejorar (o, si no lo tienen claro, a qué se dedica su negocio) y
+  // dejan nombre, empresa y WhatsApp o correo (/api/leads, «Diagnóstico inicial gratuito»). Al
+  // enviarlo, segundo paso en la misma ventana: reservar una videollamada con Pol en los tres
+  // próximos días hábiles (calendario de las demostraciones, /api/reservas) o «Prefiero no hacer
+  // videollamada» (Pol les envía el diagnóstico por escrito con mejoras y precio). Debajo, empresas
+  // de más de 1 M€: diagnóstico avanzado (de pago), que lleva al cuestionario de /diagnostico. Se
+  // abre desde los botones «Quiero mejorar» (home) o con …#quiero-mejorar. Armazón de la Fórmula.
   // ---------------------------------------------------------------------------------------------
   const ICONO_PUNTO = '<svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="m3.5 8.5 3 3 6-7"/></svg>';
   const MEJORAR_HTML =
@@ -1156,15 +1191,15 @@
     `<button type="button" class="bq-fx-cerrar" aria-label="Cerrar">${ICONO_CERRAR}</button>` +
     '<div class="bq-fx-contenido">' +
     '<section class="bq-qm-idea" aria-labelledby="bq-qm-titulo">' +
-    '<p class="bq-qm-antetitulo">Si sabes qué necesitas, cuéntanoslo.</p>' +
-    '<h2 class="bq-qm-titulo" id="bq-qm-titulo">¿Ya tienes claro qué quieres mejorar?</h2>' +
-    '<p class="bq-qm-intro">Cuéntanos qué tienes en mente y estudiaremos cómo podemos ayudarte a hacerlo realidad.</p>' +
-    // Móvil: el diagnóstico queda lejos, abajo; este enlace baja hasta él.
-    '<button type="button" class="bq-qm-saltar">¿No sabes por dónde empezar? <span>Ver el diagnóstico avanzado</span></button>' +
+    '<div class="bq-qm-idea-cabeza"><p class="bq-fx-sello">Diagnóstico gratuito</p><p class="bq-qm-pago">Facturación de menos de 1 millón de euros</p></div>' +
+    '<h2 class="bq-qm-titulo" id="bq-qm-titulo">¿Tu negocio factura menos de 1 millón de euros al año?</h2>' +
+    '<p class="bq-qm-intro">Te hacemos el diagnóstico totalmente gratis. Cuéntanos qué quieres mejorar, automatizar o desarrollar. Si no lo tienes claro, simplemente explícanos de qué se trata tu negocio y haremos el diagnóstico.</p>' +
+    // Móvil: el diagnóstico avanzado queda lejos, abajo; este enlace baja hasta él.
+    '<button type="button" class="bq-qm-saltar">¿Facturáis más de 1 millón de euros? <span>Ver el diagnóstico avanzado</span></button>' +
     '<div class="bq-qm-formulario">' +
     '<form class="bq-fx-form bq-qm-form" data-bq-propio="idea" novalidate>' +
-    '<div class="bq-fx-campo"><label class="bq-qm-oculto" for="bq-qm-mensaje">Qué quieres mejorar</label>' +
-    '<textarea id="bq-qm-mensaje" name="Message" rows="4" maxlength="5000" placeholder="Explícanos qué quieres mejorar, automatizar o desarrollar en tu empresa..."></textarea></div>' +
+    '<div class="bq-fx-campo"><label class="bq-qm-oculto" for="bq-qm-mensaje">Qué quieres mejorar o a qué se dedica tu negocio</label>' +
+    '<textarea id="bq-qm-mensaje" name="Message" rows="4" maxlength="5000" placeholder="Qué quieres mejorar o automatizar… o, si no lo tienes claro, a qué se dedica tu negocio."></textarea></div>' +
     '<div class="bq-qm-fila">' +
     '<div class="bq-fx-campo"><label for="bq-qm-nombre">Nombre</label>' +
     '<input id="bq-qm-nombre" name="Name" type="text" autocomplete="name" maxlength="120" placeholder="Tu nombre"></div>' +
@@ -1182,21 +1217,23 @@
     `<span class="bq-prefijo"><span class="bq-prefijo-valor">+34</span>${FLECHA}<select name="PhonePrefix" aria-label="Prefijo del país"></select></span></label></div>` +
     '<div class="bq-fx-campo" data-bq-campo="email"><input name="Email" type="email" autocomplete="email" maxlength="254" placeholder="Tu correo electrónico" aria-label="Correo electrónico"></div>' +
     '<input class="bq-fx-trampa" name="website" type="text" tabindex="-1" autocomplete="off" aria-hidden="true">' +
-    '<button type="submit" class="bq-fx-enviar">Enviar mi idea</button>' +
+    '<button type="submit" class="bq-fx-enviar">Pedir mi diagnóstico gratuito</button>' +
     '<p class="bq-fx-estado" aria-live="polite"></p>' +
     '<p class="bq-fx-legal">Usaremos estos datos solo para responderte. <a href="/privacidad">Política de privacidad</a></p>' +
     "</form></div>" +
+    // Segundo paso (pasoCita): lo rellena el JavaScript en el idioma de la página.
     '<div class="bq-fx-hecho bq-qm-hecho" hidden tabindex="-1">' +
     `<span class="bq-fx-hecho-icono">${ICONO_OK}</span>` +
-    '<h3 class="bq-fx-subtitulo">Hemos recibido tu idea</h3>' +
+    '<h3 class="bq-fx-subtitulo"></h3>' +
     '<p class="bq-fx-hecho-texto"></p>' +
+    '<div class="bq-qm-cita"></div>' +
     "</div>" +
     "</section>" +
     '<div class="bq-qm-o" aria-hidden="true"><span>o bien</span></div>' +
     '<section class="bq-qm-diag" aria-labelledby="bq-qm-diag-titulo">' +
     '<div class="bq-qm-diag-cabeza"><p class="bq-fx-sello">Diagnóstico avanzado</p><p class="bq-qm-pago">Servicio de pago</p></div>' +
-    '<h3 class="bq-qm-diag-titulo" id="bq-qm-diag-titulo">¿No sabes por dónde empezar?</h3>' +
-    '<p class="bq-qm-diag-texto">Descubre las oportunidades que tu empresa todavía no está aprovechando. Con nuestro diagnóstico avanzado analizamos cómo trabajas, detectamos procesos que puedes automatizar y preparamos propuestas de mejora adaptadas a tu negocio.</p>' +
+    '<h3 class="bq-qm-diag-titulo" id="bq-qm-diag-titulo">¿Tu empresa factura más de 1 millón de euros?</h3>' +
+    '<p class="bq-qm-diag-texto">Las empresas con una estructura más grande y consolidada necesitan un análisis a fondo. Con el diagnóstico avanzado analizamos cómo trabajáis, detectamos los procesos que podéis automatizar y preparamos propuestas de mejora adaptadas a vuestra empresa.</p>' +
     '<ul class="bq-qm-puntos">' +
     `<li>${ICONO_PUNTO}<span><b>Avanzado y personalizado:</b> se adapta a tu empresa y a tu forma de trabajar.</span></li>` +
     `<li>${ICONO_PUNTO}<span><b>Analizamos tus procesos</b> y las herramientas que usáis.</span></li>` +
@@ -1204,10 +1241,151 @@
     `<li>${ICONO_PUNTO}<span><b>Preparamos un mapa conceptual</b> de cómo funciona tu negocio.</span></li>` +
     `<li>${ICONO_PUNTO}<span><b>Revisamos tus respuestas</b> y te contactamos para presentarte el diagnóstico y las oportunidades detectadas.</span></li>` +
     "</ul>" +
-    '<p class="bq-qm-lema">Si no sabes por dónde empezar, nosotros analizamos tu negocio y encontramos las oportunidades.</p>' +
+    '<p class="bq-qm-lema">Para estructuras grandes, analizamos tu organización a fondo y encontramos las oportunidades.</p>' +
     '<a class="bq-qm-diag-boton" href="/diagnostico"><span>Realizar diagnóstico avanzado</span><span class="bq-qm-flecha" aria-hidden="true"></span></a>' +
     '<p class="bq-qm-precio">El diagnóstico avanzado es un servicio de pago. Responder el cuestionario no supone contratarlo: cuando te presentemos el diagnóstico te explicaremos los honorarios y las condiciones de entrega.</p>' +
     "</section></div></div>";
+
+  // Textos del segundo paso y del calendario, en el idioma de la página (no pasan por la capa de
+  // traducción: llevan datos dentro). Las claves «cal.*» y «fecha.hora» son las del calendario de las
+  // demostraciones (assets-banteq/demos-interactivas/comun/calendario.js).
+  const QM_TEXTOS = {
+    es: {
+      titulo: "Hemos recibido tu solicitud", gracias: "Gracias, {nombre}. Ahora elige cómo quieres que te presentemos tu diagnóstico gratuito.",
+      confirmacion: "Te hemos enviado una confirmación a tu correo.",
+      citaTitulo: "¿Te lo explico en una videollamada?",
+      citaTexto: "Elige un hueco de 30 minutos en los próximos 3 días hábiles. Te explicaré qué haríamos en tu negocio y cuánto costaría, para que en una sola llamada sepas si te interesa.",
+      email: "Tu correo, para enviarte la confirmación y el enlace", reservar: "Reservar videollamada", sin: "Prefiero no hacer videollamada",
+      sinNota: "Sin videollamada, te enviaremos el diagnóstico por escrito con lo que puedes mejorar y a qué precio.",
+      elegido: "Has elegido: {fecha}", faltaHora: "Elige primero un día y una hora.", emailMal: "Revisa el correo: por ejemplo, nombre@empresa.com.",
+      reservando: "Reservando…", enviando: "Enviando…", error: "No hemos podido completarlo. Inténtalo de nuevo en unos minutos.",
+      okCita: "Videollamada reservada para el {fecha}. Te hemos enviado la confirmación a {email} y una hora antes te llegará un recordatorio.",
+      okSin: "De acuerdo. Te enviaremos el diagnóstico por escrito, con lo que puedes mejorar y a qué precio, {destino}.",
+      porWhatsapp: "por WhatsApp al {tel}", porCorreo: "a {email}",
+      "cal.dias": "Elige un día", "cal.horas": "Elige una hora", "cal.manana": "Mañana", "cal.tarde": "Tarde", "cal.libres": "{n} libres", "cal.ocupado": "ocupado",
+      "cal.cargando": "Cargando los huecos libres…", "cal.error": "No hemos podido cargar los huecos. Vuelve a intentarlo en unos minutos.", "cal.reintentar": "Reintentar",
+      "cal.inactivo": "La reserva en línea no está disponible ahora mismo: te escribiremos para proponerte hora.", "cal.zona": "Hora peninsular española · llamadas de 30 minutos",
+      "fecha.hora": "{fecha} a las {hora}",
+    },
+    ca: {
+      titulo: "Hem rebut la teva sol·licitud", gracias: "Gràcies, {nombre}. Ara tria com vols que et presentem el teu diagnòstic gratuït.",
+      confirmacion: "T'hem enviat una confirmació al teu correu.",
+      citaTitulo: "T'ho explico en una videotrucada?",
+      citaTexto: "Tria una hora de 30 minuts en els propers 3 dies feiners. T'explicaré què faríem al teu negoci i quant costaria, perquè en una sola trucada sàpigues si t'interessa.",
+      email: "El teu correu, per enviar-te la confirmació i l'enllaç", reservar: "Reservar videotrucada", sin: "Prefereixo no fer videotrucada",
+      sinNota: "Sense videotrucada, t'enviarem el diagnòstic per escrit amb el que pots millorar i a quin preu.",
+      elegido: "Has triat: {fecha}", faltaHora: "Tria primer un dia i una hora.", emailMal: "Revisa el correu: per exemple, nom@empresa.com.",
+      reservando: "Reservant…", enviando: "Enviant…", error: "No ho hem pogut completar. Torna-ho a provar d'aquí a uns minuts.",
+      okCita: "Videotrucada reservada per al {fecha}. T'hem enviat la confirmació a {email} i una hora abans et rebràs un recordatori.",
+      okSin: "D'acord. T'enviarem el diagnòstic per escrit, amb el que pots millorar i a quin preu, {destino}.",
+      porWhatsapp: "per WhatsApp al {tel}", porCorreo: "a {email}",
+      "cal.dias": "Tria un dia", "cal.horas": "Tria una hora", "cal.manana": "Matí", "cal.tarde": "Tarda", "cal.libres": "{n} lliures", "cal.ocupado": "ocupat",
+      "cal.cargando": "Carregant les hores lliures…", "cal.error": "No hem pogut carregar les hores. Torna-ho a provar d'aquí a uns minuts.", "cal.reintentar": "Tornar-ho a provar",
+      "cal.inactivo": "La reserva en línia no està disponible ara mateix: t'escriurem per proposar-te hora.", "cal.zona": "Hora peninsular espanyola · trucades de 30 minuts",
+      "fecha.hora": "{fecha} a les {hora}",
+    },
+    en: {
+      titulo: "We've received your request", gracias: "Thank you, {nombre}. Now choose how you'd like us to present your free diagnostic.",
+      confirmacion: "We've sent a confirmation to your email.",
+      citaTitulo: "Shall I walk you through it on a video call?",
+      citaTexto: "Pick a 30-minute slot in the next 3 working days. I'll explain what we would do in your business and what it would cost, so you'll know after a single call whether it's for you.",
+      email: "Your email, so we can send you the confirmation and the link", reservar: "Book video call", sin: "I'd rather not have a video call",
+      sinNota: "Without a video call, we'll send you the diagnostic in writing with what you can improve and at what price.",
+      elegido: "You've chosen: {fecha}", faltaHora: "Choose a day and time first.", emailMal: "Check the email: for example, name@company.com.",
+      reservando: "Booking…", enviando: "Sending…", error: "We couldn't complete it. Please try again in a few minutes.",
+      okCita: "Video call booked for {fecha}. We've sent the confirmation to {email} and you'll get a reminder one hour before.",
+      okSin: "All right. We'll send you the diagnostic in writing, with what you can improve and at what price, {destino}.",
+      porWhatsapp: "via WhatsApp to {tel}", porCorreo: "to {email}",
+      "cal.dias": "Choose a day", "cal.horas": "Choose a time", "cal.manana": "Morning", "cal.tarde": "Afternoon", "cal.libres": "{n} free", "cal.ocupado": "taken",
+      "cal.cargando": "Loading free slots…", "cal.error": "We couldn't load the free slots. Please try again in a few minutes.", "cal.reintentar": "Try again",
+      "cal.inactivo": "Online booking isn't available right now: we'll write to you to suggest a time.", "cal.zona": "Spanish mainland time · 30-minute calls",
+      "fecha.hora": "{fecha} at {hora}",
+    },
+  };
+  const qmIdioma = () => (["ca", "en"].includes(document.documentElement.lang) ? document.documentElement.lang : "es");
+  const qmT = (clave, vars = {}) => String(QM_TEXTOS[qmIdioma()][clave] ?? clave).replace(/\{(\w+)\}/g, (m, k) => (k in vars ? String(vars[k]) : m));
+  const qmEsc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
+  const QM_EMAIL = /^[^\s@]+@[^\s@.]+(\.[^\s@.]+)*\.[a-z]{2,}$/i;
+
+  // Segundo paso tras enviar: calendario para la videollamada o recibir el diagnóstico por escrito.
+  const pasoCita = (m, solicitud, confirmacion) => {
+    const h = m.hecho;
+    h.querySelector(".bq-fx-subtitulo").textContent = qmT("titulo");
+    h.querySelector(".bq-fx-hecho-texto").textContent = `${qmT("gracias", { nombre: solicitud.name })}${confirmacion ? ` ${qmT("confirmacion")}` : ""}`;
+    const cita = h.querySelector(".bq-qm-cita");
+    cita.hidden = false;
+    cita.innerHTML =
+      `<h4 class="bq-qm-cita-titulo">${qmEsc(qmT("citaTitulo"))}</h4><p class="bq-qm-cita-texto">${qmEsc(qmT("citaTexto"))}</p>` +
+      '<div class="bq-qm-cal"></div>' +
+      (solicitud.email ? "" : `<div class="bq-fx-campo bq-qm-cita-email"><label for="bq-qm-cita-email">${qmEsc(qmT("email"))}</label><input id="bq-qm-cita-email" type="email" autocomplete="email" inputmode="email" maxlength="254"></div>`) +
+      '<p class="bq-qm-elegido" aria-live="polite"></p>' +
+      `<div class="bq-qm-cita-acciones"><button type="button" class="bq-fx-enviar bq-qm-reservar">${qmEsc(qmT("reservar"))}</button>` +
+      `<button type="button" class="bq-qm-sin">${qmEsc(qmT("sin"))}</button></div>` +
+      `<p class="bq-qm-sin-nota">${qmEsc(qmT("sinNota"))}</p><p class="bq-fx-estado bq-qm-cita-estado" aria-live="polite"></p>`;
+    const estado = cita.querySelector(".bq-qm-cita-estado");
+    const elegido = cita.querySelector(".bq-qm-elegido");
+    const reservar = cita.querySelector(".bq-qm-reservar");
+    const sin = cita.querySelector(".bq-qm-sin");
+    const aviso = (tipo, texto) => {
+      estado.dataset.tipo = tipo;
+      estado.textContent = texto;
+    };
+    const acabar = (texto) => {
+      cita.innerHTML = `<p class="bq-qm-final" tabindex="-1">${qmEsc(texto)}</p>`;
+      cita.querySelector(".bq-qm-final").focus({ preventScroll: true });
+    };
+    let calendario = null;
+    import("/demos/comun/calendario.js")
+      .then(({ montarCalendario }) => {
+        calendario = montarCalendario(cita.querySelector(".bq-qm-cal"), {
+          t: qmT, idioma: qmIdioma(),
+          alElegir: (s) => { elegido.textContent = s ? qmT("elegido", { fecha: s.etiqueta }) : ""; },
+        });
+      })
+      .catch(() => { cita.querySelector(".bq-qm-cal").textContent = qmT("cal.error"); });
+    const comun = () => ({
+      nombre: solicitud.name, empresa: solicitud.company, telefono: solicitud.phone, mensaje: solicitud.message,
+      idioma: qmIdioma(), origen: "quiero-mejorar", elapsedMs: Date.now() - m.inicio, hp: "", ...contextoSolicitud(),
+    });
+    let ocupado = false;
+    const pedir = (cuerpo, boton, enCurso) => {
+      ocupado = true;
+      reservar.disabled = sin.disabled = true;
+      const texto = boton.textContent;
+      boton.textContent = enCurso;
+      aviso("enviando", "");
+      return nativeFetch("/api/reservas", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(cuerpo) })
+        .then(async (res) => ({ res, data: await res.json().catch(() => ({})) }))
+        .catch(() => ({ res: { ok: false }, data: {} }))
+        .finally(() => {
+          ocupado = false;
+          reservar.disabled = sin.disabled = false;
+          boton.textContent = texto;
+        });
+    };
+    reservar.addEventListener("click", async () => {
+      if (ocupado) return;
+      const s = calendario && calendario.seleccion();
+      if (!s) return aviso("error", qmT("faltaHora"));
+      const campoEmail = cita.querySelector("#bq-qm-cita-email");
+      const email = solicitud.email || (campoEmail ? campoEmail.value.trim() : "");
+      if (!QM_EMAIL.test(email)) {
+        if (campoEmail) campoEmail.focus();
+        return aviso("error", qmT("emailMal"));
+      }
+      const { res, data } = await pedir({ ...comun(), email, inicio: s.inicio }, reservar, qmT("reservando"));
+      if (res.ok && data.ok) return acabar(qmT("okCita", { fecha: s.etiqueta, email }));
+      aviso("error", (data.fields && Object.values(data.fields)[0]) || data.error || qmT("error"));
+      if (data.code === "ocupado" || data.code === "hueco") calendario.recargar();
+    });
+    sin.addEventListener("click", async () => {
+      if (ocupado) return;
+      const email = solicitud.email || "";
+      const { res, data } = await pedir({ ...comun(), email, accion: "sin-videollamada" }, sin, qmT("enviando"));
+      if (!(res.ok && data.ok)) return aviso("error", data.error || qmT("error"));
+      acabar(qmT("okSin", { destino: email ? qmT("porCorreo", { email }) : qmT("porWhatsapp", { tel: solicitud.phone }) }));
+    });
+  };
 
   let mejorar = null; // { dialog, form, … } una vez montada
   let mejorarOrigen = null; // botón que la abrió (vuelve ahí el foco al cerrar)
@@ -1314,7 +1492,7 @@
     const email = form.querySelector('[name="Email"]');
     const prefijo = form.querySelector('[name="PhonePrefix"]').value || "34";
     const whatsapp = form.dataset.bqMetodo !== "email";
-    if (!mensaje.value.trim()) errores.push([mensaje, "Cuéntanos brevemente qué quieres mejorar."]);
+    if (!mensaje.value.trim()) errores.push([mensaje, "Cuéntanos qué quieres mejorar o a qué se dedica tu negocio."]);
     if (!nombre.value.trim()) errores.push([nombre, TEXTOS.Name]);
     if (!empresa.value.trim()) errores.push([empresa, TEXTOS.Company]);
     let cifras = "";
@@ -1336,7 +1514,7 @@
       return;
     }
     const payload = {
-      formType: "Idea de mejora",
+      formType: "Diagnóstico inicial gratuito",
       origin: window.location.pathname,
       message: mensaje.value.trim(),
       name: nombre.value.trim(),
@@ -1346,13 +1524,10 @@
       email: whatsapp ? "" : email.value.trim(),
     };
     const clave = JSON.stringify(payload);
-    const destino = whatsapp ? `por WhatsApp al ${payload.phone}` : `en ${payload.email}`;
     const terminar = (confirmacion) => {
       m.caja.hidden = true;
       m.hecho.hidden = false;
-      m.hecho.querySelector(".bq-fx-hecho-texto").textContent =
-        `Gracias, ${payload.name}. Revisaremos lo que nos cuentas y te contactaremos ${destino}.` +
-        (confirmacion ? " Te hemos enviado una confirmación a tu correo." : "");
+      pasoCita(m, payload, confirmacion);
       m.hecho.focus({ preventScroll: true });
     };
     // La misma solicitud ya llegó: no se envía otra vez.
@@ -1362,7 +1537,7 @@
     payload.hp = form.querySelector('[name="website"]').value;
     m.enviando = true;
     form.dataset.bqEnviando = "1";
-    qmEstado("enviando", "Enviando tu idea…");
+    qmEstado("enviando", "Enviando tu solicitud…");
     const guarda = setTimeout(() => {
       if (!m.enviando) return;
       m.enviando = false;
@@ -1401,9 +1576,9 @@
           }
           fallo(data.code === "validation" || data.code === "rate_limit"
             ? data.error
-            : "No hemos podido enviar tu idea. Inténtalo de nuevo en unos minutos.");
+            : "No hemos podido enviar tu solicitud. Inténtalo de nuevo en unos minutos.");
         },
-        () => fallo("No hemos podido enviar tu idea. Revisa tu conexión e inténtalo de nuevo."),
+        () => fallo("No hemos podido enviar tu solicitud. Revisa tu conexión e inténtalo de nuevo."),
       );
   };
 

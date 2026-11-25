@@ -84,5 +84,11 @@
     "api/diagnosticos.js": {
       "maxDuration": 120
     }
-  }
+  },
+  "crons": [
+    {
+      "path": "/api/reservas-recordatorios",
+      "schedule": "0 6 * * *"
+    }
+  ]
 }
