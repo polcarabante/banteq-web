@@ -3380,11 +3380,6 @@ dialog.bq-fx.bq-fx-cerrando::backdrop {
   font-size: 10.5px;
   font-weight: 600;
 }
-.bq-demos-boton {
-  display: flex;
-  justify-content: center;
-  margin: 6px 0 -4px;
-}
 .bq-formula-boton-solo {
   padding-left: 18px;
 }
@@ -3438,7 +3433,7 @@ dialog.bq-fx.bq-fx-cerrando::backdrop {
 .bq-dm-celda:nth-child(3n) .bq-boton-destello::after {
   animation-delay: 3.3s;
 }
-.bq-demos-boton .bq-boton-destello::after {
+.bq-dm-ahorro .bq-boton-destello::after {
   animation-delay: 4.5s;
 }
 @keyframes bq-destello {
