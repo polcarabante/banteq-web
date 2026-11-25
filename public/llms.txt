@@ -18,6 +18,7 @@ Texto completo de servicios, proyectos y guías, sin menús ni pie: https://bant
 - [Automatización con n8n e integración de herramientas](https://banteq.com/automatizacion-n8n): Conectamos tu correo, Excel, CRM, ERP, WhatsApp y tu web con n8n, Make o integraciones por API a medida. Los datos pasan de un programa a otro sin copiar y pegar.
 - [Desarrollo web a medida](https://banteq.com/desarrollo-web): Diseño web para empresas de Barcelona y Badalona. Consulta proyectos de Margon y RentUp Capital, y pide presupuesto para una web nueva o un rediseño.
 - [Mantenimiento web para empresas](https://banteq.com/mantenimiento-web): Si ya pagas el mantenimiento de tu web, con Banteq pagas un 25 % menos (hasta 50 €/mes) y la remodelamos sin coste de desarrollo básico. Mínimo: 35 €/mes.
+- [Calculadora de ahorro: seguimiento de retrasos](https://banteq.com/automatizaciones/seguimiento/ahorro): Calcula las horas y los euros que libera automatizar los avisos de retraso a clientes y el seguimiento de quién no responde.
 
 ## Guías
 
