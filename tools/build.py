@@ -2684,7 +2684,13 @@ def apply_seo():
         indexables.append((page_url(rel), rel))
     S["guias/index.html"] = guias_indice()
     indexables.append((f"{C.SITIO}/guias", "guias/index.html"))
-    fechas = page_dates({u: S[rel] for u, rel in indexables})
+    # Calculadora «¿Cuánto me ahorro?»: se copia a public/ al final del build (calculadora_ahorro.py);
+    # su lastmod sale de la fuente, que tiene el mismo texto visible.
+    from calculadora_ahorro import RUTA as RUTA_CALCULADORA, pagina_fuente
+    paginas = {u: S[rel] for u, rel in indexables}
+    indexables.append((f"{C.SITIO}/{RUTA_CALCULADORA}", f"{RUTA_CALCULADORA}/index.html"))
+    paginas[indexables[-1][0]] = pagina_fuente()
+    fechas = page_dates(paginas)
     (OUT / "sitemap.xml").write_text(sitemap_xml(indexables, fechas), encoding="utf-8")
     (OUT / "llms-full.txt").write_text(ST.llms_full(
         [(g.stem, g.read_text(encoding="utf-8"), re.search(r'<html\b[^>]* lang="([a-zA-Z-]+)"', g.read_text(encoding="utf-8")).group(1))
@@ -2775,7 +2781,9 @@ def write_llms_txt():
         f"profesional en {C.LOCALIDAD} ({C.PROVINCIA}). Los datos del titular están en {C.SITIO}/aviso-legal.",
         f"- Proyectos publicados con clientes reales: {', '.join(pr['cliente'] for pr in C.PROYECTOS)} ({C.SITIO}/proyectos).", "",
         "## Servicios", "",
-        *(item(sv["nombre"], f"{C.SITIO}/{sv['slug']}", sv["descripcion"]) for sv in C.SERVICIOS), "",
+        *(item(sv["nombre"], f"{C.SITIO}/{sv['slug']}", sv["descripcion"]) for sv in C.SERVICIOS),
+        item("Calculadora de ahorro: seguimiento de retrasos", f"{C.SITIO}/automatizaciones/seguimiento/ahorro",
+             "Calcula las horas y los euros que libera automatizar los avisos de retraso a clientes y el seguimiento de quién no responde."), "",
         "## Guías", "",
         item("Índice de guías", f"{C.SITIO}/guias", "Todos los artículos prácticos de Banteq para pymes."),
         *(item(g["titulo"], f"{C.SITIO}/guias/{g['slug']}", g["descripcion"]) for g in guias_datos()), "",

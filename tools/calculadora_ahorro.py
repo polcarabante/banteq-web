@@ -20,6 +20,11 @@ def _huella(texto):
     return sha1(texto.encode("utf-8")).hexdigest()[:10]
 
 
+def pagina_fuente():
+    """La página tal como está en la fuente: build.py la usa para el lastmod del sitemap."""
+    return (ROOT / "assets-banteq" / "calculadora-ahorro" / "index.html").read_text(encoding="utf-8")
+
+
 def integrar():
     fuente = ROOT / "assets-banteq" / "calculadora-ahorro"
     public = ROOT / "public"
@@ -39,7 +44,7 @@ def integrar():
     iconos = "".join(re.findall(r'<link rel="(?:icon|apple-touch-icon|manifest)"[^>]*>', (public / "index.html").read_text(encoding="utf-8")))
     assert iconos and "favicon.ico" in iconos, "no se encuentran los iconos de la home"
     marca = f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" aria-hidden="true"><path d="{MARK_PATH}" fill="#fff"></path></svg>'
-    pagina = (fuente / "index.html").read_text(encoding="utf-8")
+    pagina = pagina_fuente()
     for marcador, valor in (("<!--ICONOS-->", iconos), ("__MARCA__", marca), ("__V_CSS__", _huella(css)), ("__V_JS__", _huella(js))):
         assert pagina.count(marcador) == 1, marcador
         pagina = pagina.replace(marcador, valor)
