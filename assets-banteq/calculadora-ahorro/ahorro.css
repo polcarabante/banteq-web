@@ -314,6 +314,14 @@ input[type="range"]:focus-visible {
   letter-spacing: -0.04em;
   font-variant-numeric: tabular-nums;
 }
+/* «sin IVA» junto a los precios de Banteq y «ahorro estimado» junto a las cifras de ahorro. */
+.sufijo {
+  color: var(--gris);
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0;
+  white-space: nowrap;
+}
 .nota {
   margin: 0;
   color: var(--gris);
@@ -327,7 +335,8 @@ input[type="range"]:focus-visible {
   box-shadow: 0 8px 22px rgba(0, 0, 0, 0.15);
 }
 .tarjeta-destacada h3,
-.tarjeta-destacada .nota {
+.tarjeta-destacada .nota,
+.tarjeta-destacada .sufijo {
   color: rgba(255, 255, 255, 0.78);
 }
 .tarjeta-destacada .cifra {

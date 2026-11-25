@@ -46,7 +46,7 @@ function pintar() {
   const quiero = $("quiero");
   quiero.disabled = !r.compensa || enviada;
   $("quiero-texto").textContent = `Quiero ahorrar ${formatoEuros(n.gananciaClienteAño)} al año`;
-  $("primer-año").textContent = `El primer año ahorras ${formatoEuros(n.gananciaPrimerAño)} porque incluye la implantación`;
+  $("primer-año").textContent = `El primer año ahorras ${formatoEuros(n.gananciaPrimerAño)} (ahorro estimado), porque incluye la implantación`;
   $("primer-año").hidden = !r.compensa;
   if (!r.compensa) {
     $("solicitud").hidden = true;
@@ -58,7 +58,7 @@ function pintar() {
   clearTimeout(anuncioTimer);
   anuncioTimer = setTimeout(() => {
     $("anuncio").textContent = r.compensa
-      ? `Ahorro mensual ${formatoEuros(n.ahorroMes)}. Ganas ${formatoEuros(n.gananciaClienteMes)} al mes y ${formatoEuros(n.gananciaClienteAño)} al año.`
+      ? `Ahorro mensual estimado ${formatoEuros(n.ahorroMes)}. Ganas ${formatoEuros(n.gananciaClienteMes)} al mes y ${formatoEuros(n.gananciaClienteAño)} al año.`
       : "Con este volumen la automatización no compensa todavía.";
   }, 700);
   ultimo = { v, r };

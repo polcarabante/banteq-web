@@ -82,18 +82,21 @@ async function brevo(ruta, cuerpo, metodo = "POST") {
 function filasControles(v) {
   return CONTROLES.map(({ clave }) => [ETIQUETAS[clave][0], ETIQUETAS[clave][1](v[clave])]);
 }
+// Precios de Banteq, sin IVA; cifras de ahorro, marcadas como estimación (igual que en la página).
+const sinIva = (n) => `${formatoEuros(n)} sin IVA`;
+const estimado = (n) => `${formatoEuros(n)} (ahorro estimado)`;
 function filasResultados(r) {
   const n = r.redondeado;
   return [
     ["Horas liberadas al año", `${formatoNumero(n.horasAño)} h (${formatoNumero(n.empleados, 2)} empleados a jornada completa)`],
-    ["Ahorro bruto al mes (tiempo liberado)", formatoEuros(n.ahorroBrutoMes)],
-    ["Herramientas al mes", formatoEuros(n.herramientasMes)],
-    ["Ahorro mensual", formatoEuros(n.ahorroMes)],
-    ["Implantación (pago único)", formatoEuros(n.implantacion)],
-    ["Mantenimiento mensual (25 %)", formatoEuros(n.mantenimientoMes)],
-    ["Ganancia del cliente al mes (75 %)", formatoEuros(n.gananciaClienteMes)],
-    ["Ganancia del cliente al año", formatoEuros(n.gananciaClienteAño)],
-    ["Ganancia del primer año (con la implantación)", formatoEuros(n.gananciaPrimerAño)],
+    ["Ahorro bruto al mes (tiempo liberado)", estimado(n.ahorroBrutoMes)],
+    ["Herramientas al mes", sinIva(n.herramientasMes)],
+    ["Ahorro mensual", estimado(n.ahorroMes)],
+    ["Implantación (pago único)", sinIva(n.implantacion)],
+    ["Mantenimiento mensual (25 %)", sinIva(n.mantenimientoMes)],
+    ["Ganancia del cliente al mes (75 %)", estimado(n.gananciaClienteMes)],
+    ["Ganancia del cliente al año", estimado(n.gananciaClienteAño)],
+    ["Ganancia del primer año (con la implantación)", estimado(n.gananciaPrimerAño)],
   ];
 }
 const tabla = (filas) => `<table cellpadding="6" style="border-collapse:collapse;font-size:14px">${filas
@@ -117,10 +120,10 @@ ${s.pagina ? `<p><strong>Página:</strong> ${escapar(s.pagina)}</p>` : ""}${proc
 function correoConfirmacion(s) {
   const n = s.r.redondeado;
   const resumen = [
-    ["Ahorro mensual", formatoEuros(n.ahorroMes)],
-    ["Implantación (pago único)", formatoEuros(n.implantacion)],
-    ["Mantenimiento mensual", formatoEuros(n.mantenimientoMes)],
-    ["Lo que ganas tú al año", formatoEuros(n.gananciaClienteAño)],
+    ["Ahorro mensual", estimado(n.ahorroMes)],
+    ["Implantación (pago único)", sinIva(n.implantacion)],
+    ["Mantenimiento mensual", sinIva(n.mantenimientoMes)],
+    ["Lo que ganas tú al año", estimado(n.gananciaClienteAño)],
   ];
   return {
     subject: "Hemos recibido tu solicitud",
