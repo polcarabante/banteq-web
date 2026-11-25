@@ -9,7 +9,7 @@ Estamos en Santa Perpètua de Mogoda (Barcelona) y trabajamos con empresas de Ba
 ### Automatización de procesos para pymes en Barcelona
 
 URL: https://banteq.com/automatizacion-procesos
-Actualizado: 2026-11-20
+Actualizado: 2026-11-25
 Idioma: es
 
 Conectamos el correo, las hojas de cálculo y el CRM que ya utiliza tu equipo.
@@ -39,6 +39,24 @@ Así queda una tarea cuando deja de hacerse a mano. Son ejemplos habituales; en 
 - **Presupuestos y consultas.** Los correos entrantes se clasifican por tipo, se crea la ficha con los datos y se prepara un borrador de respuesta para revisar y enviar.
 - **Informe semanal.** Los datos de ventas, pedidos o incidencias se recogen de cada herramienta y llegan resumidos al correo cada lunes.
 - **Reservas y citas.** La cita queda en el calendario, el cliente recibe la confirmación y un recordatorio, y los cambios se actualizan solos.
+
+#### Cómo automatizar el seguimiento de pedidos a proveedores en Excel
+
+Simulación con Excel y Outlook. Antes, compras revisa la hoja de pedidos, busca las confirmaciones por correo y pide una fecha de entrega a cada proveedor. Con el flujo, las incidencias llegan a compras en una lista y cada aviso queda registrado en el pedido.
+
+Para reproducir el ejemplo, fija la fecha de comprobación en el 18 de noviembre. La hoja necesita un número de pedido, un correo de proveedor, una fecha de entrega, un estado y la fecha del último aviso. El flujo revisa los pedidos abiertos a diario y prepara un aviso a partir de las 48 horas de retraso si todavía no se ha enviado otro por esa fecha de entrega.
+
+| Pedido de ejemplo | Situación en Excel | Resultado esperado |
+| --- | --- | --- |
+| P-101 | Entrega el 15 de noviembre, pendiente y sin aviso | Prepara un correo para pedir una fecha actualizada y registra el aviso cuando se envía. |
+| P-102 | Entrega el 15 de noviembre, aviso enviado ayer | Conserva el aviso registrado y evita duplicarlo. |
+| P-103 | Entrega el 17 de noviembre, pendiente | Espera a que se cumplan las 48 horas. |
+| P-104 | Entrega el 15 de noviembre, correo del proveedor vacío | Envía la incidencia a compras para completar el dato. |
+| P-105 | Entrega ya registrada | Excluye el pedido de la revisión de retrasos. |
+
+Si el proveedor responde con una fecha nueva, compras la confirma antes de actualizar la hoja. Si falla el envío, el pedido queda pendiente de atención. Consulta [cómo documentar un proceso antes de automatizarlo](https://banteq.com/guias/documentar-proceso-antes-de-automatizar) para recoger tus propias reglas o [cuéntanos cómo haces hoy el seguimiento](https://banteq.com/#hablemos).
+
+Si haces el seguimiento por correo, estima el tiempo que podrías recuperar con la [calculadora de ahorro](https://banteq.com/automatizaciones/seguimiento/ahorro).
 
 #### Cómo calcular si te compensa automatizar una tarea
 
@@ -190,7 +208,7 @@ También te puede interesar: [automatización de procesos](https://banteq.com/au
 ### Automatización con n8n e integración de herramientas
 
 URL: https://banteq.com/automatizacion-n8n
-Actualizado: 2026-11-18
+Actualizado: 2026-11-25
 Idioma: es
 
 Tus programas, conectados entre sí: la información pasa de uno a otro sin copiar y pegar.
@@ -237,6 +255,18 @@ Por eso, en un flujo de diez pasos que se ejecuta mil veces al mes, n8n cuenta m
 
 Los precios y las condiciones de cada herramienta cambian a menudo: en cada propuesta los revisamos con sus tarifas del momento.
 
+#### ¿Cuánto cuesta una automatización con n8n?
+
+El precio de una automatización con n8n se calcula según los programas que conecta, el volumen de ejecuciones y las excepciones que tiene que resolver. En Banteq separamos el coste inicial de los gastos recurrentes para que puedas comparar presupuestos con el mismo alcance.
+
+- **Implantación.** Diseño del flujo, conexiones, pruebas con datos de ejemplo, puesta en marcha y documentación.
+- **Plataforma e infraestructura.** Plan de n8n Cloud o servidor propio, más las licencias y consumos de otros servicios cuando correspondan.
+- **Mantenimiento.** Qué incluye la supervisión, quién atiende los fallos y qué cambios o ampliaciones se presupuestan aparte.
+
+Ejemplo ficticio: pasar solicitudes del formulario a un CRM tiene un alcance distinto si hay que detectar duplicados, asignar un responsable según la zona y recuperar los envíos fallidos. Pide que el presupuesto diga cómo se prueba cada regla y qué gastos se repiten cada mes.
+
+Para que podamos valorar tu proyecto, [indícanos la tarea, los programas y el volumen aproximado](https://banteq.com/#hablemos). Si hace falta un diagnóstico avanzado, es de pago y te indicaremos su alcance y precio antes de contratarlo.
+
 #### Flujos que se pueden mantener
 
 - Registro de cada ejecución y avisos cuando algo falla
@@ -279,7 +309,7 @@ También te puede interesar: [automatización de procesos](https://banteq.com/au
 ### Desarrollo web a medida para empresas
 
 URL: https://banteq.com/desarrollo-web
-Actualizado: 2026-11-24
+Actualizado: 2026-11-25
 Idioma: es
 
 Webs corporativas, rediseños y formularios conectados con tu equipo.
@@ -343,9 +373,9 @@ Sí. Los formularios pueden guardar cada solicitud en tu CRM, enviar la confirma
 
 Sí. La web que hemos desarrollado para Margon, por ejemplo, está disponible en cinco idiomas, con la terminología técnica correcta en cada uno.
 
-#### ¿Hablamos de tu web?
+#### ¿Cómo contactar con Banteq para una web a medida?
 
-Estamos en Santa Perpètua de Mogoda (Barcelona) y trabajamos con empresas de Barcelona, el Vallès y, en remoto, del resto de España. [Cuéntanos tu caso](https://banteq.com/#hablemos) y te proponemos un primer paso razonable.
+Estamos en Santa Perpètua de Mogoda (Barcelona) y trabajamos con empresas de Barcelona, el Vallès y, en remoto, del resto de España. [Contacta con nuestro equipo de desarrollo web](https://banteq.com/#hablemos) para contarnos si necesitas una web nueva o un rediseño y cuándo te gustaría publicarla. Revisamos tu solicitud y hablamos contigo del alcance antes de preparar el presupuesto.
 
 También te puede interesar: [mantenimiento web para empresas](https://banteq.com/mantenimiento-web) y [automatización de procesos](https://banteq.com/automatizacion-procesos).
 
