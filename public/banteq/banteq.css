@@ -1522,6 +1522,209 @@ dialog.bq-fx.bq-fx-cerrando::backdrop {
   max-width: 420px;
   margin-bottom: 0;
 }
+/* Cabecera de la opción gratuita (menos de 1 M€): sello y píldora, como el diagnóstico avanzado. */
+.bq-qm-idea-cabeza {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 10px;
+  padding-right: 56px;
+}
+.bq-qm-idea .bq-qm-titulo {
+  margin-top: 16px;
+}
+
+/* Segundo paso: videollamada con calendario o diagnóstico por escrito (banteq.js, pasoCita). El
+   calendario es el de las demostraciones (comun/calendario.js), con estos colores oscuros. */
+.bq-qm-hecho {
+  padding: 30px 0 8px;
+}
+.bq-qm-cita {
+  width: 100%;
+  margin-top: 18px;
+  padding: 22px 22px 18px;
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.05);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+  text-align: left;
+}
+.bq-qm-cita[hidden] {
+  display: none;
+}
+.bq-qm-cita-titulo {
+  margin: 0 0 6px;
+  color: #fff;
+  font-size: 19px;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+}
+.bq-qm-cita-texto {
+  margin: 0 0 14px;
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 14.5px;
+  line-height: 1.5;
+}
+.bq-qm .cal-zona,
+.bq-qm .cal-estado {
+  margin: 0 0 12px;
+  color: rgba(255, 255, 255, 0.55);
+  font-size: 12.5px;
+}
+.bq-qm .cal-inactivo {
+  color: rgba(255, 255, 255, 0.85);
+}
+.bq-qm .cal-dias {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  margin-bottom: 12px;
+}
+.bq-qm .cal-dia,
+.bq-qm .cal-hora {
+  border: 0;
+  background: rgba(255, 255, 255, 0.06);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.14);
+  color: #fff;
+  font-family: "Geist", "Geist Placeholder", sans-serif;
+  cursor: pointer;
+  transition: background-color 0.2s ease, box-shadow 0.2s ease;
+}
+.bq-qm .cal-dia {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+  padding: 9px 4px;
+  border-radius: 16px;
+}
+.bq-qm .cal-dia b {
+  font-size: 22px;
+  font-weight: 500;
+  line-height: 1.1;
+}
+.bq-qm .cal-dia-sem,
+.bq-qm .cal-dia-mes {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 12px;
+  text-transform: capitalize;
+}
+.bq-qm .cal-dia small {
+  margin-top: 3px;
+  color: rgb(168, 230, 220);
+  font-size: 11px;
+}
+.bq-qm .cal-dia[aria-pressed="true"],
+.bq-qm .cal-hora[aria-pressed="true"] {
+  background: #fff;
+  box-shadow: none;
+  color: rgb(17, 17, 17);
+}
+.bq-qm .cal-dia[aria-pressed="true"] .cal-dia-sem,
+.bq-qm .cal-dia[aria-pressed="true"] .cal-dia-mes,
+.bq-qm .cal-dia[aria-pressed="true"] small {
+  color: rgba(17, 17, 17, 0.65);
+}
+.bq-qm .cal-franja {
+  margin: 8px 0 6px;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.bq-qm .cal-horas {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(68px, 1fr));
+  gap: 6px;
+}
+.bq-qm .cal-hora {
+  padding: 9px 2px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+}
+.bq-qm .cal-hora:disabled,
+.bq-qm .cal-dia:disabled {
+  background: transparent;
+  box-shadow: none;
+  color: rgba(255, 255, 255, 0.28);
+  text-decoration: line-through;
+  cursor: not-allowed;
+}
+@media (hover: hover) {
+  .bq-qm .cal-dia:not(:disabled):not([aria-pressed="true"]):hover,
+  .bq-qm .cal-hora:not(:disabled):not([aria-pressed="true"]):hover {
+    box-shadow: inset 0 0 0 1.5px rgba(255, 255, 255, 0.6);
+  }
+}
+.bq-qm .cal-dia:focus-visible,
+.bq-qm .cal-hora:focus-visible,
+.bq-qm-sin:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 2px;
+}
+.bq-qm .cal-estado + .boton-sec {
+  padding: 8px 14px;
+  border: 0;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  font: inherit;
+  cursor: pointer;
+}
+.bq-qm-cita-email {
+  margin-top: 14px;
+}
+.bq-qm-elegido {
+  margin: 12px 0 0;
+  color: #fff;
+  font-size: 14.5px;
+  font-weight: 500;
+}
+.bq-qm-elegido:empty {
+  display: none;
+}
+.bq-qm-cita-acciones {
+  display: grid;
+  gap: 8px;
+  margin-top: 14px;
+}
+.bq-qm-sin {
+  justify-self: center;
+  padding: 8px 12px;
+  border: 0;
+  border-radius: 999px;
+  background: none;
+  color: rgba(255, 255, 255, 0.8);
+  font: 500 14.5px/1.3 "Geist", "Geist Placeholder", sans-serif;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+.bq-qm-sin:disabled,
+.bq-qm-reservar:disabled {
+  opacity: 0.55;
+  cursor: progress;
+}
+.bq-qm-sin-nota {
+  margin: 4px 0 0;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 12.5px;
+  line-height: 1.45;
+  text-align: center;
+}
+.bq-qm-cita-estado {
+  margin-top: 10px;
+}
+.bq-qm-final {
+  margin: 0;
+  color: #fff;
+  font-size: 16px;
+  line-height: 1.55;
+  text-align: center;
+  outline: none;
+}
 
 /* Separador entre las dos opciones */
 .bq-qm-o {
@@ -3184,6 +3387,81 @@ dialog.bq-fx.bq-fx-cerrando::backdrop {
 }
 .bq-formula-boton-solo {
   padding-left: 18px;
+}
+/* Botón «Pruébalo» de cada tarjeta (tools/demos.py, boton_prueba): debajo de la tarjeta, fuera de
+   ella, como «¿Cuánto me ahorro?». La celda apila tarjeta y botón; la tarjeta ocupa el resto. */
+.bq-dm-celda {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-width: 0;
+}
+.bq-dm-celda > .bq-dm {
+  flex: 1;
+}
+.bq-dm-fuera {
+  display: flex;
+  justify-content: center;
+  margin: 0;
+}
+
+/* Destello del contorno de «Pruébalo» y «¿Cuánto me ahorro?» (Pol, 2026-11-25): una línea de luz
+   con los colores de la marca da una vuelta por el borde interior del botón y desaparece; se repite cada 7 s, sin estar
+   en movimiento todo el rato. Los botones de cada columna empiezan desfasados. Con movimiento
+   reducido no se anima. Sin @property (navegadores antiguos) solo se ve un brillo breve. */
+@property --bq-destello {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+.bq-boton-destello {
+  position: relative;
+}
+.bq-boton-destello::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  padding: 1.5px;
+  border-radius: inherit;
+  background: conic-gradient(from var(--bq-destello), transparent 0deg 220deg, rgba(168, 230, 255, 0) 225deg,
+      rgba(168, 230, 255, 0.85) 300deg, rgb(214, 204, 255) 338deg, #fff 357deg, transparent 360deg);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0;
+  pointer-events: none;
+  animation: bq-destello 7s cubic-bezier(0.45, 0, 0.25, 1) 1.5s infinite;
+}
+.bq-dm-celda:nth-child(3n + 2) .bq-boton-destello::after {
+  animation-delay: 2.4s;
+}
+.bq-dm-celda:nth-child(3n) .bq-boton-destello::after {
+  animation-delay: 3.3s;
+}
+.bq-demos-boton .bq-boton-destello::after {
+  animation-delay: 4.5s;
+}
+@keyframes bq-destello {
+  0% {
+    --bq-destello: 0deg;
+    opacity: 0;
+  }
+  3% {
+    opacity: 1;
+  }
+  24% {
+    opacity: 1;
+  }
+  29%,
+  100% {
+    --bq-destello: 360deg;
+    opacity: 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .bq-boton-destello::after {
+    animation: none;
+  }
 }
 
 /* F · Reservas */

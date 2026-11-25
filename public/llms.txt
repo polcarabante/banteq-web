@@ -19,6 +19,11 @@ Texto completo de servicios, proyectos y guías, sin menús ni pie: https://bant
 - [Desarrollo web a medida](https://banteq.com/desarrollo-web): Diseño web para empresas de Barcelona y Badalona. Consulta proyectos de Margon y RentUp Capital, y pide presupuesto para una web nueva o un rediseño.
 - [Mantenimiento web para empresas](https://banteq.com/mantenimiento-web): Si ya pagas el mantenimiento de tu web, con Banteq pagas un 25 % menos (hasta 50 €/mes) y la remodelamos sin coste de desarrollo básico. Mínimo: 35 €/mes.
 - [Calculadora de ahorro: seguimiento de retrasos](https://banteq.com/automatizaciones/seguimiento/ahorro): Calcula las horas y los euros que libera automatizar los avisos de retraso a clientes y el seguimiento de quién no responde.
+- [Facturas al ERP · demostración](https://banteq.com/automatizaciones/facturas): Sube una factura en PDF, imagen o Facturae y mira cómo se leen sus datos, se validan y se registran en un ERP de prueba.
+- [Asistente con tus documentos · demostración](https://banteq.com/automatizaciones/asistente): Sube un manual o un procedimiento y hazle preguntas: el asistente responde con el documento, cita la sección y avisa si no lo sabe.
+- [Ventas y CRM · demostración](https://banteq.com/automatizaciones/crm): Envía un contacto de prueba o importa una lista: alta en el CRM, duplicados, clasificación, correo de bienvenida y tarea de seguimiento.
+- [Informes y datos · demostración](https://banteq.com/automatizaciones/informes): Sube un Excel o CSV de ventas o stock y mira cómo se limpia, se calculan los indicadores y se prepara el informe para dirección.
+- [Reservas y citas · demostración](https://banteq.com/automatizaciones/reservas): Elige día y hora, deja tus datos y mira cómo llega la confirmación por correo y el recordatorio una hora antes. Es una reserva real.
 
 ## Guías
 
@@ -49,6 +54,11 @@ Texto completo de servicios, proyectos y guías, sin menús ni pie: https://bant
 - [Automatització amb n8n i integració d'eines](https://banteq.com/ca/automatitzacio-n8n): Connectem el teu correu, Excel, CRM, ERP, WhatsApp i el teu web amb n8n, Make o integracions per API a mida. Les dades passen d'un programa a un altre sense copiar i enganxar.
 - [Desenvolupament web a mida](https://banteq.com/ca/desenvolupament-web): Disseny web per a empreses de Barcelona i Badalona. Consulta els projectes de Margon i RentUp Capital i demana pressupost per a un web nou o un redisseny.
 - [Manteniment web per a empreses](https://banteq.com/ca/manteniment-web): Si ja pagues manteniment web, amb Banteq pagues un 25 % menys (fins a 50 €/mes) i el remodelem sense cost de desenvolupament bàsic. Mínim: 35 €/mes.
+- [Prova-ho amb la teva factura](https://banteq.com/ca/automatitzacions/factures): Puja una factura en PDF, imatge o Facturae i mira com se'n llegeixen les dades, es validen i es registren en un ERP de prova.
+- [Pregunta-li al teu document](https://banteq.com/ca/automatitzacions/assistent): Puja un manual o un procediment i fes-li preguntes: l'assistent respon amb el document, cita la secció i avisa si no ho sap.
+- [Cap contacte sense resposta](https://banteq.com/ca/automatitzacions/crm): Envia un contacte de prova o importa una llista: alta al CRM, duplicats, classificació, correu de benvinguda i tasca de seguiment.
+- [L'informe del dilluns, sol](https://banteq.com/ca/automatitzacions/informes): Puja un Excel o CSV de vendes o estoc i mira com es neteja, es calculen els indicadors i es prepara l'informe per a direcció.
+- [Reserva una videotrucada](https://banteq.com/ca/automatitzacions/reserves): Tria dia i hora, deixa les teves dades i mira com arriba la confirmació per correu i el recordatori una hora abans. És una reserva real.
 - [Projectes](https://banteq.com/ca/projectes)
 - [Margon](https://banteq.com/ca/projectes/margon)
 - [RentUp Capital](https://banteq.com/ca/projectes/rentup-capital)
@@ -63,6 +73,11 @@ Texto completo de servicios, proyectos y guías, sin menús ni pie: https://bant
 - [n8n automation and tool integration](https://banteq.com/en/n8n-automation): We connect your email, Excel, CRM, ERP, WhatsApp and website with n8n, Make or custom API integrations. Data moves from one program to another without copying and pasting.
 - [Custom web development](https://banteq.com/en/web-development): Custom corporate websites, redesigns and websites connected to your CRM and automations. No templates. For businesses in Barcelona and across Spain.
 - [Web maintenance for businesses](https://banteq.com/en/web-maintenance): Already paying for web maintenance? With Banteq you pay 25% less (up to €50/month) and we remodel your site at no basic development cost. Min. €35/month.
+- [Try it with your invoice](https://banteq.com/en/automations/invoices): Upload an invoice as a PDF, image or Facturae file and watch its data being read, validated and registered in a test ERP.
+- [Ask your document](https://banteq.com/en/automations/assistant): Upload a manual or a procedure and ask it questions: the assistant answers from the document, cites the section and says when it doesn't know.
+- [No enquiry left unanswered](https://banteq.com/en/automations/crm): Send a test enquiry or import a list: added to the CRM, duplicates checked, classified, welcome email drafted and follow-up task set.
+- [The Monday report, done for you](https://banteq.com/en/automations/reports): Upload a sales or stock Excel or CSV file and watch it get cleaned, the KPIs calculated and the management report prepared.
+- [Book a video call](https://banteq.com/en/automations/bookings): Pick a day and time, leave your details and see the email confirmation and the one-hour reminder arrive. It's a real booking.
 - [Projects](https://banteq.com/en/projects)
 - [Margon](https://banteq.com/en/projects/margon)
 - [RentUp Capital](https://banteq.com/en/projects/rentup-capital)
