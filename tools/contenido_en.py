@@ -283,10 +283,10 @@ SERVICIOS_EN = [
         "es": "automatizacion-n8n",
         "id": "bqEnN8nI1",
         "nombre": "n8n automation and tool integration",
-        "title": "n8n automation and tool integration | Banteq",
+        "title": "n8n consultant in Barcelona: custom integrations | Banteq",
         "descripcion": (
-            "We connect your email, Excel, CRM, ERP, WhatsApp and website with n8n, Make or custom API integrations. "
-            "Data moves from one program to another without copying and pasting."
+            "We implement n8n for companies in Barcelona and across Spain: email, Excel, CRM, ERP and your website "
+            "connected, in the cloud or on your own server."
         ),
         "h1": "n8n automation and tool integration",
         "subtitulo": "Your programs, connected to each other: information moves from one to the next without copying and pasting.",

@@ -15,8 +15,8 @@ Texto completo de servicios, proyectos y guías, sin menús ni pie: https://bant
 
 - [Automatización de procesos](https://banteq.com/automatizacion-procesos): Automatizamos facturas, correos, formularios y tareas repetitivas conectando las herramientas que ya usa tu empresa. Para pymes de Barcelona y de toda España.
 - [Inteligencia artificial para empresas](https://banteq.com/inteligencia-artificial): Asistentes de IA para pymes de Barcelona y el Vallès: leen documentos, clasifican correos y preparan borradores. Tu equipo revisa y decide.
-- [Automatización con n8n e integración de herramientas](https://banteq.com/automatizacion-n8n): Conectamos tu correo, Excel, CRM, ERP, WhatsApp y tu web con n8n, Make o integraciones por API a medida. Los datos pasan de un programa a otro sin copiar y pegar.
-- [Desarrollo web a medida](https://banteq.com/desarrollo-web): Diseño web para empresas de Barcelona y Badalona. Consulta proyectos de Margon y RentUp Capital, y pide presupuesto para una web nueva o un rediseño.
+- [Automatización con n8n e integración de herramientas](https://banteq.com/automatizacion-n8n): Implantamos n8n en empresas de Barcelona y el Vallès: conectamos correo, Excel, CRM, ERP y tu web, en la nube o en tu servidor, con avisos si algo falla.
+- [Desarrollo web a medida](https://banteq.com/desarrollo-web): Webs a medida para empresas de Barcelona, Badalona y el Vallès. Mira los proyectos de Margon y RentUp Capital y pide presupuesto para tu web o rediseño.
 - [Mantenimiento web para empresas](https://banteq.com/mantenimiento-web): Si ya pagas el mantenimiento de tu web, con Banteq pagas un 25 % menos (hasta 50 €/mes) y la remodelamos sin coste de desarrollo básico. Mínimo: 35 €/mes.
 - [Calculadora de ahorro: seguimiento de retrasos](https://banteq.com/automatizaciones/seguimiento/ahorro): Calcula las horas y los euros que libera automatizar los avisos de retraso a clientes y el seguimiento de quién no responde.
 
@@ -46,8 +46,8 @@ Texto completo de servicios, proyectos y guías, sin menús ni pie: https://bant
 - [Català](https://banteq.com/ca)
 - [Automatització de processos](https://banteq.com/ca/automatitzacio-processos): Automatitzem tasques de pimes, com passar comandes del correu a l’Excel. Treballem des de Santa Perpètua de Mogoda. Explica’ns quina tasca repeteixes.
 - [Intel·ligència artificial per a empreses](https://banteq.com/ca/intelligencia-artificial): Assistents d'IA per a pimes de Barcelona i el Vallès: llegeixen documents, classifiquen correus i preparen esborranys. El teu equip revisa i decideix.
-- [Automatització amb n8n i integració d'eines](https://banteq.com/ca/automatitzacio-n8n): Connectem el teu correu, Excel, CRM, ERP, WhatsApp i el teu web amb n8n, Make o integracions per API a mida. Les dades passen d'un programa a un altre sense copiar i enganxar.
-- [Desenvolupament web a mida](https://banteq.com/ca/desenvolupament-web): Disseny web per a empreses de Barcelona i Badalona. Consulta els projectes de Margon i RentUp Capital i demana pressupost per a un web nou o un redisseny.
+- [Automatització amb n8n i integració d'eines](https://banteq.com/ca/automatitzacio-n8n): Implantem n8n a empreses de Barcelona i el Vallès: connectem correu, Excel, CRM, ERP i el teu web, al núvol o al teu servidor, amb avisos si falla.
+- [Desenvolupament web a mida](https://banteq.com/ca/desenvolupament-web): Webs a mida per a empreses de Barcelona, Badalona i el Vallès. Mira els projectes de Margon i RentUp Capital i demana pressupost per al teu web.
 - [Manteniment web per a empreses](https://banteq.com/ca/manteniment-web): Si ja pagues manteniment web, amb Banteq pagues un 25 % menys (fins a 50 €/mes) i el remodelem sense cost de desenvolupament bàsic. Mínim: 35 €/mes.
 - [Projectes](https://banteq.com/ca/projectes)
 - [Margon](https://banteq.com/ca/projectes/margon)
@@ -60,7 +60,7 @@ Texto completo de servicios, proyectos y guías, sin menús ni pie: https://bant
 - [English](https://banteq.com/en)
 - [Process automation](https://banteq.com/en/process-automation): We automate invoices, emails, forms and repetitive tasks by connecting the tools your business already uses. For SMEs in Barcelona and across Spain.
 - [Artificial intelligence for businesses](https://banteq.com/en/artificial-intelligence): AI assistants for businesses in Barcelona and the Vallès: they read documents, sort emails and draft replies. Your team reviews and decides.
-- [n8n automation and tool integration](https://banteq.com/en/n8n-automation): We connect your email, Excel, CRM, ERP, WhatsApp and website with n8n, Make or custom API integrations. Data moves from one program to another without copying and pasting.
+- [n8n automation and tool integration](https://banteq.com/en/n8n-automation): We implement n8n for companies in Barcelona and across Spain: email, Excel, CRM, ERP and your website connected, in the cloud or on your own server.
 - [Custom web development](https://banteq.com/en/web-development): Custom corporate websites, redesigns and websites connected to your CRM and automations. No templates. For businesses in Barcelona and across Spain.
 - [Web maintenance for businesses](https://banteq.com/en/web-maintenance): Already paying for web maintenance? With Banteq you pay 25% less (up to €50/month) and we remodel your site at no basic development cost. Min. €35/month.
 - [Projects](https://banteq.com/en/projects)

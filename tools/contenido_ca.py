@@ -46,7 +46,7 @@ SERVICIOS_CA = [
         "h1": "Automatització de processos per a pimes",
         "subtitulo": "Connectem el correu, els fulls de càlcul i el CRM que ja fa servir el teu equip.",
         "intro": [
-            "Cada cop que arriba una comanda per correu, algú n’ha de copiar les dades a l’Excel? Des de Santa Perpètua de Mogoda ajudem pimes de Barcelona i del Vallès a automatitzar feines com aquesta. L’equip continua revisant les dades que falten o que no quadren.",
+            "Cada cop que arriba una comanda per correu, algú n’ha de copiar les dades a l’Excel? Des de Santa Perpètua de Mogoda ajudem pimes de Barcelona i del Vallès, com les de Sabadell, Terrassa, Granollers o Mollet, a automatitzar feines com aquesta. L’equip continua revisant les dades que falten o que no quadren.",
             ["A ", ("a", "RentUp Capital", "/proyectos/rentup-capital"), " vam connectar els formularis del web amb la seva llista de contactes. Quan algú hi deixa les dades, rep una confirmació i l’equip rep un avís per fer-ne el seguiment."],
             [("a", "Vull saber si puc automatitzar una tasca", "#hablemos"), ". Explica’ns què fas a mà, amb quins programes treballes i quantes vegades al mes ho repeteixes. Si et cal una diagnosi avançada, t’explicarem què inclou i quant costa abans de contractar-la."],
         ],
@@ -104,7 +104,7 @@ SERVICIOS_CA = [
                     ("Necessitem coneixements tècnics?", "No. Ens encarreguem de l'anàlisi, el desenvolupament, les integracions i les proves. Després formem el teu equip i deixem documentació perquè faci servir el sistema amb autonomia."),
                     ("Quant costa automatitzar un procés?", "Per fer el pressupost revisem quants programes hi intervenen, com accedim a les dades i quines excepcions cal comprovar. Separem la implantació de les despeses recurrents de llicències i manteniment perquè les puguis comparar amb el temps que recupera el teu equip."),
                     ("Quant de temps s'estalvia?", "Depèn de quantes vegades es repeteix la tasca i de quant triga avui. En les automatitzacions amb garantia ho deixem per escrit abans de començar: quant de temps dedica el teu equip al procés i com es mesurarà després."),
-                    ("Treballeu amb empreses de fora de Barcelona?", "Sí. L'anàlisi, el desenvolupament i la formació es poden fer en remot, així que treballem amb empreses d'arreu d'Espanya. Amb les de Barcelona i el Vallès també ens podem veure en persona."),
+                    ("Treballeu amb empreses de fora de Barcelona?", "Sí. L'anàlisi, el desenvolupament i la formació es poden fer en remot, així que treballem amb empreses d'arreu d'Espanya. Amb les de Barcelona i el Vallès (Sabadell, Terrassa, Granollers, Mollet o Santa Perpètua) també ens podem veure en persona."),
                 ]),
             ]),
             ("Parlem dels teus processos?", [
@@ -181,12 +181,12 @@ SERVICIOS_CA = [
         "es": "automatizacion-n8n",
         "id": "bqCaN8nI1",
         "nombre": "Automatització amb n8n i integració d'eines",
-        "title": "Automatització amb n8n i integració d'eines | Banteq",
+        "title": "Consultor n8n a Barcelona: integracions a mida | Banteq",
         "descripcion": (
-            "Connectem el teu correu, Excel, CRM, ERP, WhatsApp i el teu web amb n8n, Make o integracions per API "
-            "a mida. Les dades passen d'un programa a un altre sense copiar i enganxar."
+            "Implantem n8n a empreses de Barcelona i el Vallès: connectem correu, Excel, CRM, ERP i el teu web, "
+            "al núvol o al teu servidor, amb avisos si falla."
         ),
-        "h1": "Automatització amb n8n i integració d'eines",
+        "h1": "Consultor n8n: automatització i integració d'eines",
         "subtitulo": "Els teus programes, connectats entre si: la informació passa de l'un a l'altre sense copiar i enganxar.",
         "intro": [
             "La majoria de les empreses ja té bones eines. El problema és que no es parlen: la comanda és en un programa, el client en un altre i la factura en un tercer, i algú dedica part del dia a passar dades d'un lloc a un altre.",
@@ -214,6 +214,11 @@ SERVICIOS_CA = [
                     [("b", "De diverses eines a un informe. "), "Les dades es reuneixen cada setmana i arriben resumides per correu."],
                 ]),
                 ("p", ["A ", ("a", "automatització de processos", "/ca/automatitzacio-processos"), " expliquem quines tasques convé automatitzar primer i com ho decidim."]),
+            ]),
+            ("Consultor n8n a Barcelona i el Vallès", [
+                ("p", "Si busques un consultor d'n8n per a la teva empresa, ens encarreguem del projecte sencer: revisem el procés, dissenyem el flux, el connectem amb els teus programes, el provem amb dades d'exemple i formem qui l'ha de fer servir. Som a Santa Perpètua de Mogoda: amb empreses de Barcelona, Sabadell, Terrassa, Granollers o Mollet ens podem veure en persona, i amb la resta d'Espanya treballem en remot."),
+                ("p", ["L'instal·lem al núvol d'n8n o en un servidor propi. Si les dades no han de sortir de la teva empresa, consulta ", ("a", "què cal revisar per fer servir n8n en un servidor propi amb el RGPD", "/guias/n8n-servidor-propio-rgpd"), " (en castellà). Si el flux emet factures, revisa també ", ("a", "què canvia Verifactu en les factures automàtiques", "/guias/verifactu-facturas-automaticas"), " (en castellà)."]),
+                ("p", [("a", "Explica'ns quins programes vols connectar", "#hablemos"), " i quantes vegades al mes es repeteix la tasca."]),
             ]),
             ("n8n, Make o Zapier: diferències i com triem", [
                 ("p", "No hi ha una eina millor per a tot. Triem segons el volum d'operacions, com de sensibles són les dades, les eines que ja tens i qui mantindrà el flux després. Si ja treballes amb Make, amb Zapier o amb una altra plataforma, partim d'aquí."),
@@ -260,12 +265,12 @@ SERVICIOS_CA = [
         "nombre": "Desenvolupament web a mida",
         "title": "Disseny i desenvolupament web a mida a Barcelona | Banteq",
         "descripcion": (
-            "Disseny web per a empreses de Barcelona i Badalona. Consulta els projectes de Margon i RentUp Capital i demana pressupost per a un web nou o un redisseny."
+            "Webs a mida per a empreses de Barcelona, Badalona i el Vallès. Mira els projectes de Margon i RentUp Capital i demana pressupost per al teu web."
         ),
         "h1": "Desenvolupament web a mida per a empreses",
         "subtitulo": "Webs corporatius, redissenys i formularis connectats amb el teu equip.",
         "intro": [
-            "Si busques algú que desenvolupi el web del teu negoci a Badalona, podem preparar el projecte des de Santa Perpètua de Mogoda. Explica’ns què vens, què hi hauria de poder fer un client i qui s’encarrega avui de respondre les consultes.",
+            "Si busques algú que desenvolupi el web del teu negoci a Badalona, Sabadell, Terrassa o qualsevol punt del Vallès, podem preparar el projecte des de Santa Perpètua de Mogoda. Explica’ns què vens, què hi hauria de poder fer un client i qui s’encarrega avui de respondre les consultes.",
             [("a", "Demanar pressupost per al meu web", "#hablemos"), ". Si ja en tens un, indica’n l’adreça i què t’agradaria millorar. Pots veure com vam resoldre dos encàrrecs diferents al ", ("a", "web industrial de Margon", "/proyectos/margon"), " i als ", ("a", "formularis de captació de RentUp Capital", "/proyectos/rentup-capital"), "."],
         ],
         "secciones": [
