@@ -278,7 +278,7 @@ def tarjeta(d):
         f'<p><b>Ejemplo:</b> {esc(d["ejemplo"])}</p></div></div>'
         f'<div class="bq-dm-video" data-pasos="{pasos}" role="group" aria-label="Demostración: {esc(d["titulo"])}">'
         f'<ol class="bq-dm-fases">{fases}</ol><div class="bq-dm-escena">{d["escenas"]}</div></div>'
-        f'<ul class="bq-dm-etiquetas">{etiquetas}</ul></article>{boton_prueba(d)}</div>'
+        f'<ul class="bq-dm-etiquetas">{etiquetas}</ul></article>{boton_prueba(d)}{boton_ahorro(d)}</div>'
     )
 
 
@@ -293,15 +293,15 @@ def boton_prueba(d):
             f'<span class="bq-formula-texto">{esc(texto)}</span><span class="bq-formula-flecha" aria-hidden="true"></span></a></p>')
 
 
-def boton_ahorro(datos):
-    """Botón «¿Cuánto me ahorro?» de la demostración que lo lleve: fuera de las tarjetas, centrado bajo
-    la cuadrícula y encima de la nota (Pol lo pidió así el 2026-11-24, para que se vea más). Mismo
-    estilo que el botón de la Fórmula Banteq (banteq.css)."""
-    d = next((d for d in datos if d.get("boton")), None)
-    if not d:
+def boton_ahorro(d):
+    """Botón «¿Cuánto me ahorro?» de la demostración que lo lleve (seguimiento de retrasos): fuera de
+    la tarjeta, debajo de ella y a la altura de los «Pruébalo» de las demás (Pol lo pidió fuera el
+    2026-11-24 y más arriba el 2026-11-25: bajo la cuadrícula quedaba un hueco encima). Mismo estilo
+    que el botón de la Fórmula Banteq (banteq.css)."""
+    if not d.get("boton"):
         return ""
     texto, destino = d["boton"]
-    return (f'<p class="bq-demos-boton"><a class="bq-formula-boton bq-formula-boton-solo bq-boton-destello" href="{destino}">'
+    return (f'<p class="bq-dm-fuera bq-dm-ahorro"><a class="bq-formula-boton bq-formula-boton-solo bq-boton-destello" href="{destino}">'
             f'<span class="bq-formula-texto">{esc(texto)}</span><span class="bq-formula-flecha" aria-hidden="true"></span></a></p>')
 
 
@@ -335,7 +335,7 @@ def seccion_html():
     datos = [f() for f in DEMOS]
     tarjetas = "".join(tarjeta(d) for d in datos)
     h = (f'<p class="bq-demos-sub">{esc(SUBTITULO)}</p><div class="bq-demos-rejilla">{tarjetas}</div>'
-         f'{boton_ahorro(datos)}<p class="bq-demos-nota">{esc(NOTA)}</p>{garantia_html()}')
+         f'<p class="bq-demos-nota">{esc(NOTA)}</p>{garantia_html()}')
     assert "`" not in h and "${" not in h and "\\" not in h, "el HTML de las demostraciones no puede ir en un template de JS"
     return h
 
