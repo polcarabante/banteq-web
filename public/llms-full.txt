@@ -474,7 +474,7 @@ Estamos en Santa Perpètua de Mogoda (Barcelona) y trabajamos con empresas de Ba
 ### Margon: web corporativa para una empresa industrial
 
 URL: https://banteq.com/proyectos/margon
-Actualizado: 2026-11-24
+Actualizado: 2026-11-26
 Idioma: es
 
 Cliente: Margon. Sector: Industria: ferroviario, defensa y obra pública. Año: 2026. Servicios: Diseño y desarrollo web, experiencia interactiva, multiidioma y newsletter.
@@ -515,7 +515,7 @@ Cliente: Margon. Sector: Industria: ferroviario, defensa y obra pública. Año: 
 ### RentUp Capital: web y formularios automatizados
 
 URL: https://banteq.com/proyectos/rentup-capital
-Actualizado: 2026-11-24
+Actualizado: 2026-11-26
 Idioma: es
 
 Cliente: RentUp Capital. Sector: Inversión inmobiliaria. Año: 2026. Servicios: Diseño y desarrollo web, automatización de formularios e integración con Brevo y Resend.
@@ -891,7 +891,7 @@ Rellénalo desde el móvil como un cliente y mira si llega la confirmación, qui
 ### Com triar una empresa per automatitzar processos
 
 URL: https://banteq.com/guias/com-triar-empresa-automatitzacio-processos
-Actualizado: 2026-11-23
+Actualizado: 2026-11-26
 Idioma: ca
 
 Banteq Digital · 23 de novembre de 2026
@@ -913,7 +913,7 @@ Aquest exemple és una prova que pots adaptar. Si vens serveis, substitueix la c
 #### Quatre preguntes per comparar pressupostos
 
 - On comença i on acaba la feina? Passar els articles a un full i donar d’alta una comanda a l’ERP són encàrrecs diferents. Demana que s’indiquin el punt de partida, el resultat i qui el valida.
-- Què pagarem quan ja funcioni? Demana per separat la implantació, les llicències i el manteniment. Pregunta què canviaria si es doblés el volum de comandes.
+- Què pagarem quan ja funcioni? Demana per separat la implantació, les llicències i el manteniment. Pregunta què canviaria si es doblés el volum de comandes. A automatització de processos per a pimes expliquem què fa variar el preu amb tres exemples, i a automatització amb n8n , com es compten les execucions de la plataforma.
 - Qui ho podrà reprendre si falla? Concreta qui rep l’avís, si el teu equip pot recuperar el treball pendent i com evitarà registrar-lo dues vegades.
 - Com sabrem si ens surt a compte? Mesura el temps que trigueu a tramitar una mostra habitual. A la prova, compta també les comprovacions i les excepcions. Fes servir el volum del teu negoci per comparar els dos resultats.
 

@@ -1,7 +1,7 @@
 {
  "https://banteq.com/": {
-  "firma": "b0f6b83e80bf",
-  "fecha": "2026-11-24"
+  "firma": "99d95b0b8b5c",
+  "fecha": "2026-11-26"
  },
  "https://banteq.com/automatizacion-n8n": {
   "firma": "f960cd52686c",
@@ -20,15 +20,15 @@
   "fecha": "2026-11-24"
  },
  "https://banteq.com/ca": {
-  "firma": "701a0d7fe497",
-  "fecha": "2026-11-24"
+  "firma": "e6088482a5ef",
+  "fecha": "2026-11-26"
  },
  "https://banteq.com/ca/automatitzacio-n8n": {
-  "firma": "761462c615dd",
+  "firma": "32f15e5980c7",
   "fecha": "2026-11-26"
  },
  "https://banteq.com/ca/automatitzacio-processos": {
-  "firma": "f4132a9cc6da",
+  "firma": "014bd8b564d4",
   "fecha": "2026-11-26"
  },
  "https://banteq.com/ca/avis-legal": {
@@ -36,7 +36,7 @@
   "fecha": "2026-11-24"
  },
  "https://banteq.com/ca/desenvolupament-web": {
-  "firma": "c87086d350e1",
+  "firma": "311e1e20b115",
   "fecha": "2026-11-26"
  },
  "https://banteq.com/ca/intelligencia-artificial": {
@@ -56,20 +56,20 @@
   "fecha": "2026-11-24"
  },
  "https://banteq.com/ca/projectes/margon": {
-  "firma": "6e4310a53eea",
-  "fecha": "2026-11-24"
+  "firma": "c3f1904fe343",
+  "fecha": "2026-11-26"
  },
  "https://banteq.com/ca/projectes/rentup-capital": {
-  "firma": "cf379e4c62bb",
-  "fecha": "2026-11-24"
+  "firma": "63e26c4789a6",
+  "fecha": "2026-11-26"
  },
  "https://banteq.com/desarrollo-web": {
   "firma": "df543285bd2d",
   "fecha": "2026-11-26"
  },
  "https://banteq.com/en": {
-  "firma": "6072dc4f6612",
-  "fecha": "2026-11-24"
+  "firma": "d401ec519f42",
+  "fecha": "2026-11-26"
  },
  "https://banteq.com/en/artificial-intelligence": {
   "firma": "f571b5870adf",
@@ -96,12 +96,12 @@
   "fecha": "2026-11-24"
  },
  "https://banteq.com/en/projects/margon": {
-  "firma": "4631f513da17",
-  "fecha": "2026-11-24"
+  "firma": "8f425deb6219",
+  "fecha": "2026-11-26"
  },
  "https://banteq.com/en/projects/rentup-capital": {
-  "firma": "0555faf888c0",
-  "fecha": "2026-11-24"
+  "firma": "56736f057ca5",
+  "fecha": "2026-11-26"
  },
  "https://banteq.com/en/web-development": {
   "firma": "99d48c3ac878",
@@ -132,8 +132,8 @@
   "fecha": "2026-11-24"
  },
  "https://banteq.com/guias/com-triar-empresa-automatitzacio-processos": {
-  "firma": "14a1e61dbab0",
-  "fecha": "2026-11-23"
+  "firma": "736e29e69d95",
+  "fecha": "2026-11-26"
  },
  "https://banteq.com/guias/como-pedir-presupuesto-web-a-medida": {
   "firma": "88407d58fd2a",
@@ -176,11 +176,11 @@
   "fecha": "2026-11-24"
  },
  "https://banteq.com/proyectos/margon": {
-  "firma": "f1adb0379af3",
-  "fecha": "2026-11-24"
+  "firma": "2213b15fd698",
+  "fecha": "2026-11-26"
  },
  "https://banteq.com/proyectos/rentup-capital": {
-  "firma": "d8106cde78ee",
-  "fecha": "2026-11-24"
+  "firma": "0ffa0cb172c4",
+  "fecha": "2026-11-26"
  }
 }

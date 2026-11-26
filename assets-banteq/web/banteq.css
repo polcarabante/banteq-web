@@ -1838,6 +1838,20 @@ dialog.bq-fx.bq-fx-cerrando::backdrop {
   font-size: 12px;
   text-align: center;
 }
+/* Enlaces de texto a las páginas de servicio, bajo las demostraciones (build.py, SERVICIOS_HOME) */
+.bq-demos-servicios {
+  margin: 0;
+  color: var(--dm-suave);
+  font-size: 15px;
+  line-height: 1.5;
+  text-align: center;
+  text-wrap: balance;
+}
+.bq-demos-servicios a {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: .2em;
+}
 .bq-demos-rejilla {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
