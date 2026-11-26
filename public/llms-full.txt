@@ -9,12 +9,12 @@ Estamos en Santa Perpètua de Mogoda (Barcelona) y trabajamos con empresas de Ba
 ### Automatización de procesos para pymes en Barcelona
 
 URL: https://banteq.com/automatizacion-procesos
-Actualizado: 2026-11-25
+Actualizado: 2026-11-26
 Idioma: es
 
 Conectamos el correo, las hojas de cálculo y el CRM que ya utiliza tu equipo.
 
-¿Tu equipo vuelve a teclear en Excel los pedidos que llegan por correo? Desde Santa Perpètua de Mogoda ayudamos a pymes de Barcelona y del Vallès a automatizar tareas como esta. El equipo sigue revisando los datos que faltan o no cuadran.
+¿Tu equipo vuelve a teclear en Excel los pedidos que llegan por correo? Desde Santa Perpètua de Mogoda ayudamos a pymes de Barcelona y del Vallès, como las de Sabadell, Terrassa, Granollers o Mollet, a automatizar tareas como esta. El equipo sigue revisando los datos que faltan o no cuadran.
 
 En [RentUp Capital](https://banteq.com/proyectos/rentup-capital) conectamos los formularios de la web con su lista de contactos. Alguien deja sus datos, recibe una confirmación y el equipo recibe el aviso para hacer el seguimiento.
 
@@ -123,7 +123,7 @@ Depende de cuántas veces se repite la tarea y de cuánto tarda hoy. En las auto
 
 **¿Trabajáis con empresas de fuera de Barcelona?**
 
-Sí. El análisis, el desarrollo y la formación pueden hacerse en remoto, así que trabajamos con empresas de toda España. Con las de Barcelona y el Vallès también podemos vernos en persona.
+Sí. El análisis, el desarrollo y la formación pueden hacerse en remoto, así que trabajamos con empresas de toda España. Con las de Barcelona y el Vallès (Sabadell, Terrassa, Granollers, Mollet o Santa Perpètua) también podemos vernos en persona.
 
 #### ¿Hablamos de tus procesos?
 
@@ -205,10 +205,10 @@ Estamos en Santa Perpètua de Mogoda (Barcelona) y trabajamos con empresas de Ba
 
 También te puede interesar: [automatización de procesos](https://banteq.com/automatizacion-procesos) y [automatización con n8n](https://banteq.com/automatizacion-n8n).
 
-### Automatización con n8n e integración de herramientas
+### Consultor n8n: automatización e integración de herramientas
 
 URL: https://banteq.com/automatizacion-n8n
-Actualizado: 2026-11-25
+Actualizado: 2026-11-26
 Idioma: es
 
 Tus programas, conectados entre sí: la información pasa de uno a otro sin copiar y pegar.
@@ -239,6 +239,14 @@ La usamos para los procesos que cruzan varias herramientas: recoger un dato, tra
 - **De varias herramientas a un informe.** Los datos se reúnen cada semana y llegan resumidos por correo.
 
 En [automatización de procesos](https://banteq.com/automatizacion-procesos) explicamos qué tareas conviene automatizar primero y cómo lo decidimos.
+
+#### Consultor n8n en Barcelona y el Vallès
+
+Si buscas un consultor de n8n para tu empresa, nos ocupamos del proyecto completo: revisamos el proceso, diseñamos el flujo, lo conectamos con tus programas, lo probamos con datos de ejemplo y formamos a quien lo va a usar. Estamos en Santa Perpètua de Mogoda: con empresas de Barcelona, Sabadell, Terrassa, Granollers o Mollet podemos vernos en persona, y con el resto de España trabajamos en remoto.
+
+Lo instalamos en la nube de n8n o en un servidor propio. Si los datos no deben salir de tu empresa, consulta [qué revisar al usar n8n en servidor propio con el RGPD](https://banteq.com/guias/n8n-servidor-propio-rgpd). Si el flujo emite facturas, revisa también [qué cambia Verifactu en las facturas automáticas](https://banteq.com/guias/verifactu-facturas-automaticas).
+
+[Cuéntanos qué programas quieres conectar](https://banteq.com/#hablemos) y cuántas veces al mes se repite la tarea.
 
 #### n8n, Make o Zapier: diferencias y cómo elegimos
 
@@ -309,12 +317,12 @@ También te puede interesar: [automatización de procesos](https://banteq.com/au
 ### Desarrollo web a medida para empresas
 
 URL: https://banteq.com/desarrollo-web
-Actualizado: 2026-11-25
+Actualizado: 2026-11-26
 Idioma: es
 
 Webs corporativas, rediseños y formularios conectados con tu equipo.
 
-Si buscas desarrollo web en Badalona, podemos preparar tu proyecto desde Santa Perpètua de Mogoda. Dinos qué vendes, qué debería poder hacer un cliente en tu web y quién recibe hoy las consultas.
+Si buscas desarrollo web en Badalona, Sabadell, Terrassa o cualquier punto del Vallès, podemos preparar tu proyecto desde Santa Perpètua de Mogoda. Dinos qué vendes, qué debería poder hacer un cliente en tu web y quién recibe hoy las consultas.
 
 [Pedir presupuesto para mi web](https://banteq.com/#hablemos). Si ya tienes una, incluye la dirección y qué te gustaría mejorar. Para ver cómo resolvimos dos encargos distintos, visita [la web industrial de Margon](https://banteq.com/proyectos/margon) o [los formularios de captación de RentUp Capital](https://banteq.com/proyectos/rentup-capital).
 
@@ -466,7 +474,7 @@ Estamos en Santa Perpètua de Mogoda (Barcelona) y trabajamos con empresas de Ba
 ### Margon: web corporativa para una empresa industrial
 
 URL: https://banteq.com/proyectos/margon
-Actualizado: 2026-11-24
+Actualizado: 2026-11-26
 Idioma: es
 
 Cliente: Margon. Sector: Industria: ferroviario, defensa y obra pública. Año: 2026. Servicios: Diseño y desarrollo web, experiencia interactiva, multiidioma y newsletter.
@@ -507,7 +515,7 @@ Cliente: Margon. Sector: Industria: ferroviario, defensa y obra pública. Año: 
 ### RentUp Capital: web y formularios automatizados
 
 URL: https://banteq.com/proyectos/rentup-capital
-Actualizado: 2026-11-24
+Actualizado: 2026-11-26
 Idioma: es
 
 Cliente: RentUp Capital. Sector: Inversión inmobiliaria. Año: 2026. Servicios: Diseño y desarrollo web, automatización de formularios e integración con Brevo y Resend.
@@ -883,7 +891,7 @@ Rellénalo desde el móvil como un cliente y mira si llega la confirmación, qui
 ### Com triar una empresa per automatitzar processos
 
 URL: https://banteq.com/guias/com-triar-empresa-automatitzacio-processos
-Actualizado: 2026-11-23
+Actualizado: 2026-11-26
 Idioma: ca
 
 Banteq Digital · 23 de novembre de 2026
@@ -905,7 +913,7 @@ Aquest exemple és una prova que pots adaptar. Si vens serveis, substitueix la c
 #### Quatre preguntes per comparar pressupostos
 
 - On comença i on acaba la feina? Passar els articles a un full i donar d’alta una comanda a l’ERP són encàrrecs diferents. Demana que s’indiquin el punt de partida, el resultat i qui el valida.
-- Què pagarem quan ja funcioni? Demana per separat la implantació, les llicències i el manteniment. Pregunta què canviaria si es doblés el volum de comandes.
+- Què pagarem quan ja funcioni? Demana per separat la implantació, les llicències i el manteniment. Pregunta què canviaria si es doblés el volum de comandes. A automatització de processos per a pimes expliquem què fa variar el preu amb tres exemples, i a automatització amb n8n , com es compten les execucions de la plataforma.
 - Qui ho podrà reprendre si falla? Concreta qui rep l’avís, si el teu equip pot recuperar el treball pendent i com evitarà registrar-lo dues vegades.
 - Com sabrem si ens surt a compte? Mesura el temps que trigueu a tramitar una mostra habitual. A la prova, compta també les comprovacions i les excepcions. Fes servir el volum del teu negoci per comparar els dos resultats.
 

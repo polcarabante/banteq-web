@@ -147,6 +147,8 @@ TABLA = [
     ("Año", "Any", "Year"),
     ("Cliente", "Client", "Client"),
     ("Sector", "Sector", "Sector"),
+    # --- Enlaces a los servicios bajo las demostraciones (build.py, SERVICIOS_HOME) ---------------
+    ("Conoce cada servicio en detalle:", "Coneix cada servei en detall:", "See each service in detail:"),
     # --- Cómo trabajamos --------------------------------------------------------------------------
     ("cómo trabajamos", "com treballem", "how we work"),
     ("Cómo trabajamos", "Com treballem", "How we work"),
@@ -154,6 +156,13 @@ TABLA = [
      "Un procés clar per passar de tasques manuals a sistemes que funcionen, amb el teu equip implicat en cada pas.",
      "A clear process for moving from manual tasks to systems that work, with your team involved at every step."),
     ("Diagnóstico", "Diagnòstic", "Diagnostic"),
+    # Variantes cortas de los pasos que pinta la versión móvil (contenido.py)
+    ("Analizamos cómo trabaja tu empresa y dónde se pierde tiempo.",
+     "Analitzem com treballa la teva empresa i on es perd temps.",
+     "We analyse how your business works and where time is lost."),
+    ("Formamos a tu equipo y damos soporte con el uso real.",
+     "Formem el teu equip i l'acompanyem en l'ús real.",
+     "We train your team and support it in real use."),
     ("Analizamos cómo trabaja tu empresa y detectamos tareas repetitivas, lentas o propensas a errores.",
      "Analitzem com treballa la teva empresa i detectem tasques repetitives, lentes o propenses a errors.",
      "We analyse how your business works and identify repetitive, slow or error-prone tasks."),

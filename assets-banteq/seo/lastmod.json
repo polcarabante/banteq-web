@@ -1,35 +1,35 @@
 {
  "https://banteq.com/": {
-  "firma": "587a8fc7f44d",
-  "fecha": "2026-11-25"
+  "firma": "79e675382a75",
+  "fecha": "2026-11-26"
  },
  "https://banteq.com/automatizacion-n8n": {
-  "firma": "2c661e8ff413",
-  "fecha": "2026-11-25"
+  "firma": "f960cd52686c",
+  "fecha": "2026-11-26"
  },
  "https://banteq.com/automatizacion-procesos": {
-  "firma": "f5dee14ccf0a",
-  "fecha": "2026-11-25"
+  "firma": "cfc17714ed24",
+  "fecha": "2026-11-26"
  },
  "https://banteq.com/automatizaciones/asistente": {
   "firma": "965ad3931449",
-  "fecha": "2026-11-25"
+  "fecha": "2026-11-26"
  },
  "https://banteq.com/automatizaciones/crm": {
   "firma": "424454cd996e",
-  "fecha": "2026-11-25"
+  "fecha": "2026-11-26"
  },
  "https://banteq.com/automatizaciones/facturas": {
   "firma": "a4edf8067955",
-  "fecha": "2026-11-25"
+  "fecha": "2026-11-26"
  },
  "https://banteq.com/automatizaciones/informes": {
   "firma": "4ff054fb336c",
-  "fecha": "2026-11-25"
+  "fecha": "2026-11-26"
  },
  "https://banteq.com/automatizaciones/reservas": {
   "firma": "8fa70e7cfffe",
-  "fecha": "2026-11-25"
+  "fecha": "2026-11-26"
  },
  "https://banteq.com/automatizaciones/seguimiento/ahorro": {
   "firma": "3ad670b3002a",
@@ -40,44 +40,44 @@
   "fecha": "2026-11-24"
  },
  "https://banteq.com/ca": {
-  "firma": "701a0d7fe497",
-  "fecha": "2026-11-24"
+  "firma": "e6088482a5ef",
+  "fecha": "2026-11-26"
  },
  "https://banteq.com/ca/automatitzacio-n8n": {
-  "firma": "4d94ff72a2d5",
-  "fecha": "2026-11-25"
+  "firma": "32f15e5980c7",
+  "fecha": "2026-11-26"
  },
  "https://banteq.com/ca/automatitzacio-processos": {
-  "firma": "6cbca3c1c7ec",
-  "fecha": "2026-11-25"
+  "firma": "014bd8b564d4",
+  "fecha": "2026-11-26"
  },
  "https://banteq.com/ca/automatitzacions/assistent": {
   "firma": "b2cfb6627fcf",
-  "fecha": "2026-11-25"
+  "fecha": "2026-11-26"
  },
  "https://banteq.com/ca/automatitzacions/crm": {
   "firma": "5cda6e00187d",
-  "fecha": "2026-11-25"
+  "fecha": "2026-11-26"
  },
  "https://banteq.com/ca/automatitzacions/factures": {
   "firma": "6c1d906096e3",
-  "fecha": "2026-11-25"
+  "fecha": "2026-11-26"
  },
  "https://banteq.com/ca/automatitzacions/informes": {
   "firma": "ca8f10ec4678",
-  "fecha": "2026-11-25"
+  "fecha": "2026-11-26"
  },
  "https://banteq.com/ca/automatitzacions/reserves": {
   "firma": "953a824e829b",
-  "fecha": "2026-11-25"
+  "fecha": "2026-11-26"
  },
  "https://banteq.com/ca/avis-legal": {
   "firma": "bb94159c49dc",
   "fecha": "2026-11-24"
  },
  "https://banteq.com/ca/desenvolupament-web": {
-  "firma": "e720b217b76b",
-  "fecha": "2026-11-25"
+  "firma": "311e1e20b115",
+  "fecha": "2026-11-26"
  },
  "https://banteq.com/ca/intelligencia-artificial": {
   "firma": "5efdb0a85705",
@@ -96,20 +96,20 @@
   "fecha": "2026-11-24"
  },
  "https://banteq.com/ca/projectes/margon": {
-  "firma": "6e4310a53eea",
-  "fecha": "2026-11-24"
+  "firma": "c3f1904fe343",
+  "fecha": "2026-11-26"
  },
  "https://banteq.com/ca/projectes/rentup-capital": {
-  "firma": "cf379e4c62bb",
-  "fecha": "2026-11-24"
+  "firma": "63e26c4789a6",
+  "fecha": "2026-11-26"
  },
  "https://banteq.com/desarrollo-web": {
-  "firma": "403187cc052b",
-  "fecha": "2026-11-25"
+  "firma": "df543285bd2d",
+  "fecha": "2026-11-26"
  },
  "https://banteq.com/en": {
-  "firma": "6072dc4f6612",
-  "fecha": "2026-11-24"
+  "firma": "d401ec519f42",
+  "fecha": "2026-11-26"
  },
  "https://banteq.com/en/artificial-intelligence": {
   "firma": "f571b5870adf",
@@ -117,23 +117,23 @@
  },
  "https://banteq.com/en/automations/assistant": {
   "firma": "4767b794f036",
-  "fecha": "2026-11-25"
+  "fecha": "2026-11-26"
  },
  "https://banteq.com/en/automations/bookings": {
   "firma": "d9af72558934",
-  "fecha": "2026-11-25"
+  "fecha": "2026-11-26"
  },
  "https://banteq.com/en/automations/crm": {
   "firma": "fa4334b55677",
-  "fecha": "2026-11-25"
+  "fecha": "2026-11-26"
  },
  "https://banteq.com/en/automations/invoices": {
   "firma": "ba3c80df87a2",
-  "fecha": "2026-11-25"
+  "fecha": "2026-11-26"
  },
  "https://banteq.com/en/automations/reports": {
   "firma": "cbade659570c",
-  "fecha": "2026-11-25"
+  "fecha": "2026-11-26"
  },
  "https://banteq.com/en/legal-notice": {
   "firma": "1b2a479b9258",
@@ -156,12 +156,12 @@
   "fecha": "2026-11-24"
  },
  "https://banteq.com/en/projects/margon": {
-  "firma": "4631f513da17",
-  "fecha": "2026-11-24"
+  "firma": "8f425deb6219",
+  "fecha": "2026-11-26"
  },
  "https://banteq.com/en/projects/rentup-capital": {
-  "firma": "0555faf888c0",
-  "fecha": "2026-11-24"
+  "firma": "56736f057ca5",
+  "fecha": "2026-11-26"
  },
  "https://banteq.com/en/web-development": {
   "firma": "99d48c3ac878",
@@ -192,8 +192,8 @@
   "fecha": "2026-11-24"
  },
  "https://banteq.com/guias/com-triar-empresa-automatitzacio-processos": {
-  "firma": "14a1e61dbab0",
-  "fecha": "2026-11-23"
+  "firma": "736e29e69d95",
+  "fecha": "2026-11-26"
  },
  "https://banteq.com/guias/como-pedir-presupuesto-web-a-medida": {
   "firma": "88407d58fd2a",
@@ -236,11 +236,11 @@
   "fecha": "2026-11-24"
  },
  "https://banteq.com/proyectos/margon": {
-  "firma": "f1adb0379af3",
-  "fecha": "2026-11-24"
+  "firma": "2213b15fd698",
+  "fecha": "2026-11-26"
  },
  "https://banteq.com/proyectos/rentup-capital": {
-  "firma": "d8106cde78ee",
-  "fecha": "2026-11-24"
+  "firma": "0ffa0cb172c4",
+  "fecha": "2026-11-26"
  }
 }

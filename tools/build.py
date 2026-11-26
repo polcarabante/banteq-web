@@ -1499,9 +1499,13 @@ def build_service_pages():
         i = t.find('className:`framer-inyegz`,"data-framer-name":`Main`,children:[')
         assert i > 0, "no se encuentra la columna de contenido de la página de texto"
         k = t.find("children:[", i) + len("children:")
-        t = t[:k] + js_service_main(sv) + t[jsx.match_bracket(t, k):]
+        # Los enlaces del texto al aviso legal llevan el id de su página (H6u27ToU_), el mismo que la
+        # plantilla clonada: se apartan antes de cambiar el id de la plantilla por el del servicio, o
+        # acabarían apuntando a la propia página.
+        cuerpo = js_service_main(sv).replace("webPageId:`H6u27ToU_`", "webPageId:`BQ_ID_AVISO_LEGAL`")
+        t = t[:k] + cuerpo + t[jsx.match_bracket(t, k):]
         assert "H6u27ToU_" in t
-        t = t.replace("H6u27ToU_", sv["id"])
+        t = t.replace("H6u27ToU_", sv["id"]).replace("BQ_ID_AVISO_LEGAL", "H6u27ToU_")
         S[service_mod(sv)] = LINK_IMPORT + t
         PAGINAS[sv["slug"]] = (sv["title"], sv["descripcion"])
     # Rutas nuevas: junto a la del aviso legal, y con la misma plantilla de página (cabecera y pie).
@@ -1555,7 +1559,9 @@ def apply_project_seo():
         trozos = ["`Servicios relacionados: `" if len(servicios) > 1 else "`Servicio relacionado: `"]
         for k, slug in enumerate(servicios):
             if k:
-                trozos.append("` y `")
+                # Coma y no «y»: el diccionario de /ca y /en no puede traducir «y», porque también es el
+                # nombre de una propiedad de animación de Framer (se rompería la entrada animada).
+                trozos.append("`, `")
             trozos.append(enlace(nombres[slug], f"{{webPageId:`{rutas[slug]}`}}"))
         trozos.append("`.`")
         if pr["slug"] in C.PROYECTO_WEB:
@@ -2188,13 +2194,31 @@ def apply_formula_home():
     S[INDEX] = h[:j] + formula_boton_html() + h[j:]
 
 
+# Enlaces de texto a las páginas de servicio, bajo las demostraciones de la home (2026-11-26): los
+# buscadores y quien lee necesitan llegar a cada servicio desde el cuerpo de la portada, no solo
+# desde el pie. En /ca y /en, banteq-i18n.js traduce el texto (textos_home.py) y lleva cada enlace a
+# su página en ese idioma. No toca las tarjetas ni los botones de las demostraciones.
+SERVICIOS_HOME = ("Conoce cada servicio en detalle:", [
+    ("automatización de procesos", "/automatizacion-procesos"),
+    ("n8n e integraciones", "/automatizacion-n8n"),
+    ("desarrollo web a medida", "/desarrollo-web"),
+])
+
+
+def servicios_home_html():
+    rotulo, enlaces = SERVICIOS_HOME
+    a = [f'<a href="{destino}">{html.escape(texto)}</a>' for texto, destino in enlaces]
+    # Separados por « · » y no por «y» (ver el comentario de los servicios relacionados de los proyectos).
+    return f'<p class="bq-demos-servicios">{html.escape(rotulo)} {(chr(160) + "· ").join(a)}</p>'
+
+
 def apply_demos_home():
     """Sección «Automatización e inteligencia artificial»: las cinco tarjetas de la plantilla se
     sustituyen por seis demostraciones animadas (tools/demos.py; movimiento en banteq.js, aspecto en
     banteq.css). Mismo HTML en el módulo (dangerouslySetInnerHTML: React no lo toca al hidratar ni
     al volver a pintar) y en el HTML inicial. La fila del diagnóstico de debajo no cambia."""
     import demos
-    contenido = demos.seccion_html()
+    contenido = demos.seccion_html() + servicios_home_html()
     t = S[HOME_MOD]
     i = t.find("className:`framer-1tg9hql`")
     assert i > 0 and t.count("className:`framer-1tg9hql`") == 1, "no se encuentran las tarjetas de la sección de servicios"

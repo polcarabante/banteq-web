@@ -46,7 +46,7 @@ SERVICIOS_CA = [
         "h1": "Automatització de processos per a pimes",
         "subtitulo": "Connectem el correu, els fulls de càlcul i el CRM que ja fa servir el teu equip.",
         "intro": [
-            "Cada cop que arriba una comanda per correu, algú n’ha de copiar les dades a l’Excel? Des de Santa Perpètua de Mogoda ajudem pimes de Barcelona i del Vallès a automatitzar feines com aquesta. L’equip continua revisant les dades que falten o que no quadren.",
+            "Cada cop que arriba una comanda per correu, algú n’ha de copiar les dades a l’Excel? Des de Santa Perpètua de Mogoda ajudem pimes de Barcelona i del Vallès, com les de Sabadell, Terrassa, Granollers o Mollet, a automatitzar feines com aquesta. L’equip continua revisant les dades que falten o que no quadren.",
             ["A ", ("a", "RentUp Capital", "/proyectos/rentup-capital"), " vam connectar els formularis del web amb la seva llista de contactes. Quan algú hi deixa les dades, rep una confirmació i l’equip rep un avís per fer-ne el seguiment."],
             [("a", "Vull saber si puc automatitzar una tasca", "#hablemos"), ". Explica’ns què fas a mà, amb quins programes treballes i quantes vegades al mes ho repeteixes. Si et cal una diagnosi avançada, t’explicarem què inclou i quant costa abans de contractar-la."],
         ],
@@ -76,6 +76,29 @@ SERVICIOS_CA = [
                 ("p", ["Per valorar el teu cas, ", ("a", "explica’ns quina tasca repeteixes", "#hablemos"), ", amb quins programes la fas i quantes vegades al mes. El temps alliberat només és un estalvi de diners si redueix una despesa real."]),
                 ("p", ["Si estàs comparant pressupostos de diversos proveïdors, la guia ", ("a", "com triar una empresa per automatitzar processos", "/guias/com-triar-empresa-automatitzacio-processos"), " proposa una prova amb tres comandes i quatre preguntes per comparar-los amb la mateixa tasca."]),
             ]),
+            ("Quant costa automatitzar un procés en una pime?", [
+                ("p", "El preu d’automatitzar un procés depèn de quants programes hi intervenen, de quantes vegades es repeteix la tasca, de les excepcions que cal resoldre i de quins passos ha de revisar una persona. Per això no hi ha una tarifa única: dues tasques que semblen iguals poden tenir un abast molt diferent. Al pressupost separem el que pagues una sola vegada, la implantació, del que es repeteix cada mes: les llicències i el manteniment."),
+                ("p", "La taula compara tres tasques fictícies, sense imports, per mostrar què fa créixer l’abast en cada cas."),
+                ("tabla", (
+                    ["", "Formulari del web al CRM", "Factures de proveïdors", "Informe setmanal"],
+                    [
+                        ["Programes", "El formulari i el CRM", "El correu, el full de càlcul o el programa de gestió i la carpeta on s’arxiva el PDF", "Cada eina d’on surten les dades i el correu on arriba el resum"],
+                        ["Volum", "Tantes execucions com sol·licituds", "Tantes execucions com factures", "Una execució per setmana"],
+                        ["Excepcions", "Contactes duplicats i camps buits", "Imports que no quadren, proveïdors nous i factures escanejades", "Dades que falten o arriben tard en alguna eina"],
+                        ["Revisió humana", "L’equip rep l’avís i respon la sol·licitud", "Una persona revisa les factures que no quadren", "Qui rep l’informe en valida les xifres abans de decidir"],
+                        ["IA", "No cal: les dades arriben en camps fixos", "Sovint sí, per llegir factures que no arriben sempre igual", "No cal: les dades ja surten ordenades de cada eina"],
+                        ["Manteniment", "Revisar el flux si canvia el formulari o el CRM", "Ajustar les regles quan entra un proveïdor amb un format nou", "Afegir o treure indicadors quan l’equip ho demana"],
+                    ],
+                )),
+                ("p", "En tots tres casos, el pressupost té tres parts:"),
+                ("ul", [
+                    [("b", "Implantació. "), "Anàlisi del procés, disseny del flux, connexions amb els teus programes, proves amb dades d’exemple, posada en marxa, formació i documentació. Es paga una vegada."],
+                    [("b", "Plataforma i llicències. "), "L’eina d’automatització, al núvol o en un servidor propi, i els consums d’altres serveis, com ara la IA, si escau. Es paga cada mes i pot créixer amb el volum."],
+                    [("b", "Manteniment. "), "Qui supervisa els fluxos, qui atén les incidències i quins canvis o ampliacions es pressuposten a part."],
+                ]),
+                ("p", ["Si la tasca connecta diverses eines, a ", ("a", "automatització amb n8n", "/ca/automatitzacio-n8n"), " detallem què inclou cada partida i com es compten les execucions. Si cal llegir documents o classificar correus, com en l’exemple de les factures, hi afegim ", ("a", "intel·ligència artificial amb revisió humana", "/ca/intelligencia-artificial"), " i en preveiem el consum al pressupost."]),
+                ("p", ["Per saber si et surt a compte, compara la implantació i les despeses mensuals amb el temps que recupera el teu equip, tal com explica l’apartat «Com pots calcular si et surt a compte automatitzar una tasca?». ", ("a", "Explica’ns la tasca, els programes i quantes vegades al mes es repeteix", "#hablemos"), " i et direm quins d’aquests factors pesen en el teu cas. Si cal una diagnosi avançada, t’explicarem què inclou i quant costa abans de contractar-la."]),
+            ]),
             ("Comencem per un diagnòstic", [
                 ("p", "Abans d'automatitzar res, analitzem com treballa la teva empresa i dibuixem un mapa dels seus processos, eines i connexions. Aquest mapa mostra on es perd temps i què convé automatitzar primer."),
                 ("p", "Preparem dos diagnòstics separats: processos i oportunitats d'automatització. El primer organitza com treballeu i ajuda a preparar el camí cap a la ISO 9001. El segon identifica tasques que es podrien fer amb menys temps i errors. Us contactarem en menys de 72 hores naturals per comentar les conclusions, els honoraris i les condicions de lliurament. Enviar el qüestionari no suposa contractar ni pagar."),
@@ -102,9 +125,11 @@ SERVICIOS_CA = [
                     ("Hem de canviar d'eines?", "No. Partim de les que ja fa servir la teva empresa i les connectem entre si. Només proposem una eina nova quan resol alguna cosa que les actuals no poden."),
                     ("Què passa si una automatització s'equivoca?", "Les dissenyem amb validacions, registre d'accions i revisió humana en els passos sensibles, i les provem abans de posar-les en marxa. Les decisions importants continuen passant per una persona."),
                     ("Necessitem coneixements tècnics?", "No. Ens encarreguem de l'anàlisi, el desenvolupament, les integracions i les proves. Després formem el teu equip i deixem documentació perquè faci servir el sistema amb autonomia."),
-                    ("Quant costa automatitzar un procés?", "Per fer el pressupost revisem quants programes hi intervenen, com accedim a les dades i quines excepcions cal comprovar. Separem la implantació de les despeses recurrents de llicències i manteniment perquè les puguis comparar amb el temps que recupera el teu equip."),
+                    ("Quant costa automatitzar un procés?", "Depèn dels programes que hi intervenen, del volum, de les excepcions i dels passos que ha de revisar una persona. A l’apartat «Quant costa automatitzar un procés en una pime?» d’aquesta pàgina expliquem cada factor amb tres exemples i com separem la implantació de les llicències i el manteniment."),
+                    ("Per què dos pressupostos per a la mateixa tasca poden ser tan diferents?", "Perquè sovint no tenen el mateix abast: l’un preveu els duplicats, les dades que falten i la revisió humana, i l’altre només el cas en què tot arriba bé. També pot variar qui paga les llicències i què cobreix el manteniment. Demana que cada proposta indiqui on comença i on acaba la feina i quines despeses es repeteixen cada mes."),
+                    ("Demanar una valoració té cost?", "No. Enviar-nos la consulta o el qüestionari no suposa contractar ni pagar. Si el teu cas necessita una diagnosi avançada, que és de pagament, t’expliquem què inclou i quant costa abans que la contractis."),
                     ("Quant de temps s'estalvia?", "Depèn de quantes vegades es repeteix la tasca i de quant triga avui. En les automatitzacions amb garantia ho deixem per escrit abans de començar: quant de temps dedica el teu equip al procés i com es mesurarà després."),
-                    ("Treballeu amb empreses de fora de Barcelona?", "Sí. L'anàlisi, el desenvolupament i la formació es poden fer en remot, així que treballem amb empreses d'arreu d'Espanya. Amb les de Barcelona i el Vallès també ens podem veure en persona."),
+                    ("Treballeu amb empreses de fora de Barcelona?", "Sí. L'anàlisi, el desenvolupament i la formació es poden fer en remot, així que treballem amb empreses d'arreu d'Espanya. Amb les de Barcelona i el Vallès (Sabadell, Terrassa, Granollers, Mollet o Santa Perpètua) també ens podem veure en persona."),
                 ]),
             ]),
             ("Parlem dels teus processos?", [
@@ -181,12 +206,12 @@ SERVICIOS_CA = [
         "es": "automatizacion-n8n",
         "id": "bqCaN8nI1",
         "nombre": "Automatització amb n8n i integració d'eines",
-        "title": "Automatització amb n8n i integració d'eines | Banteq",
+        "title": "Consultor n8n a Barcelona: integracions a mida | Banteq",
         "descripcion": (
-            "Connectem el teu correu, Excel, CRM, ERP, WhatsApp i el teu web amb n8n, Make o integracions per API "
-            "a mida. Les dades passen d'un programa a un altre sense copiar i enganxar."
+            "Implantem n8n a empreses de Barcelona i el Vallès: connectem correu, Excel, CRM, ERP i el teu web, "
+            "al núvol o al teu servidor, amb avisos si falla."
         ),
-        "h1": "Automatització amb n8n i integració d'eines",
+        "h1": "Consultor n8n: automatització i integració d'eines",
         "subtitulo": "Els teus programes, connectats entre si: la informació passa de l'un a l'altre sense copiar i enganxar.",
         "intro": [
             "La majoria de les empreses ja té bones eines. El problema és que no es parlen: la comanda és en un programa, el client en un altre i la factura en un tercer, i algú dedica part del dia a passar dades d'un lloc a un altre.",
@@ -194,7 +219,7 @@ SERVICIOS_CA = [
         ],
         "secciones": [
             ("Què és n8n i per a què el fem servir", [
-                ("p", "n8n és una eina d'automatització que connecta aplicacions mitjançant fluxos: quan passa alguna cosa en un programa, s'executen una sèrie de passos en d'altres. Es pot fer servir al núvol d'n8n o instal·lar-se en un servidor propi, i permet afegir lògica a mida i intel·ligència artificial quan el flux ho necessita."),
+                ("p", "n8n és una eina d'automatització que connecta aplicacions mitjançant fluxos: quan passa alguna cosa en un programa, s'executen una sèrie de passos en altres programes. Es pot fer servir al núvol d'n8n o instal·lar-se en un servidor propi, i permet afegir lògica a mida i intel·ligència artificial quan el flux ho necessita."),
                 ("p", "El fem servir per als processos que creuen diverses eines: recollir una dada, transformar-la, comprovar-la i deixar-la on ha d'estar, amb avisos si alguna cosa falla."),
             ]),
             ("Quines eines connectem", [
@@ -214,6 +239,12 @@ SERVICIOS_CA = [
                     [("b", "De diverses eines a un informe. "), "Les dades es reuneixen cada setmana i arriben resumides per correu."],
                 ]),
                 ("p", ["A ", ("a", "automatització de processos", "/ca/automatitzacio-processos"), " expliquem quines tasques convé automatitzar primer i com ho decidim."]),
+            ]),
+            ("Consultor n8n a Barcelona i el Vallès", [
+                ("p", "Si busques un consultor d'n8n per a la teva empresa, ens encarreguem del projecte sencer: revisem el procés, dissenyem el flux, el connectem amb els teus programes, el provem amb dades d'exemple i formem qui l'ha de fer servir. Som a Santa Perpètua de Mogoda: amb empreses de Barcelona, Sabadell, Terrassa, Granollers o Mollet ens podem veure en persona, i amb la resta d'Espanya treballem en remot."),
+                ("p", ["L'instal·lem al núvol d'n8n o en un servidor propi. Si les dades no han de sortir de la teva empresa, consulta ", ("a", "què cal revisar per fer servir n8n en un servidor propi amb el RGPD", "/guias/n8n-servidor-propio-rgpd"), " (en castellà). Si el flux emet factures, revisa també ", ("a", "què canvia Verifactu en les factures automàtiques", "/guias/verifactu-facturas-automaticas"), " (en castellà)."]),
+                ("p", ["Si estàs comparant proveïdors, la guia ", ("a", "com triar una empresa per automatitzar processos", "/guias/com-triar-empresa-automatitzacio-processos"), " proposa una prova amb tres comandes per comparar-los amb la mateixa tasca."]),
+                ("p", [("a", "Explica'ns quins programes vols connectar", "#hablemos"), " i quantes vegades al mes es repeteix la tasca."]),
             ]),
             ("n8n, Make o Zapier: diferències i com triem", [
                 ("p", "No hi ha una eina millor per a tot. Triem segons el volum d'operacions, com de sensibles són les dades, les eines que ja tens i qui mantindrà el flux després. Si ja treballes amb Make, amb Zapier o amb una altra plataforma, partim d'aquí."),
@@ -260,18 +291,18 @@ SERVICIOS_CA = [
         "nombre": "Desenvolupament web a mida",
         "title": "Disseny i desenvolupament web a mida a Barcelona | Banteq",
         "descripcion": (
-            "Disseny web per a empreses de Barcelona i Badalona. Consulta els projectes de Margon i RentUp Capital i demana pressupost per a un web nou o un redisseny."
+            "Webs a mida per a empreses de Barcelona, Badalona i el Vallès. Mira els projectes de Margon i RentUp Capital i demana pressupost per al teu web."
         ),
         "h1": "Desenvolupament web a mida per a empreses",
         "subtitulo": "Webs corporatius, redissenys i formularis connectats amb el teu equip.",
         "intro": [
-            "Si busques algú que desenvolupi el web del teu negoci a Badalona, podem preparar el projecte des de Santa Perpètua de Mogoda. Explica’ns què vens, què hi hauria de poder fer un client i qui s’encarrega avui de respondre les consultes.",
+            "Si busques algú que desenvolupi el web del teu negoci a Badalona, Sabadell, Terrassa o qualsevol punt del Vallès, podem preparar el projecte des de Santa Perpètua de Mogoda. Explica’ns què vens, què hi hauria de poder fer un client i qui s’encarrega avui de respondre les consultes.",
             [("a", "Demanar pressupost per al meu web", "#hablemos"), ". Si ja en tens un, indica’n l’adreça i què t’agradaria millorar. Pots veure com vam resoldre dos encàrrecs diferents al ", ("a", "web industrial de Margon", "/proyectos/margon"), " i als ", ("a", "formularis de captació de RentUp Capital", "/proyectos/rentup-capital"), "."],
         ],
         "secciones": [
             ("Quin tipus de webs fem", [
                 ("ul", [
-                    [("b", "Webs corporatius. "), "Moderns i cuidats al detall, pensats per explicar bé el que fas."],
+                    [("b", "Webs corporatius. "), "Moderns i cuidats fins a l'últim detall, pensats per explicar bé el que fas."],
                     [("b", "Redisseny de webs. "), "Nova imatge, millor estructura i una experiència pensada primer per al mòbil."],
                     [("b", "Experiències interactives. "), "Animacions, 3D i recorreguts que fan que un producte s'entengui d'un cop d'ull."],
                     [("b", "Webs en diversos idiomes. "), "Amb la terminologia correcta en cadascun."],
@@ -291,7 +322,7 @@ SERVICIOS_CA = [
                     "Avís al teu equip al moment",
                     "Integració amb el teu correu i amb les teves automatitzacions",
                 ]),
-                ("p", ["És la mateixa feina que fem a ", ("a", "automatització de processos", "/ca/automatitzacio-processos"), ", aplicada al teu web."]),
+                ("p", ["És la mateixa feina que fem a ", ("a", "automatització de processos", "/ca/automatitzacio-processos"), ", aplicada al teu web. Quan el formulari s’ha de connectar amb el CRM, el correu o el programa de gestió, ho fem amb ", ("a", "n8n o integracions a mida", "/ca/automatitzacio-n8n"), "."]),
             ]),
             ("Ràpid i ben construït", [
                 ("p", "Disseny adaptat a mòbil, tauleta i escriptori, bon rendiment i una base tècnica preparada per créixer amb tu. Cuidem també l'estructura i el SEO de cada pàgina, perquè els teus clients et trobin."),
