@@ -3,7 +3,7 @@
 // registra. Todo en el navegador: el archivo no sale del equipo del visitante.
 //   PDF con texto → pdf.js · PDF escaneado o imagen → OCR (tesseract.js) · XML Facturae → lectura exacta
 import { montarAhorro } from "../comun/ahorro.js?v=b860c75e88";
-import { cargarPdfjs, reconocerTexto } from "../comun/carga.js?v=26b2baaff2";
+import { cargarPdfjs, reconocerTexto } from "../comun/carga.js?v=a4ae5b4595";
 import { anadir, montarERP, registros } from "../comun/erp.js?v=494fabfa89";
 import { crearPasos } from "../comun/pasos.js?v=eb663277c1";
 import { prepararSubida } from "../comun/subida.js?v=0f014d39f5";

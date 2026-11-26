@@ -3,7 +3,7 @@
 // preguntas con frases del documento, citando sección y página. Si la respuesta no está, lo dice.
 // Todo en el navegador (lib/asistente-busqueda.mjs): el documento no sale del equipo del visitante.
 import { montarAhorro } from "../comun/ahorro.js?v=b860c75e88";
-import { cargarMammoth, cargarPdfjs } from "../comun/carga.js?v=26b2baaff2";
+import { cargarMammoth, cargarPdfjs } from "../comun/carga.js?v=a4ae5b4595";
 import { anadir, montarERP } from "../comun/erp.js?v=494fabfa89";
 import { crearPasos } from "../comun/pasos.js?v=eb663277c1";
 import { prepararSubida } from "../comun/subida.js?v=0f014d39f5";

@@ -3,7 +3,7 @@
 // y queda listo el panel de dirección con su correo. Si las columnas no se reconocen, el visitante
 // las elige. Todo en el navegador (lib/informes-datos.mjs): el archivo no sale de su equipo.
 import { montarAhorro } from "../comun/ahorro.js?v=b860c75e88";
-import { cargarSheetjs } from "../comun/carga.js?v=26b2baaff2";
+import { cargarSheetjs } from "../comun/carga.js?v=a4ae5b4595";
 import { anadir, montarERP } from "../comun/erp.js?v=494fabfa89";
 import { crearPasos } from "../comun/pasos.js?v=eb663277c1";
 import { prepararSubida } from "../comun/subida.js?v=0f014d39f5";

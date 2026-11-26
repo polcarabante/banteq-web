@@ -1,12 +1,13 @@
 // Librerías pesadas, solo cuando hacen falta (nunca al abrir la página). Están copiadas en la web
 // (/demos/vendor/, assets-banteq/vendor/): no se llama a ningún CDN ni se envía nada fuera.
-//   pdf.js 6.5.438        leer y previsualizar PDF        ~0,5 MB comprimido
+//   pdf.js 6.5.438        leer y previsualizar PDF        ~0,55 MB comprimido (build «legacy»: la
+//                         normal usa Iterator y no carga en Safari anteriores a 18.4; visto el 2026-11-26)
 //   tesseract.js 7.0.0    OCR de imágenes y escaneos      ~3–5 MB (núcleo + modelo; solo con imágenes)
 //   mammoth 1.13.0        leer documentos de Word (DOCX)  ~0,1 MB comprimido
 //   SheetJS 0.20.3 (mini) leer Excel (.xlsx)              ~0,09 MB comprimido (de cdn.sheetjs.com:
 //                         la versión de npm, 0.18.5, tiene fallos de seguridad conocidos)
 
-const PDFJS = "/demos/vendor/pdfjs-6.5.438/";
+const PDFJS = "/demos/vendor/pdfjs-6.5.438-legacy/";
 const TESS = "/demos/vendor/tesseract-7.0.0/";
 const MAMMOTH = "/demos/vendor/mammoth-1.13.0/mammoth.browser.min.js";
 const SHEETJS = "/demos/vendor/sheetjs-0.20.3/xlsx.mini.min.js";

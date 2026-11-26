@@ -3,7 +3,7 @@
 // (sector, prioridad, origen), se le prepara el correo de bienvenida y se crea la tarea de
 // seguimiento para un comercial. Todo en el navegador (lib/crm-leads.mjs); no se envía nada.
 import { montarAhorro } from "../comun/ahorro.js?v=b860c75e88";
-import { cargarSheetjs } from "../comun/carga.js?v=26b2baaff2";
+import { cargarSheetjs } from "../comun/carga.js?v=a4ae5b4595";
 import { anadir, montarERP, registros } from "../comun/erp.js?v=494fabfa89";
 import { crearPasos } from "../comun/pasos.js?v=eb663277c1";
 import { prepararSubida } from "../comun/subida.js?v=0f014d39f5";
