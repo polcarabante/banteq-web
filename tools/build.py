@@ -807,6 +807,34 @@ def apply_feature_cards():
     S[INDEX] = h[:a] + seg + h[b:]
 
 
+def fix_project_slider():
+    """Carrusel de proyectos de la home («Project Slider»): la plantilla tiene tres diapositivas, una
+    por proyecto del CMS, y las flechas las recorren 1 → 2 → 3. Con dos proyectos la tercera salía en
+    blanco. Las flechas pasan a ir de la 2 a la 1 (y de la 1 a la 2 hacia atrás); la 3 ya no se usa.
+    Manejadores del módulo: A/N/I = diapositiva 1 (escritorio/tableta/móvil), j/F/L = diapositiva 2."""
+    if len(C.PROYECTOS) >= 3:
+        return
+    assert len(C.PROYECTOS) == 2, "fix_project_slider: revisar el carrusel para un solo proyecto"
+    # Flecha izquierda: en la 1 de tableta y de móvil iba a la 3 (en escritorio no hace nada).
+    n = replace(
+        HOME_MOD,
+        "...Vo({BV9SgLvdZ:{T9EZqmYsP:M},iHzi9x_tO:{T9EZqmYsP:F},JVA92gNTY:{T9EZqmYsP:A},P8qnRpQKH:{T9EZqmYsP:I},"
+        "pYIqqyPmB:{T9EZqmYsP:re},r1IlqoEs7:{T9EZqmYsP:N},SUv2FFiiE:{T9EZqmYsP:j},XTfaCJhYS:{T9EZqmYsP:L}},_,S)",
+        "...Vo({BV9SgLvdZ:{T9EZqmYsP:F},iHzi9x_tO:{T9EZqmYsP:F},JVA92gNTY:{T9EZqmYsP:A},P8qnRpQKH:{T9EZqmYsP:I},"
+        "pYIqqyPmB:{T9EZqmYsP:L},r1IlqoEs7:{T9EZqmYsP:N},SUv2FFiiE:{T9EZqmYsP:j},XTfaCJhYS:{T9EZqmYsP:L}},_,S)",
+    )
+    assert n == 1, n
+    # Flecha derecha: en la 2 (escritorio, móvil, tableta) iba a la 3.
+    n = replace(
+        HOME_MOD,
+        "...Vo({BV9SgLvdZ:{T9EZqmYsP:F},iHzi9x_tO:{T9EZqmYsP:N},JVA92gNTY:{T9EZqmYsP:ie},P8qnRpQKH:{T9EZqmYsP:re},"
+        "pYIqqyPmB:{T9EZqmYsP:L},r1IlqoEs7:{T9EZqmYsP:M},SUv2FFiiE:{T9EZqmYsP:A},XTfaCJhYS:{T9EZqmYsP:I}},_,S)",
+        "...Vo({BV9SgLvdZ:{T9EZqmYsP:F},iHzi9x_tO:{T9EZqmYsP:N},JVA92gNTY:{T9EZqmYsP:A},P8qnRpQKH:{T9EZqmYsP:I},"
+        "pYIqqyPmB:{T9EZqmYsP:L},r1IlqoEs7:{T9EZqmYsP:N},SUv2FFiiE:{T9EZqmYsP:A},XTfaCJhYS:{T9EZqmYsP:I}},_,S)",
+    )
+    assert n == 1, n
+
+
 MARQUEE_LABEL = "Empresas que ya confían en Banteq"
 
 
@@ -3049,6 +3077,7 @@ def main():
     apply_images()
     apply_nav_logo()
     apply_feature_cards()
+    fix_project_slider()
     apply_hero_marquee()
     apply_hero_b()
     remove_unused_requests()
