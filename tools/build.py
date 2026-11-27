@@ -427,6 +427,10 @@ def set_links_before(rel, label, link_js, prop="q0dQpavo3"):
 
 def fix_links():
     replace(HOME_MOD, "fLS9iwM5O:`framer.com`", "fLS9iwM5O:`#hablemos`")
+    # «¿Tienes otra pregunta? · Contactar» (preguntas frecuentes): en la plantilla no llevaba enlace.
+    n = replace(HOME_MOD, "g(wt,{height:`100%`,id:`Ag6J03pnu`,",
+                "g(wt,{fLS9iwM5O:`#hablemos`,height:`100%`,id:`Ag6J03pnu`,")
+    assert n == 1, n
     # La imagen de "Quiénes somos" abría un vídeo de YouTube de la plantilla.
     replace(HOME_MOD, "WwoFhkv5M:`https://www.youtube.com/watch?v=8AHPXm9Y6mI`", "WwoFhkv5M:`/proyectos`")
     set_links_before(HOME_MOD, "Ver servicios", "{webPageId:`augiA20Il`,hash:`v30xxKYcD`}")
